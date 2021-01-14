@@ -91,7 +91,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 
     const query = {};
     const headers = {};
-    const packageUrl = UrlHelpers.ensureEndSlash(url) + `${request.package.name}/index.json`;
+    const packageUrl = UrlHelpers.ensureEndSlash(url) + `${request.package.name.toLowerCase()}/index.json`;
 
     return this.client.request(
       HttpClientRequestMethods.get,

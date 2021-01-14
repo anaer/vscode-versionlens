@@ -1,3 +1,13 @@
+# 1.0.10
+
+- **Dotnet** Added PackageVersion to 'versionlens.dotnet.dependencyProperties' setting for "central package versioning"
+
+  Reported in [#278](https://gitlab.com/versionlens/vscode-versionlens/issues/278)
+
+- **Dotnet** Fixed "package not found" where the package name case now has to be lower case whenusing the nuget autocomplete api
+
+  Reported in [#299](https://gitlab.com/versionlens/vscode-versionlens/-/issues/299)
+
 # 1.0.9
 
 - Ensures config urls have end slashes.
