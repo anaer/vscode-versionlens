@@ -394,7 +394,7 @@
         },
         "versionlens.composer.apiUrl": {
           "type": "string",
-          "default": "https://repo.packagist.org/p",
+          "default": "https://repo.packagist.org/p2",
           "description": "Defines the api to use for composer package searching."
         },
         "versionlens.composer.dependencyProperties": {
