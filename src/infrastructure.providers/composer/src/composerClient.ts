@@ -96,8 +96,13 @@ export class ComposerClient implements IPackageClient<null> {
           status: httpResponse.status,
         };
 
-        const rawVersions: string[] = [];
-        packageInfo.forEach((packageObject) => rawVersions.push(packageObject.version))
+        let rawVersions: string[] = [];
+
+        if (url.indexOf('/p2/') !== -1) {
+            packageInfo.reverse().forEach((packageObject) => rawVersions.push(packageObject.version))
+        } else {
+            rawVersions = Object.keys(packageInfo);
+        }
 
         // extract semver versions only
         const semverVersions = VersionHelpers.filterSemverVersions(rawVersions);
