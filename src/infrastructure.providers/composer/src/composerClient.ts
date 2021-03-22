@@ -78,7 +78,7 @@ export class ComposerClient implements IPackageClient<null> {
 
     return this.client.request(HttpClientRequestMethods.get, url, query, headers)
       .then(function (httpResponse: JsonClientResponse): TPackageDocument {
-        const packageInfo: IPackagistApiItem[] = httpResponse.data.packages[request.package.name];
+        const packageInfo = httpResponse.data.packages[request.package.name];
 
         const { providerName } = request;
 
@@ -99,7 +99,7 @@ export class ComposerClient implements IPackageClient<null> {
         let rawVersions: string[] = [];
 
         if (url.indexOf('/p2/') !== -1) {
-            packageInfo.reverse().forEach((packageObject) => rawVersions.push(packageObject.version))
+            packageInfo.reverse().forEach((packageObject: IPackagistApiItem) => rawVersions.push(packageObject.version))
         } else {
             rawVersions = Object.keys(packageInfo);
         }
