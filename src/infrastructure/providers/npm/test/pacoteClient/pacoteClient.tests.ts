@@ -20,6 +20,7 @@ import {
 
 import Fixtures from './pacoteClient.fixtures'
 import { PacoteStub } from '../stubs/pacoteStub';
+import { NpmCliConfigStub } from '../stubs/npmCliConfigStub';
 
 const { mock, instance, when, anything } = require('ts-mockito');
 
@@ -72,6 +73,7 @@ export default {
       )
 
       cut.pacote = instance(pacoteMock)
+      cut.NpmCliConfig = NpmCliConfigStub
 
       return cut.fetchPackage(testRequest, npaSpec)
         .then((actual) => {
@@ -110,6 +112,7 @@ export default {
       )
 
       cut.pacote = instance(pacoteMock)
+      cut.NpmCliConfig = NpmCliConfigStub
 
       return cut.fetchPackage(testRequest, npaSpec)
         .then((actual) => {
@@ -147,6 +150,7 @@ export default {
       )
 
       cut.pacote = instance(pacoteMock)
+      cut.NpmCliConfig = NpmCliConfigStub
 
       return cut.fetchPackage(testRequest, npaSpec)
         .then((actual) => {
@@ -185,6 +189,7 @@ export default {
       )
 
       cut.pacote = instance(pacoteMock)
+      cut.NpmCliConfig = NpmCliConfigStub
 
       return cut.fetchPackage(testRequest, npaSpec)
         .then((actual) => {

@@ -1,0 +1,8 @@
+{
+  "name": "smoke-test",
+  "title": "smoke test",
+  "dependencies": {},
+  "devDependencies": {
+    "@smoke/private-pub": "0.1"
+  }
+}

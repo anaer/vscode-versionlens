@@ -69,10 +69,12 @@
     "webpack-cli": "5.0.1"
   },
   "dependencies": {
+    "@npmcli/config": "6.1.1",
     "@npmcli/promise-spawn": "6.0.2",
     "awilix": "8.0.0",
+    "dotenv": "^16.0.1",
+    "find-config": "^1.0.0",
     "jsonc-parser": "3.2.0",
-    "libnpmconfig": "1.2.1",
     "minimatch": "5.1.2",
     "npm-package-arg": "10.1.0",
     "pacote": "9.5.12",

@@ -22,7 +22,11 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
 
   pacote: any;
 
-  libnpmconfig: any;
+  NpmCliConfig: any;
+
+  findConfig: any;
+
+  dotenv: any;
 
   constructor(config: NpmConfig, logger: ILogger) {
     super(config.caching);
@@ -30,7 +34,9 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
     this.logger = logger;
 
     this.pacote = require('pacote');
-    this.libnpmconfig = require('libnpmconfig');
+    this.NpmCliConfig = require('@npmcli/config');
+    this.findConfig = require('find-config');
+    this.dotenv = require('dotenv');
   }
 
   async fetchPackage(
@@ -47,18 +53,22 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
       return Promise.resolve(cachedResp.data);
     }
 
-    // get npm config
-    const npmOpts = this.libnpmconfig.read(
-      {
-        where: request.package.path,
-        fullMetadata: false,
-        retry: {
-          retries: 0
-        }
-      },
-      {
-        cwd: request.package.path,
-      }
+    // load any environment variables from .env
+    this.dotenv.config({ path: this.findConfig('.env', { cwd: request.package.path }) });
+
+    // load the npm config
+    const npmConfig = new this.NpmCliConfig({
+      npmPath: request.package.path,
+      shorthands: {},
+      definitions: {},
+      cwd: request.package.path
+    });
+    await npmConfig.load();
+
+    // flatten all the options
+    const npmOpts = npmConfig.list.reduce(
+      (memo, list) => ({ ...memo, ...list }),
+      { cwd: request.package.path }
     );
 
     return this.pacote.packument(npaSpec, npmOpts)

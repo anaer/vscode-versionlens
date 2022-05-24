@@ -51,7 +51,7 @@ module.exports = function (env, argv) {
     },
 
     resolve: {
-      extensions: ['.ts'],
+      extensions:  ['.ts'],
       alias: generateAliases(),
       plugins: [
         new tsconfigPathsPlugin(

@@ -55,7 +55,8 @@ export default {
       // write the npmrc file
       const npmrcPath = packagePath + '/.npmrc';
       fs.writeFileSync(npmrcPath, Fixtures[".npmrc"])
-      assert.ok(require('fs').existsSync(testRequest.package.path), 'test .npmrc doesnt exist?')
+      fs.writeFileSync(`${packagePath}/.env`, Fixtures[".npmrc-env"])
+      assert.ok(fs.existsSync(testRequest.package.path), 'test .npmrc doesnt exist?')
 
       when(pacoteMock.packument(anything(), anything()))
         .thenResolve(Fixtures.packumentGit)
@@ -66,6 +67,7 @@ export default {
       )
 
       cut.pacote = instance(pacoteMock)
+      cut.NpmCliConfig = require("@npmcli/config")
 
       const npaSpec = npa.resolve(
         testRequest.package.name,
@@ -78,6 +80,7 @@ export default {
 
           const [, actualOpts] = capture(pacoteMock.packument).first()
           assert.equal(actualOpts.cwd, testRequest.package.path)
+          assert.equal(process.env.NPM_AUTH, "12345678")
           assert.equal(
             actualOpts['//registry.npmjs.example/:_authToken'],
             '12345678'
