@@ -36,6 +36,7 @@ module.exports = function (env, argv) {
 
     entry,
 
+    externalsType: 'commonjs',
     externals: generateExternals(),
 
     resolve: {
@@ -59,6 +60,7 @@ module.exports = function (env, argv) {
     devtool: 'source-map',
 
     output: {
+      clean: true,
       path: distPath,
       filename: outputFile,
       libraryTarget: "commonjs2",
@@ -107,20 +109,16 @@ module.exports = function (env, argv) {
     return areaAliases;
   }
 
+  // Finds all the node_modules package names.
+  // Returns a object map of strings {"{moduleName}": true, ...} to mark them as nodejs modules
   function generateExternals() {
-    log("[debug] Generating externals")
-
     const externals = {
-      "vscode": "commonjs vscode",
-      "@npmcli/promise-spawn": "commonjs @npmcli/promise-spawn"
+      "vscode": true,
+      "@npmcli/promise-spawn": true
     }
 
-    getNodeModulesNames()
-      .forEach(
-        moduleName => externals[moduleName] = `commonjs ${moduleName}`
-      )
-
-    log("[debug] Generated externals", externals)
+    getDirectories(path.resolve(projectPath, 'node_modules'))
+      .forEach(moduleName => externals[moduleName] = true)
 
     return [
       externals,
@@ -128,17 +126,10 @@ module.exports = function (env, argv) {
     ]
   }
 
-  function getNodeModulesNames() {
-    return getDirectories(path.resolve(projectPath, 'node_modules'))
-  }
-
   function getDirectories(absolutePath) {
-    log(`[debug] getDirectories ${absolutePath}`)
     return fs.readdirSync(absolutePath).filter(
-      function (file) {
-        return fs.statSync(absolutePath + '/' + file).isDirectory();
-      }
-    );
+      file => fs.statSync(absolutePath + '/' + file).isDirectory()
+    )
   }
 
   function log(message, ...optional) {
