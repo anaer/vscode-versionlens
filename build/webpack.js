@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const tsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const buildPath = __dirname;
 const projectPath = path.resolve(buildPath, '..');
@@ -16,9 +17,7 @@ module.exports = function (env, argv) {
     path.resolve(testPath, 'runner.ts') :
     path.resolve(sourcePath, 'activate.ts');
 
-  const tsconfigFile = test ?
-    path.resolve(buildPath, 'tsconfig.test.json') :
-    path.resolve(buildPath, 'tsconfig.src.json');
+  const tsconfigFile = path.resolve(projectPath, 'tsconfig.json');
 
   const outputFile = test ?
     'extension.test.js' :
@@ -41,7 +40,14 @@ module.exports = function (env, argv) {
 
     resolve: {
       extensions: ['.ts'],
-      alias: generateAliases()
+      alias: generateAliases(),
+      plugins: [
+        new tsconfigPathsPlugin(
+          {
+            configFile: path.resolve(projectPath, "tsconfig.json")
+          }
+        )
+      ],
     },
 
     module: {
@@ -73,8 +79,8 @@ module.exports = function (env, argv) {
     log("[debug] Generating aliases")
 
     let aliases = {
-      ...generateAreaAliases(''),
-      ...generateAreaAliases('infrastructure.providers')
+      ...generateDynamicImportAliases(''),
+      ...generateDynamicImportAliases('infrastructure/providers')
     }
 
     log("[debug] Generated aliases", aliases)
@@ -82,12 +88,12 @@ module.exports = function (env, argv) {
     return aliases;
   }
 
-  function generateAreaAliases(relativePath) {
+  function generateDynamicImportAliases(relativePath) {
     log("[debug] Generating area aliases for " + relativePath)
 
     const areaAliases = {}
     const areaPrefix = relativePath.length > 0 ?
-      `${relativePath}.` :
+      `${relativePath}/` :
       relativePath;
 
     getDirectories(path.resolve(sourcePath, relativePath))

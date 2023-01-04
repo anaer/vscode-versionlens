@@ -1,4 +1,4 @@
-import * as UnitTests from './unit.tests'
+import * as UnitTests from './unit/index.tests'
 
 const tty = require('tty');
 const Mocha = require("mocha");

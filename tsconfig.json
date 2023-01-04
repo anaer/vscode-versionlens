@@ -1,39 +1,40 @@
 {
+  "include": [
+    "./src",
+    "./src/infrastructure/providers/**/index.ts",
+    "./test",
+  ],
   "compilerOptions": {
+    "strict": false,
     "target": "ES2019",
     "module": "CommonJS",
     "moduleResolution": "node",
-    "outDir": "../out/",
+    "outDir": "./out/",
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
     "lib": [
       "ES2019"
     ],
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": "src",
+    "baseUrl": ".",
     "paths": {
-      "core.*": [
-        "core.*/index",
+      "test/*": [
+        "./test/*",
+        "./test/*/index.test"
       ],
-      "infrastructure.*": [
-        "infrastructure.*/index",
+      "test/unit/infrastructure/providers/*": [
+        "./src/infrastructure/providers/*/index.test",
       ],
-      "infrastructure.providers.*": [
-        "infrastructure.providers/*/index"
+      "*": [
+        "*",
+        "./src/*"
+      ],
+      "infrastructure/providers/*": [
+        "./src/infrastructure/providers/*/index"
       ],
       "presentation.*": [
-        "presentation.*/index"
-      ],
-      "test.core.*": [
-        "core.*/index.test"
-      ],
-      "test.infrastructure.*": [
-        "infrastructure.*/index.test",
-      ],
-      "test.infrastructure.providers.*": [
-        "infrastructure.providers/*/index.test",
-      ],
-      "test.providers.*": [
-        "providers.*/index.test",
+        "./src/presentation.*/index"
       ]
     }
   }
