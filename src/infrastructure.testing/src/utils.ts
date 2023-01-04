@@ -9,7 +9,7 @@ export async function delay(delay) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       try {
-        resolve();
+        resolve(null);
       } catch (err) {
         reject(err);
       }

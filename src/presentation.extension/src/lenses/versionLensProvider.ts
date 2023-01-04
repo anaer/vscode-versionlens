@@ -18,7 +18,7 @@ import {
   defaultReplaceFn,
 } from 'core.suggestions';
 import { IProviderConfig } from 'core.providers';
-import { PackageSourceTypes, PackageResponseErrors } from 'core.packages';
+import { PackageSourceTypes } from 'core.packages';
 
 import {
   CommandFactory,

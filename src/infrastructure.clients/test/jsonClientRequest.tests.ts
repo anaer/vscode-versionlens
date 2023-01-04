@@ -1,6 +1,3 @@
-import { LoggerStub } from 'test.core.logging'
-
-import { ILogger } from 'core.logging'
 import {
   ClientResponseSource,
   HttpClientRequestMethods,
@@ -21,14 +18,12 @@ const assert = require('assert')
 let cachingOptsMock: ICachingOptions;
 let httpOptsMock: IHttpOptions;
 let httpClientMock: IHttpClient;
-let loggerMock: ILogger;
 
 export const JsonClientRequestTests = {
 
   beforeEach: () => {
     cachingOptsMock = mock(CachingOptions);
     httpOptsMock = mock(HttpOptions);
-    loggerMock = mock(LoggerStub);
     httpClientMock = mock(HttpClient);
 
     when(cachingOptsMock.duration).thenReturn(30000);
