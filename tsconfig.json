@@ -27,7 +27,6 @@
         "./src/infrastructure/providers/*/index.test",
       ],
       "*": [
-        "*",
         "./src/*"
       ],
       "infrastructure/providers/*": [
