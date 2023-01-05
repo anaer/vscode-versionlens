@@ -18,6 +18,8 @@ import {
 
 import { ComposerConfig } from './composerConfig';
 
+import { IPackagistApiItem } from './definitions/iPackagistApiItem';
+
 export class ComposerClient implements IPackageClient<null> {
 
   config: ComposerConfig;
@@ -94,7 +96,17 @@ export class ComposerClient implements IPackageClient<null> {
           status: httpResponse.status,
         };
 
-        const rawVersions = Object.keys(packageInfo);
+        let rawVersions: string[] = [];
+
+        if (url.indexOf('/p2/') !== -1) {
+          packageInfo
+            .reverse()
+            .forEach(
+              (packageObject: IPackagistApiItem) => rawVersions.push(packageObject.version)
+            )
+        } else {
+          rawVersions = Object.keys(packageInfo);
+        }
 
         // extract semver versions only
         const semverVersions = VersionHelpers.filterSemverVersions(rawVersions);

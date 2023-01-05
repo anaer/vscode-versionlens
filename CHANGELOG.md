@@ -1,4 +1,4 @@
-# 1.0.10
+# 1.10.0
 
 - **Dotnet** Added PackageVersion to 'versionlens.dotnet.dependencyProperties' setting for "central package versioning"
 
