@@ -1,7 +1,7 @@
 import * as UnitTests from './unit/index.tests'
 
+const Mocha = require('mocha');
 const tty = require('tty');
-const Mocha = require("mocha");
 require('mocha-ui-esm');
 
 // Linux: prevent a weird NPE when mocha on Linux requires the window size from the TTY
@@ -12,10 +12,10 @@ const runner = new Mocha({
   ui: 'esm',
   reporter: 'spec',
   timeout: 60000,
+  color: true
 });
 
 // set up the global variables
-runner.color(true);
 runner.suite.emit('global-mocha-context', runner);
 runner.suite.emit('support-only', runner.options);
 runner.suite.emit('modules', UnitTests);
