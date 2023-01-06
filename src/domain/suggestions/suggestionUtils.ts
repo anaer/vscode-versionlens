@@ -1,5 +1,5 @@
 import { basename } from 'path';
-import * as  minimatch from 'minimatch';
+import minimatch from 'minimatch';
 
 import { PackageResponse, VersionHelpers } from 'domain/packages';
 

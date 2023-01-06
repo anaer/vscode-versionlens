@@ -16,8 +16,6 @@ export class VersionLens extends CodeLens {
 
   replaceVersionFn: TSuggestionReplaceFunction;
 
-  command: any;
-
   constructor(
     commandRange: Range,
     replaceRange: Range,

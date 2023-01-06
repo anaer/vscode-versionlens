@@ -1,6 +1,6 @@
 // vscode references
 import { basename } from 'path';
-import * as minimatch from 'minimatch';
+import minimatch from 'minimatch';
 
 import * as VsCodeTypes from 'vscode';
 

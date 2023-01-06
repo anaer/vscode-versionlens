@@ -6,8 +6,8 @@
   ],
   "compilerOptions": {
     "strict": false,
-    "target": "ES2019",
-    "module": "CommonJS",
+    "target": "ES2022",
+    "module": "Node16",
     "moduleResolution": "node",
     "outDir": "./out/",
     "noUnusedLocals": true,
