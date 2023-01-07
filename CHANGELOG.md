@@ -1,4 +1,12 @@
-# 1.10.0
+# 1.0.11
+
+- **Composer** Updated packagist api to v2 https://repo.packagist.org/p2 (thanks to https://gitlab.com/Zerogiven1)
+
+- Maintenance updates for runtime packages
+
+- Updated nodejs dev packages (notably webpack 5 and typescript 4.8.4)
+
+# 1.0.10
 
 - **Dotnet** Added PackageVersion to 'versionlens.dotnet.dependencyProperties' setting for "central package versioning"
 

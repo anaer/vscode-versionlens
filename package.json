@@ -9,7 +9,7 @@
   },
   "author": "Peter Flannery",
   "license": "ISC",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "publisher": "pflannery",
   "displayName": "Version Lens",
   "icon": "images/logo.png",
@@ -69,18 +69,18 @@
     "tsconfig-paths-webpack-plugin": "4.0.0"
   },
   "dependencies": {
-    "@npmcli/promise-spawn": "1.3.2",
-    "awilix": "4.3.1",
-    "npm-package-arg": "8.1.0",
+    "@npmcli/promise-spawn": "6.0.2",
+    "awilix": "8.0.0",
+    "npm-package-arg": "10.1.0",
     "libnpmconfig": "1.2.1",
     "pacote": "9.5.12",
-    "minimatch": "3.0.4",
-    "request-light": "0.4.0",
-    "semver": "7.3.4",
-    "xmldoc": "1.1.2",
-    "yaml": "1.10.0",
-    "jsonc-parser": "3.0.0",
-    "winston": "3.3.3"
+    "minimatch": "5.1.2",
+    "request-light": "0.5.5",
+    "semver": "7.3.8",
+    "xmldoc": "1.2.0",
+    "yaml": "1.10.2",
+    "jsonc-parser": "3.2.0",
+    "winston": "3.8.2"
   },
   "contributes": {
     "commands": [
