@@ -1,12 +1,12 @@
 # Version Lens for Visual Studio Code
 
-[![Badge for version for Visual Studio Code extension](https://vsmarketplacebadges.dev/version/pflannery.vscode-versionlens.svg?color=blue&style=?style=for-the-badge&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=pflannery.vscode-versionlens&wt.mc_id=vscode-versionlens-gitlab)
-[![Installs](https://vsmarketplacebadges.dev/installs-short/pflannery.vscode-versionlens.svg?color=blue&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=pflannery.vscode-versionlens)
-[![Rating](https://vsmarketplacebadges.dev/rating/pflannery.vscode-versionlens.svg?color=blue&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=pflannery.vscode-versionlens)
-[![The ISC license](https://img.shields.io/badge/license-ISC-orange.svg?color=blue&style=flat-square)](http://opensource.org/licenses/ISC)
+[![Badge for version for Visual Studio Code extension](https://vsmarketplacebadges.dev/version/pflannery.vscode-versionlens.png?color=blue&style=?style=for-the-badge&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=pflannery.vscode-versionlens&wt.mc_id=vscode-versionlens-gitlab)
+[![Installs](https://vsmarketplacebadges.dev/installs-short/pflannery.vscode-versionlens.png?color=blue&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=pflannery.vscode-versionlens)
+[![Rating](https://vsmarketplacebadges.dev/rating/pflannery.vscode-versionlens.png?color=blue&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=pflannery.vscode-versionlens)
+[![The ISC license](https://img.shields.io/badge/license-ISC-orange.png?color=blue&style=flat-square)](http://opensource.org/licenses/ISC)
 [![Pipeline status](https://gitlab.com/versionlens/vscode-versionlens/badges/master/pipeline.svg)](https://gitlab.com/versionlens/vscode-versionlens/-/pipelines)
 
-[![BuyMeACoffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-aa5511?logo=buy-me-a-coffee&logoColor=ffffff)](https://www.buymeacoffee.com/peterf)
+[![BuyMeACoffee](https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png)](https://www.buymeacoffee.com/peterf)
 
 This extension shows __version__ information when opening a package or project for one of the following:
 
