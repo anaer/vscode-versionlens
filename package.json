@@ -323,6 +323,7 @@
           "uniqueItems": true,
           "minItems": 1,
           "default": [
+            "GlobalPackageReference",
             "PackageReference",
             "PackageVersion",
             "DotNetCliToolReference"

@@ -2,4 +2,7 @@
   <ItemGroup>
     <PackageVersion Include="System.Text.Json" Version="4.7.2" />
   </ItemGroup>
+  <ItemGroup>
+    <GlobalPackageReference Include="Microsoft.Azure.ServiceBus" Version="(3.0,)" />
+  </ItemGroup>
 </Project>

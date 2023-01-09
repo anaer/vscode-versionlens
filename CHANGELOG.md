@@ -1,3 +1,11 @@
+# 1.0.12
+
+- **Dotnet** Added GlobalPackageVersion to 'versionlens.dotnet.dependencyProperties' https://learn.microsoft.com/en-us/nuget/consume-packages/central-package-management#global-package-references
+
+  Requested in [issue #307](https://gitlab.com/versionlens/vscode-versionlens/-/issues/307)
+
+- Added terser-webpack-plugin to minify release code without breaking the ioc containers
+
 # 1.0.11
 
 - **Composer** Updated packagist api to v2 https://repo.packagist.org/p2 (thanks to https://gitlab.com/Zerogiven1)
