@@ -4,6 +4,12 @@
 
   Requested in [issue #307](https://gitlab.com/versionlens/vscode-versionlens/-/issues/307)
 
+- **Dotnet** Added 'Sdk' node name to dependency props to allow version inspection.
+
+  `<Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.1.3" />`
+
+  Requested in [issue #304](https://gitlab.com/versionlens/vscode-versionlens/-/issues/304)
+
 - Added terser-webpack-plugin to minify release code without breaking the ioc containers
 
 # 1.0.11

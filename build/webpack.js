@@ -12,6 +12,7 @@ module.exports = function (env, argv) {
 
   const logging = env && env.logging == 'true'
   const test = env && env.test == 'true'
+  const devMode = argv.mode == 'development'
 
   const entry = test ?
     path.resolve(testPath, 'runner.ts') :
@@ -39,7 +40,7 @@ module.exports = function (env, argv) {
     externals: generateExternals(),
 
     optimization: {
-      minimize: !test,
+      minimize: !devMode,
       minimizer: [
         new TerserPlugin({
           terserOptions: {

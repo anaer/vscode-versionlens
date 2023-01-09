@@ -19,22 +19,26 @@ export function createDependenciesFromXml(
 }
 
 function extractPackageLensDataFromNodes(
-  topLevelNodes, xml: string, includePropertyNames: Array<string>
+  topLevelNodes, xml: string,
+  includePropertyNames: Array<string>
 ) {
   const collector = [];
 
   topLevelNodes.eachChild(
     function (node) {
-      if (node.name !== "ItemGroup") return;
-      node.eachChild(
-        function (itemGroupNode) {
-          if (includePropertyNames.includes(itemGroupNode.name) == false) return;
-          const dependencyLens = createFromAttribute(itemGroupNode, xml);
-          if (dependencyLens) collector.push(dependencyLens);
-        }
-      )
+      if (node.name === "ItemGroup" && node.children.length > 0) {
+        node.eachChild(parseVersionNode);
+      } else if (node.name === "Sdk") {
+        parseVersionNode(node);
+      }
     }
   )
+
+  function parseVersionNode(itemGroupNode) {
+    if (includePropertyNames.includes(itemGroupNode.name) == false) return;
+    const dependencyLens = createFromAttribute(itemGroupNode, xml);
+    if (dependencyLens) collector.push(dependencyLens);
+  }
 
   return collector
 }
@@ -50,7 +54,7 @@ function createFromAttribute(node, xml: string): IPackageDependency {
   if (versionRange === null) return null;
 
   const packageInfo = {
-    name: node.attr.Include || node.attr.Update,
+    name: node.attr.Include || node.attr.Update || node.attr.Name,
     version: node.attr.Version,
   }
 
