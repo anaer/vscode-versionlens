@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const tsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin')
 
-const buildPath = __dirname;
-const projectPath = path.resolve(buildPath, '..');
+const projectPath = process.cwd();
 const sourcePath = path.resolve(projectPath, 'src');
 const testPath = path.resolve(projectPath, 'test');
 const distPath = path.resolve(projectPath, 'dist');
@@ -37,6 +37,17 @@ module.exports = function (env, argv) {
 
     externalsType: 'commonjs',
     externals: generateExternals(),
+
+    optimization: {
+      minimize: !test,
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            mangle: false
+          }
+        })
+      ],
+    },
 
     resolve: {
       extensions: ['.ts'],
