@@ -4,7 +4,7 @@
 
   Requested in [issue #307](https://gitlab.com/versionlens/vscode-versionlens/-/issues/307)
 
-- **Dotnet** Added 'Sdk' node name to dependency props to allow version inspection.
+- **Dotnet** Added 'Sdk' node name to dependency props to allow sdk version inspection.
 
   `<Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.1.3" />`
 
