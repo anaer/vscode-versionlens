@@ -1,6 +1,6 @@
-import { VersionHelpers } from 'domain/packages';
+import assert from 'assert';
 
-const assert = require('assert');
+import { VersionHelpers } from 'domain/packages';
 
 const testVersions = [
   "2.0.0-preview.1",

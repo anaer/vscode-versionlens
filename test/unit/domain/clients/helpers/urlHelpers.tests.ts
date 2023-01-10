@@ -1,6 +1,5 @@
+import assert from 'assert';
 import { UrlHelpers } from 'domain/clients';
-
-const assert = require('assert')
 
 export const UrlHelpersTests = {
 

@@ -1,4 +1,4 @@
-const path = require('path');
+import path from 'path';
 
 // expects test bundle to be at ./dist/[filename].js
 export const projectPath = path.resolve(__dirname, '..');

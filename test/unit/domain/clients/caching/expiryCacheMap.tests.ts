@@ -1,8 +1,6 @@
+import assert from 'assert';
 import { delay } from 'test/unit/utils';
-
 import { ExpiryCacheMap, ICachingOptions } from 'domain/clients';
-
-const assert = require('assert');
 
 let testCacheMap: ExpiryCacheMap<any>;
 
@@ -113,10 +111,18 @@ export const ExpiryCacheMapTests = {
 
       testCacheMap.set(testKey, testData);
       testCacheMap.expire(testKey);
-      assert.ok(testCacheMap.hasExpired(testKey), true, 'ExpiryCacheMap.expire(key): Should expiry the item');
+      assert.equal(
+        testCacheMap.hasExpired(testKey), 
+        true, 
+        'ExpiryCacheMap.expire(key): Should expiry the item'
+      );
 
       testCacheMap.set(testKey, "new data");
-      assert.ok(testCacheMap.get(testKey), "new data", 'ExpiryCacheMap.get(key): Should contain new data');
+      assert.equal(
+        testCacheMap.get(testKey), 
+        "new data", 
+        'ExpiryCacheMap.get(key): Should contain new data'
+      );
     }
 
   }

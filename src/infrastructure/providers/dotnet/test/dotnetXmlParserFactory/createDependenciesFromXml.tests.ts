@@ -1,8 +1,8 @@
+import assert from 'assert';
+
 import { createDependenciesFromXml } from 'infrastructure/providers/dotnet';
 
 import Fixtures from './createDependenciesFromXml.fixtures';
-
-const assert = require('assert');
 
 export default {
 

@@ -1,3 +1,5 @@
+import assert from 'assert';
+
 import Fixtures from './fixtures/dotnetSources'
 
 import { LoggerStub } from 'test/unit/domain/logging';
@@ -23,8 +25,6 @@ import {
 import { ProcessClient } from 'infrastructure/clients';
 
 const { mock, instance, when, anything } = require('ts-mockito');
-
-const assert = require('assert');
 
 let cacheOptsMock: ICachingOptions;
 let httpOptsMock: IHttpOptions;

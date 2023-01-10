@@ -1,5 +1,6 @@
+import assert from 'assert';
+import npa from 'npm-package-arg';
 import { LoggerStub } from 'test/unit/domain/logging/index.test';
-
 import { SuggestionFlags } from 'domain/suggestions';
 
 import {
@@ -17,8 +18,6 @@ import {
 import { githubFixtures } from './fetchGitHub.fixtures'
 
 const { mock, instance, when, anything, capture } = require('ts-mockito');
-const assert = require('assert')
-const npa = require('npm-package-arg');
 
 let githubOptsMock: GitHubOptions;
 let configMock: NpmConfig;

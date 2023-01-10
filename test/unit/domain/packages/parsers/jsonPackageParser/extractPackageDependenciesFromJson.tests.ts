@@ -1,8 +1,8 @@
+import assert from 'assert';
+
 import { extractPackageDependenciesFromJson } from 'domain/packages';
 
 import Fixtures from './extractPackageDependenciesFromJson.fixtures';
-
-const assert = require('assert');
 
 export default {
 

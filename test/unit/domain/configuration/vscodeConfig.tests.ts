@@ -1,7 +1,7 @@
+import assert from 'assert';
 import { VsCodeConfig, IVsCodeWorkspace } from 'domain/configuration'
 import { VsCodeWorkspaceStub } from './stubs/vsCodeWorkspaceStub';
 
-const assert = require('assert')
 const { mock, instance, when } = require('ts-mockito');
 
 let workspaceMock: IVsCodeWorkspace;

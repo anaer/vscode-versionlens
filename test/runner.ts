@@ -1,22 +1,17 @@
+import Mocha from 'mocha'
+import registerMochaUiEsm from 'mocha-ui-esm'
 import * as UnitTests from './unit/index.tests'
 
-const Mocha = require('mocha');
-const tty = require('tty');
-
-require('mocha-ui-esm').default();
-
-// Linux: prevent a weird NPE when mocha on Linux requires the window size from the TTY
-// Since we are not running in a tty environment, we just implementt he method statically
-if (!tty.getWindowSize) tty.getWindowSize = function () { return [80, 75]; };
+registerMochaUiEsm();
 
 const runner = new Mocha({
-  ui: 'esm',
+  ui: <any>'esm',
   reporter: 'spec',
   timeout: 60000,
   color: true
 });
 
-// set up the global variables
+// add esm unit tests to mocha
 runner.suite.emit('modules', UnitTests);
 
 require('source-map-support').install();

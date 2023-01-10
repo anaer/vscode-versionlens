@@ -1,3 +1,6 @@
+import assert from 'assert';
+import npa from 'npm-package-arg';
+
 import { LoggerStub } from 'test/unit/domain/logging';
 
 import { ILogger } from 'domain/logging';
@@ -19,9 +22,6 @@ import Fixtures from './pacoteClient.fixtures'
 import { PacoteStub } from '../stubs/pacoteStub';
 
 const { mock, instance, when, anything } = require('ts-mockito');
-
-const assert = require('assert')
-const npa = require('npm-package-arg');
 
 let cachingOptsMock: ICachingOptions;
 let githubOptsMock: GitHubOptions;

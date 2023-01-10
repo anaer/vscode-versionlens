@@ -1,7 +1,7 @@
+import assert from 'assert';
+
 import * as NpmUtils from 'infrastructure/providers/npm'
 import { PackageResponse, PackageSourceTypes } from 'domain/packages'
-
-const assert = require('assert')
 
 export default {
 

@@ -1,3 +1,5 @@
+import assert from 'assert';
+
 import { LoggerStub } from 'test/unit/domain/logging'
 
 import { ILogger } from 'domain/logging';
@@ -13,7 +15,6 @@ import { NuGetResourceClient } from 'infrastructure/providers/dotnet';
 
 import Fixtures from './fixtures/nugetResources'
 
-const assert = require('assert');
 const { mock, instance, when, anything, capture } = require('ts-mockito');
 
 let jsonClientMock: IJsonHttpClient;

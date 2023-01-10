@@ -1,9 +1,8 @@
+import assert from 'assert';
 import {
   SuggestionFactory,
   SuggestionFlags
 } from 'domain/suggestions';
-
-const assert = require('assert');
 
 export default {
 

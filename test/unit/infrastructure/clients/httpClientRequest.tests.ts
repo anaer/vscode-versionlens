@@ -1,3 +1,5 @@
+import assert from 'assert';
+
 import { LoggerStub } from 'test/unit/domain/logging'
 
 import { ILogger } from 'domain/logging';
@@ -24,8 +26,6 @@ const {
   capture,
   anything
 } = require('ts-mockito');
-
-const assert = require('assert')
 
 let cachingOptsMock: ICachingOptions;
 let httpOptsMock: IHttpOptions;

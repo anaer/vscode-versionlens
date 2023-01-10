@@ -1,3 +1,5 @@
+import assert from 'assert';
+
 import { LoggerStub } from 'test/unit/domain/logging';
 
 import { ILogger } from 'domain/logging';
@@ -7,8 +9,6 @@ import { ProcessClient } from 'infrastructure/clients'
 import { ProcessSpawnStub } from './stubs/processSpawnStub';
 
 const { mock, instance, when, anything } = require('ts-mockito');
-
-const assert = require('assert')
 
 let psMock: ProcessSpawnStub;
 let cachingMock: ICachingOptions;

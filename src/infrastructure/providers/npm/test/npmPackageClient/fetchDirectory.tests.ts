@@ -1,3 +1,5 @@
+import assert from 'assert';
+
 import { LoggerStub } from 'test/unit/domain/logging';
 
 import {
@@ -9,8 +11,6 @@ import {
 import { PacoteClient } from 'infrastructure/providers/npm';
 
 const { mock, instance } = require('ts-mockito');
-
-const assert = require('assert')
 
 let configMock: NpmConfig;
 let pacoteMock: PacoteClient;

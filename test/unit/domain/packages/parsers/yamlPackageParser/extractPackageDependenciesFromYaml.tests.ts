@@ -1,8 +1,8 @@
+import assert from 'assert';
+
 import { extractPackageDependenciesFromYaml } from 'domain/packages';
 
 import Fixtures from './extractPackageDependenciesFromYaml.fixtures';
-
-const assert = require('assert');
 
 export default {
 

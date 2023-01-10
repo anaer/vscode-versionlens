@@ -1,10 +1,9 @@
+import assert from 'assert';
 import {
   ClientResponseSource,
   AbstractCachedRequest,
   ICachingOptions
 } from 'domain/clients'
-
-const assert = require('assert')
 
 class TestClientRequest extends AbstractCachedRequest<number, string> { }
 
@@ -79,7 +78,6 @@ export const AbstractClientRequestTests = {
       // assert cache
       const actualCacheResp = rut.cache.get(testKey);
       assert.deepEqual(actualCacheResp, undefined)
-
     },
 
   },

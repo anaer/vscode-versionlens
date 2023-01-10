@@ -1,6 +1,5 @@
+import assert from 'assert';
 import { OptionsWithFallback } from 'domain/configuration'
-
-const assert = require('assert')
 
 export const OptionsWithFallbackTests = {
 

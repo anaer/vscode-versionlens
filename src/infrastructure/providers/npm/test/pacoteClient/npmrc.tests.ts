@@ -1,3 +1,8 @@
+import assert from 'assert';
+import fs from 'fs';
+import path from 'path';
+import npa from 'npm-package-arg';
+
 import { sourcePath } from 'test/unit/utils';
 import { LoggerStub } from 'test/unit/domain/logging';
 
@@ -10,11 +15,6 @@ import { PacoteStub } from '../stubs/pacoteStub';
 import { CachingOptions, ICachingOptions } from 'domain/clients';
 
 const { mock, instance, when, anything, capture } = require('ts-mockito');
-
-const assert = require('assert')
-const path = require('path')
-const npa = require('npm-package-arg');
-const fs = require('fs');
 
 let cachingOptsMock: ICachingOptions;
 let loggerMock: ILogger;

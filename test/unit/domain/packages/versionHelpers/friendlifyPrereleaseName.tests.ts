@@ -1,6 +1,5 @@
+import assert from 'assert';
 import { VersionHelpers } from 'domain/packages';
-
-const assert = require('assert');
 
 const testPrereleases = [
   '4.1.0-beta.1',
