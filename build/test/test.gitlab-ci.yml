@@ -1,0 +1,15 @@
+image: docker:stable
+
+services:
+  - docker:dind
+
+workflow:
+  rules:
+    - when: always
+
+before_script:
+  - docker build -t versionlens:tests -f ./build/test/test.dockerfile .
+
+unit_tests:
+  script:
+    - docker run --rm versionlens:tests npm run test:unit
