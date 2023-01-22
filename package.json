@@ -52,36 +52,35 @@
     "trace": "npm run -s clean && tsc --explainFiles --project ./tsconfig.json > trace.log"
   },
   "devDependencies": {
-    "@types/node": "^18.11.18",
-    "@types/vscode": "1.74.0",
-    "@types/winston": "2.4.4",
     "@types/mocha": "10.0.1",
+    "@types/node": "18.11.18",
+    "@types/vscode": "1.74.0",
+    "@vscode/test-electron": "2.2.2",
+    "mocha": "10.2.0",
+    "mocha-ui-esm": "1.0.0-beta.10",
     "rimraf": "3.0.2",
-    "typescript": "4.8.4",
+    "source-map-support": "0.5.21",
+    "terser-webpack-plugin": "5.3.6",
     "ts-loader": "9.4.2",
     "ts-mockito": "2.6.1",
-    "mocha": "10.2.0",
-    "mocha-ui-esm": "1.0.0-beta.7",
-    "source-map-support": "0.5.21",
-    "webpack": "5.75.0",
-    "webpack-cli": "5.0.1",
-    "vscode-test": "1.6.1",
     "tsconfig-paths-webpack-plugin": "4.0.0",
-    "terser-webpack-plugin": "5.3.6"
+    "typescript": "4.8.4",
+    "webpack": "5.75.0",
+    "webpack-cli": "5.0.1"
   },
   "dependencies": {
     "@npmcli/promise-spawn": "6.0.2",
     "awilix": "8.0.0",
-    "npm-package-arg": "10.1.0",
+    "jsonc-parser": "3.2.0",
     "libnpmconfig": "1.2.1",
-    "pacote": "9.5.12",
     "minimatch": "5.1.2",
+    "npm-package-arg": "10.1.0",
+    "pacote": "9.5.12",
     "request-light": "0.5.5",
     "semver": "7.3.8",
+    "winston": "3.8.2",
     "xmldoc": "1.2.0",
-    "yaml": "1.10.2",
-    "jsonc-parser": "3.2.0",
-    "winston": "3.8.2"
+    "yaml": "1.10.2"
   },
   "contributes": {
     "commands": [

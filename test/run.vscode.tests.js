@@ -1,4 +1,4 @@
-const { runTests } = require('vscode-test');
+const { runTests } = require('@vscode/test-electron');
 const path = require('path');
 
 const extensionDevelopmentPath = path.resolve(__dirname, '..');
