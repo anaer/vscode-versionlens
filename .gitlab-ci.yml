@@ -1,21 +1,28 @@
-test_trigger:
+"Push to master trigger -> Run tests":
   stage: test
   trigger:
     strategy: depend
     include:
       - local: build/test/test.gitlab-ci.yml
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
-# publish_trigger:
-#   stage: deploy
-#   trigger:
-#     strategy: depend
-#     include:
-#       - local: build/publish/publish.gitlab-ci.yml
-#   rules:
-#     - if: $CI_COMMIT_TAG && $CI_COMMIT_TAG =~ /^\d+.\d+.\d+-.*/
-#     - when: never
-#     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+"Merge to master trigger -> Run tests":
+  stage: test
+  trigger:
+    strategy: depend
+    include:
+      - local: build/test/test.gitlab-ci.yml
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH
+
+publish_trigger:
+  stage: deploy
+  trigger:
+    strategy: depend
+    include:
+      - local: build/publish/publish.gitlab-ci.yml
+  rules:
+    - if: $CI_COMMIT_TAG && $CI_COMMIT_TAG =~ /^\d+.\d+.\d+-.*/
+    - when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
