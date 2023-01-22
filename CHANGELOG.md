@@ -1,3 +1,11 @@
+# 1.0.13
+
+- **npm** Fixed an issue where `.npmrc` was not taking variables from `.env` files
+
+  Reported in [issue #274](https://gitlab.com/versionlens/vscode-versionlens/-/issues/274)
+
+  Thanks to [npappas](https://gitlab.com/npappas)
+
 # 1.0.12
 
 - **Dotnet** Added GlobalPackageVersion to 'versionlens.dotnet.dependencyProperties' https://learn.microsoft.com/en-us/nuget/consume-packages/central-package-management#global-package-references
