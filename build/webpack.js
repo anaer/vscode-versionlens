@@ -88,20 +88,20 @@ module.exports = function (env, argv) {
   }
 
   function generateAliases() {
-    log("[debug] Generating aliases")
+    log("[info] Generating aliases")
 
     let aliases = {
       ...generateDynamicImportAliases(''),
       ...generateDynamicImportAliases('infrastructure/providers')
     }
 
-    log("[debug] Generated aliases", aliases)
+    // log("[debug] Generated aliases", aliases)
 
     return aliases;
   }
 
   function generateDynamicImportAliases(relativePath) {
-    log("[debug] Generating area aliases for " + relativePath)
+    // log("[debug] Generating area aliases for " + relativePath)
 
     const areaAliases = {}
     const areaPrefix = relativePath.length > 0 ?
