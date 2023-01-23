@@ -17,8 +17,6 @@
     "@smoke/private-pub": "0.1",
     "npm": ">=4.5.1",
     "invalid": ">=4.5.",
-    "gitpkgnotfound1": "git+https://git@github.com/testuser/test.git",
-    "gitpkgnotfound2": "git+ssh://git@some.com/testuser/test.git",
     "@could-not-be-found/a": "^1.0.0"
   },
   "customDependencies": {
