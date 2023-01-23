@@ -5,12 +5,12 @@ import {
   JsonHttpClient
 } from "domain/clients";
 import { ILogger } from "domain/logging";
-import { HttpClient } from "./httpClient";
+import { RequestLightClient } from "./requestLightClient";
 
 export function createHttpClient(
   options: HttpRequestOptions, logger: ILogger
 ): IHttpClient {
-  return new HttpClient(require('request-light').xhr, options, logger);
+  return new RequestLightClient(require('request-light').xhr, options, logger);
 }
 
 export function createJsonClient(

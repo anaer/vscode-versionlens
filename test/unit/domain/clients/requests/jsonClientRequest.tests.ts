@@ -11,8 +11,6 @@ import {
   IHttpClient,
 } from 'domain/clients'
 
-import { HttpClient } from 'infrastructure/clients';
-
 const { mock, instance, when, anything } = require('ts-mockito');
 
 let cachingOptsMock: ICachingOptions;
@@ -21,10 +19,12 @@ let httpClientMock: IHttpClient;
 
 export const JsonClientRequestTests = {
 
+  title: "JsonClientRequest",
+
   beforeEach: () => {
     cachingOptsMock = mock(CachingOptions);
     httpOptsMock = mock(HttpOptions);
-    httpClientMock = mock(HttpClient);
+    httpClientMock = mock();
 
     when(cachingOptsMock.duration).thenReturn(30000);
     when(httpOptsMock.strictSSL).thenReturn(true);

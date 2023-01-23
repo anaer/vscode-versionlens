@@ -8,13 +8,10 @@ import {
   HttpRequestOptions,
   UrlHelpers,
 } from 'domain/clients';
-
-import { IXhrResponse } from './definitions/iXhrResponse';
-
-
+import { IXhrResponse } from './iXhrResponse';
 import { XHRRequest } from 'request-light'
 
-export class HttpClient extends AbstractCachedRequest<number, string>
+export class RequestLightClient extends AbstractCachedRequest<number, string>
   implements IHttpClient {
 
   logger: ILogger;

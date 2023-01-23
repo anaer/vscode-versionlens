@@ -4,45 +4,43 @@ import {
   SuggestionFlags
 } from 'domain/suggestions';
 
-export default {
+export const CreateFromHttpStatusTests = {
 
-  "createFromHttpStatus": {
+  title: SuggestionFactory.createFromHttpStatus.name,
 
-    "returns suggestions from implemented http statuses": () => {
+  "returns suggestions from implemented http statuses": () => {
 
-      const tests = [
-        {
-          testStatus: 401,
-          expected: {
-            name: '401 not authorized',
-            version: '',
-            flags: SuggestionFlags.status
-          }
-        },
-        {
-          testStatus: 404,
-          expected: {
-            name: 'package not found',
-            version: '',
-            flags: SuggestionFlags.status
-          }
+    const tests = [
+      {
+        testStatus: 401,
+        expected: {
+          name: '401 not authorized',
+          version: '',
+          flags: SuggestionFlags.status
         }
-      ]
-
-      tests.forEach(
-        test => {
-          const actual = SuggestionFactory.createFromHttpStatus(test.testStatus)
-          assert.deepEqual(actual, test.expected)
+      },
+      {
+        testStatus: 404,
+        expected: {
+          name: 'package not found',
+          version: '',
+          flags: SuggestionFlags.status
         }
-      )
+      }
+    ]
 
-    },
-
-    "returns null when http status not implemented": () => {
-      const actual = SuggestionFactory.createFromHttpStatus(501)
-      assert.deepEqual(actual, null)
-    }
+    tests.forEach(
+      test => {
+        const actual = SuggestionFactory.createFromHttpStatus(test.testStatus)
+        assert.deepEqual(actual, test.expected)
+      }
+    )
 
   },
+
+  "returns null when http status not implemented": () => {
+    const actual = SuggestionFactory.createFromHttpStatus(501)
+    assert.deepEqual(actual, null)
+  }
 
 }

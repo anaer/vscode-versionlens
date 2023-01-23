@@ -3,7 +3,8 @@ import { AwilixContainer, asFunction } from 'awilix';
 import { CachingOptions, HttpOptions } from 'domain/clients';
 import { ISuggestionProvider } from 'domain/suggestions';
 
-import { createJsonClient, createProcessClient } from 'infrastructure/clients';
+import { createJsonClient } from 'infrastructure/http';
+import { createProcessClient } from 'infrastructure/process';
 
 import { IDotNetContainerMap } from './definitions/iDotNetContainerMap';
 import { DotNetContributions } from './definitions/eDotNetContributions';

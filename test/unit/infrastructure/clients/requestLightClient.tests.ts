@@ -1,22 +1,17 @@
 import assert from 'assert';
-
-import { LoggerStub } from 'test/unit/domain/logging'
-
-import { ILogger } from 'domain/logging';
-import { KeyStringDictionary } from 'domain/generics'
+import { LoggerStub } from 'test/unit/domain/logging';
 import {
+  CachingOptions,
   ClientResponseSource,
-  UrlHelpers,
   HttpClientRequestMethods,
+  HttpOptions,
   HttpRequestOptions,
   ICachingOptions,
-  IHttpOptions,
-  CachingOptions,
-  HttpOptions
-} from 'domain/clients'
-
-import { HttpClient } from 'infrastructure/clients'
-
+  IHttpOptions, UrlHelpers
+} from 'domain/clients';
+import { KeyStringDictionary } from 'domain/generics';
+import { ILogger } from 'domain/logging';
+import { RequestLightClient } from 'infrastructure/http';
 import { RequestLightStub } from './stubs/requestLightStub';
 
 const {
@@ -32,9 +27,11 @@ let httpOptsMock: IHttpOptions;
 let loggerMock: ILogger;
 let requestLightMock: RequestLightStub;
 
-let rut: HttpClient;
+let rut: RequestLightClient;
 
-export const HttpRequestTests = {
+export const RequestLightClientTests = {
+
+  title: "RequestLightHttpClient",
 
   beforeEach: () => {
     cachingOptsMock = mock(CachingOptions);
@@ -42,7 +39,7 @@ export const HttpRequestTests = {
     loggerMock = mock(LoggerStub);
     requestLightMock = mock(RequestLightStub);
 
-    rut = new HttpClient(
+    rut = new RequestLightClient(
       instance(requestLightMock).xhr,
       <HttpRequestOptions>{
         caching: instance(cachingOptsMock),
@@ -76,7 +73,7 @@ export const HttpRequestTests = {
         when(cachingOptsMock.duration).thenReturn(test.testDuration);
         when(httpOptsMock.strictSSL).thenReturn(test.testStrictSSL);
 
-        const rut = new HttpClient(
+        const rut = new RequestLightClient(
           instance(requestLightMock).xhr,
           <HttpRequestOptions>{
             caching: instance(cachingOptsMock),

@@ -22,7 +22,7 @@ import {
   NugetOptions
 } from 'infrastructure/providers/dotnet';
 
-import { ProcessClient } from 'infrastructure/clients';
+import { PromiseSpawnClient } from 'infrastructure/process';
 
 const { mock, instance, when, anything } = require('ts-mockito');
 
@@ -42,7 +42,7 @@ export const DotnetClientRequestTests = {
     nugetOptsMock = mock(NugetOptions);
     configMock = mock(DotNetConfig);
     loggerMock = mock(LoggerStub)
-    clientMock = mock(ProcessClient)
+    clientMock = mock(PromiseSpawnClient)
 
     when(configMock.caching).thenReturn(instance(cacheOptsMock))
     when(configMock.http).thenReturn(instance(httpOptsMock))

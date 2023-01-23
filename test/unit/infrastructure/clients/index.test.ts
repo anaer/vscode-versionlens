@@ -1,3 +1,2 @@
-export * from './httpClientRequest.tests';
-export * from './jsonClientRequest.tests';
-export * from './processClientRequest.tests';
+export * from './requestLightClient.tests';
+export * from './promiseSpawnClient.tests';

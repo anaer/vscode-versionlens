@@ -1,11 +1,12 @@
 import assert from 'assert';
-
 import { LoggerStub } from 'test/unit/domain/logging';
-
+import {
+  CachingOptions,
+  ClientResponseSource,
+  ICachingOptions
+} from 'domain/clients';
 import { ILogger } from 'domain/logging';
-import { ClientResponseSource, CachingOptions, ICachingOptions } from 'domain/clients'
-
-import { ProcessClient } from 'infrastructure/clients'
+import { PromiseSpawnClient } from 'infrastructure/process';
 import { ProcessSpawnStub } from './stubs/processSpawnStub';
 
 const { mock, instance, when, anything } = require('ts-mockito');
@@ -15,6 +16,8 @@ let cachingMock: ICachingOptions;
 let loggerMock: ILogger;
 
 export const ProcessClientRequestTests = {
+
+  title: "PromiseSpawnProcessClient",
 
   beforeEach: () => {
     cachingMock = mock(CachingOptions)
@@ -34,7 +37,7 @@ export const ProcessClientRequestTests = {
           message: "spawn missing ENOENT"
         })
 
-      const rut = new ProcessClient(
+      const rut = new PromiseSpawnClient(
         instance(psMock).promiseSpawn,
         instance(cachingMock),
         instance(loggerMock)
@@ -74,7 +77,7 @@ export const ProcessClientRequestTests = {
 
       when(cachingMock.duration).thenReturn(30000)
 
-      const rut = new ProcessClient(
+      const rut = new PromiseSpawnClient(
         instance(psMock).promiseSpawn,
         instance(cachingMock),
         instance(loggerMock)
@@ -115,7 +118,7 @@ export const ProcessClientRequestTests = {
 
       when(cachingMock.duration).thenReturn(0)
 
-      const rut = new ProcessClient(
+      const rut = new PromiseSpawnClient(
         instance(psMock).promiseSpawn,
         instance(cachingMock),
         instance(loggerMock)

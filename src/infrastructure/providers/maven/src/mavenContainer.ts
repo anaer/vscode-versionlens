@@ -3,7 +3,8 @@ import { AwilixContainer, asFunction } from 'awilix';
 import { CachingOptions, HttpOptions } from 'domain/clients';
 import { ISuggestionProvider } from 'domain/suggestions';
 
-import { createHttpClient, createProcessClient } from 'infrastructure/clients';
+import { createHttpClient } from 'infrastructure/http';
+import { createProcessClient } from 'infrastructure/process';
 
 import { MavenContributions } from './definitions/eMavenContributions';
 import { IMavenContainerMap } from './definitions/iMavenContainerMap';

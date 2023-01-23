@@ -5,7 +5,9 @@ import {
   SuggestionFlags
 } from 'domain/suggestions';
 
-export default {
+export const CreateSuggestionsTests = {
+
+  title: SuggestionFactory.createSuggestions.name,
 
   "returns PackageVersionStatus.nomatch": {
 

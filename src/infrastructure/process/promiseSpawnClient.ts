@@ -7,9 +7,9 @@ import {
 } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 
-import { IPromiseSpawnFn } from './definitions/iPromiseSpawn';
+import { IPromiseSpawnFn } from './iPromiseSpawn';
 
-export class ProcessClient extends AbstractCachedRequest<string, string>
+export class PromiseSpawnClient extends AbstractCachedRequest<string, string>
   implements IProcessClient {
 
   promiseSpawn: IPromiseSpawnFn;

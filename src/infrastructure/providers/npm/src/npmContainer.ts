@@ -3,7 +3,7 @@ import { AwilixContainer, asFunction } from 'awilix';
 import { CachingOptions, HttpOptions } from 'domain/clients';
 import { ISuggestionProvider } from 'domain/suggestions';
 
-import { createJsonClient } from 'infrastructure/clients';
+import { createJsonClient } from 'infrastructure/http';
 
 import { NpmContributions } from './definitions/eNpmContributions';
 import { INpmContainerMap } from './definitions/iNpmContainerMap';
