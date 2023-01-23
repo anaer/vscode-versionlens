@@ -1,6 +1,6 @@
 # see ./test.gitlab-ci.yml for cmdline example of how to run on local docker
 FROM node:latest
-ARG TARGET_PATH=/esm-test-parser
+ARG TARGET_PATH=/versionlens
 
 COPY / $TARGET_PATH
 

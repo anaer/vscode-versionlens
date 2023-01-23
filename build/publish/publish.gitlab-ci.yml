@@ -1,0 +1,20 @@
+image: docker:stable
+
+services:
+  - docker:dind
+
+workflow:
+  rules:
+    - when: always
+
+publish:
+  script:
+    - cp $VSCE_PAT_FILEPATH .env
+    - docker build -t versionlens:publish -f build/publish/publish.dockerfile .
+    - docker run --name versionlens-container --env-file ./.env versionlens:publish
+    - docker cp versionlens-container:/versionlens/artifacts/ .
+    - docker rm -f versionlens-container
+    - mv ./artifacts/*.vsix .
+  artifacts:
+    paths:
+      - ./*.vsix
