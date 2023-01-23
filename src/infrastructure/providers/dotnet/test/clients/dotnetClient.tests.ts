@@ -1,30 +1,23 @@
 import assert from 'assert';
-
-import Fixtures from './fixtures/dotnetSources'
-
-import { LoggerStub } from 'test/unit/domain/logging';
-
-import { ILogger } from 'domain/logging';
-
 import {
-  UrlHelpers,
-  ICachingOptions,
   CachingOptions,
-  IHttpOptions,
+  ClientResponseSource,
   HttpOptions,
-  IProcessClient
+  ICachingOptions,
+  IHttpOptions,
+  IProcessClient,
+  UrlHelpers
 } from 'domain/clients';
-
+import { ILogger } from 'domain/logging';
 import {
-  DotNetConfig,
   DotNetCli,
+  DotNetConfig,
   INugetOptions,
   NugetOptions
 } from 'infrastructure/providers/dotnet';
-
-import { PromiseSpawnClient } from 'infrastructure/process';
-
-const { mock, instance, when, anything } = require('ts-mockito');
+import { LoggerStub } from 'test/unit/domain/logging';
+import { anything, instance, mock, when } from 'ts-mockito';
+import Fixtures from './fixtures/dotnetSources';
 
 let cacheOptsMock: ICachingOptions;
 let httpOptsMock: IHttpOptions;
@@ -32,9 +25,12 @@ let nugetOptsMock: INugetOptions;
 let configMock: DotNetConfig;
 let loggerMock: ILogger;
 
+// client under test (cut)
 let clientMock: IProcessClient;
 
-export const DotnetClientRequestTests = {
+export const DotNetCliTests = {
+
+  title: DotNetCli.name,
 
   beforeEach: () => {
     cacheOptsMock = mock(CachingOptions);
@@ -42,7 +38,7 @@ export const DotnetClientRequestTests = {
     nugetOptsMock = mock(NugetOptions);
     configMock = mock(DotNetConfig);
     loggerMock = mock(LoggerStub)
-    clientMock = mock(PromiseSpawnClient)
+    clientMock = mock()
 
     when(configMock.caching).thenReturn(instance(cacheOptsMock))
     when(configMock.http).thenReturn(instance(httpOptsMock))
@@ -85,6 +81,8 @@ export const DotnetClientRequestTests = {
 
       when(clientMock.request(anything(), anything(), anything()))
         .thenResolve({
+          source: ClientResponseSource.local,
+          status: "200",
           data: Fixtures.enabledSources
         })
 
@@ -95,11 +93,11 @@ export const DotnetClientRequestTests = {
         instance(clientMock),
         instance(loggerMock)
       );
+
       return cut.fetchSources('.')
         .then(actualSources => {
           assert.deepEqual(actualSources, expected);
         });
-
     },
 
     "return 0 items when no sources are enabled": async () => {
@@ -110,6 +108,8 @@ export const DotnetClientRequestTests = {
         anything(),
         anything()
       )).thenResolve({
+        source: ClientResponseSource.local,
+        status: "200",
         data: Fixtures.disabledSource
       })
 
@@ -142,6 +142,8 @@ export const DotnetClientRequestTests = {
         anything(),
         anything()
       )).thenResolve({
+        source: ClientResponseSource.local,
+        status: "200",
         data: Fixtures.enabledAndDisabledSources
       })
 
@@ -166,9 +168,7 @@ export const DotnetClientRequestTests = {
         anything(),
         anything(),
         anything()
-      )).thenReject({
-        data: Fixtures.invalidSources
-      })
+      )).thenReject()
 
       when(configMock.fallbackNugetSource).thenReturn(expectedFallbackNugetSource)
 

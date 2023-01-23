@@ -1,26 +1,22 @@
 import assert from 'assert';
-
-import { LoggerStub } from 'test/unit/domain/logging'
-
-import { ILogger } from 'domain/logging';
-
 import {
-  UrlHelpers,
+  ClientResponseSource,
+  HttpClientRequestMethods,
   IJsonHttpClient,
-  JsonHttpClient,
-  HttpClientRequestMethods
+  JsonHttpClient, UrlHelpers
 } from 'domain/clients';
-
+import { ILogger } from 'domain/logging';
 import { NuGetResourceClient } from 'infrastructure/providers/dotnet';
-
-import Fixtures from './fixtures/nugetResources'
-
-const { mock, instance, when, anything, capture } = require('ts-mockito');
+import { LoggerStub } from 'test/unit/domain/logging';
+import { anything, capture, instance, mock, when } from 'ts-mockito';
+import Fixtures from './fixtures/nugetResources';
 
 let jsonClientMock: IJsonHttpClient;
 let loggerMock: ILogger;
 
 export const NuGetResourceClientTests = {
+
+  title: NuGetResourceClient.name,
 
   beforeEach: () => {
     jsonClientMock = mock(JsonHttpClient);
@@ -38,6 +34,7 @@ export const NuGetResourceClientTests = {
       };
 
       const mockResponse = {
+        source: ClientResponseSource.remote,
         status: 200,
         data: Fixtures.success,
       };
@@ -81,7 +78,7 @@ export const NuGetResourceClientTests = {
       const expectedUrl = "";
 
       when(jsonClientMock.request(anything(), anything(), anything(), anything()))
-        .thenReject(errorResponse)
+        .thenReject(<any>errorResponse)
 
       const cut = new NuGetResourceClient(
         instance(jsonClientMock),
