@@ -13,11 +13,10 @@ import npa from 'npm-package-arg';
 import path from 'path';
 import { LoggerStub } from 'test/unit/domain/logging';
 import { sourcePath } from 'test/unit/utils';
+import { anything, capture, instance, mock, when } from 'ts-mockito';
 import Fixtures from './pacoteClient.fixtures';
 import { NpmCliConfigStub } from './stubs/npmCliConfigStub';
 import { PacoteStub } from './stubs/pacoteStub';
-
-const { mock, instance, when, anything, capture } = require('ts-mockito');
 
 let cachingOptsMock: ICachingOptions;
 let githubOptsMock: GitHubOptions;

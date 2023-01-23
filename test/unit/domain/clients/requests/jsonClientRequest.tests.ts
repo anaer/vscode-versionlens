@@ -1,5 +1,4 @@
 import assert from 'assert';
-
 import {
   ClientResponseSource,
   HttpClientRequestMethods,
@@ -10,8 +9,7 @@ import {
   ICachingOptions,
   IHttpClient,
 } from 'domain/clients'
-
-const { mock, instance, when, anything } = require('ts-mockito');
+import { mock, instance, when, anything } from 'ts-mockito';
 
 let cachingOptsMock: ICachingOptions;
 let httpOptsMock: IHttpOptions;

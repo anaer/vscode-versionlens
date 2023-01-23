@@ -1,5 +1,4 @@
 import assert from 'assert';
-import { LoggerStub } from 'test/unit/domain/logging';
 import {
   CachingOptions,
   ClientResponseSource,
@@ -7,20 +6,21 @@ import {
   HttpOptions,
   HttpRequestOptions,
   ICachingOptions,
-  IHttpOptions, UrlHelpers
+  IHttpOptions,
+  UrlHelpers
 } from 'domain/clients';
 import { KeyStringDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import { RequestLightClient } from 'infrastructure/http';
-import { RequestLightStub } from './stubs/requestLightStub';
-
-const {
-  mock,
-  instance,
-  when,
+import { LoggerStub } from 'test/unit/domain/logging';
+import {
+  anything,
   capture,
-  anything
-} = require('ts-mockito');
+  instance,
+  mock,
+  when
+} from 'ts-mockito';
+import { RequestLightStub } from './stubs/requestLightStub';
 
 let cachingOptsMock: ICachingOptions;
 let httpOptsMock: IHttpOptions;
@@ -40,7 +40,7 @@ export const RequestLightClientTests = {
     requestLightMock = mock(RequestLightStub);
 
     rut = new RequestLightClient(
-      instance(requestLightMock).xhr,
+      <any>instance(requestLightMock).xhr,
       <HttpRequestOptions>{
         caching: instance(cachingOptsMock),
         http: instance(httpOptsMock)
@@ -62,7 +62,7 @@ export const RequestLightClientTests = {
       ];
 
       when(requestLightMock.xhr(anything()))
-        .thenResolve({
+        .thenResolve(<any>{
           responseText: '{}',
           status: 200
         })
@@ -74,7 +74,7 @@ export const RequestLightClientTests = {
         when(httpOptsMock.strictSSL).thenReturn(test.testStrictSSL);
 
         const rut = new RequestLightClient(
-          instance(requestLightMock).xhr,
+          <any>instance(requestLightMock).xhr,
           <HttpRequestOptions>{
             caching: instance(cachingOptsMock),
             http: instance(httpOptsMock)
@@ -103,7 +103,7 @@ export const RequestLightClientTests = {
       ]
 
       when(requestLightMock.xhr(anything()))
-        .thenResolve({
+        .thenResolve(<any>{
           status: 200,
           responseText: null
         })
@@ -146,7 +146,7 @@ export const RequestLightClientTests = {
         rejected: false
       }
 
-      when(requestLightMock.xhr(anything())).thenResolve(testResponse)
+      when(requestLightMock.xhr(anything())).thenResolve(<any>testResponse)
 
       await rut.request(
         HttpClientRequestMethods.get,
@@ -174,7 +174,7 @@ export const RequestLightClientTests = {
         rejected: true,
       }
 
-      when(requestLightMock.xhr(anything())).thenResolve(testResponse)
+      when(requestLightMock.xhr(anything())).thenResolve(<any>testResponse)
 
       // first request
       await rut.request(
@@ -204,7 +204,7 @@ export const RequestLightClientTests = {
       const expectedCacheData = undefined;
 
       when(requestLightMock.xhr(anything()))
-        .thenResolve({
+        .thenResolve(<any>{
           status: 200,
           responseText: JSON.stringify({ "message": "cached test" })
         });
@@ -219,6 +219,7 @@ export const RequestLightClientTests = {
       ).then(response => {
         const cachedData = rut.cache.get('GET_' + testUrl);
         assert.equal(cachedData, expectedCacheData);
+        assert.equal(response.status, 200);
       })
     },
 

@@ -1,8 +1,7 @@
 import assert from 'assert';
-import { VsCodeConfig, IVsCodeWorkspace } from 'domain/configuration'
+import { IVsCodeWorkspace, VsCodeConfig } from 'domain/configuration';
+import { instance, mock, when } from 'ts-mockito';
 import { VsCodeWorkspaceStub } from './stubs/vsCodeWorkspaceStub';
-
-const { mock, instance, when } = require('ts-mockito');
 
 let workspaceMock: IVsCodeWorkspace;
 
@@ -23,7 +22,7 @@ export const VsCodeFrozenConfigTests = {
 
       when(workspaceMock.getConfiguration(testSection))
         .thenReturn({
-          get: section => expectedFrozenValue
+          get: section => <any>expectedFrozenValue
         })
 
       // get hot value
@@ -32,7 +31,7 @@ export const VsCodeFrozenConfigTests = {
       assert.equal(first, expectedFrozenValue)
 
       // change value
-      when(workspaceMock.getConfiguration(testSection)).thenReturn('hot value')
+      when(workspaceMock.getConfiguration(testSection)).thenReturn(<any>'hot value')
 
       // should still return frozen value
       const actualFrozen = cut.get(testKey);
@@ -47,7 +46,7 @@ export const VsCodeFrozenConfigTests = {
 
       when(workspaceMock.getConfiguration(testSection))
         .thenReturn({
-          get: section => initialValue
+          get: section => <any>initialValue
         })
 
       // get hot value
@@ -59,7 +58,7 @@ export const VsCodeFrozenConfigTests = {
       const expectedHotValue = 'hot value';
       when(workspaceMock.getConfiguration(testSection))
         .thenReturn({
-          get: section => expectedHotValue
+          get: section => <any>expectedHotValue
         })
 
       // should return hot value

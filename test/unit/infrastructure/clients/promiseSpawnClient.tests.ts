@@ -1,5 +1,4 @@
 import assert from 'assert';
-import { LoggerStub } from 'test/unit/domain/logging';
 import {
   CachingOptions,
   ClientResponseSource,
@@ -7,9 +6,9 @@ import {
 } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import { PromiseSpawnClient } from 'infrastructure/process';
+import { LoggerStub } from 'test/unit/domain/logging';
+import { anything, instance, mock, when } from 'ts-mockito';
 import { ProcessSpawnStub } from './stubs/processSpawnStub';
-
-const { mock, instance, when, anything } = require('ts-mockito');
 
 let psMock: ProcessSpawnStub;
 let cachingMock: ICachingOptions;
@@ -32,7 +31,7 @@ export const ProcessClientRequestTests = {
       when(cachingMock.duration).thenReturn(30000)
 
       when(psMock.promiseSpawn(anything(), anything(), anything()))
-        .thenReject({
+        .thenReject(<any>{
           code: "ENOENT",
           message: "spawn missing ENOENT"
         })
@@ -70,7 +69,7 @@ export const ProcessClientRequestTests = {
       }
 
       when(psMock.promiseSpawn(anything(), anything(), anything()))
-        .thenResolve({
+        .thenResolve(<any>{
           code: 0,
           stdout: testResponse.data
         })
@@ -111,7 +110,7 @@ export const ProcessClientRequestTests = {
       }
 
       when(psMock.promiseSpawn(anything(), anything(), anything()))
-        .thenResolve({
+        .thenResolve(<any>{
           code: 0,
           stdout: testResponse.data
         })
