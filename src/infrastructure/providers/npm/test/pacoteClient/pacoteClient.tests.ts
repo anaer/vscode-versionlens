@@ -1,28 +1,23 @@
 import assert from 'assert';
-import npa from 'npm-package-arg';
-
-import { LoggerStub } from 'test/unit/domain/logging';
-
+import { CachingOptions, ICachingOptions } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import { SuggestionFlags } from 'domain/suggestions';
-
+import fs from 'fs';
 import {
-  ICachingOptions,
-  CachingOptions
-} from 'domain/clients';
-
-import {
-  NpmConfig,
-  PacoteClient,
   GitHubOptions,
-  IPacote
-} from 'infrastructure/providers/npm'
+  IPacote,
+  NpmConfig,
+  PacoteClient
+} from 'infrastructure/providers/npm';
+import npa from 'npm-package-arg';
+import path from 'path';
+import { LoggerStub } from 'test/unit/domain/logging';
+import { sourcePath } from 'test/unit/utils';
+import Fixtures from './pacoteClient.fixtures';
+import { NpmCliConfigStub } from './stubs/npmCliConfigStub';
+import { PacoteStub } from './stubs/pacoteStub';
 
-import Fixtures from './pacoteClient.fixtures'
-import { PacoteStub } from '../stubs/pacoteStub';
-import { NpmCliConfigStub } from '../stubs/npmCliConfigStub';
-
-const { mock, instance, when, anything } = require('ts-mockito');
+const { mock, instance, when, anything, capture } = require('ts-mockito');
 
 let cachingOptsMock: ICachingOptions;
 let githubOptsMock: GitHubOptions;
@@ -30,7 +25,9 @@ let loggerMock: ILogger;
 let configMock: NpmConfig;
 let pacoteMock: IPacote;
 
-export default {
+export const fetchPackageTests = {
+
+  title: PacoteClient.prototype.fetchPackage.name,
 
   beforeEach: () => {
     githubOptsMock = mock(GitHubOptions);
@@ -43,164 +40,217 @@ export default {
     when(configMock.github).thenReturn(instance(githubOptsMock))
   },
 
-  'fetchPackage': {
+  'returns a registry range package': async () => {
 
-    'returns a registry range package': async () => {
-
-      const testRequest: any = {
-        clientData: {
-          providerName: 'testnpmprovider',
-        },
-        package: {
-          path: 'packagepath',
-          name: 'pacote',
-          version: '10.1.*',
-        }
+    const testRequest: any = {
+      clientData: {
+        providerName: 'testnpmprovider',
+      },
+      package: {
+        path: 'packagepath',
+        name: 'pacote',
+        version: '10.1.*',
       }
+    }
 
-      const npaSpec = npa.resolve(
-        testRequest.package.name,
-        testRequest.package.version,
-        testRequest.package.path
-      );
+    const npaSpec = npa.resolve(
+      testRequest.package.name,
+      testRequest.package.version,
+      testRequest.package.path
+    );
 
-      when(pacoteMock.packument(anything(), anything()))
-        .thenResolve(Fixtures.packumentRegistryRange)
+    when(pacoteMock.packument(anything(), anything()))
+      .thenResolve(Fixtures.packumentRegistryRange)
 
-      const cut = new PacoteClient(
-        instance(configMock),
-        instance(loggerMock)
-      )
+    const cut = new PacoteClient(
+      instance(configMock),
+      instance(loggerMock)
+    )
 
-      cut.pacote = instance(pacoteMock)
-      cut.NpmCliConfig = NpmCliConfigStub
+    cut.pacote = instance(pacoteMock)
+    cut.NpmCliConfig = NpmCliConfigStub
 
-      return cut.fetchPackage(testRequest, npaSpec)
-        .then((actual) => {
-          assert.equal(actual.source, 'registry')
-          assert.equal(actual.type, 'range')
-          assert.equal(actual.resolved.name, testRequest.package.name)
-          assert.deepEqual(actual.requested, testRequest.package)
-        })
-    },
+    return cut.fetchPackage(testRequest, npaSpec)
+      .then((actual) => {
+        assert.equal(actual.source, 'registry')
+        assert.equal(actual.type, 'range')
+        assert.equal(actual.resolved.name, testRequest.package.name)
+        assert.deepEqual(actual.requested, testRequest.package)
+      })
+  },
 
-    'returns a registry version package': async () => {
+  'returns a registry version package': async () => {
 
-      const testRequest: any = {
-        clientData: {
-          providerName: 'testnpmprovider',
-        },
-        package: {
-          path: 'packagepath',
-          name: 'npm-package-arg',
-          version: '8.0.1',
-        }
+    const testRequest: any = {
+      clientData: {
+        providerName: 'testnpmprovider',
+      },
+      package: {
+        path: 'packagepath',
+        name: 'npm-package-arg',
+        version: '8.0.1',
       }
+    }
 
-      const npaSpec = npa.resolve(
-        testRequest.package.name,
-        testRequest.package.version,
-        testRequest.package.path
-      );
+    const npaSpec = npa.resolve(
+      testRequest.package.name,
+      testRequest.package.version,
+      testRequest.package.path
+    );
 
-      when(pacoteMock.packument(anything(), anything()))
-        .thenResolve(Fixtures.packumentRegistryVersion)
+    when(pacoteMock.packument(anything(), anything()))
+      .thenResolve(Fixtures.packumentRegistryVersion)
 
-      const cut = new PacoteClient(
-        instance(configMock),
-        instance(loggerMock)
-      )
+    const cut = new PacoteClient(
+      instance(configMock),
+      instance(loggerMock)
+    )
 
-      cut.pacote = instance(pacoteMock)
-      cut.NpmCliConfig = NpmCliConfigStub
+    cut.pacote = instance(pacoteMock)
+    cut.NpmCliConfig = NpmCliConfigStub
 
-      return cut.fetchPackage(testRequest, npaSpec)
-        .then((actual) => {
-          assert.equal(actual.source, 'registry')
-          assert.equal(actual.type, 'version')
-          assert.equal(actual.resolved.name, testRequest.package.name)
-        })
-    },
+    return cut.fetchPackage(testRequest, npaSpec)
+      .then((actual) => {
+        assert.equal(actual.source, 'registry')
+        assert.equal(actual.type, 'version')
+        assert.equal(actual.resolved.name, testRequest.package.name)
+      })
+  },
 
-    'returns capped latest versions': async () => {
+  'returns capped latest versions': async () => {
 
-      const testRequest: any = {
-        clientData: {
-          providerName: 'testnpmprovider',
-        },
-        package: {
-          path: 'packagepath',
-          name: 'npm-package-arg',
-          version: '7.0.0',
-        }
+    const testRequest: any = {
+      clientData: {
+        providerName: 'testnpmprovider',
+      },
+      package: {
+        path: 'packagepath',
+        name: 'npm-package-arg',
+        version: '7.0.0',
       }
+    }
 
-      const npaSpec = npa.resolve(
-        testRequest.package.name,
-        testRequest.package.version,
-        testRequest.package.path
-      );
+    const npaSpec = npa.resolve(
+      testRequest.package.name,
+      testRequest.package.version,
+      testRequest.package.path
+    );
 
-      when(pacoteMock.packument(anything(), anything()))
-        .thenResolve(Fixtures.packumentCappedToLatestTaggedVersion)
+    when(pacoteMock.packument(anything(), anything()))
+      .thenResolve(Fixtures.packumentCappedToLatestTaggedVersion)
 
-      const cut = new PacoteClient(
-        instance(configMock),
-        instance(loggerMock)
-      )
+    const cut = new PacoteClient(
+      instance(configMock),
+      instance(loggerMock)
+    )
 
-      cut.pacote = instance(pacoteMock)
-      cut.NpmCliConfig = NpmCliConfigStub
+    cut.pacote = instance(pacoteMock)
+    cut.NpmCliConfig = NpmCliConfigStub
 
-      return cut.fetchPackage(testRequest, npaSpec)
-        .then((actual) => {
-          assert.deepEqual(actual.suggestions, [{
-            name: 'latest',
-            version: '',
-            flags: SuggestionFlags.status
-          }])
-        })
-    },
+    return cut.fetchPackage(testRequest, npaSpec)
+      .then((actual) => {
+        assert.deepEqual(actual.suggestions, [{
+          name: 'latest',
+          version: '',
+          flags: SuggestionFlags.status
+        }])
+      })
+  },
 
-    'returns a registry alias package': async () => {
-      const testRequest: any = {
-        clientData: {
-          providerName: 'testnpmprovider',
-        },
-        package: {
-          path: 'packagepath',
-          name: 'aliased',
-          version: 'npm:pacote@11.1.9',
-        }
+  'returns a registry alias package': async () => {
+    const testRequest: any = {
+      clientData: {
+        providerName: 'testnpmprovider',
+      },
+      package: {
+        path: 'packagepath',
+        name: 'aliased',
+        version: 'npm:pacote@11.1.9',
       }
+    }
 
-      const npaSpec = npa.resolve(
-        testRequest.package.name,
-        testRequest.package.version,
-        testRequest.package.path
-      );
+    const npaSpec = npa.resolve(
+      testRequest.package.name,
+      testRequest.package.version,
+      testRequest.package.path
+    );
 
-      when(pacoteMock.packument(anything(), anything()))
-        .thenResolve(Fixtures.packumentRegistryAlias)
+    when(pacoteMock.packument(anything(), anything()))
+      .thenResolve(Fixtures.packumentRegistryAlias)
 
-      const cut = new PacoteClient(
-        instance(configMock),
-        instance(loggerMock)
-      )
+    const cut = new PacoteClient(
+      instance(configMock),
+      instance(loggerMock)
+    )
 
-      cut.pacote = instance(pacoteMock)
-      cut.NpmCliConfig = NpmCliConfigStub
+    cut.pacote = instance(pacoteMock)
+    cut.NpmCliConfig = NpmCliConfigStub
 
-      return cut.fetchPackage(testRequest, npaSpec)
-        .then((actual) => {
-          assert.equal(actual.source, 'registry')
-          assert.equal(actual.type, 'alias')
-          assert.equal(actual.requested.name, testRequest.package.name)
-          assert.equal(actual.resolved.name, 'pacote')
-          assert.deepEqual(actual.requested, testRequest.package)
-        })
-    },
+    return cut.fetchPackage(testRequest, npaSpec)
+      .then((actual) => {
+        assert.equal(actual.source, 'registry')
+        assert.equal(actual.type, 'alias')
+        assert.equal(actual.requested.name, testRequest.package.name)
+        assert.equal(actual.resolved.name, 'pacote')
+        assert.deepEqual(actual.requested, testRequest.package)
+      })
+  },
 
-  }
+  'uses npmrc registry': async () => {
+    const packagePath = path.join(
+      sourcePath,
+      'infrastructure/providers/npm/test/pacoteClient/npmrc-test'
+    );
+
+    const testRequest: any = {
+      clientData: {
+        providerName: 'testnpmprovider',
+      },
+      source: 'npmtest',
+      package: {
+        path: packagePath,
+        name: 'aliased',
+        version: 'npm:pacote@11.1.9',
+      },
+    }
+
+    // write the npmrc file
+    const npmrcPath = packagePath + '/.npmrc';
+    fs.writeFileSync(npmrcPath, Fixtures[".npmrc"])
+    fs.writeFileSync(`${packagePath}/.env`, Fixtures[".npmrc-env"])
+    assert.ok(fs.existsSync(testRequest.package.path), 'test .npmrc doesnt exist?')
+
+    when(pacoteMock.packument(anything(), anything()))
+      .thenResolve(Fixtures.packumentGit)
+
+    const cut = new PacoteClient(
+      instance(configMock),
+      instance(loggerMock)
+    )
+
+    cut.pacote = instance(pacoteMock)
+    cut.NpmCliConfig = require("@npmcli/config")
+
+    const npaSpec = npa.resolve(
+      testRequest.package.name,
+      testRequest.package.version,
+      testRequest.package.path
+    )
+
+    return cut.fetchPackage(testRequest, npaSpec)
+      .then(_ => {
+
+        const [, actualOpts] = capture(pacoteMock.packument).first()
+        assert.equal(actualOpts.cwd, testRequest.package.path)
+        assert.equal(process.env.NPM_AUTH, "12345678")
+        assert.equal(
+          actualOpts['//registry.npmjs.example/:_authToken'],
+          '12345678'
+        )
+
+        // delete the npmrc file
+        fs.unlinkSync(npmrcPath)
+      })
+  },
 
 }

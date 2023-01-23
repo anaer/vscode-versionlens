@@ -1,30 +1,28 @@
 import assert from 'assert';
-import npa from 'npm-package-arg';
-import { LoggerStub } from 'test/unit/domain/logging/index.test';
-import { SuggestionFlags } from 'domain/suggestions';
-
-import {
-  NpmConfig,
-  GitHubOptions,
-  GitHubClient
-} from 'infrastructure/providers/npm'
-
 import {
   ClientResponseSource,
-  JsonHttpClient,
-  IJsonHttpClient
+  IJsonHttpClient,
+  JsonHttpClient
 } from 'domain/clients';
-
-import { githubFixtures } from './fetchGitHub.fixtures'
-
-const { mock, instance, when, anything, capture } = require('ts-mockito');
+import { SuggestionFlags } from 'domain/suggestions';
+import {
+  GitHubClient,
+  GitHubOptions,
+  NpmConfig
+} from 'infrastructure/providers/npm';
+import npa from 'npm-package-arg';
+import { LoggerStub } from 'test/unit/domain/logging/index.test';
+import { anything, capture, instance, mock, when } from 'ts-mockito';
+import { githubFixtures } from './fetchGitHub.fixtures';
 
 let githubOptsMock: GitHubOptions;
 let configMock: NpmConfig;
 let loggerMock: LoggerStub;
 let jsonClientMock: IJsonHttpClient;
 
-export default {
+export const fetchGithubTests = {
+
+  title: GitHubClient.prototype.fetchGithub.name,
 
   beforeEach: () => {
     githubOptsMock = mock(GitHubOptions);
@@ -35,223 +33,219 @@ export default {
     when(configMock.github).thenReturn(instance(githubOptsMock))
   },
 
-  'fetchTags': {
+  'returns a #semver:x.x.x. package': async () => {
+    const testRequest: any = {
+      providerName: 'testnpmprovider',
+      package: {
+        path: 'packagepath',
+        name: 'core.js',
+        version: 'github:octokit/core.js#semver:^2',
+      }
+    };
 
-    'returns a #semver:x.x.x. package': async () => {
-      const testRequest: any = {
-        providerName: 'testnpmprovider',
-        package: {
-          path: 'packagepath',
-          name: 'core.js',
-          version: 'github:octokit/core.js#semver:^2',
-        }
-      };
+    const testSpec = npa.resolve(
+      testRequest.package.name,
+      testRequest.package.version,
+      testRequest.package.path
+    );
 
-      const testSpec = npa.resolve(
-        testRequest.package.name,
-        testRequest.package.version,
-        testRequest.package.path
-      );
+    when(jsonClientMock.request(anything(), anything(), anything(), anything()))
+      .thenResolve({
+        status: 200,
+        data: githubFixtures.tags,
+        source: ClientResponseSource.remote
+      })
 
-      when(jsonClientMock.request(anything(), anything(), anything(), anything()))
-        .thenResolve({
-          status: 200,
-          data: githubFixtures.tags,
-          source: ClientResponseSource.remote
-        })
+    // setup initial call
+    const cut = new GitHubClient(
+      instance(configMock),
+      instance(jsonClientMock),
+      instance(loggerMock)
+    );
 
-      // setup initial call
-      const cut = new GitHubClient(
-        instance(configMock),
-        instance(jsonClientMock),
-        instance(loggerMock)
-      );
+    return cut.fetchGithub(testRequest, <any>testSpec)
+      .then((actual) => {
+        assert.equal(actual.source, 'github')
+        assert.equal(actual.type, 'range')
+        assert.equal(actual.resolved.name, testRequest.package.name)
+        assert.deepEqual(actual.requested, testRequest.package)
 
-      return cut.fetchGithub(testRequest, <any>testSpec)
-        .then((actual) => {
-          assert.equal(actual.source, 'github')
-          assert.equal(actual.type, 'range')
-          assert.equal(actual.resolved.name, testRequest.package.name)
-          assert.deepEqual(actual.requested, testRequest.package)
+        assert.deepEqual(
+          actual.suggestions,
+          [{
+            name: 'satisfies',
+            version: 'latest',
+            flags: SuggestionFlags.status
+          }, {
+            name: 'latest',
+            version: 'v2.5.0',
+            flags: SuggestionFlags.release
+          }, {
+            name: 'rc',
+            version: 'v2.6.0-rc.1',
+            flags: SuggestionFlags.prerelease
+          }, {
+            name: 'preview',
+            version: 'v2.5.0-preview.1',
+            flags: SuggestionFlags.prerelease
+          }]
+        )
+      })
+  },
 
-          assert.deepEqual(
-            actual.suggestions,
-            [{
-              name: 'satisfies',
-              version: 'latest',
-              flags: SuggestionFlags.status
-            }, {
-              name: 'latest',
-              version: 'v2.5.0',
-              flags: SuggestionFlags.release
-            }, {
-              name: 'rc',
-              version: 'v2.6.0-rc.1',
-              flags: SuggestionFlags.prerelease
-            }, {
-              name: 'preview',
-              version: 'v2.5.0-preview.1',
-              flags: SuggestionFlags.prerelease
-            }]
-          )
-        })
-    },
+  'returns a #x.x.x': async () => {
 
-    'returns a #x.x.x': async () => {
+    const testRequest: any = {
+      providerName: 'testnpmprovider',
+      package: {
+        path: 'packagepath',
+        name: 'core.js',
+        version: 'github:octokit/core.js#v2.0.0',
+      }
+    };
 
-      const testRequest: any = {
-        providerName: 'testnpmprovider',
-        package: {
-          path: 'packagepath',
-          name: 'core.js',
-          version: 'github:octokit/core.js#v2.0.0',
-        }
-      };
+    const testSpec = npa.resolve(
+      testRequest.package.name,
+      testRequest.package.version,
+      testRequest.package.path
+    );
 
-      const testSpec = npa.resolve(
-        testRequest.package.name,
-        testRequest.package.version,
-        testRequest.package.path
-      );
+    when(jsonClientMock.request(anything(), anything(), anything(), anything()))
+      .thenResolve({
+        status: 200,
+        data: githubFixtures.tags,
+        source: ClientResponseSource.remote
+      })
 
-      when(jsonClientMock.request(anything(), anything(), anything(), anything()))
-        .thenResolve({
-          status: 200,
-          data: githubFixtures.tags,
-          source: ClientResponseSource.remote
-        })
+    // setup initial call
+    const cut = new GitHubClient(
+      instance(configMock),
+      instance(jsonClientMock),
+      instance(loggerMock)
+    );
 
-      // setup initial call
-      const cut = new GitHubClient(
-        instance(configMock),
-        instance(jsonClientMock),
-        instance(loggerMock)
-      );
+    return cut.fetchGithub(testRequest, testSpec)
+      .then((actual) => {
+        assert.equal(actual.source, 'github')
+        assert.equal(actual.type, 'range')
+        assert.equal(actual.providerName, testRequest.providerName)
+        assert.equal(actual.resolved.name, testRequest.package.name)
+        assert.deepEqual(actual.requested, testRequest.package)
 
-      return cut.fetchGithub(testRequest, testSpec)
-        .then((actual) => {
-          assert.equal(actual.source, 'github')
-          assert.equal(actual.type, 'range')
-          assert.equal(actual.providerName, testRequest.providerName)
-          assert.equal(actual.resolved.name, testRequest.package.name)
-          assert.deepEqual(actual.requested, testRequest.package)
+        assert.deepEqual(
+          actual.suggestions,
+          [{
+            name: 'fixed',
+            version: 'v2.0.0',
+            flags: SuggestionFlags.status
+          }, {
+            name: 'latest',
+            version: 'v2.5.0',
+            flags: SuggestionFlags.release
+          }, {
+            name: 'rc',
+            version: 'v2.6.0-rc.1',
+            flags: SuggestionFlags.prerelease
+          }, {
+            name: 'preview',
+            version: 'v2.5.0-preview.1',
+            flags: SuggestionFlags.prerelease
+          }]
+        )
+      })
+  },
 
-          assert.deepEqual(
-            actual.suggestions,
-            [{
-              name: 'fixed',
-              version: 'v2.0.0',
-              flags: SuggestionFlags.status
-            }, {
-              name: 'latest',
-              version: 'v2.5.0',
-              flags: SuggestionFlags.release
-            }, {
-              name: 'rc',
-              version: 'v2.6.0-rc.1',
-              flags: SuggestionFlags.prerelease
-            }, {
-              name: 'preview',
-              version: 'v2.5.0-preview.1',
-              flags: SuggestionFlags.prerelease
-            }]
-          )
-        })
-    },
+  'returns a #sha commit': async () => {
 
-    'returns a #sha commit': async () => {
+    const testRequest: any = {
+      providerName: 'testnpmprovider',
+      package: {
+        path: 'packagepath',
+        name: 'core.js',
+        version: 'github:octokit/core.js#166c3497',
+      }
+    };
 
-      const testRequest: any = {
-        providerName: 'testnpmprovider',
-        package: {
-          path: 'packagepath',
-          name: 'core.js',
-          version: 'github:octokit/core.js#166c3497',
-        }
-      };
+    const testSpec = npa.resolve(
+      testRequest.package.name,
+      testRequest.package.version,
+      testRequest.package.path
+    );
 
-      const testSpec = npa.resolve(
-        testRequest.package.name,
-        testRequest.package.version,
-        testRequest.package.path
-      );
+    when(jsonClientMock.request(anything(), anything(), anything(), anything()))
+      .thenResolve({
+        status: 200,
+        data: githubFixtures.commits,
+        source: ClientResponseSource.remote
+      })
 
-      when(jsonClientMock.request(anything(), anything(), anything(), anything()))
-        .thenResolve({
-          status: 200,
-          data: githubFixtures.commits,
-          source: ClientResponseSource.remote
-        })
+    const cut = new GitHubClient(
+      instance(configMock),
+      instance(jsonClientMock),
+      instance(loggerMock)
+    );
 
-      const cut = new GitHubClient(
-        instance(configMock),
-        instance(jsonClientMock),
-        instance(loggerMock)
-      );
+    return cut.fetchGithub(testRequest, testSpec)
+      .then((actual) => {
+        assert.equal(actual.source, 'github')
+        assert.equal(actual.type, 'committish')
+        assert.equal(actual.providerName, testRequest.providerName)
+        assert.equal(actual.resolved.name, testRequest.package.name)
+        assert.deepEqual(actual.requested, testRequest.package)
 
-      return cut.fetchGithub(testRequest, testSpec)
-        .then((actual) => {
-          assert.equal(actual.source, 'github')
-          assert.equal(actual.type, 'committish')
-          assert.equal(actual.providerName, testRequest.providerName)
-          assert.equal(actual.resolved.name, testRequest.package.name)
-          assert.deepEqual(actual.requested, testRequest.package)
+        assert.deepEqual(
+          actual.suggestions,
+          [{
+            name: 'fixed',
+            version: '166c3497',
+            flags: SuggestionFlags.status
+          }, {
+            name: 'latest',
+            version: 'df4d9435',
+            flags: SuggestionFlags.release
+          }]
+        )
+      })
+  },
 
-          assert.deepEqual(
-            actual.suggestions,
-            [{
-              name: 'fixed',
-              version: '166c3497',
-              flags: SuggestionFlags.status
-            }, {
-              name: 'latest',
-              version: 'df4d9435',
-              flags: SuggestionFlags.release
-            }]
-          )
-        })
-    },
+  'sets auth token in headers': async () => {
 
-    'sets auth token in headers': async () => {
+    const testRequest: any = {
+      providerName: 'testnpmprovider',
+      package: {
+        path: 'packagepath',
+        name: 'core.js',
+        version: 'github:octokit/core.js#166c3497',
+      }
+    };
 
-      const testRequest: any = {
-        providerName: 'testnpmprovider',
-        package: {
-          path: 'packagepath',
-          name: 'core.js',
-          version: 'github:octokit/core.js#166c3497',
-        }
-      };
+    const testSpec = npa.resolve(
+      testRequest.package.name,
+      testRequest.package.version,
+      testRequest.package.path
+    );
 
-      const testSpec = npa.resolve(
-        testRequest.package.name,
-        testRequest.package.version,
-        testRequest.package.path
-      );
+    const testToken = 'testToken';
 
-      const testToken = 'testToken';
+    when(jsonClientMock.request(anything(), anything(), anything(), anything()))
+      .thenResolve({
+        status: 200,
+        data: githubFixtures.commits,
+        source: ClientResponseSource.remote
+      })
 
-      when(jsonClientMock.request(anything(), anything(), anything(), anything()))
-        .thenResolve({
-          status: 200,
-          data: githubFixtures.commits,
-          source: ClientResponseSource.remote
-        })
+    when(githubOptsMock.accessToken).thenReturn(testToken);
 
-      when(githubOptsMock.accessToken).thenReturn(testToken);
+    const cut = new GitHubClient(
+      instance(configMock),
+      instance(jsonClientMock),
+      instance(loggerMock)
+    );
 
-      const cut = new GitHubClient(
-        instance(configMock),
-        instance(jsonClientMock),
-        instance(loggerMock)
-      );
+    await cut.fetchGithub(testRequest, testSpec)
 
-      await cut.fetchGithub(testRequest, testSpec)
-
-      const [, , , actualHeaders] = capture(jsonClientMock.request).first();
-      assert.equal(actualHeaders['authorization'], 'token ' + testToken);
-    }
-
+    const [, , , actualHeaders] = capture(jsonClientMock.request).first();
+    assert.equal(actualHeaders['authorization'], 'token ' + testToken);
   }
 
 }
