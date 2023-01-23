@@ -9,6 +9,8 @@ class TestClientRequest extends AbstractCachedRequest<number, string> { }
 
 export const AbstractClientRequestTests = {
 
+  title: AbstractCachedRequest.name,
+
   "createCachedResponse": {
 
     "caches responses": () => {

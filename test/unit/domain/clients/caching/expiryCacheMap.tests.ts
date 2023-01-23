@@ -6,6 +6,8 @@ let testCacheMap: ExpiryCacheMap<any>;
 
 export const ExpiryCacheMapTests = {
 
+  title: ExpiryCacheMap.name,
+
   beforeEach: () => {
     // setup the client cache
     testCacheMap = new ExpiryCacheMap(<ICachingOptions>{ duration: 30000 })

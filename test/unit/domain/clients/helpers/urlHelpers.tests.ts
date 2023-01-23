@@ -3,6 +3,8 @@ import { UrlHelpers } from 'domain/clients';
 
 export const UrlHelpersTests = {
 
+  title: "UrlHelpers",
+
   "getProtocolFromUrl": {
 
     "parses http and https protocols": () => {
