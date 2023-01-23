@@ -1,4 +1,4 @@
-# 1.0.13
+# 1.0.14
 
 - **npm** Fixed an issue where `.npmrc` was not taking variables from `.env` files
 

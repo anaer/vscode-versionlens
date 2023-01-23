@@ -14,3 +14,4 @@ gruntfile.js
 .gitignore
 tsconfig.json
 vsc-extension-quickstart.md
+**/.env
