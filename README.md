@@ -4,7 +4,6 @@
 [![Installs](https://vsmarketplacebadges.dev/installs-short/pflannery.vscode-versionlens.png?color=blue&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=pflannery.vscode-versionlens)
 [![Rating](https://vsmarketplacebadges.dev/rating/pflannery.vscode-versionlens.png?color=blue&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=pflannery.vscode-versionlens)
 [![The ISC license](https://img.shields.io/badge/license-ISC-orange.png?color=blue&style=flat-square)](http://opensource.org/licenses/ISC)
-[![Pipeline status](https://gitlab.com/versionlens/vscode-versionlens/badges/master/pipeline.svg)](https://gitlab.com/versionlens/vscode-versionlens/-/pipelines)
 
 [![BuyMeACoffee](https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png)](https://www.buymeacoffee.com/peterf)
 
