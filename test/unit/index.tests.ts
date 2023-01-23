@@ -1,7 +1,7 @@
 // domain
 export * from 'test/unit/domain/clients/index.test'
 export * from 'test/unit/domain/configuration/index.test'
-export * from 'test/unit/domain/packages/index.test'
+export * as PackageDomainTests from 'test/unit/domain/packages/index.test'
 export * from 'test/unit/domain/suggestions/index.test'
 
 // infrastructure

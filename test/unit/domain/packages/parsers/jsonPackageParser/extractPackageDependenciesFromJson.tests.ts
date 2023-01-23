@@ -4,7 +4,9 @@ import { extractPackageDependenciesFromJson } from 'domain/packages';
 
 import Fixtures from './extractPackageDependenciesFromJson.fixtures';
 
-export default {
+export const extractPackageDependenciesFromJsonTests = {
+
+  title: extractPackageDependenciesFromJson.name,
 
   "returns empty when no matches found": () => {
     const includeNames = []

@@ -11,7 +11,9 @@ const testVersions = [
   '~master',
 ]
 
-export default {
+export const filterSemverVersionsTests = {
+
+  title: VersionHelpers.filterSemverVersions.name,
 
   "returns empty when versions is empty": () => {
     const results = VersionHelpers.filterSemverVersions([]);

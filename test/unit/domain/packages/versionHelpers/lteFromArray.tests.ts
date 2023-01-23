@@ -1,7 +1,9 @@
 import assert from 'assert';
 import { VersionHelpers } from 'domain/packages';
 
-export default {
+export const lteFromArrayTests = {
+
+  title: VersionHelpers.lteFromArray.name,
 
   "returns empty when versions is empty": () => {
     const results = VersionHelpers.lteFromArray([], '1.2.3');

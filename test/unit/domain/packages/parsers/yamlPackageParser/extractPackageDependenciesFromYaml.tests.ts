@@ -4,7 +4,9 @@ import { extractPackageDependenciesFromYaml } from 'domain/packages';
 
 import Fixtures from './extractPackageDependenciesFromYaml.fixtures';
 
-export default {
+export const extractPackageDependenciesFromYamlTests = {
+
+  title: extractPackageDependenciesFromYaml.name,
 
   "returns empty when no matches found": () => {
     const includeNames = []

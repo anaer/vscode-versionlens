@@ -14,7 +14,9 @@ const testVersions = [
   "2.2.1",
 ];
 
-export default {
+export const extractTaggedVersionsTests = {
+
+  title: VersionHelpers.extractTaggedVersions.name,
 
   "returns empty when no matches found": () => {
     const results = VersionHelpers.extractTaggedVersions([]);

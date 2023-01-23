@@ -10,7 +10,9 @@ const testVersions = [
   '12.0.0-next.1',
 ]
 
-export default {
+export const splitReleasesFromArrayTests = {
+
+  title: VersionHelpers.splitReleasesFromArray.name,
 
   "returns empty when no matches found": () => {
     const { releases, prereleases } = VersionHelpers.splitReleasesFromArray([]);

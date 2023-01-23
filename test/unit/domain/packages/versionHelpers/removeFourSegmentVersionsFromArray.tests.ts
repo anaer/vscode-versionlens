@@ -12,7 +12,9 @@ const testVersions = [
   '12.0.0-next.1',
 ]
 
-export default {
+export const removeFourSegmentVersionsFromArrayTests = {
+
+  title: VersionHelpers.removeFourSegmentVersionsFromArray.name,
 
   "returns versions when no matches found": () => {
     const expected = [

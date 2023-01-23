@@ -7,7 +7,9 @@ const testPrereleases = [
   '2.5.0-release.1',
 ]
 
-export default {
+export const friendlifyPrereleaseNameTests = {
+
+  title: VersionHelpers.friendlifyPrereleaseName.name,
 
   "returns null name when no matches found": () => {
     const result = VersionHelpers.friendlifyPrereleaseName('2.5.0-tag.1');

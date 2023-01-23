@@ -1,7 +1,9 @@
 import assert from 'assert';
 import { VersionHelpers } from 'domain/packages';
 
-export default {
+export const isFixedVersionTests = {
+
+  title: VersionHelpers.isFixedVersion.name,
 
   "returns false when not fixed": () => {
     const testVersions = [

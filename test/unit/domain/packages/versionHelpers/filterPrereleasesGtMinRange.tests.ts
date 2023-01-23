@@ -18,7 +18,9 @@ const testPrereleases = [
   '2.1.0-beta3',
 ];
 
-export default {
+export const filterPrereleasesGtMinRangeTests = {
+
+  title: VersionHelpers.filterPrereleasesGtMinRange.name,
 
   "returns empty when no matches found": () => {
     const results = VersionHelpers.filterPrereleasesGtMinRange('*', []);
