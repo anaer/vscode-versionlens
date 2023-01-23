@@ -3,6 +3,8 @@ import { OptionsWithFallback } from 'domain/configuration'
 
 export const OptionsWithFallbackTests = {
 
+  title: OptionsWithFallback.name,
+
   "get": {
 
     "returns section.key value, fallback.key value": () => {

@@ -8,6 +8,8 @@ let workspaceMock: IVsCodeWorkspace;
 
 export const VsCodeFrozenConfigTests = {
 
+  title: VsCodeConfig.name,
+
   beforeAll: () => {
     workspaceMock = mock(VsCodeWorkspaceStub);
   },
