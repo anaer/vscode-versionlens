@@ -1,8 +1,10 @@
 import Mocha from 'mocha'
-import registerMochaUiEsm from 'mocha-ui-esm'
+import { registerMochaUiEsm, SortByEnum } from 'mocha-ui-esm'
 import * as UnitTests from './unit/index.tests'
 
-registerMochaUiEsm();
+registerMochaUiEsm({
+  sort: SortByEnum.all
+});
 
 const runner = new Mocha({
   ui: <any>'esm',
