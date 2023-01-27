@@ -49,4 +49,8 @@ export class NpmConfig implements IProviderConfig {
     return this.config.get(NpmContributions.DistTagFilter);
   }
 
+  get allowEnvFiles(): boolean {
+    return this.config.get(NpmContributions.AllowEnvFiles);
+  }
+
 }

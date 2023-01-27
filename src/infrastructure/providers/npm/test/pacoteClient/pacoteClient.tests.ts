@@ -195,61 +195,75 @@ export const fetchPackageTests = {
       })
   },
 
-  'uses npmrc registry': async () => {
-    const packagePath = path.join(
-      sourcePath,
-      'infrastructure/providers/npm/test/pacoteClient/npmrc-test'
-    );
+  'uses npmrc registry when allowEnvFiles is "$1"': [
+    true,
+    false,
+    async function (testAllowEnvFiles) {
+      this.test.title = this.test.title.replace("$1", testAllowEnvFiles);
 
-    const testRequest: any = {
-      clientData: {
-        providerName: 'testnpmprovider',
-      },
-      source: 'npmtest',
-      package: {
-        path: packagePath,
-        name: 'aliased',
-        version: 'npm:pacote@11.1.9',
-      },
+      const packagePath = path.join(
+        sourcePath,
+        'infrastructure/providers/npm/test/pacoteClient/npmrc-test'
+      );
+
+      const testRequest: any = {
+        clientData: {
+          providerName: 'testnpmprovider',
+        },
+        source: 'npmtest',
+        package: {
+          path: packagePath,
+          name: 'aliased',
+          version: 'npm:pacote@11.1.9',
+        },
+      }
+
+      // write the npmrc file
+      const npmrcPath = packagePath + '/.npmrc';
+      fs.writeFileSync(npmrcPath, Fixtures[".npmrc"])
+      fs.writeFileSync(`${packagePath}/.env`, Fixtures[".npmrc-env"])
+      assert.ok(fs.existsSync(testRequest.package.path), 'test .npmrc doesnt exist?')
+
+      when(pacoteMock.packument(anything(), anything()))
+        .thenResolve(Fixtures.packumentGit)
+
+      // mock allow .env files
+      when(configMock.allowEnvFiles).thenReturn(testAllowEnvFiles)
+
+      const cut = new PacoteClient(
+        instance(configMock),
+        instance(loggerMock)
+      )
+
+      cut.pacote = instance(pacoteMock)
+      cut.NpmCliConfig = require("@npmcli/config")
+
+      const npaSpec = npa.resolve(
+        testRequest.package.name,
+        testRequest.package.version,
+        testRequest.package.path
+      )
+
+      return cut.fetchPackage(testRequest, npaSpec)
+        .then(_ => {
+
+          const [, actualOpts] = capture(pacoteMock.packument).first()
+          assert.equal(actualOpts.cwd, testRequest.package.path);
+
+          const expectedPassword = testAllowEnvFiles ? "12345678" : undefined;
+          assert.equal(process.env.NPM_AUTH, expectedPassword);
+
+          const expectedAuthToken = testAllowEnvFiles ? expectedPassword : "${NPM_AUTH}";
+          assert.equal(
+            actualOpts['//registry.npmjs.example/:_authToken'],
+            expectedAuthToken
+          );
+
+          // delete the npmrc file
+          fs.unlinkSync(npmrcPath)
+          delete process.env.NPM_AUTH;
+        })
     }
-
-    // write the npmrc file
-    const npmrcPath = packagePath + '/.npmrc';
-    fs.writeFileSync(npmrcPath, Fixtures[".npmrc"])
-    fs.writeFileSync(`${packagePath}/.env`, Fixtures[".npmrc-env"])
-    assert.ok(fs.existsSync(testRequest.package.path), 'test .npmrc doesnt exist?')
-
-    when(pacoteMock.packument(anything(), anything()))
-      .thenResolve(Fixtures.packumentGit)
-
-    const cut = new PacoteClient(
-      instance(configMock),
-      instance(loggerMock)
-    )
-
-    cut.pacote = instance(pacoteMock)
-    cut.NpmCliConfig = require("@npmcli/config")
-
-    const npaSpec = npa.resolve(
-      testRequest.package.name,
-      testRequest.package.version,
-      testRequest.package.path
-    )
-
-    return cut.fetchPackage(testRequest, npaSpec)
-      .then(_ => {
-
-        const [, actualOpts] = capture(pacoteMock.packument).first()
-        assert.equal(actualOpts.cwd, testRequest.package.path)
-        assert.equal(process.env.NPM_AUTH, "12345678")
-        assert.equal(
-          actualOpts['//registry.npmjs.example/:_authToken'],
-          '12345678'
-        )
-
-        // delete the npmrc file
-        fs.unlinkSync(npmrcPath)
-      })
-  },
+  ],
 
 }

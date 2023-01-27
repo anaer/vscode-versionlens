@@ -1,3 +1,14 @@
+# 1.1.0-next
+
+- **npm** Added `versionlens.npm.allowEnvFiles` contribution setting. 
+  
+  Default is set to `false`.
+
+  When set to `true` versionlens will load `.env files` in to the process environment for npm registry authentication.
+  Useful when using `.npmrc files` containing env auth tokens.
+
+  **NOTE**: You will need to restart vscode when changing this setting from `true` to `false` to clear any .env file variables still in the process.env.
+
 # 1.0.14
 
 - **npm** Fixed an issue where `.npmrc` was not taking variables from `.env` files

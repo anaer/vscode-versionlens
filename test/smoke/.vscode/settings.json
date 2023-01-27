@@ -1,6 +1,6 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-  "versionlens.logging.level": "info",
+  "versionlens.logging.level": "debug",
   "versionlens.caching.duration": 0,
   "versionlens.suggestions.showOnStartup": false,
   "versionlens.suggestions.showPrereleasesOnStartup": false,
@@ -11,5 +11,6 @@
     "peerDependencies",
     "optionalDependencies",
     "customDependencies"
-  ]
+  ],
+  "versionlens.npm.allowEnvFiles": false
 }

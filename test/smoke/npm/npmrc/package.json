@@ -3,6 +3,6 @@
   "title": "smoke test",
   "dependencies": {},
   "devDependencies": {
-    "@smoke/private-pub": "0.1"
+    "@scope/some-package": "0.1"
   }
 }

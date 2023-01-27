@@ -53,14 +53,19 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
       return Promise.resolve(cachedResp.data);
     }
 
-    // load any environment variables from .env
-    this.dotenv.config({ path: this.findConfig('.env', { cwd: request.package.path }) });
+    if (this.config.allowEnvFiles) {
+      // load environment variables from .env files for npm authentication
+      this.dotenv.config({
+        path: this.findConfig('.env', { cwd: request.package.path })
+      });
+    }
 
     // load the npm config
     const npmConfig = new this.NpmCliConfig({
       npmPath: request.package.path,
       shorthands: {},
       definitions: {},
+      argv: [],
       cwd: request.package.path
     });
     await npmConfig.load();
@@ -71,6 +76,7 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
       { cwd: request.package.path }
     );
 
+    // fetch the package from npm's pacote
     return this.pacote.packument(npaSpec, npmOpts)
       .then(function (packumentResponse): TPackageDocument {
 
