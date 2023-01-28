@@ -1,6 +1,5 @@
 // vscode references
-import * as VsCodeTypes from 'vscode';
-
+import * as VsCode from 'vscode';
 import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 
@@ -8,9 +7,9 @@ export function registerCommands(
   contributions: KeyDictionary<string>,
   handlers: KeyDictionary<Function>,
   logger: ILogger
-): Array<VsCodeTypes.Disposable> {
+): Array<VsCode.Disposable> {
 
-  const { commands } = require('vscode');
+  const { commands } = VsCode;
   const disposables = [];
 
   // loop enum keys

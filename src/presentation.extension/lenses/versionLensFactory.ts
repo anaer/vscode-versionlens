@@ -1,7 +1,6 @@
-import { TextDocument } from 'vscode';
-import { TSuggestionReplaceFunction } from 'domain/suggestions';
 import { PackageResponse } from 'domain/packages';
-
+import { TSuggestionReplaceFunction } from 'domain/suggestions';
+import { Range, TextDocument, Uri } from 'vscode';
 import { VersionLens } from './versionLens';
 
 export function createFromPackageResponses(
@@ -25,8 +24,6 @@ function createFromPackageResponse(
   document: TextDocument,
   replaceVersionFn: TSuggestionReplaceFunction,
 ): VersionLens {
-  const { Uri, Range } = require('vscode')
-
   const { nameRange, versionRange } = packageResponse;
   const commandRangePos = nameRange.start + packageResponse.order;
   const commandRange = new Range(

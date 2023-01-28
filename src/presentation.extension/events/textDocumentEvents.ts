@@ -1,9 +1,8 @@
 // vscode references
-import * as VsCodeTypes from 'vscode';
-
+import * as VsCode from 'vscode';
 import { ILogger } from 'domain/logging';
-import { VersionLensState } from '../state/versionLensState';
 import * as InstalledStatusHelpers from '../helpers/installedStatusHelpers';
+import { VersionLensState } from '../state/versionLensState';
 
 export class TextDocumentEvents {
 
@@ -15,16 +14,15 @@ export class TextDocumentEvents {
     this.state = extensionState;
     this.logger = logger;
 
-    // register editor events
-    const { workspace } = require('vscode');
+    // register workspace events
+    const { workspace } = VsCode;
 
-    // register window and workspace events
     workspace.onDidChangeTextDocument(
       this.onDidChangeTextDocument.bind(this)
     );
   }
 
-  onDidChangeTextDocument(changeEvent: VsCodeTypes.TextDocumentChangeEvent) {
+  onDidChangeTextDocument(changeEvent: VsCode.TextDocumentChangeEvent) {
     // ensure version lens is active
     if (this.state.providerActive.value === false) return;
 

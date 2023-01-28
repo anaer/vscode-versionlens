@@ -1,13 +1,9 @@
 // vscode references
-import { basename } from 'path';
 import minimatch from 'minimatch';
-
-import * as VsCodeTypes from 'vscode';
-
+import { basename } from 'path';
+import * as VsCode from 'vscode';
 import { ILogger } from 'domain/logging';
-
 import { CommandHelpers, VersionLensProvider } from 'presentation.extension';
-
 import { IconCommandContributions } from '../definitions/eIconCommandContributions';
 import * as InstalledStatusHelpers from '../helpers/installedStatusHelpers';
 import { VersionLensState } from '../state/versionLensState';
@@ -16,13 +12,13 @@ export class IconCommands {
 
   state: VersionLensState;
 
-  outputChannel: VsCodeTypes.OutputChannel;
+  outputChannel: VsCode.OutputChannel;
 
   versionLensProviders: Array<VersionLensProvider>;
 
   constructor(
     state: VersionLensState,
-    outputChannel: VsCodeTypes.OutputChannel,
+    outputChannel: VsCode.OutputChannel,
     versionLensProviders: Array<VersionLensProvider>
   ) {
     this.state = state;
@@ -30,7 +26,7 @@ export class IconCommands {
     this.versionLensProviders = versionLensProviders;
   }
 
-  onShowError(resourceUri: VsCodeTypes.Uri) {
+  onShowError(resourceUri: VsCode.Uri) {
     return Promise.all([
       this.state.providerError.change(false),
       this.state.providerBusy.change(0)
@@ -40,52 +36,52 @@ export class IconCommands {
       });
   }
 
-  onShowVersionLenses(resourceUri: VsCodeTypes.Uri) {
+  onShowVersionLenses(resourceUri: VsCode.Uri) {
     this.state.enabled.change(true)
       .then(_ => {
         this.refreshActiveCodeLenses();
       });
   }
 
-  onHideVersionLenses(resourceUri: VsCodeTypes.Uri) {
+  onHideVersionLenses(resourceUri: VsCode.Uri) {
     this.state.enabled.change(false)
       .then(_ => {
         this.refreshActiveCodeLenses();
       });
   }
 
-  onShowPrereleaseVersions(resourceUri: VsCodeTypes.Uri) {
+  onShowPrereleaseVersions(resourceUri: VsCode.Uri) {
     this.state.prereleasesEnabled.change(true)
       .then(_ => {
         this.refreshActiveCodeLenses();
       });
   }
 
-  onHidePrereleaseVersions(resourceUri: VsCodeTypes.Uri) {
+  onHidePrereleaseVersions(resourceUri: VsCode.Uri) {
     this.state.prereleasesEnabled.change(false)
       .then(_ => {
         this.refreshActiveCodeLenses();
       });
   }
 
-  onShowInstalledStatuses(resourceUri: VsCodeTypes.Uri) {
+  onShowInstalledStatuses(resourceUri: VsCode.Uri) {
     this.state.installedStatusesEnabled.change(true)
       .then(_ => {
         this.refreshActiveCodeLenses();
       });
   }
 
-  onHideInstalledStatuses(resourceUri: VsCodeTypes.Uri) {
+  onHideInstalledStatuses(resourceUri: VsCode.Uri) {
     this.state.installedStatusesEnabled.change(false)
       .then(_ => {
         InstalledStatusHelpers.clearDecorations();
       });
   }
 
-  onShowingProgress(resourceUri: VsCodeTypes.Uri) { }
+  onShowingProgress(resourceUri: VsCode.Uri) { }
 
   refreshActiveCodeLenses() {
-    const { window } = require('vscode');
+    const { window } = VsCode;
     const fileName = window.activeTextEditor.document.fileName;
     const providers = filtersProvidersByFileName(
       fileName,
@@ -124,8 +120,8 @@ export function filtersProvidersByFileName(
 export function registerIconCommands(
   state: VersionLensState,
   versionLensProviders: Array<VersionLensProvider>,
-  subscriptions: Array<VsCodeTypes.Disposable>,
-  outputChannel: VsCodeTypes.OutputChannel,
+  subscriptions: Array<VsCode.Disposable>,
+  outputChannel: VsCode.OutputChannel,
   logger: ILogger
 ): IconCommands {
 

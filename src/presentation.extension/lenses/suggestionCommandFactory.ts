@@ -1,9 +1,10 @@
 import { SuggestionFlags } from 'domain/suggestions';
-
+import fs from 'node:fs';
+import path from 'node:path';
 import {
+  SuggestionCommandContributions,
   SuggestionIndicators,
-  VersionLens,
-  SuggestionCommandContributions
+  VersionLens
 } from 'presentation.extension';
 
 export function createErrorCommand(errorMsg, codeLens) {
@@ -17,9 +18,10 @@ export function createTagCommand(tag, codeLens) {
 export function createDirectoryLinkCommand(codeLens) {
   let title;
   let cmd = SuggestionCommandContributions.LinkCommand;
-  const path = require('path');
-  const fs = require('fs');
-  const filePath = path.resolve(path.dirname(codeLens.documentUrl.fsPath), codeLens.package.suggestion.version);
+  const filePath = path.resolve(
+    path.dirname(codeLens.documentUrl.fsPath),
+    codeLens.package.suggestion.version
+  );
   const fileExists = fs.existsSync(filePath);
   if (fileExists === false)
     title = (cmd = null) || 'Specified resource does not exist';
