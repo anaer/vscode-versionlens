@@ -1,5 +1,5 @@
 import { PackageVersionTypes, VersionHelpers } from 'domain/packages';
-
+import semver from 'semver';
 import { DotNetVersionSpec } from './definitions/dotnet';
 import { NugetVersionSpec } from './definitions/nuget';
 
@@ -42,7 +42,7 @@ export function parseVersionSpec(rawVersion: string): DotNetVersionSpec {
 
   if (spec && !spec.hasFourSegments) {
     // convert spec to semver
-    const { valid, validRange } = require('semver');
+    const { valid, validRange } = semver;
     version = convertVersionSpecToString(spec);
     isValidVersion = valid(version, VersionHelpers.loosePrereleases);
     isValidRange = !isValidVersion && validRange(version, VersionHelpers.loosePrereleases) !== null;
@@ -67,7 +67,6 @@ export function buildVersionSpec(value): NugetVersionSpec {
   if (!formattedValue) return null;
 
   // test if the version is in semver format
-  const semver = require('semver');
   const parsedSemver = semver.parse(formattedValue, { includePrereleases: true });
   if (parsedSemver) {
     return {

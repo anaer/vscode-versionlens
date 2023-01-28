@@ -1,11 +1,10 @@
-import { IPackageDependency, extractFromNodes } from 'domain/packages'
+import { extractFromNodes, IPackageDependency } from 'domain/packages';
+import * as jsonParser from 'jsonc-parser';
 
 export function extractPackageDependenciesFromJson(
   json: string,
   filterPropertyNames: Array<string>
 ): Array<IPackageDependency> {
-  const jsonParser = require("jsonc-parser");
-
   const jsonErrors = [];
   const jsonTree = jsonParser.parseTree(json, jsonErrors);
   if (!jsonTree || jsonTree.children.length === 0 || jsonErrors.length > 0) return [];

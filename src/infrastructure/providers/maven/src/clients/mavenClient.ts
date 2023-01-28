@@ -1,20 +1,20 @@
-import { ILogger } from 'domain/logging';
-import { SuggestionFactory } from 'domain/suggestions';
 import {
-  DocumentFactory,
-  TPackageDocument,
-  PackageSourceTypes,
-  TPackageRequest,
-  VersionHelpers,
-  IPackageClient,
-  TSemverSpec,
-} from 'domain/packages';
-import {
-  HttpClientResponse,
   HttpClientRequestMethods,
+  HttpClientResponse,
   IHttpClient
 } from 'domain/clients';
-
+import { ILogger } from 'domain/logging';
+import {
+  DocumentFactory,
+  IPackageClient,
+  PackageSourceTypes,
+  TPackageDocument,
+  TPackageRequest,
+  TSemverSpec,
+  VersionHelpers
+} from 'domain/packages';
+import { SuggestionFactory } from 'domain/suggestions';
+import xmldoc from 'xmldoc';
 import { MavenClientData } from '../definitions/mavenClientData';
 import { MavenConfig } from '../mavenConfig';
 
@@ -132,7 +132,6 @@ export class MavenClient implements IPackageClient<MavenClientData> {
 }
 
 function getVersionsFromPackageXml(packageXml: string): Array<string> {
-  const xmldoc = require('xmldoc');
   let xmlRootNode = new xmldoc.XmlDocument(packageXml);
   let xmlVersioningNode = xmlRootNode.childNamed("versioning");
   let xmlVersionsList = xmlVersioningNode.childNamed("versions").childrenNamed("version");

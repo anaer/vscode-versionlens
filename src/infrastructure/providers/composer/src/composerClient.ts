@@ -1,23 +1,22 @@
-import { ILogger } from 'domain/logging';
-import { SuggestionFactory } from 'domain/suggestions';
-import {
-  DocumentFactory,
-  VersionHelpers,
-  TPackageRequest,
-  TPackageDocument,
-  PackageSourceTypes,
-  TSemverSpec,
-  IPackageClient
-} from 'domain/packages';
 import {
   HttpClientRequestMethods,
   HttpClientResponse,
-  JsonClientResponse,
   IJsonHttpClient,
+  JsonClientResponse
 } from 'domain/clients';
-
+import { ILogger } from 'domain/logging';
+import {
+  DocumentFactory,
+  IPackageClient,
+  PackageSourceTypes,
+  TPackageDocument,
+  TPackageRequest,
+  TSemverSpec,
+  VersionHelpers
+} from 'domain/packages';
+import { SuggestionFactory } from 'domain/suggestions';
+import fs from 'node:fs';
 import { ComposerConfig } from './composerConfig';
-
 import { IPackagistApiItem } from './definitions/iPackagistApiItem';
 
 export class ComposerClient implements IPackageClient<null> {
@@ -140,8 +139,6 @@ export class ComposerClient implements IPackageClient<null> {
 export function readComposerSelections(filePath) {
 
   return new Promise(function (resolve, reject) {
-    const fs = require('fs');
-
     if (fs.existsSync(filePath) === false) {
       reject(null);
       return;

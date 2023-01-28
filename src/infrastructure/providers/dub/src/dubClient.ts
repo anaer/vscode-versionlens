@@ -1,24 +1,24 @@
-import { ILogger } from 'domain/logging';
 import {
-  SuggestionFactory,
-  TPackageSuggestion,
-  SuggestionStatus
-} from 'domain/suggestions';
-import {
-  HttpClientResponse,
   HttpClientRequestMethods,
+  HttpClientResponse,
   IJsonHttpClient
 } from 'domain/clients';
+import { ILogger } from 'domain/logging';
 import {
   DocumentFactory,
-  VersionHelpers,
+  IPackageClient,
   PackageSourceTypes,
   TPackageDocument,
-  TSemverSpec,
   TPackageRequest,
-  IPackageClient,
+  TSemverSpec,
+  VersionHelpers
 } from 'domain/packages';
-
+import {
+  SuggestionFactory,
+  SuggestionStatus,
+  TPackageSuggestion
+} from 'domain/suggestions';
+import fs from 'node:fs';
 import { DubConfig } from './dubConfig';
 
 export class DubClient implements IPackageClient<null> {
@@ -156,8 +156,6 @@ export function createSuggestions(
 export async function readDubSelections(filePath) {
 
   return new Promise(function (resolve, reject) {
-    const fs = require('fs');
-
     if (fs.existsSync(filePath) === false) {
       reject(null);
       return;

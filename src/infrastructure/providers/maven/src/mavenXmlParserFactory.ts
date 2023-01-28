@@ -1,12 +1,10 @@
 import { IPackageDependency } from 'domain/packages';
-
+import xmldoc from 'xmldoc';
 import { MavenProjectProperty } from "./definitions/mavenProjectProperty";
 
 export function createDependenciesFromXml(
   xml: string, includePropertyNames: Array<string>
 ): Array<IPackageDependency> {
-
-  const xmldoc = require('xmldoc');
   let document = null
 
   try {
@@ -115,7 +113,6 @@ function extractPropertiesFromDocument(xmlDoc): Array<MavenProjectProperty> {
 }
 
 export function extractReposUrlsFromXml(stdout: string): Array<string> {
-  const xmldoc = require('xmldoc');
   const regex = /<\?xml(.+\r?\n?)+\/settings>/gm;
   const xmlString = regex.exec(stdout.toString())[0];
   const xml = new xmldoc.XmlDocument(xmlString);

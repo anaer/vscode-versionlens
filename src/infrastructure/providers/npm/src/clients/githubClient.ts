@@ -1,21 +1,21 @@
-import { ILogger } from 'domain/logging';
-import { SuggestionFactory } from 'domain/suggestions';
 import {
   HttpClientRequestMethods,
-  JsonClientResponse,
-  IJsonHttpClient
+  IJsonHttpClient,
+  JsonClientResponse
 } from 'domain/clients';
+import { ILogger } from 'domain/logging';
 import {
-  TPackageRequest,
+  DocumentFactory,
   PackageSourceTypes,
   PackageVersionTypes,
-  VersionHelpers,
   TPackageDocument,
-  DocumentFactory
+  TPackageRequest,
+  VersionHelpers
 } from 'domain/packages';
-
-import { NpmConfig } from "../npmConfig";
-import { NpaSpec } from "../models/npaSpec";
+import { SuggestionFactory } from 'domain/suggestions';
+import semver from 'semver';
+import { NpaSpec } from '../models/npaSpec';
+import { NpmConfig } from '../npmConfig';
 
 const defaultHeaders = {
   accept: 'application\/vnd.github.v3+json',
@@ -37,7 +37,7 @@ export class GitHubClient {
   }
 
   fetchGithub(request: TPackageRequest<null>, npaSpec: NpaSpec): Promise<TPackageDocument> {
-    const { validRange } = require('semver');
+    const { validRange } = semver;
 
     if (npaSpec.gitRange) {
       // we have a semver:x.x.x

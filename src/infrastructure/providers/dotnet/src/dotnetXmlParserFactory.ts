@@ -1,11 +1,11 @@
 import { Nullable } from 'domain/generics';
 import { IPackageDependency, TPackageDependencyRange } from 'domain/packages';
+import xmldoc from 'xmldoc';
 
 export function createDependenciesFromXml(
   xml: string, includePropertyNames: Array<string>
 ): Array<IPackageDependency> {
 
-  const xmldoc = require('xmldoc');
   let document = null
 
   try {

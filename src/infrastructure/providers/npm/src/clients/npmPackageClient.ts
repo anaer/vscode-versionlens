@@ -1,22 +1,22 @@
-import { ILogger } from 'domain/logging';
-import { SuggestionFactory, TPackageSuggestion } from 'domain/suggestions';
 import { ClientResponseSource } from 'domain/clients';
+import { ILogger } from 'domain/logging';
 import {
   DocumentFactory,
-  ResponseFactory,
   IPackageClient,
-  TPackageRequest,
-  TPackageDocument,
+  PackageSourceTypes,
   PackageVersionTypes,
-  PackageSourceTypes
+  ResponseFactory,
+  TPackageDocument,
+  TPackageRequest
 } from 'domain/packages';
-
+import { SuggestionFactory, TPackageSuggestion } from 'domain/suggestions';
+import npa from 'npm-package-arg';
 import * as PackageFactory from '../factories/packageFactory';
 import { NpaSpec, NpaTypes } from '../models/npaSpec';
-import * as NpmUtils from '../npmUtils';
 import { NpmConfig } from '../npmConfig';
-import { PacoteClient } from './pacoteClient';
+import * as NpmUtils from '../npmUtils';
 import { GitHubClient } from './githubClient';
+import { PacoteClient } from './pacoteClient';
 
 export class NpmPackageClient implements IPackageClient<null> {
 
@@ -42,7 +42,6 @@ export class NpmPackageClient implements IPackageClient<null> {
   }
 
   async fetchPackage(request: TPackageRequest<null>): Promise<TPackageDocument> {
-    const npa = require('npm-package-arg');
     let source: PackageSourceTypes;
 
     return new Promise<TPackageDocument>((resolve, reject) => {
