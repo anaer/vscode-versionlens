@@ -1,11 +1,11 @@
 import {
   SuggestionFactory,
-  TPackageSuggestion,
+  SuggestionFlags,
   SuggestionStatus,
-  SuggestionFlags
-} from "domain/suggestions";
-
-import { VersionHelpers } from "domain/packages";
+  TPackageSuggestion
+} from 'domain/suggestions';
+import { VersionHelpers } from 'domain/packages';
+import semver from 'semver';
 
 export function createSuggestions(
   versionRange: string,
@@ -13,7 +13,7 @@ export function createSuggestions(
   prereleases: string[],
   suggestedLatestVersion: string = null
 ): Array<TPackageSuggestion> {
-  const { maxSatisfying, compareLoose } = require("semver");
+  const { maxSatisfying, compareLoose } = semver;
   const suggestions: Array<TPackageSuggestion> = [];
 
   // check for a release

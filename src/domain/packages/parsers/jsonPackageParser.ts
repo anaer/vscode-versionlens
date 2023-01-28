@@ -1,11 +1,10 @@
-// vscode references
-import { IPackageDependency } from "../definitions/iPackageDependency";
+import * as jsonParser from 'jsonc-parser';
+import { IPackageDependency } from '../definitions/iPackageDependency';
 
 export function extractPackageDependenciesFromJson(
   json: string, filterPropertyNames: Array<string>
 ): Array<IPackageDependency> {
   const jsonErrors = [];
-  const jsonParser = require("jsonc-parser");
   const jsonTree = jsonParser.parseTree(json, jsonErrors);
   if (!jsonTree || jsonTree.children.length === 0 || jsonErrors.length > 0) return [];
   return extractFromNodes(jsonTree.children, filterPropertyNames);

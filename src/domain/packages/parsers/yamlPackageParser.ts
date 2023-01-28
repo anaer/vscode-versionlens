@@ -1,4 +1,5 @@
-import { IPackageDependency } from "../definitions/iPackageDependency";
+import { Document, parseCST } from 'yaml';
+import { IPackageDependency } from '../definitions/iPackageDependency';
 
 type YamlOptions = {
   hasCrLf: boolean,
@@ -9,8 +10,6 @@ export function extractPackageDependenciesFromYaml(
   yaml: string,
   filterPropertyNames: Array<string>
 ): Array<IPackageDependency> {
-  const { Document, parseCST } = require('yaml');
-
   // verbose parsing to handle CRLF scenarios
   const cst = parseCST(yaml)
 

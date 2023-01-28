@@ -1,4 +1,5 @@
 import { KeyStringDictionary } from 'domain/generics';
+import { parse } from 'url';
 
 export enum RegistryProtocols {
   file = 'file:',
@@ -7,7 +8,6 @@ export enum RegistryProtocols {
 }
 
 export function getProtocolFromUrl(url: string): RegistryProtocols {
-  const { parse } = require('url');
   const sourceUrl = parse(url);
   const registryProtocol = sourceUrl.protocol === null ?
     RegistryProtocols.file :

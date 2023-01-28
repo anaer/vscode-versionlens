@@ -1,14 +1,14 @@
 import { KeyStringArrayDictionary } from 'domain/generics';
-
-import { TSemverSpec } from "../definitions/tSemverSpec";
-import { TPackageNameVersion } from "../definitions/tPackageNameVersion";
-import { PackageVersionTypes } from "../definitions/ePackageVersionTypes";
+import semver from 'semver';
+import { PackageVersionTypes } from '../definitions/ePackageVersionTypes';
+import { TPackageNameVersion } from '../definitions/tPackageNameVersion';
+import { TSemverSpec } from '../definitions/tSemverSpec';
 
 export const formatTagNameRegex = /^[^0-9\-]*/;
 export const loosePrereleases = { loose: true, includePrerelease: true };
 
 export function filterPrereleasesFromDistTags(distTags: { [key: string]: string }): Array<string> {
-  const { prerelease } = require("semver");
+  const { prerelease } = semver;
   const prereleases: Array<string> = [];
   Object.keys(distTags)
     .forEach((key: string) => {
@@ -25,7 +25,7 @@ export function extractVersionsFromMap(versions: Array<TPackageNameVersion>): Ar
 }
 
 export function extractTaggedVersions(versions: Array<string>): Array<TPackageNameVersion> {
-  const { prerelease } = require('semver');
+  const { prerelease } = semver;
 
   const results: Array<TPackageNameVersion> = [];
   versions.forEach(function (version) {
@@ -50,7 +50,7 @@ export function extractTaggedVersions(versions: Array<string>): Array<TPackageNa
 }
 
 export function splitReleasesFromArray(versions: Array<string>): { releases: Array<string>, prereleases: Array<string> } {
-  const { prerelease } = require('semver');
+  const { prerelease } = semver;
   const releases: Array<string> = [];
   const prereleases: Array<string> = [];
 
@@ -65,7 +65,7 @@ export function splitReleasesFromArray(versions: Array<string>): { releases: Arr
 }
 
 export function lteFromArray(versions: Array<string>, version: string) {
-  const { lte } = require('semver');
+  const { lte } = semver;
   return versions.filter(
     function (testVersion: string) {
       return lte(testVersion, version);
@@ -80,7 +80,7 @@ export function removeFourSegmentVersionsFromArray(versions: Array<string>): Arr
 }
 
 export function isFixedVersion(versionToCheck: string): boolean {
-  const { Range, valid } = require('semver');
+  const { Range, valid } = semver;
   const testRange = new Range(versionToCheck, loosePrereleases);
   return valid(versionToCheck) !== null && testRange.set[0][0].operator === "";
 }
@@ -122,7 +122,7 @@ export function friendlifyPrereleaseName(prereleaseName: string): string {
 }
 
 export function parseSemver(packageVersion: string): TSemverSpec {
-  const { valid, validRange } = require('semver');
+  const { valid, validRange } = semver;
   const isVersion = valid(packageVersion, loosePrereleases);
   const isRange = validRange(packageVersion, loosePrereleases);
   return {
@@ -141,7 +141,7 @@ export function filterPrereleasesGtMinRange(versionRange: string, prereleases: A
     maxSatisfying,
     minVersion,
     validRange,
-  } = require('semver');
+  } = semver;
 
   const prereleaseGroupMap: KeyStringArrayDictionary = {};
 
@@ -179,7 +179,7 @@ export function filterPrereleasesGtMinRange(versionRange: string, prereleases: A
 }
 
 export function filterSemverVersions(versions: Array<string>): Array<string> {
-  const { validRange } = require('semver');
+  const { validRange } = semver;
   const semverVersions = [];
   versions.forEach(version => {
     if (validRange(version, loosePrereleases)) semverVersions.push(version);
