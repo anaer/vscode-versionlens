@@ -113,7 +113,6 @@ export async function configureContainer(
       'composer',
       'dotnet',
       'dub',
-      'jspm',
       'maven',
       'npm',
       'pub',

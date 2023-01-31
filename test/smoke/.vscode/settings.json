@@ -11,6 +11,10 @@
     "peerDependencies",
     "optionalDependencies",
     "customDependencies",
+    "jspm.dependencies",
+    "jspm.devDependencies",
+    "jspm.peerDependencies",
+    "jspm.optionalDependencies",
     "pnpm.overrides"
   ],
   "versionlens.npm.allowEnvFiles": false
