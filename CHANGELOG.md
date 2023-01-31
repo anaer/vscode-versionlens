@@ -1,6 +1,12 @@
 # 1.1.0-next
 
-- **npm** Added `versionlens.npm.allowEnvFiles` contribution setting. 
+- **pnpm** Added `pnpm.overrides` support to package.json
+
+    Reported in [issue #312](https://gitlab.com/versionlens/vscode-versionlens/-/issues/312)
+
+    Thanks to [tjx666](https://gitlab.com/tjx666)
+
+- **npm** Added `versionlens.npm.allowEnvFiles` contribution setting.
   
   Default is set to `false`.
 

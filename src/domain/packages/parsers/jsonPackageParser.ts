@@ -1,25 +1,26 @@
-import * as jsonParser from 'jsonc-parser';
+import * as JsonC from 'jsonc-parser';
 import { IPackageDependency } from '../definitions/iPackageDependency';
 
 export function extractPackageDependenciesFromJson(
-  json: string, filterPropertyNames: Array<string>
+  json: string,
+  includePropNames: Array<string>
 ): Array<IPackageDependency> {
   const jsonErrors = [];
-  const jsonTree = jsonParser.parseTree(json, jsonErrors);
+  const jsonTree = JsonC.parseTree(json, jsonErrors);
   if (!jsonTree || jsonTree.children.length === 0 || jsonErrors.length > 0) return [];
-  return extractFromNodes(jsonTree.children, filterPropertyNames);
+  return extractFromNodes(jsonTree, includePropNames);
 }
 
-export function extractFromNodes(topLevelNodes, includePropertyNames: string[]): IPackageDependency[] {
+export function extractFromNodes(
+  jsonTree: JsonC.Node,
+  includePropNames: string[]
+): IPackageDependency[] {
   const collector = [];
 
-  topLevelNodes.forEach(
-    function (node) {
-      const [keyEntry, valueEntry] = node.children;
-      if (includePropertyNames.includes(keyEntry.value) === false) return;
-      collectDependencyNodes(valueEntry.children, null, '', collector);
-    }
-  )
+  for (const property of includePropNames) {
+    const node = JsonC.findNodeAtLocation(jsonTree, property.split('.'));
+    if (node) collectDependencyNodes(node.children, null, '', collector);
+  }
 
   return collector
 }

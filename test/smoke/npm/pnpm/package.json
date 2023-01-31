@@ -1,0 +1,7 @@
+{
+  "pnpm": {
+    "overrides": {
+      "semver": "5.3.0"
+    }
+  }
+}

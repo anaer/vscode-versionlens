@@ -1,12 +1,12 @@
 import { extractFromNodes, IPackageDependency } from 'domain/packages';
-import * as jsonParser from 'jsonc-parser';
+import * as JsonC from 'jsonc-parser';
 
 export function extractPackageDependenciesFromJson(
   json: string,
-  filterPropertyNames: Array<string>
+  includePropNames: Array<string>
 ): Array<IPackageDependency> {
   const jsonErrors = [];
-  const jsonTree = jsonParser.parseTree(json, jsonErrors);
+  const jsonTree = JsonC.parseTree(json, jsonErrors);
   if (!jsonTree || jsonTree.children.length === 0 || jsonErrors.length > 0) return [];
 
   const children = jsonTree.children;
@@ -14,7 +14,7 @@ export function extractPackageDependenciesFromJson(
     const node = children[i];
     const [keyEntry, valueEntry] = node.children;
     if (keyEntry.value === 'jspm') {
-      return extractFromNodes(valueEntry.children, filterPropertyNames);
+      return extractFromNodes(valueEntry, includePropNames);
     }
   }
 
