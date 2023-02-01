@@ -4,4 +4,5 @@ export enum DubContributions {
 
   DependencyProperties = 'dub.dependencyProperties',
   ApiUrl = 'dub.apiUrl',
+  FilePatterns = 'dub.files',
 }

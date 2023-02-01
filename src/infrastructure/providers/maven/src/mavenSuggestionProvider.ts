@@ -1,17 +1,16 @@
-import { ILogger } from 'domain/logging';
 import { UrlHelpers } from 'domain/clients';
-import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
+import { ILogger } from 'domain/logging';
 import {
-  RequestFactory,
+  IPackageDependency,
   PackageResponse,
-  IPackageDependency
+  RequestFactory
 } from 'domain/packages';
-
-import { MavenClientData } from './definitions/mavenClientData';
-import { MvnCli } from './clients/mvnCli';
+import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import { MavenClient } from './clients/mavenClient';
-import * as MavenXmlFactory from './mavenXmlParserFactory';
+import { MvnCli } from './clients/mvnCli';
+import { MavenClientData } from './definitions/mavenClientData';
 import { MavenConfig } from './mavenConfig';
+import * as MavenXmlFactory from './mavenXmlParserFactory';
 
 export class MavenSuggestionProvider implements ISuggestionProvider {
 

@@ -1,34 +1,32 @@
-import { dirname } from 'path';
-
-import {
-  EventEmitter,
-  TextDocument,
-  CancellationToken,
-  CodeLensProvider,
-  CodeLens,
-  Event,
-  DocumentSelector
-} from 'vscode';
-
 import { ILogger } from 'domain/logging';
+import { PackageSourceTypes } from 'domain/packages';
+import { IProviderConfig } from 'domain/providers';
+import { IProvider } from 'domain/providers/definitions/iProvider';
 import {
+  defaultReplaceFn,
   ISuggestionProvider,
   SuggestionFlags,
-  SuggestionStatus,
-  defaultReplaceFn,
+  SuggestionStatus
 } from 'domain/suggestions';
-import { IProviderConfig } from 'domain/providers';
-import { PackageSourceTypes } from 'domain/packages';
-
+import { dirname } from 'path';
 import {
   CommandFactory,
   VersionLens,
-  VersionLensFactory,
   VersionLensExtension,
+  VersionLensFactory,
   VersionLensState
 } from 'presentation.extension';
+import {
+  CancellationToken,
+  CodeLens,
+  CodeLensProvider,
+  DocumentSelector,
+  Event,
+  EventEmitter,
+  TextDocument
+} from 'vscode';
 
-export class VersionLensProvider implements CodeLensProvider {
+export class VersionLensProvider implements CodeLensProvider, IProvider {
 
   constructor(
     extension: VersionLensExtension,

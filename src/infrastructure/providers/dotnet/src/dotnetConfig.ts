@@ -1,44 +1,35 @@
-import { IFrozenOptions } from 'domain/configuration';
 import { ICachingOptions, IHttpOptions } from 'domain/clients';
-import { ProviderSupport, IProviderConfig, TProviderFileMatcher } from 'domain/providers';
-
-import { INugetOptions } from "./definitions/iNugetOptions";
+import { IFrozenOptions } from 'domain/configuration';
+import { IProviderConfig, TProviderFileMatcher } from 'domain/providers';
+import { AbstractProviderConfig } from 'domain/providers/abstractProviderConfig';
 import { DotNetContributions } from './definitions/eDotNetContributions';
+import { INugetOptions } from "./definitions/iNugetOptions";
 
-export class DotNetConfig implements IProviderConfig {
+export class DotNetConfig extends AbstractProviderConfig implements IProviderConfig {
 
   constructor(
     config: IFrozenOptions,
-    dotnetCachingOpts: ICachingOptions,
-    dotnetHttpOpts: IHttpOptions,
+    caching: ICachingOptions,
+    http: IHttpOptions,
     nugetOpts: INugetOptions,
   ) {
-    this.config = config;
-    this.caching = dotnetCachingOpts;
-    this.http = dotnetHttpOpts;
+    super('dotnet', config, caching, http);
     this.nuget = nugetOpts;
   }
 
-  config: IFrozenOptions;
-
-  providerName: string = 'dotnet';
-
-  supports: Array<ProviderSupport> = [
-    ProviderSupport.Releases,
-    ProviderSupport.Prereleases,
-  ];
-
-  fileMatcher: TProviderFileMatcher = {
-    language: 'xml',
-    scheme: 'file',
-    pattern: '**/*.{csproj,fsproj,targets,props}',
-  };
-
-  caching: ICachingOptions;
-
-  http: IHttpOptions;
-
   nuget: INugetOptions;
+
+  get fileMatcher(): TProviderFileMatcher {
+    return {
+      language: 'xml',
+      scheme: 'file',
+      pattern: this.filePatterns,
+    };
+  }
+
+  get filePatterns(): string {
+    return this.config.get(DotNetContributions.FilePatterns);
+  }
 
   get dependencyProperties(): Array<string> {
     return this.config.get(DotNetContributions.DependencyProperties);

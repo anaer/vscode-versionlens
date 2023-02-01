@@ -62,14 +62,7 @@ export class TextEditorEvents {
       , false
     );
 
-    // determine installed statuses support
-    const providerSupportsInstalledStatuses = providersMatchingFilename.reduce(
-      (v, p) => p.config.supports.includes(ProviderSupport.InstalledStatuses)
-      , false
-    );
-
     this.state.providerSupportsPrereleases.value = providerSupportsPrereleases;
-    this.state.providerSupportsInstalledStatuses.value = providerSupportsInstalledStatuses;
     this.state.providerActive.value = true;
   }
 

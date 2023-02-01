@@ -1,22 +1,20 @@
-import { ILogger } from 'domain/logging';
 import { UrlHelpers } from 'domain/clients';
+import { ILogger } from 'domain/logging';
 import {
-  ISuggestionProvider,
+  IPackageDependency,
+  PackageResponse, RequestFactory
+} from 'domain/packages';
+import {
   defaultReplaceFn,
+  ISuggestionProvider,
   TSuggestionReplaceFunction
 } from 'domain/suggestions';
-import {
-  RequestFactory,
-  IPackageDependency,
-  PackageResponse
-} from 'domain/packages';
-
 import { DotNetCli } from './clients/dotnetCli';
 import { NuGetPackageClient } from './clients/nugetPackageClient';
 import { NuGetResourceClient } from './clients/nugetResourceClient';
 import { NuGetClientData } from './definitions/nuget';
 import { DotNetConfig } from './dotnetConfig';
-import { createDependenciesFromXml } from './dotnetXmlParserFactory'
+import { createDependenciesFromXml } from './dotnetXmlParserFactory';
 
 export class DotNetSuggestionProvider implements ISuggestionProvider {
 

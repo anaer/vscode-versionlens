@@ -17,5 +17,6 @@
     "jspm.optionalDependencies",
     "pnpm.overrides"
   ],
-  "versionlens.npm.allowEnvFiles": false
+  "versionlens.npm.allowEnvFiles": false,
+  "versionlens.npm.files": "**/{package.json,web-module.json}"
 }

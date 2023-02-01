@@ -14,7 +14,6 @@ export class VersionLensState {
   providerError: ContextState<boolean>;
 
   providerSupportsPrereleases: ContextState<boolean>;
-  providerSupportsInstalledStatuses: ContextState<boolean>;
 
   constructor(extension: VersionLensExtension) {
 
@@ -26,11 +25,6 @@ export class VersionLensState {
     this.prereleasesEnabled = new ContextState(
       StateContributions.PrereleasesEnabled,
       extension.suggestions.showPrereleasesOnStartup
-    );
-
-    this.installedStatusesEnabled = new ContextState(
-      StateContributions.InstalledStatusesEnabled,
-      extension.statuses.showOnStartup
     );
 
     this.providerActive = new ContextState(
@@ -50,11 +44,6 @@ export class VersionLensState {
 
     this.providerSupportsPrereleases = new ContextState(
       StateContributions.ProviderSupportsPrereleases,
-      false
-    );
-
-    this.providerSupportsInstalledStatuses = new ContextState(
-      StateContributions.ProviderSupportsInstalledStatuses,
       false
     );
 

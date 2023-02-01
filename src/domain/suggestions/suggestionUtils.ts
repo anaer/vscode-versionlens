@@ -1,9 +1,7 @@
-import { basename } from 'path';
-import minimatch from 'minimatch';
-
 import { PackageResponse, VersionHelpers } from 'domain/packages';
-
-import { ISuggestionProvider } from './definitions/iSuggestionProvider';
+import { IProvider } from 'domain/providers/definitions/iProvider';
+import minimatch from 'minimatch';
+import { basename } from 'path';
 
 export function defaultReplaceFn(packageResponse: PackageResponse, newVersion: string): string {
   return VersionHelpers.formatWithExistingLeading(
@@ -12,10 +10,10 @@ export function defaultReplaceFn(packageResponse: PackageResponse, newVersion: s
   );
 }
 
-export function filtersProvidersByFileName(
+export function filtersProvidersByFileName<T extends IProvider>(
   fileName: string,
-  providers: Array<ISuggestionProvider>
-): Array<ISuggestionProvider> {
+  providers: Array<T>
+): Array<T> {
 
   const filename = basename(fileName);
 

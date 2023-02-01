@@ -1,14 +1,13 @@
 import { ILogger } from 'domain/logging';
-import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import {
   extractPackageDependenciesFromYaml,
-  RequestFactory,
   IPackageDependency,
-  PackageResponse
+  PackageResponse,
+  RequestFactory
 } from 'domain/packages';
-
-import { PubConfig } from './pubConfig';
+import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import { PubClient } from './pubClient';
+import { PubConfig } from './pubConfig';
 import { pubReplaceVersion } from './pubUtils';
 
 export class PubSuggestionProvider implements ISuggestionProvider {

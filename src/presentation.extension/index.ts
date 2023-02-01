@@ -1,6 +1,5 @@
 export * from './definitions/iContainerMap';
 export * from './definitions/eIconCommandContributions';
-export * from './definitions/eStatusesContributions';
 export * from './definitions/eSuggestionCommandContributions';
 export * from './definitions/eSuggestionContributions';
 export * from './definitions/eSuggestionIndicators';
@@ -14,7 +13,6 @@ export * from './events/textDocumentEvents';
 export * from './state/contextState';
 export * from './state/versionLensState';
 
-export * from './helpers/installedStatusHelpers';
 export * as CommandHelpers from './helpers/commandHelpers';
 
 export * from './versionLensExtension';

@@ -1,11 +1,11 @@
 import { ICachingOptions, IHttpOptions } from 'domain/clients';
 import { IFrozenOptions } from 'domain/configuration';
-import { ProviderSupport, IProviderConfig, TProviderFileMatcher } from 'domain/providers';
-
-import { GitHubOptions } from './options/githubOptions';
+import { IProviderConfig, TProviderFileMatcher } from 'domain/providers';
+import { AbstractProviderConfig } from 'domain/providers/abstractProviderConfig';
 import { NpmContributions } from './definitions/eNpmContributions';
+import { GitHubOptions } from './options/githubOptions';
 
-export class NpmConfig implements IProviderConfig {
+export class NpmConfig extends AbstractProviderConfig implements IProviderConfig {
 
   constructor(
     config: IFrozenOptions,
@@ -13,33 +13,23 @@ export class NpmConfig implements IProviderConfig {
     http: IHttpOptions,
     github: GitHubOptions,
   ) {
-    this.config = config;
-    this.caching = caching;
-    this.http = http;
+    super('npm', config, caching, http);
     this.github = github;
   }
 
-  config: IFrozenOptions;
-
-  providerName: string = 'npm';
-
-  supports: Array<ProviderSupport> = [
-    ProviderSupport.Releases,
-    ProviderSupport.Prereleases,
-    ProviderSupport.InstalledStatuses,
-  ];
-
-  fileMatcher: TProviderFileMatcher = {
-    language: 'json',
-    scheme: 'file',
-    pattern: '**/package.json',
-  };
-
-  caching: ICachingOptions;
-
-  http: IHttpOptions;
-
   github: GitHubOptions;
+
+  get fileMatcher(): TProviderFileMatcher {
+    return {
+      language: 'json',
+      scheme: 'file',
+      pattern: this.filePatterns,
+    };
+  }
+
+  get filePatterns(): string {
+    return this.config.get(NpmContributions.FilePatterns);
+  }
 
   get dependencyProperties(): Array<string> {
     return this.config.get(NpmContributions.DependencyProperties);

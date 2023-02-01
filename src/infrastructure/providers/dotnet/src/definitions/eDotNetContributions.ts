@@ -4,4 +4,5 @@ export enum DotNetContributions {
   Nuget = 'dotnet.nuget',
   DependencyProperties = 'dotnet.dependencyProperties',
   TagFilter = 'dotnet.tagFilter',
+  FilePatterns = 'dotnet.files',
 }

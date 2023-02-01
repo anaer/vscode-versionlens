@@ -4,4 +4,5 @@ export enum PubContributions {
 
   DependencyProperties = 'pub.dependencyProperties',
   ApiUrl = 'pub.apiUrl',
+  FilePatterns = 'pub.files',
 }

@@ -1,15 +1,14 @@
 import { ILogger } from 'domain/logging';
-import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import {
   extractPackageDependenciesFromJson,
-  RequestFactory,
   IPackageDependency,
-  PackageResponse
+  PackageResponse,
+  RequestFactory
 } from 'domain/packages';
-
+import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import { NpmPackageClient } from './clients/npmPackageClient';
-import { npmReplaceVersion } from './npmUtils';
 import { NpmConfig } from './npmConfig';
+import { npmReplaceVersion } from './npmUtils';
 
 export class NpmSuggestionProvider implements ISuggestionProvider {
 

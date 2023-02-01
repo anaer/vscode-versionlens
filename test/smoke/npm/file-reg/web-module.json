@@ -1,0 +1,7 @@
+{
+  "name": "smoke npm file registration",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^2.3.4"
+  }
+}

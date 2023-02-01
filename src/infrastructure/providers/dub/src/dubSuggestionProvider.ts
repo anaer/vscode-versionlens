@@ -1,18 +1,17 @@
 import { ILogger } from 'domain/logging';
 import {
-  ISuggestionProvider,
+  extractPackageDependenciesFromJson,
+  IPackageDependency,
+  PackageResponse,
+  RequestFactory
+} from 'domain/packages';
+import {
   defaultReplaceFn,
+  ISuggestionProvider,
   TSuggestionReplaceFunction
 } from 'domain/suggestions';
-import {
-  extractPackageDependenciesFromJson,
-  RequestFactory,
-  IPackageDependency,
-  PackageResponse
-} from 'domain/packages';
-
-import { DubConfig } from './dubConfig';
 import { DubClient } from './dubClient';
+import { DubConfig } from './dubConfig';
 
 export class DubSuggestionProvider implements ISuggestionProvider {
 

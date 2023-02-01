@@ -44,7 +44,7 @@
     "lint:src": "npm run -s compile:src -- --noEmit",
     "lint:test": "npm run -s compile:test -- --noEmit",
     "pack": "webpack --config=./build/webpack.js --env logging=true",
-    "pack:src": "npm run -s pack -- --mode=production",
+    "pack:src": "npm run -s pack -- --mode=development",
     "pack:test": "npm run -s pack -- --env test=true --mode=development",
     "pretest": "npm run -s clean && npm run -s lint:test && npm run -s pack:test",
     "test": "node ./test/run.vscode.tests",
@@ -231,6 +231,11 @@
           "default": true,
           "description": "When set to 'true' the server will reject any connection which is not authorized within the list of supplied CAs. Set to false for unsigned."
         },
+        "versionlens.npm.files": {
+          "type": "string",
+          "default": "**/package.json",
+          "description": "Specifies which files to register with version lenses. You can use [minimatch](https://github.com/isaacs/minimatch) expressions to match file names. You will need to restart vscode when changing this setting."
+        },
         "versionlens.npm.caching.duration": {
           "type": [
             "null",
@@ -282,6 +287,11 @@
           "default": false,
           "description": "Allows versionlens to load .env file variables in to the process environment for npm to authenticate with .npmrc files. NOTE: You will need to restart vscode when changing this setting from true to false to clear any .env file variables still in the process.env."
         },
+        "versionlens.pub.files": {
+          "type": "string",
+          "default": "**/pubspec.yaml",
+          "description": "Specifies which files to register with version lenses. You can use [minimatch](https://github.com/isaacs/minimatch) expressions to match file names. You will need to restart vscode when changing this setting."
+        },
         "versionlens.pub.caching.duration": {
           "type": [
             "null",
@@ -313,6 +323,11 @@
           "type": "string",
           "default": "https://pub.dev",
           "description": "Defines the pub api to use for package searching."
+        },
+        "versionlens.dotnet.files": {
+          "type": "string",
+          "default": "**/*.{csproj,fsproj,targets,props}",
+          "description": "Specifies which files to register with version lenses. You can use [minimatch](https://github.com/isaacs/minimatch) expressions to match file names. You will need to restart vscode when changing this setting."
         },
         "versionlens.dotnet.caching.duration": {
           "type": [
@@ -365,6 +380,11 @@
           "default": [],
           "description": "Defines which nuget source to use for package searching. Has to be a v3 'service index' endpoint. e.g. https://api.nuget.org/v3/index.json. Defaults to the sources output by `dotnet nuget list source`"
         },
+        "versionlens.dub.files": {
+          "type": "string",
+          "default": "**/{dub.json,dub.selections.json}",
+          "description": "Specifies which files to register with version lenses. You can use [minimatch](https://github.com/isaacs/minimatch) expressions to match file names. You will need to restart vscode when changing this setting."
+        },
         "versionlens.dub.caching.duration": {
           "type": [
             "null",
@@ -397,6 +417,11 @@
           ],
           "description": "Defines which properties in dub.json should be parsed by this extension"
         },
+        "versionlens.composer.files": {
+          "type": "string",
+          "default": "**/composer.json",
+          "description": "Specifies which files to register with version lenses. You can use [minimatch](https://github.com/isaacs/minimatch) expressions to match file names. You will need to restart vscode when changing this setting."
+        },
         "versionlens.composer.caching.duration": {
           "type": [
             "null",
@@ -428,6 +453,11 @@
             "require-dev"
           ],
           "description": "Defines which properties in composer.json should be parsed by this extension"
+        },
+        "versionlens.maven.files": {
+          "type": "string",
+          "default": "**/pom.xml",
+          "description": "Specifies which files to register with version lenses. You can use [minimatch](https://github.com/isaacs/minimatch) expressions to match file names. You will need to restart vscode when changing this setting."
         },
         "versionlens.maven.caching.duration": {
           "type": [

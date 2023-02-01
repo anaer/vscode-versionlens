@@ -1,11 +1,9 @@
 // vscode references
-import minimatch from 'minimatch';
-import { basename } from 'path';
-import * as VsCode from 'vscode';
 import { ILogger } from 'domain/logging';
+import { filtersProvidersByFileName } from 'domain/suggestions/suggestionUtils';
 import { CommandHelpers, VersionLensProvider } from 'presentation.extension';
+import * as VsCode from 'vscode';
 import { IconCommandContributions } from '../definitions/eIconCommandContributions';
-import * as InstalledStatusHelpers from '../helpers/installedStatusHelpers';
 import { VersionLensState } from '../state/versionLensState';
 
 export class IconCommands {
@@ -64,20 +62,6 @@ export class IconCommands {
       });
   }
 
-  onShowInstalledStatuses(resourceUri: VsCode.Uri) {
-    this.state.installedStatusesEnabled.change(true)
-      .then(_ => {
-        this.refreshActiveCodeLenses();
-      });
-  }
-
-  onHideInstalledStatuses(resourceUri: VsCode.Uri) {
-    this.state.installedStatusesEnabled.change(false)
-      .then(_ => {
-        InstalledStatusHelpers.clearDecorations();
-      });
-  }
-
   onShowingProgress(resourceUri: VsCode.Uri) { }
 
   refreshActiveCodeLenses() {
@@ -99,23 +83,6 @@ export class IconCommands {
   }
 
 }
-
-export function filtersProvidersByFileName(
-  fileName: string,
-  providers: Array<VersionLensProvider>
-): Array<VersionLensProvider> {
-
-  const filename = basename(fileName);
-
-  const filtered = providers.filter(
-    provider => minimatch(filename, provider.config.fileMatcher.pattern)
-  );
-
-  if (filtered.length === 0) return [];
-
-  return filtered;
-}
-
 
 export function registerIconCommands(
   state: VersionLensState,

@@ -5,4 +5,5 @@ export enum NpmContributions {
   DependencyProperties = 'npm.dependencyProperties',
   DistTagFilter = 'npm.distTagFilter',
   AllowEnvFiles = 'npm.allowEnvFiles',
+  FilePatterns = 'npm.files',
 }

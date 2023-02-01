@@ -1,17 +1,8 @@
-import { ILogger } from "domain/logging";
-import { IProviderConfig } from "domain/providers";
-import {
-  PackageResponse,
-  IPackageDependency
-} from "domain/packages";
-
+import { IPackageDependency, PackageResponse } from "domain/packages";
+import { IProvider } from "domain/providers/definitions/iProvider";
 import { TSuggestionReplaceFunction } from "./tSuggestionReplaceFunction";
 
-export interface ISuggestionProvider {
-
-  config: IProviderConfig;
-
-  logger: ILogger;
+export interface ISuggestionProvider extends IProvider {
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
 

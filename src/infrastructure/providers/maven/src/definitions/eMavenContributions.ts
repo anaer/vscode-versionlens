@@ -5,4 +5,5 @@ export enum MavenContributions {
   DependencyProperties = 'maven.dependencyProperties',
   TagFilter = 'maven.tagFilter',
   ApiUrl = 'maven.apiUrl',
+  FilePatterns = 'maven.files',
 }

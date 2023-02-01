@@ -5,6 +5,4 @@ export enum StateContributions {
   ProviderBusy = 'versionlens.providerBusy',
   ProviderError = 'versionlens.providerError',
   ProviderSupportsPrereleases = 'versionlens.providerSupportsPrereleases',
-  ProviderSupportsInstalledStatuses = 'versionlens.providerSupportsInstalledStatuses',
-  InstalledStatusesEnabled = 'versionlens.installedStatusesEnabled',
 }

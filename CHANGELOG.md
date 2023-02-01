@@ -1,12 +1,37 @@
 # 1.1.0-next
 
-- **pnpm** Added `pnpm.overrides` support to package.json
+- **All providers**
+
+  You can now specify which files to register with version lenses. 
+  
+  You can use [minimatch](https://github.com/isaacs/minimatch) expressions to match file names. 
+  
+  You will need to restart vscode when changing these settings.
+
+  > **NOTE** File types are fixed and cannot be changed in contributions at this time
+
+  The new contributions are: 
+
+  |Provider|Type|Contribution|Default
+  |-|-|-|-
+  |**Composer**|json|`versionlens.composer.files`|`**/composer.json`
+  |**Dotnet**|xml|`versionlens.dotnet.files`|`**/*.{csproj,fsproj,targets,props}`
+  |**Dub**|json|`versionlens.dub.files`|`**/{dub.json,dub.selections.json}`
+  |**Npm**|json|`versionlens.npm.files`|`**/package.json`
+  |**Maven**|xml|`versionlens.maven.files`|`**/pom.xml`
+  |**Pub**|yaml|`versionlens.pub.files`|`**/pubspec.yaml`
+
+  Reported in [issue #313](https://gitlab.com/versionlens/vscode-versionlens/-/issues/313)
+
+  Thanks to [tjx666](https://gitlab.com/tjx666) for providing an example solution
+
+- **PNpm** Added ability to view `pnpm.overrides` versions in package.json
 
     Reported in [issue #312](https://gitlab.com/versionlens/vscode-versionlens/-/issues/312)
 
-    Thanks to [tjx666](https://gitlab.com/tjx666)
+    Thanks to [tjx666](https://gitlab.com/tjx666) for providing an example solution
 
-- **npm** Added `versionlens.npm.allowEnvFiles` contribution setting.
+- **Npm** Added `versionlens.npm.allowEnvFiles` contribution setting.
   
   Default is set to `false`.
 
