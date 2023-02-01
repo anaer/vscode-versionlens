@@ -131,8 +131,7 @@ module.exports = function (env, argv) {
   // Returns a object map of strings {"{moduleName}": true, ...} to mark them as nodejs modules
   function generateExternals() {
     const externals = {
-      "vscode": true,
-      "@npmcli/promise-spawn": true
+      "vscode": true
     }
 
     getDirectories(path.resolve(projectPath, 'node_modules'))

@@ -41,6 +41,21 @@
       "skipFiles": [
         "<node_internals>/**"
       ]
+    },
+    {
+      "name": "Debug webpack",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run-script",
+        "pack:src"
+      ],
+      "sourceMaps": true,
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     }
   ]
 }

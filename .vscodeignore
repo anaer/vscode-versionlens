@@ -1,9 +1,10 @@
 **/*.*
 !AUTHORS.md
 !README.md
-!LICENSE
 !CHANGELOG.md
-!package.json
-!package-lock.json
+!**/LICENSE
 !images/**/*.*
-!dist/**/*.js
+!**/*.json
+!**/*.js
+!**/*.cjs
+!**/*.mjs
