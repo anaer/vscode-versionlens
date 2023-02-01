@@ -9,13 +9,14 @@
 
 This extension shows __version__ information when opening a package or project for one of the following:
 
+- composer https://getcomposer.org/
 - dotnet https://www.dotnetfoundation.org/
 - dub https://code.dlang.org/
-- jspm https://jspm.io/,
 - maven https://maven.apache.org/
 - npm https://www.npmjs.com/
+  - jspm https://jspm.org/
+  - pnpm https://pnpm.io/
 - pub https://pub.dev/
-- composer https://getcomposer.org/
 
 ## How do I see version information?
 
