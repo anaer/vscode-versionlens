@@ -39,8 +39,4 @@ export class NpmConfig extends AbstractProviderConfig implements IProviderConfig
     return this.config.get(NpmContributions.DistTagFilter);
   }
 
-  get allowEnvFiles(): boolean {
-    return this.config.get(NpmContributions.AllowEnvFiles);
-  }
-
 }

@@ -1,57 +1,53 @@
-# 1.1.0-next
+# 1.1.0
 
 - **All providers**
 
-    You can now specify which files to register with version lenses. 
-    
-    You can use [minimatch](https://github.com/isaacs/minimatch) expressions to match file names. 
-    
-    You will need to restart vscode when changing these settings.
+  You can now specify which files to register with version lenses. 
+  
+  You can use [minimatch](https://github.com/isaacs/minimatch) expressions to match file names. 
+  
+  You will need to restart vscode when changing these settings.
 
-    The defaults are the same settings that were used internally prior to this change.
+  The defaults are the same settings that were used internally prior to this change.
 
-    > **NOTE** File types are fixed and cannot be changed in contributions at this time
+  > **NOTE** File types are fixed and cannot be changed in contributions at this time
 
-    The new contributions are: 
+  The new contributions are: 
 
-    |Provider|Type|Contribution|Default
-    |-|-|-|-
-    |**Composer**|json|`versionlens.composer.files`|`**/composer.json`
-    |**Dotnet**|xml|`versionlens.dotnet.files`|`**/*.{csproj,fsproj,targets,props}`
-    |**Dub**|json|`versionlens.dub.files`|`**/{dub.json,dub.selections.json}`
-    |**Npm**|json|`versionlens.npm.files`|`**/package.json`
-    |**Maven**|xml|`versionlens.maven.files`|`**/pom.xml`
-    |**Pub**|yaml|`versionlens.pub.files`|`**/pubspec.yaml`
+  |Provider|Type|Contribution|Default
+  |-|-|-|-
+  |**Composer**|json|`versionlens.composer.files`|`**/composer.json`
+  |**Dotnet**|xml|`versionlens.dotnet.files`|`**/*.{csproj,fsproj,targets,props}`
+  |**Dub**|json|`versionlens.dub.files`|`**/{dub.json,dub.selections.json}`
+  |**Npm**|json|`versionlens.npm.files`|`**/package.json`
+  |**Maven**|xml|`versionlens.maven.files`|`**/pom.xml`
+  |**Pub**|yaml|`versionlens.pub.files`|`**/pubspec.yaml`
 
-    > Be aware that changing a setting to something like `**/*.json` would tell version lens to activate for all json files. So be specific like `**/filename.ext`
+  > Be aware that changing a setting to something like `**/*.json` would tell version lens to activate for all json files. So be specific like `**/filename.ext`
 
-    Reported in [issue #313](https://gitlab.com/versionlens/vscode-versionlens/-/issues/313)
+  Reported in [issue #313](https://gitlab.com/versionlens/vscode-versionlens/-/issues/313)
 
-    Thanks to [tjx666](https://gitlab.com/tjx666) for providing an example solution
+  Thanks to [tjx666](https://gitlab.com/tjx666) for providing an example solution
 
 - **PNpm** Added ability to view `pnpm.overrides` versions in package.json
 
-    Reported in [issue #312](https://gitlab.com/versionlens/vscode-versionlens/-/issues/312)
+  Reported in [issue #312](https://gitlab.com/versionlens/vscode-versionlens/-/issues/312)
 
-    Thanks to [tjx666](https://gitlab.com/tjx666) for providing an example solution
-
-- **Npm** Added `versionlens.npm.allowEnvFiles` contribution setting.
-  
-    Default is set to `false`.
-
-    When set to `true` versionlens will load `.env files` in to the process environment for npm registry authentication.
-    Useful when using `.npmrc files` containing env auth tokens.
-    
-    **NOTE**: You will need to restart vscode when changing this setting from `true` to `false` to clear any .env file variables still in the process.env.
+  Thanks to [tjx666](https://gitlab.com/tjx666) for providing an example solution
 
 - **Jspm** is now part of the npm provider.
 
-    The following entries have been added to the `versionlens.npm.dependencyProperties` contribution setting
+  The following entries have been added to the `versionlens.npm.dependencyProperties` contribution setting
 
-      - "jspm.dependencies""
-      - "jspm.devDependencies"
-      - "jspm.peerDependencies"
-      - "jspm.optionalDependencies"
+    - "jspm.dependencies""
+    - "jspm.devDependencies"
+    - "jspm.peerDependencies"
+    - "jspm.optionalDependencies"
+
+- **Npm** Fixed an issue where npm config wasnt using the user config causing private registry authentication to fail.
+
+  - reported in [issue #314](https://gitlab.com/versionlens/vscode-versionlens/-/issues/314)
+  - reported in [issue #311](https://gitlab.com/versionlens/vscode-versionlens/-/issues/311)
 
 # 1.0.14
 

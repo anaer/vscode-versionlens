@@ -280,13 +280,6 @@
           "default": [],
           "description": "Define which common dist tags you want to see. i.e. [alpha, beta]. If you don't specify any dist tags then all the dist-tags for a package will be shown."
         },
-        "versionlens.npm.allowEnvFiles": {
-          "type": [
-            "boolean"
-          ],
-          "default": false,
-          "description": "Allows versionlens to load .env file variables in to the process environment for npm to authenticate with .npmrc files. NOTE: You will need to restart vscode when changing this setting from true to false to clear any .env file variables still in the process.env."
-        },
         "versionlens.pub.files": {
           "type": "string",
           "default": "**/pubspec.yaml",

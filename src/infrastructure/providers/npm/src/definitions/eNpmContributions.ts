@@ -4,6 +4,5 @@ export enum NpmContributions {
   Github = 'npm.github',
   DependencyProperties = 'npm.dependencyProperties',
   DistTagFilter = 'npm.distTagFilter',
-  AllowEnvFiles = 'npm.allowEnvFiles',
   FilePatterns = 'npm.files',
 }

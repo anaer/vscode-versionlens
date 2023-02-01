@@ -1,17 +1,18 @@
+import { AbstractCachedRequest, ClientResponseSource } from 'domain/clients';
 import { ILogger } from 'domain/logging';
-import { SuggestionFactory } from 'domain/suggestions';
 import {
   DocumentFactory,
-  TPackageRequest,
-  VersionHelpers,
-  TPackageDocument,
+  PackageSourceTypes,
   PackageVersionTypes,
-  PackageSourceTypes
+  TPackageDocument,
+  TPackageRequest,
+  VersionHelpers
 } from 'domain/packages';
-import { ClientResponseSource, AbstractCachedRequest } from 'domain/clients';
-
-import { NpmConfig } from '../npmConfig';
+import { SuggestionFactory } from 'domain/suggestions';
+import { homedir } from 'os';
+import { resolve } from 'path';
 import { NpaSpec, NpaTypes } from '../models/npaSpec';
+import { NpmConfig } from '../npmConfig';
 import * as NpmUtils from '../npmUtils';
 
 export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument> {
@@ -24,19 +25,12 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
 
   NpmCliConfig: any;
 
-  findConfig: any;
-
-  dotenv: any;
-
   constructor(config: NpmConfig, logger: ILogger) {
     super(config.caching);
     this.config = config;
     this.logger = logger;
-
     this.pacote = require('pacote');
     this.NpmCliConfig = require('@npmcli/config');
-    this.findConfig = require('find-config');
-    this.dotenv = require('dotenv');
   }
 
   async fetchPackage(
@@ -53,20 +47,17 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
       return Promise.resolve(cachedResp.data);
     }
 
-    if (this.config.allowEnvFiles) {
-      // load environment variables from .env files for npm authentication
-      this.dotenv.config({
-        path: this.findConfig('.env', { cwd: request.package.path })
-      });
-    }
-
     // load the npm config
+    const userConfigPath = resolve(homedir(), ".npmrc");
     const npmConfig = new this.NpmCliConfig({
-      npmPath: request.package.path,
       shorthands: {},
       definitions: {},
-      argv: [],
-      cwd: request.package.path
+      npmPath: request.package.path,
+      cwd: request.package.path,
+      // ensure user config is parsed by npm
+      argv: ['', '', `--userconfig=${userConfigPath}`],
+      // setup up a custom env for .env files
+      env: NpmUtils.getDotEnv(request.package.path)
     });
     await npmConfig.load();
 

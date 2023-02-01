@@ -1,10 +1,14 @@
+import { ClientResponse, ClientResponseSource } from 'domain/clients';
 import {
-  VersionHelpers,
-  PackageSourceTypes,
   PackageResponse,
+  PackageSourceTypes,
   PackageVersionTypes,
+  VersionHelpers
 } from 'domain/packages';
-import { ClientResponseSource, ClientResponse } from 'domain/clients';
+import dotenv from 'dotenv';
+import fs from 'fs';
+import findConfig from 'find-config';
+import { KeyStringDictionary } from 'domain/generics';
 
 export function npmReplaceVersion(packageInfo: PackageResponse, newVersion: string): string {
   if (packageInfo.source === PackageSourceTypes.Github) {
@@ -45,4 +49,17 @@ export function convertNpmErrorToResponse(error, source: ClientResponseSource): 
     status: error.code,
     data: error.message,
   }
+}
+
+export function getDotEnv(cwd: string): KeyStringDictionary {
+  // check for npmrc files
+  const npmrcPath = findConfig('.npmrc', { cwd, dot: true });
+  if (!npmrcPath) return {};
+
+  // find the env file
+  const envPath = findConfig('.env', { cwd, dot: true });
+  if (!envPath) return {};
+
+  // return the parsed env object
+  return dotenv.parse(fs.readFileSync(envPath, 'utf8'));
 }
