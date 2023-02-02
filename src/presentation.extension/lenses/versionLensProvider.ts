@@ -1,7 +1,6 @@
 import { ILogger } from 'domain/logging';
 import { PackageSourceTypes } from 'domain/packages';
-import { IProviderConfig } from 'domain/providers';
-import { IProvider } from 'domain/providers/definitions/iProvider';
+import { IProvider, IProviderConfig } from 'domain/providers';
 import {
   defaultReplaceFn,
   ISuggestionProvider,

@@ -1,5 +1,5 @@
 import { IPackageDependency, PackageResponse } from "domain/packages";
-import { IProvider } from "domain/providers/definitions/iProvider";
+import { IProvider } from "domain/providers";
 import { TSuggestionReplaceFunction } from "./tSuggestionReplaceFunction";
 
 export interface ISuggestionProvider extends IProvider {

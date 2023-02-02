@@ -1,3 +1,4 @@
+import { getSuggestionProviders } from 'application/providers';
 import {
   addCachingOptions,
   addHttpOptions,
@@ -6,7 +7,6 @@ import {
   addWinstonChannelLogger,
   addWinstonLogger
 } from 'application/serviceUtils';
-import { getSuggestionProviders } from 'application/suggestions/getSuggestionProviders';
 import {
   asFunction,
   asValue,

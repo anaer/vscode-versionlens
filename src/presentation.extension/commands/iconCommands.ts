@@ -1,6 +1,6 @@
 // vscode references
 import { ILogger } from 'domain/logging';
-import { filtersProvidersByFileName } from 'domain/suggestions/suggestionUtils';
+import { getSuggestionProvidersByFileName } from 'application/providers';
 import { CommandHelpers, VersionLensProvider } from 'presentation.extension';
 import * as VsCode from 'vscode';
 import { IconCommandContributions } from '../definitions/eIconCommandContributions';
@@ -67,7 +67,7 @@ export class IconCommands {
   refreshActiveCodeLenses() {
     const { window } = VsCode;
     const fileName = window.activeTextEditor.document.fileName;
-    const providers = filtersProvidersByFileName(
+    const providers = getSuggestionProvidersByFileName(
       fileName,
       this.versionLensProviders
     )

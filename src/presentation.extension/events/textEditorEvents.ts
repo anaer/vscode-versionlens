@@ -1,6 +1,7 @@
+import { getSuggestionProvidersByFileName } from 'application/providers';
 import { ILoggerChannel } from 'domain/logging';
 import { ProviderSupport } from 'domain/providers';
-import { filtersProvidersByFileName, ISuggestionProvider } from 'domain/suggestions';
+import { ISuggestionProvider } from 'domain/suggestions';
 import { TextEditor, window } from 'vscode';
 import { VersionLensState } from '../state/versionLensState';
 
@@ -39,7 +40,7 @@ export class TextEditorEvents {
 
     if (textEditor.document.uri.scheme !== 'file') return;
 
-    const providersMatchingFilename = filtersProvidersByFileName(
+    const providersMatchingFilename = getSuggestionProvidersByFileName(
       textEditor.document.fileName,
       this.suggestionProviders
     );
