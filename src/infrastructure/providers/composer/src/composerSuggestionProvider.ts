@@ -1,9 +1,9 @@
 import { ILogger } from 'domain/logging';
 import {
   extractPackageDependenciesFromJson,
+  fetchPackages,
   IPackageDependency,
-  PackageResponse,
-  RequestFactory
+  PackageResponse
 } from 'domain/packages';
 import {
   defaultReplaceFn,
@@ -46,7 +46,7 @@ export class ComposerSuggestionProvider implements ISuggestionProvider {
 
     const clientData = null;
 
-    return RequestFactory.executeDependencyRequests(
+    return fetchPackages(
       packagePath,
       this.client,
       clientData,

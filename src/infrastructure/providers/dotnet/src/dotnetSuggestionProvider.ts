@@ -1,8 +1,9 @@
 import { UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
+  fetchPackages,
   IPackageDependency,
-  PackageResponse, RequestFactory
+  PackageResponse
 } from 'domain/packages';
 import {
   defaultReplaceFn,
@@ -87,7 +88,7 @@ export class DotNetSuggestionProvider implements ISuggestionProvider {
 
     const clientData: NuGetClientData = { serviceUrls: serviceUrls }
 
-    return RequestFactory.executeDependencyRequests(
+    return fetchPackages(
       packagePath,
       this.nugetPackageClient,
       clientData,

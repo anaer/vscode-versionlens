@@ -1,9 +1,9 @@
 import { ILogger } from 'domain/logging';
 import {
   extractPackageDependenciesFromJson,
+  fetchPackages,
   IPackageDependency,
-  PackageResponse,
-  RequestFactory
+  PackageResponse
 } from 'domain/packages';
 import {
   defaultReplaceFn,
@@ -45,7 +45,7 @@ export class DubSuggestionProvider implements ISuggestionProvider {
   ): Promise<Array<PackageResponse>> {
     const clientData = null;
 
-    return RequestFactory.executeDependencyRequests(
+    return fetchPackages(
       packagePath,
       this.client,
       clientData,

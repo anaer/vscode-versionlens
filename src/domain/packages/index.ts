@@ -14,9 +14,10 @@ export * from "./definitions/tPackageResponseStatus";
 export * from './definitions/tSemverSpec';
 
 export * as DocumentFactory from './factories/packageDocumentFactory';
-export * as RequestFactory from './factories/packageRequestFactory';
 export * as ResponseFactory from './factories/packageResponseFactory';
 export * as VersionHelpers from './helpers/versionHelpers';
+
+export * from './fetchPackages';
 
 export * from './models/packageResponse';
 

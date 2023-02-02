@@ -1,9 +1,9 @@
 import { ILogger } from 'domain/logging';
 import {
   extractPackageDependenciesFromJson,
+  fetchPackages,
   IPackageDependency,
-  PackageResponse,
-  RequestFactory
+  PackageResponse
 } from 'domain/packages';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import { NpmPackageClient } from './clients/npmPackageClient';
@@ -48,7 +48,7 @@ export class NpmSuggestionProvider implements ISuggestionProvider {
     }
 
     const clientData = null;
-    return RequestFactory.executeDependencyRequests(
+    return fetchPackages(
       packagePath,
       this.client,
       clientData,

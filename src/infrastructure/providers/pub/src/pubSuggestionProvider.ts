@@ -1,9 +1,9 @@
 import { ILogger } from 'domain/logging';
 import {
   extractPackageDependenciesFromYaml,
+  fetchPackages,
   IPackageDependency,
-  PackageResponse,
-  RequestFactory
+  PackageResponse
 } from 'domain/packages';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import { PubClient } from './pubClient';
@@ -44,7 +44,7 @@ export class PubSuggestionProvider implements ISuggestionProvider {
     // this.customReplaceFn = pubReplaceVersion.bind(yamlText);
 
     const clientData = null;
-    return RequestFactory.executeDependencyRequests(
+    return fetchPackages(
       packagePath,
       this.client,
       clientData,

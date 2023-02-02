@@ -1,9 +1,9 @@
 import { UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
+  fetchPackages,
   IPackageDependency,
-  PackageResponse,
-  RequestFactory
+  PackageResponse
 } from 'domain/packages';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import { MavenClient } from './clients/mavenClient';
@@ -56,7 +56,7 @@ export class MavenSuggestionProvider implements ISuggestionProvider {
 
       const clientData: MavenClientData = { repositories }
 
-      return RequestFactory.executeDependencyRequests(
+      return fetchPackages(
         packagePath,
         this.client,
         clientData,
