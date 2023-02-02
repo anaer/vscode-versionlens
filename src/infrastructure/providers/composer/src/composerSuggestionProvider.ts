@@ -1,7 +1,7 @@
+import { fetchPackages } from 'application/packages';
 import { ILogger } from 'domain/logging';
 import {
   extractPackageDependenciesFromJson,
-  fetchPackages,
   IPackageDependency,
   PackageResponse
 } from 'domain/packages';

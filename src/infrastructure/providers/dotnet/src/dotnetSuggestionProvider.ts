@@ -1,10 +1,7 @@
+import { fetchPackages } from 'application/packages';
 import { UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
-import {
-  fetchPackages,
-  IPackageDependency,
-  PackageResponse
-} from 'domain/packages';
+import { IPackageDependency, PackageResponse } from 'domain/packages';
 import {
   defaultReplaceFn,
   ISuggestionProvider,

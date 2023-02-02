@@ -2,28 +2,29 @@ import {
   IPackageClient,
   PackageResponse,
   ResponseFactory,
+  TPackageDocument,
   TPackageRequest
 } from 'domain/packages';
 
-export async function fetchPackage<TClientData>(
+export function fetchPackage<TClientData>(
   client: IPackageClient<TClientData>,
   request: TPackageRequest<TClientData>,
-): Promise<Array<PackageResponse> | PackageResponse> {
+): Promise<Array<PackageResponse>> {
 
-  client.logger.debug(`Queued package: %s`, request.package.name);
+  client.logger.debug("Queued package: %s", request.package.name);
 
   return client.fetchPackage(request)
-    .then(function (response) {
+    .then(function (document: TPackageDocument) {
 
       client.logger.info(
         'Fetched %s package from %s: %s@%s',
-        response.providerName,
-        response.response.source,
+        document.providerName,
+        document.response.source,
         request.package.name,
         request.package.version
       );
 
-      return ResponseFactory.createSuccess(request, response);
+      return ResponseFactory.createSuccess(request, document);
     })
     .catch(function (error: PackageResponse) {
 
