@@ -1,13 +1,13 @@
 import assert from 'assert';
 import {
-  SuggestionFactory,
-  SuggestionStatus,
-  SuggestionFlags
+  createSuggestions,
+  SuggestionFlags,
+  SuggestionStatus
 } from 'domain/suggestions';
 
 export const CreateSuggestionsTests = {
 
-  title: SuggestionFactory.createSuggestions.name,
+  title: createSuggestions.name,
 
   "returns PackageVersionStatus.nomatch": {
 
@@ -23,7 +23,7 @@ export const CreateSuggestionsTests = {
       const testRange = '*'
       const testReleases = []
       const testPrereleases = []
-      const results = SuggestionFactory.createSuggestions(
+      const results = createSuggestions(
         testRange,
         testReleases,
         testPrereleases
@@ -52,7 +52,7 @@ export const CreateSuggestionsTests = {
       const testRange = '2.0.0'
       const testReleases = ['1.0.0']
       const testPrereleases = ['1.1.0-alpha.1']
-      const results = SuggestionFactory.createSuggestions(
+      const results = createSuggestions(
         testRange,
         testReleases,
         testPrereleases
@@ -77,7 +77,7 @@ export const CreateSuggestionsTests = {
       const testRange = '^1.0.0'
       const testReleases = ['0.0.6']
       const testPrereleases = ['1.0.1-1.2.3', '1.0.2-1.2.3', '1.0.3-1.2.3']
-      const results = SuggestionFactory.createSuggestions(
+      const results = createSuggestions(
         testRange,
         testReleases,
         testPrereleases,
@@ -113,7 +113,7 @@ export const CreateSuggestionsTests = {
       ]
 
       testRanges.forEach(testRange => {
-        const results = SuggestionFactory.createSuggestions(
+        const results = createSuggestions(
           testRange,
           testReleases,
           testPrereleases
@@ -138,7 +138,7 @@ export const CreateSuggestionsTests = {
       const testPrereleases = ['1.1.0-alpha.1', '4.0.0-next']
       const testRange = testSuggestedVersion
 
-      const results = SuggestionFactory.createSuggestions(
+      const results = createSuggestions(
         testRange,
         testReleases,
         testPrereleases,
@@ -171,7 +171,7 @@ export const CreateSuggestionsTests = {
       const testPrereleases = ['1.1.0-alpha.1', '4.0.0-next']
       const testRange = '4.0.0'
 
-      const results = SuggestionFactory.createSuggestions(
+      const results = createSuggestions(
         testRange,
         testReleases,
         testPrereleases,
@@ -207,7 +207,7 @@ export const CreateSuggestionsTests = {
       const testReleases = ['1.0.0', '2.0.0', '2.1.0', '3.0.0']
       const testPrereleases = ['1.1.0-alpha.1', '4.0.0-next']
 
-      const results = SuggestionFactory.createSuggestions(
+      const results = createSuggestions(
         '>=2',
         testReleases,
         testPrereleases
@@ -240,7 +240,7 @@ export const CreateSuggestionsTests = {
       const testReleases = ['1.0.0', '2.0.0', '2.1.0', '7.9.6', '7.9.7', testLatest]
       const testPrereleases = ['1.1.0-alpha.1', '8.0.0-next']
 
-      const results = SuggestionFactory.createSuggestions(
+      const results = createSuggestions(
         '^7.9.1',
         testReleases,
         testPrereleases,
@@ -276,7 +276,7 @@ export const CreateSuggestionsTests = {
       ]
 
       testRanges.forEach(testRange => {
-        const results = SuggestionFactory.createSuggestions(
+        const results = createSuggestions(
           testRange,
           testReleases,
           testPrereleases

@@ -13,7 +13,7 @@ import {
   TSemverSpec,
   VersionHelpers
 } from 'domain/packages';
-import { SuggestionFactory } from 'domain/suggestions';
+import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
 import xmldoc from 'xmldoc';
 import { MavenClientData } from '../definitions/mavenClientData';
 import { MavenConfig } from '../mavenConfig';
@@ -111,7 +111,7 @@ export class MavenClient implements IPackageClient<MavenClientData> {
         };
 
         // analyse suggestions
-        const suggestions = SuggestionFactory.createSuggestions(
+        const suggestions = createSuggestions(
           versionRange,
           releases,
           prereleases

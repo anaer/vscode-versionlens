@@ -14,6 +14,7 @@ import {
   VersionHelpers
 } from 'domain/packages';
 import {
+  createSuggestions,
   SuggestionFactory,
   SuggestionStatus,
   TPackageSuggestion
@@ -100,7 +101,7 @@ export class DubClient implements IPackageClient<null> {
         const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(rawVersions)
 
         // analyse suggestions
-        const suggestions = createSuggestions(
+        const suggestions = parseSuggestions(
           versionRange,
           releases,
           prereleases
@@ -120,13 +121,13 @@ export class DubClient implements IPackageClient<null> {
 
 }
 
-export function createSuggestions(
+export function parseSuggestions(
   versionRange: string,
   releases: string[],
   prereleases: string[]
 ): Array<TPackageSuggestion> {
 
-  const suggestions = SuggestionFactory.createSuggestions(
+  const suggestions = createSuggestions(
     versionRange,
     releases,
     prereleases

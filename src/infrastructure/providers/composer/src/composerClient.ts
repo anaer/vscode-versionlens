@@ -14,7 +14,7 @@ import {
   TSemverSpec,
   VersionHelpers
 } from 'domain/packages';
-import { SuggestionFactory } from 'domain/suggestions';
+import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
 import fs from 'node:fs';
 import { ComposerConfig } from './composerConfig';
 import { IPackagistApiItem } from './definitions/iPackagistApiItem';
@@ -116,7 +116,7 @@ export class ComposerClient implements IPackageClient<null> {
         );
 
         // analyse suggestions
-        const suggestions = SuggestionFactory.createSuggestions(
+        const suggestions = createSuggestions(
           versionRange,
           releases,
           prereleases

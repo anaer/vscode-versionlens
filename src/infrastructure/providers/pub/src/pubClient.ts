@@ -1,5 +1,5 @@
 import { ILogger } from 'domain/logging';
-import { SuggestionFactory } from 'domain/suggestions';
+import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
 
 import {
   TPackageRequest,
@@ -95,7 +95,7 @@ export class PubClient implements IPackageClient<null> {
         const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(rawVersions)
 
         // analyse suggestions
-        const suggestions = SuggestionFactory.createSuggestions(
+        const suggestions = createSuggestions(
           versionRange,
           releases,
           prereleases

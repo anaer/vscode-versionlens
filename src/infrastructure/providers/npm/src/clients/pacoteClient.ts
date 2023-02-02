@@ -8,7 +8,7 @@ import {
   TPackageRequest,
   VersionHelpers
 } from 'domain/packages';
-import { SuggestionFactory } from 'domain/suggestions';
+import { createSuggestions } from 'domain/suggestions';
 import { homedir } from 'os';
 import { resolve } from 'path';
 import { NpaSpec, NpaTypes } from '../models/npaSpec';
@@ -147,7 +147,7 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
         }
 
         // analyse suggestions
-        const suggestions = SuggestionFactory.createSuggestions(
+        const suggestions = createSuggestions(
           versionRange,
           releases,
           prereleases,

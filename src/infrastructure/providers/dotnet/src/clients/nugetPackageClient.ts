@@ -1,5 +1,5 @@
 import { ILogger } from 'domain/logging';
-import { SuggestionFactory } from 'domain/suggestions';
+import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
 import {
   DocumentFactory,
   TPackageDocument,
@@ -153,7 +153,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
         };
 
         // analyse suggestions
-        const suggestions = SuggestionFactory.createSuggestions(
+        const suggestions = createSuggestions(
           versionRange,
           releases,
           prereleases

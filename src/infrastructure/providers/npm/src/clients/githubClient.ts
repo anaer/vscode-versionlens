@@ -12,7 +12,7 @@ import {
   TPackageRequest,
   VersionHelpers
 } from 'domain/packages';
-import { SuggestionFactory } from 'domain/suggestions';
+import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
 import semver from 'semver';
 import { NpaSpec } from '../models/npaSpec';
 import { NpmConfig } from '../npmConfig';
@@ -100,7 +100,7 @@ export class GitHubClient {
         );
 
         // analyse suggestions
-        const suggestions = SuggestionFactory.createSuggestions(
+        const suggestions = createSuggestions(
           versionRange,
           releases,
           prereleases
