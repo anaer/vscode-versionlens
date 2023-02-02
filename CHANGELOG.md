@@ -1,3 +1,14 @@
+# 1.1.1
+
+  - **pnpm** added override name dependency handling. i.e `axios@<1`
+
+    Reported in [issue #312](https://gitlab.com/versionlens/vscode-versionlens/-/issues/312)
+
+    Thanks to [tjx666](https://gitlab.com/tjx666) for providing an example solution
+
+  - **npm** Fixed an issue where invalid npm package names would cause an exception.
+    Will now show `Invalid entry` for invalid npm package names
+
 # 1.1.0
 
 - **All providers**
