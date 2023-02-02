@@ -1,9 +1,7 @@
-import { languages, Disposable } from 'vscode';
-
 import { ILogger } from "domain/logging";
 import { ISuggestionProvider } from "domain/suggestions";
-
 import { VersionLensExtension, VersionLensProvider } from "presentation.extension";
+import { Disposable, languages } from 'vscode';
 
 export function registerVersionLensProviders(
   extension: VersionLensExtension,

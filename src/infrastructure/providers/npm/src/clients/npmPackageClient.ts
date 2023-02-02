@@ -135,6 +135,10 @@ export class NpmPackageClient implements IPackageClient<null> {
           SuggestionFactory.createInvalid(''),
           SuggestionFactory.createLatest()
         ];
+      else if (status == 'INVALIDPACKAGENAME')
+        suggestions = [
+          SuggestionFactory.createInvalid('')
+        ];
       else if (status == 128)
         suggestions = [SuggestionFactory.createNotFound()]
       else

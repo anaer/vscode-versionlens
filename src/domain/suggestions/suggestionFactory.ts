@@ -126,8 +126,6 @@ export function createMatchesLatest(latestVersion: string): TPackageSuggestion {
     version: isPrerelease ? latestVersion : '',
     flags: SuggestionFlags.status
   };
-
-
 }
 
 export function createSatisifiesLatest(): TPackageSuggestion {
@@ -147,7 +145,9 @@ export function createFixedStatus(version: string): TPackageSuggestion {
 }
 
 export function createSuggestion(
-  name: string, version: string, flags: SuggestionFlags
+  name: string,
+  version: string,
+  flags: SuggestionFlags
 ): TPackageSuggestion {
   return { name, version, flags };
 }
