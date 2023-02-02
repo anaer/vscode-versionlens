@@ -80,7 +80,7 @@
     "pacote": "15.0.8",
     "request-light": "0.7.0",
     "semver": "7.3.8",
-    "winston": "3.8.2",
+    "winston": "3.7.1",
     "xmldoc": "1.2.0",
     "yaml": "1.10.2"
   },
