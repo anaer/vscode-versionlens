@@ -1,10 +1,7 @@
-import { window, TextEditor } from 'vscode';
-
+import { ILoggerChannel } from 'domain/logging';
 import { ProviderSupport } from 'domain/providers';
-import { ISuggestionProvider, filtersProvidersByFileName } from 'domain/suggestions';
-
-import { ILoggerTransport } from 'infrastructure/logging';
-
+import { filtersProvidersByFileName, ISuggestionProvider } from 'domain/suggestions';
+import { TextEditor, window } from 'vscode';
 import { VersionLensState } from '../state/versionLensState';
 
 export class TextEditorEvents {
@@ -12,11 +9,11 @@ export class TextEditorEvents {
   constructor(
     state: VersionLensState,
     suggestionProviders: Array<ISuggestionProvider>,
-    loggerTransport: ILoggerTransport
+    loggerChannel: ILoggerChannel
   ) {
     this.state = state;
     this.suggestionProviders = suggestionProviders;
-    this.loggerTransport = loggerTransport;
+    this.loggerChannel = loggerChannel;
 
     // register editor events
     window.onDidChangeActiveTextEditor(
@@ -28,7 +25,7 @@ export class TextEditorEvents {
 
   suggestionProviders: Array<ISuggestionProvider>;
 
-  loggerTransport: ILoggerTransport;
+  loggerChannel: ILoggerChannel;
 
   onDidChangeActiveTextEditor(textEditor: TextEditor) {
     // maintain versionLens.providerActive state
@@ -54,7 +51,7 @@ export class TextEditorEvents {
     }
 
     // ensure the latest logging level is set
-    this.loggerTransport.updateLevel();
+    this.loggerChannel.refreshLoggingLevel();
 
     // determine prerelease support
     const providerSupportsPrereleases = providersMatchingFilename.reduce(

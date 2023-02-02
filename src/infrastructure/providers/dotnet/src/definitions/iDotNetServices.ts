@@ -1,18 +1,17 @@
 import {
   ICachingOptions,
   IHttpOptions,
-  IProcessClient,
-  IJsonHttpClient
+  IJsonHttpClient,
+  IProcessClient
 } from 'domain/clients';
-
+import { DotNetCli } from '../clients/dotnetCli';
+import { NuGetPackageClient } from '../clients/nugetPackageClient';
+import { NuGetResourceClient } from '../clients/nugetResourceClient';
 import { DotNetConfig } from '../dotnetConfig';
 import { DotNetSuggestionProvider } from '../dotnetSuggestionProvider';
 import { NugetOptions } from '../options/nugetOptions';
-import { DotNetCli } from '../clients/dotnetCli';
-import { NuGetResourceClient } from '../clients/nugetResourceClient';
-import { NuGetPackageClient } from '../clients/nugetPackageClient';
 
-export interface IDotNetContainerMap {
+export interface IDotNetServices {
   // options
   nugetOpts: NugetOptions,
 

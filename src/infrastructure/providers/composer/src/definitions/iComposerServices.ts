@@ -1,10 +1,9 @@
 import { ICachingOptions, IHttpOptions, IJsonHttpClient } from 'domain/clients';
-
 import { ComposerConfig } from '../composerConfig';
 import { ComposerSuggestionProvider } from '../composerSuggestionProvider';
 import { ComposerClient } from '../composerClient';
 
-export interface IComposerContainerMap {
+export interface IComposerServices {
 
   // options
   composerCachingOpts: ICachingOptions,

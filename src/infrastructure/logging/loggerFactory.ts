@@ -1,11 +1,10 @@
-import { ILogger } from 'domain/logging';
-
-import { ILoggerTransport } from './transports/iLoggerTransport';
+import { ILogger, ILoggerChannel } from 'domain/logging';
 
 const { loggers, format, transports } = require('winston');
 
 export function createWinstonLogger(
-  loggerTransport: ILoggerTransport, defaultMeta: object
+  loggerChannel: ILoggerChannel,
+  defaultMeta: object
 ): ILogger {
 
   const logTransports = [
@@ -13,18 +12,18 @@ export function createWinstonLogger(
     new transports.Console({ level: 'error' }),
 
     // send info to the transport
-    loggerTransport
+    loggerChannel
   ];
 
   const logFormat = format.combine(
-    format.timestamp({ format: loggerTransport.logging.timestampFormat }),
+    format.timestamp({ format: loggerChannel.logging.timestampFormat }),
     format.simple(),
     format.splat(),
     format.printf(loggerFormatter)
   );
 
   return loggers.add(
-    loggerTransport.name,
+    loggerChannel.name,
     {
       format: logFormat,
       defaultMeta,

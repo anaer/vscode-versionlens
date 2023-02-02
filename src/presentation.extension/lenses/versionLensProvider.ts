@@ -129,7 +129,7 @@ export class VersionLensProvider implements CodeLensProvider, IProvider {
           )
         }
 
-        return <any>VersionLensFactory.createFromPackageResponses(
+        return VersionLensFactory.createFromPackageResponses(
           document,
           responses,
           this.suggestionProvider.suggestionReplaceFn || defaultReplaceFn

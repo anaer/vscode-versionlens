@@ -1,4 +1,4 @@
-export * from './definitions/iContainerMap';
+export * from './definitions/iExtensionServices';
 export * from './definitions/eIconCommandContributions';
 export * from './definitions/eSuggestionCommandContributions';
 export * from './definitions/eSuggestionContributions';
@@ -16,7 +16,7 @@ export * from './state/versionLensState';
 export * as CommandHelpers from './helpers/commandHelpers';
 
 export * from './versionLensExtension';
-export * from './versionLensContainer';
+export * from './extensionContainer';
 
 export * as CommandFactory from './lenses/suggestionCommandFactory';
 export * as VersionLensFactory from './lenses/versionLensFactory';

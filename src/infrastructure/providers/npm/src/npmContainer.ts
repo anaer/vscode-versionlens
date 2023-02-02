@@ -6,7 +6,7 @@ import { ISuggestionProvider } from 'domain/suggestions';
 import { createJsonClient } from 'infrastructure/http';
 
 import { NpmContributions } from './definitions/eNpmContributions';
-import { INpmContainerMap } from './definitions/iNpmContainerMap';
+import { INpmServices } from './definitions/iNpmServices';
 import { GitHubOptions } from './options/githubOptions';
 import { NpmPackageClient } from './clients/npmPackageClient';
 import { PacoteClient } from './clients/pacoteClient';
@@ -15,31 +15,31 @@ import { NpmSuggestionProvider } from './npmSuggestionProvider'
 import { NpmConfig } from './npmConfig';
 
 export function configureContainer(
-  container: AwilixContainer<INpmContainerMap>
+  container: AwilixContainer<INpmServices>
 ): ISuggestionProvider {
 
-  const containerMap = {
+  const services = {
 
     // options
     npmCachingOpts: asFunction(
-      rootConfig => new CachingOptions(
-        rootConfig,
+      appConfig => new CachingOptions(
+        appConfig,
         NpmContributions.Caching,
         'caching'
       )
     ).singleton(),
 
     npmHttpOpts: asFunction(
-      rootConfig => new HttpOptions(
-        rootConfig,
+      appConfig => new HttpOptions(
+        appConfig,
         NpmContributions.Http,
         'http'
       )
     ).singleton(),
 
     npmGitHubOpts: asFunction(
-      rootConfig => new GitHubOptions(
-        rootConfig,
+      appConfig => new GitHubOptions(
+        appConfig,
         NpmContributions.Github,
         'github'
       )
@@ -47,8 +47,8 @@ export function configureContainer(
 
     // config
     npmConfig: asFunction(
-      (rootConfig, npmCachingOpts, npmHttpOpts, npmGitHubOpts) =>
-        new NpmConfig(rootConfig, npmCachingOpts, npmHttpOpts, npmGitHubOpts)
+      (appConfig, npmCachingOpts, npmHttpOpts, npmGitHubOpts) =>
+        new NpmConfig(appConfig, npmCachingOpts, npmHttpOpts, npmGitHubOpts)
     ).singleton(),
 
     // clients
@@ -101,7 +101,7 @@ export function configureContainer(
 
   };
 
-  container.register(containerMap);
+  container.register(services);
 
   return container.cradle.npmProvider;
 }

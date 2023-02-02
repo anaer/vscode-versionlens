@@ -1,34 +1,31 @@
-import { AwilixContainer, asFunction } from 'awilix';
-
+import { asFunction, AwilixContainer } from 'awilix';
 import { CachingOptions, HttpOptions } from 'domain/clients';
 import { ISuggestionProvider } from 'domain/suggestions';
-
 import { createJsonClient } from 'infrastructure/http';
-
 import { DubContributions } from './definitions/eDubContributions';
-import { IDubContainerMap } from './definitions/iDubContainerMap';
-import { DubSuggestionProvider } from './dubSuggestionProvider'
-import { DubConfig } from './dubConfig';
+import { IDubServices } from './definitions/iDubServices';
 import { DubClient } from './dubClient';
+import { DubConfig } from './dubConfig';
+import { DubSuggestionProvider } from './dubSuggestionProvider';
 
 export function configureContainer(
-  container: AwilixContainer<IDubContainerMap>
+  container: AwilixContainer<IDubServices>
 ): ISuggestionProvider {
 
-  const containerMap = {
+  const services = {
 
     // options
     dubCachingOpts: asFunction(
-      rootConfig => new CachingOptions(
-        rootConfig,
+      appConfig => new CachingOptions(
+        appConfig,
         DubContributions.Caching,
         'caching'
       )
     ).singleton(),
 
     dubHttpOpts: asFunction(
-      rootConfig => new HttpOptions(
-        rootConfig,
+      appConfig => new HttpOptions(
+        appConfig,
         DubContributions.Http,
         'http'
       )
@@ -36,8 +33,8 @@ export function configureContainer(
 
     // config
     dubConfig: asFunction(
-      (rootConfig, dubCachingOpts, dubHttpOpts) =>
-        new DubConfig(rootConfig, dubCachingOpts, dubHttpOpts)
+      (appConfig, dubCachingOpts, dubHttpOpts) =>
+        new DubConfig(appConfig, dubCachingOpts, dubHttpOpts)
     ).singleton(),
 
     // clients
@@ -71,7 +68,7 @@ export function configureContainer(
     ).singleton(),
   };
 
-  container.register(containerMap)
+  container.register(services)
 
   return container.cradle.dubProvider;
 }

@@ -1,36 +1,33 @@
-import { AwilixContainer, asFunction } from 'awilix';
-
+import { asFunction, AwilixContainer } from 'awilix';
 import { CachingOptions, HttpOptions } from 'domain/clients';
 import { ISuggestionProvider } from 'domain/suggestions';
-
 import { createHttpClient } from 'infrastructure/http';
 import { createProcessClient } from 'infrastructure/process';
-
-import { MavenContributions } from './definitions/eMavenContributions';
-import { IMavenContainerMap } from './definitions/iMavenContainerMap';
-import { MvnCli } from './clients/mvnCli';
 import { MavenClient } from './clients/mavenClient';
+import { MvnCli } from './clients/mvnCli';
+import { MavenContributions } from './definitions/eMavenContributions';
+import { IMavenServices } from './definitions/iMavenServices';
 import { MavenConfig } from './mavenConfig';
-import { MavenSuggestionProvider } from './mavenSuggestionProvider'
+import { MavenSuggestionProvider } from './mavenSuggestionProvider';
 
 export function configureContainer(
-  container: AwilixContainer<IMavenContainerMap>
+  container: AwilixContainer<IMavenServices>
 ): ISuggestionProvider {
 
-  const containerMap = {
+  const services = {
 
     // options
     mavenCachingOpts: asFunction(
-      rootConfig => new CachingOptions(
-        rootConfig,
+      appConfig => new CachingOptions(
+        appConfig,
         MavenContributions.Caching,
         'caching'
       )
     ).singleton(),
 
     mavenHttpOpts: asFunction(
-      rootConfig => new HttpOptions(
-        rootConfig,
+      appConfig => new HttpOptions(
+        appConfig,
         MavenContributions.Http,
         'http'
       )
@@ -38,9 +35,9 @@ export function configureContainer(
 
     // config
     mavenConfig: asFunction(
-      (rootConfig, mavenCachingOpts, mavenHttpOpts) =>
+      (appConfig, mavenCachingOpts, mavenHttpOpts) =>
         new MavenConfig(
-          rootConfig,
+          appConfig,
           mavenCachingOpts,
           mavenHttpOpts
         )
@@ -96,7 +93,7 @@ export function configureContainer(
     ).singleton(),
   };
 
-  container.register(containerMap);
+  container.register(services);
 
   return container.cradle.mavenProvider;
 }

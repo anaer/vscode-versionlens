@@ -1,14 +1,10 @@
+import { ILoggerChannel, ILoggingOptions } from 'domain/logging';
 import { OutputChannel } from 'vscode';
 
-import { ILoggingOptions } from 'domain/logging';
-
-import { ILoggerTransport } from './iLoggerTransport';
-
-const { Transport } = require('winston');
-
+const { Transport: WinstonChannel } = require('winston');
 const MESSAGE = Symbol.for('message');
 
-export class OutputChannelTransport extends Transport implements ILoggerTransport {
+export class OutputChannelTransport extends WinstonChannel implements ILoggerChannel {
 
   constructor(outputChannel: OutputChannel, logging: ILoggingOptions) {
     super({ level: logging.level });
@@ -34,7 +30,7 @@ export class OutputChannelTransport extends Transport implements ILoggerTranspor
     callback();
   }
 
-  updateLevel() {
+  refreshLoggingLevel() {
     this.logging.defrost();
     super.level = this.logging.level;
   }

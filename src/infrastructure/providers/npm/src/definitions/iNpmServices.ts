@@ -1,13 +1,12 @@
 import { ICachingOptions, IHttpOptions, IJsonHttpClient } from 'domain/clients';
-
-import { NpmConfig } from '../npmConfig';
-import { GitHubOptions } from '../options/githubOptions';
-import { NpmSuggestionProvider } from '../npmSuggestionProvider'
+import { GitHubClient } from '../clients/githubClient';
 import { NpmPackageClient } from '../clients/npmPackageClient';
 import { PacoteClient } from '../clients/pacoteClient';
-import { GitHubClient } from '../clients/githubClient';
+import { NpmConfig } from '../npmConfig';
+import { NpmSuggestionProvider } from '../npmSuggestionProvider';
+import { GitHubOptions } from '../options/githubOptions';
 
-export interface INpmContainerMap {
+export interface INpmServices {
 
   // config
   npmConfig: NpmConfig,

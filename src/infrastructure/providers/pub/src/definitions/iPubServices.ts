@@ -1,10 +1,9 @@
 import { ICachingOptions, IHttpOptions, IJsonHttpClient } from 'domain/clients';
-
-import { PubConfig } from '../pubConfig';
 import { PubClient } from '../pubClient';
+import { PubConfig } from '../pubConfig';
 import { PubSuggestionProvider } from '../pubSuggestionProvider';
 
-export interface IPubContainerMap {
+export interface IPubServices {
 
   // options
   pubCachingOpts: ICachingOptions,

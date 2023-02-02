@@ -1,34 +1,31 @@
-import { AwilixContainer, asFunction } from 'awilix';
-
+import { asFunction, AwilixContainer } from 'awilix';
 import { CachingOptions, HttpOptions } from 'domain/clients';
 import { ISuggestionProvider } from 'domain/suggestions';
-
 import { createJsonClient } from 'infrastructure/http';
-
-import { ComposerContributions } from './definitions/eComposerContributions';
-import { IComposerContainerMap } from './definitions/iComposerContainerMap';
-import { ComposerSuggestionProvider } from './composerSuggestionProvider'
-import { ComposerConfig } from './composerConfig';
 import { ComposerClient } from './composerClient';
+import { ComposerConfig } from './composerConfig';
+import { ComposerSuggestionProvider } from './composerSuggestionProvider';
+import { ComposerContributions } from './definitions/eComposerContributions';
+import { IComposerServices } from './definitions/iComposerServices';
 
 export function configureContainer(
-  container: AwilixContainer<IComposerContainerMap>
+  container: AwilixContainer<IComposerServices>
 ): ISuggestionProvider {
 
-  const containerMap = {
+  const services = {
 
     // options
     composerCachingOpts: asFunction(
-      rootConfig => new CachingOptions(
-        rootConfig,
+      appConfig => new CachingOptions(
+        appConfig,
         ComposerContributions.Caching,
         'caching'
       )
     ).singleton(),
 
     composerHttpOpts: asFunction(
-      rootConfig => new HttpOptions(
-        rootConfig,
+      appConfig => new HttpOptions(
+        appConfig,
         ComposerContributions.Http,
         'http'
       )
@@ -36,8 +33,8 @@ export function configureContainer(
 
     // config
     composerConfig: asFunction(
-      (rootConfig, composerCachingOpts, composerHttpOpts) =>
-        new ComposerConfig(rootConfig, composerCachingOpts, composerHttpOpts)
+      (appConfig, composerCachingOpts, composerHttpOpts) =>
+        new ComposerConfig(appConfig, composerCachingOpts, composerHttpOpts)
     ).singleton(),
 
     // clients
@@ -71,7 +68,7 @@ export function configureContainer(
     ).singleton(),
   };
 
-  container.register(containerMap)
+  container.register(services)
 
   return container.cradle.composerProvider;
 }

@@ -1,45 +1,42 @@
-import { AwilixContainer, asFunction } from 'awilix';
-
+import { asFunction, AwilixContainer } from 'awilix';
 import { CachingOptions, HttpOptions } from 'domain/clients';
 import { ISuggestionProvider } from 'domain/suggestions';
-
 import { createJsonClient } from 'infrastructure/http';
 import { createProcessClient } from 'infrastructure/process';
-
-import { IDotNetContainerMap } from './definitions/iDotNetContainerMap';
-import { DotNetContributions } from './definitions/eDotNetContributions';
-import { NugetOptions } from './options/nugetOptions';
 import { DotNetCli } from './clients/dotnetCli';
-import { NuGetResourceClient } from './clients/nugetResourceClient';
 import { NuGetPackageClient } from './clients/nugetPackageClient';
-import { DotNetSuggestionProvider } from './dotnetSuggestionProvider';
+import { NuGetResourceClient } from './clients/nugetResourceClient';
+import { DotNetContributions } from './definitions/eDotNetContributions';
+import { IDotNetServices } from './definitions/iDotNetServices';
 import { DotNetConfig } from './dotnetConfig';
+import { DotNetSuggestionProvider } from './dotnetSuggestionProvider';
+import { NugetOptions } from './options/nugetOptions';
 
 export function configureContainer(
-  container: AwilixContainer<IDotNetContainerMap>
+  container: AwilixContainer<IDotNetServices>
 ): ISuggestionProvider {
 
-  const containerMap = {
+  const services = {
 
     // options
     nugetOpts: asFunction(
-      rootConfig => new NugetOptions(
-        rootConfig,
+      appConfig => new NugetOptions(
+        appConfig,
         DotNetContributions.Nuget
       )
     ).singleton(),
 
     dotnetCachingOpts: asFunction(
-      rootConfig => new CachingOptions(
-        rootConfig,
+      appConfig => new CachingOptions(
+        appConfig,
         DotNetContributions.Caching,
         'caching'
       )
     ).singleton(),
 
     dotnetHttpOpts: asFunction(
-      rootConfig => new HttpOptions(
-        rootConfig,
+      appConfig => new HttpOptions(
+        appConfig,
         DotNetContributions.Http,
         'http'
       )
@@ -47,9 +44,9 @@ export function configureContainer(
 
     // config
     dotnetConfig: asFunction(
-      (rootConfig, dotnetCachingOpts, dotnetHttpOpts, nugetOpts) =>
+      (appConfig, dotnetCachingOpts, dotnetHttpOpts, nugetOpts) =>
         new DotNetConfig(
-          rootConfig,
+          appConfig,
           dotnetCachingOpts,
           dotnetHttpOpts,
           nugetOpts
@@ -115,7 +112,7 @@ export function configureContainer(
     ).singleton(),
   };
 
-  container.register(containerMap);
+  container.register(services);
 
   return container.cradle.dotnetProvider;
 }

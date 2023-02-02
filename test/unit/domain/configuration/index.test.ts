@@ -1,2 +1,2 @@
 export * from './optionsWithFallback.tests';
-export * from './vscodeConfig.tests';
+export * from './appConfig.tests';

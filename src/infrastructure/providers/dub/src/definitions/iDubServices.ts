@@ -3,12 +3,11 @@ import {
   IHttpOptions,
   IJsonHttpClient
 } from 'domain/clients';
-
+import { DubClient } from '../dubClient';
 import { DubConfig } from '../dubConfig';
 import { DubSuggestionProvider } from '../dubSuggestionProvider';
-import { DubClient } from '../dubClient';
 
-export interface IDubContainerMap {
+export interface IDubServices {
 
   // options
   dubCachingOpts: ICachingOptions,

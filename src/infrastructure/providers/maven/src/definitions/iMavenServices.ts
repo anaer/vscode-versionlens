@@ -4,13 +4,12 @@ import {
   IHttpClient,
   IProcessClient
 } from 'domain/clients';
-
 import { MavenConfig } from '../mavenConfig';
 import { MavenSuggestionProvider } from '../mavenSuggestionProvider';
 import { MvnCli } from '../clients/mvnCli';
 import { MavenClient } from '../clients/mavenClient';
 
-export interface IMavenContainerMap {
+export interface IMavenServices {
 
   // options
   mavenCachingOpts: ICachingOptions,

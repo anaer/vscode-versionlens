@@ -1,34 +1,31 @@
-import { AwilixContainer, asFunction } from 'awilix';
-
+import { asFunction, AwilixContainer } from 'awilix';
 import { CachingOptions, HttpOptions } from 'domain/clients';
 import { ISuggestionProvider } from 'domain/suggestions';
-
 import { createJsonClient } from 'infrastructure/http';
-
 import { PubContributions } from './definitions/ePubContributions';
-import { IPubContainerMap } from './definitions/iPubContainerMap';
-import { PubSuggestionProvider } from './pubSuggestionProvider'
-import { PubConfig } from './pubConfig';
+import { IPubServices } from './definitions/iPubServices';
 import { PubClient } from './pubClient';
+import { PubConfig } from './pubConfig';
+import { PubSuggestionProvider } from './pubSuggestionProvider';
 
 export function configureContainer(
-  container: AwilixContainer<IPubContainerMap>
+  container: AwilixContainer<IPubServices>
 ): ISuggestionProvider {
 
-  const containerMap = {
+  const services = {
 
     // options
     pubCachingOpts: asFunction(
-      rootConfig => new CachingOptions(
-        rootConfig,
+      appConfig => new CachingOptions(
+        appConfig,
         PubContributions.Caching,
         'caching'
       )
     ).singleton(),
 
     pubHttpOpts: asFunction(
-      rootConfig => new HttpOptions(
-        rootConfig,
+      appConfig => new HttpOptions(
+        appConfig,
         PubContributions.Http,
         'http'
       )
@@ -36,8 +33,8 @@ export function configureContainer(
 
     // config
     pubConfig: asFunction(
-      (rootConfig, pubCachingOpts, pubHttpOpts) =>
-        new PubConfig(rootConfig, pubCachingOpts, pubHttpOpts)
+      (appConfig, pubCachingOpts, pubHttpOpts) =>
+        new PubConfig(appConfig, pubCachingOpts, pubHttpOpts)
     ).singleton(),
 
     // clients
@@ -71,7 +68,7 @@ export function configureContainer(
     ).singleton(),
   };
 
-  container.register(containerMap)
+  container.register(services)
 
   return container.cradle.pubProvider;
 }
