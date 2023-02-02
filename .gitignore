@@ -8,3 +8,5 @@ test/smoke/dotnet/bin/
 **/.env
 dist/
 trace.log
+artifacts/
+**/*.vsix

@@ -35,7 +35,6 @@
   "main": "./dist/extension.bundle.js",
   "scripts": {
     "fresh": "npm run -s clean && rimraf ./node_modules && rm -f ./package-lock.json",
-    "vscode:prepublish": "npm run -s pack -- --mode=production",
     "clean": "rimraf ./out ./dist",
     "precompile": "npm run -s clean && npm run -s lint:src",
     "compile": "npm run -s pack:src",
