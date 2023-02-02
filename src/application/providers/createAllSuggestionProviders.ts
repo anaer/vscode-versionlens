@@ -3,7 +3,7 @@ import { ILogger } from 'domain/logging';
 import { ISuggestionProvider } from 'domain/suggestions';
 import { createSuggestionProvider } from './createSuggestionProvider';
 
-export async function getSuggestionProviders(
+export async function createAllSuggestionProviders(
   providerNames: Array<string>,
   container: AwilixContainer<any>,
   logger: ILogger

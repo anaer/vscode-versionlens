@@ -1,3 +1,3 @@
 export * from './createSuggestionProvider';
-export * from './getSuggestionProviders';
+export * from './createAllSuggestionProviders';
 export * from './getSuggestionProvidersByFileName';

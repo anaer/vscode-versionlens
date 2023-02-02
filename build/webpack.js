@@ -16,7 +16,7 @@ module.exports = function (env, argv) {
 
   const entry = test ?
     path.resolve(testPath, 'runner.ts') :
-    path.resolve(sourcePath, 'activate.ts');
+    path.resolve(sourcePath, './presentation.extension/activate.ts');
 
   const tsconfigFile = path.resolve(projectPath, 'tsconfig.json');
 

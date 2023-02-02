@@ -1,4 +1,4 @@
-import { getSuggestionProviders } from 'application/providers';
+import { createAllSuggestionProviders } from 'application/providers';
 import {
   addCachingOptions,
   addHttpOptions,
@@ -119,7 +119,7 @@ export async function configureContainer(
   const { logger, providerNames } = container.cradle;
   container.register({
     suggestionProviders: asValue(
-      await getSuggestionProviders(
+      await createAllSuggestionProviders(
         providerNames,
         container,
         logger.child({ namespace: 'registry' })
