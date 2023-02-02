@@ -53,8 +53,15 @@ function createFromProperty(keyEntry, valueEntry): IPackageDependency {
     end: valueEntry.offset + valueEntry.length - 1,
   }
 
+  // handle override dependency selectors in the name
+  let name = keyEntry.value;
+  const atIndex = name.indexOf('@');
+  if (atIndex > 0) {
+    name = name.slice(0, atIndex);
+  }
+
   const packageInfo = {
-    name: keyEntry.value,
+    name,
     version: valueEntry.value
   }
 

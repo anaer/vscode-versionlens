@@ -10,7 +10,8 @@ export default {
         "Package3": "*",
         "ComplexPackage1": {
           "version": "1.2.3"
-        }
+        },
+        "NameOverrides@1": "1.0.0",
       },
 
       "scripts": {
@@ -73,6 +74,20 @@ export default {
         "packageInfo": {
           "name": "ComplexPackage1",
           "version": "1.2.3"
+        }
+      },
+      {
+        "nameRange": {
+          "end": 135,
+          "start": 135
+        },
+        "packageInfo": {
+          "name": "NameOverrides",
+          "version": "1.0.0"
+        },
+        "versionRange": {
+          "end": 159,
+          "start": 154
         }
       }
     ]

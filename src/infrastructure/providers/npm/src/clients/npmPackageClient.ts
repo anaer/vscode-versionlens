@@ -56,7 +56,9 @@ export class NpmPackageClient implements IPackageClient<null> {
         );
       }
       catch (error) {
-        return reject(NpmUtils.convertNpmErrorToResponse(error, ClientResponseSource.local));
+        return reject(
+          NpmUtils.convertNpmErrorToResponse(error, ClientResponseSource.local)
+        );
       }
 
       // return if directory or file document
