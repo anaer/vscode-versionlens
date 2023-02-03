@@ -37,7 +37,8 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
   }
 
   async fetchPackage(request: TPackageClientRequest<NuGetClientData>): Promise<TPackageClientResponse> {
-    const dotnetSpec = parseVersionSpec(request.package.version);
+    const requestedPackage = request.dependency.package;
+    const dotnetSpec = parseVersionSpec(requestedPackage.version);
     return this.fetchPackageRetry(request, dotnetSpec);
   }
 
@@ -89,7 +90,8 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 
     const query = {};
     const headers = {};
-    const packageUrl = UrlHelpers.ensureEndSlash(url) + `${request.package.name.toLowerCase()}/index.json`;
+    const requestedPackage = request.dependency.package;
+    const packageUrl = UrlHelpers.ensureEndSlash(url) + `${requestedPackage.name.toLowerCase()}/index.json`;
 
     return this.client.request(
       HttpClientRequestMethods.get,
@@ -139,7 +141,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
         const versionRange = dotnetSpec.resolvedVersion;
 
         const resolved = {
-          name: request.package.name,
+          name: requestedPackage.name,
           version: versionRange,
         };
 

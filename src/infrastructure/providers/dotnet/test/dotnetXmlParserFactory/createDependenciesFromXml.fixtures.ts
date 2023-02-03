@@ -1,3 +1,5 @@
+import { PackageDependency } from "domain/packages"
+
 export default {
 
   "createDependenciesFromXml": {
@@ -13,13 +15,13 @@ export default {
 </Project>
     `,
 
-    "expected": [
-      {
+    expected: [
+      <PackageDependency>{
         nameRange: {
           end: 13,
           start: 13
         },
-        packageInfo: {
+        package: {
           path: "testPath",
           name: 'Microsoft.Build.CentralPackageVersions',
           version: '2.1.3'
@@ -29,12 +31,12 @@ export default {
           start: 73
         }
       },
-      {
+      <PackageDependency>{
         nameRange: {
           end: 103,
           start: 103
         },
-        packageInfo: {
+        package: {
           path: "testPath",
           name: 'Microsoft.Extensions.DependencyInjection.Abstractions',
           version: '2.0.0'
@@ -44,12 +46,12 @@ export default {
           start: 194
         }
       },
-      {
+      <PackageDependency>{
         nameRange: {
           end: 210,
           start: 210
         },
-        packageInfo: {
+        package: {
           path: "testPath",
           name: 'Microsoft.Extensions.Logging.Abstractions',
           version: '2.0.1'
@@ -59,12 +61,12 @@ export default {
           start: 289
         }
       },
-      {
+      <PackageDependency>{
         nameRange: {
           start: 305,
           end: 305
         },
-        packageInfo: {
+        package: {
           path: "testPath",
           name: "System.Text.Json",
           version: "4.7.2"

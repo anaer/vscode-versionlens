@@ -9,7 +9,6 @@ import {
   PackageSourceType,
   PackageVersionType,
   TPackageClientResponse,
-  TPackageClientRequest,
   VersionHelpers
 } from 'domain/packages';
 import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
@@ -36,25 +35,25 @@ export class GitHubClient {
     this.logger = logger;
   }
 
-  fetchGithub(request: TPackageClientRequest<null>, npaSpec: NpaSpec): Promise<TPackageClientResponse> {
+  fetchGithub(npaSpec: NpaSpec): Promise<TPackageClientResponse> {
     const { validRange } = semver;
 
     if (npaSpec.gitRange) {
       // we have a semver:x.x.x
-      return this.fetchTags(request, npaSpec);
+      return this.fetchTags(npaSpec);
     }
 
     if (validRange(npaSpec.gitCommittish, VersionHelpers.loosePrereleases)) {
       // we have a #x.x.x
       npaSpec.gitRange = npaSpec.gitCommittish;
-      return this.fetchTags(request, npaSpec);
+      return this.fetchTags(npaSpec);
     }
 
     // we have a #commit
-    return this.fetchCommits(request, npaSpec);
+    return this.fetchCommits(npaSpec);
   }
 
-  fetchTags(request: TPackageClientRequest<null>, npaSpec: NpaSpec): Promise<TPackageClientResponse> {
+  fetchTags(npaSpec: NpaSpec): Promise<TPackageClientResponse> {
     // todo pass in auth
     const { user, project } = npaSpec.hosted;
     const tagsRepoUrl = `https://api.github.com/repos/${user}/${project}/tags`;
@@ -117,7 +116,7 @@ export class GitHubClient {
 
   }
 
-  fetchCommits(request: TPackageClientRequest<null>, npaSpec: NpaSpec): Promise<TPackageClientResponse> {
+  fetchCommits(npaSpec: NpaSpec): Promise<TPackageClientResponse> {
     // todo pass in auth
     const { user, project } = npaSpec.hosted;
     const commitsRepoUrl = `https://api.github.com/repos/${user}/${project}/commits`;

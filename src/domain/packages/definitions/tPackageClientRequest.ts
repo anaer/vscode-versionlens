@@ -1,5 +1,4 @@
 import { PackageDependency } from '../models/packageDependency';
-import { TPackageResource } from './tPackageResource';
 
 export type TPackageClientRequest<TClientData> = {
   // provider descriptor
@@ -8,11 +7,8 @@ export type TPackageClientRequest<TClientData> = {
   // provider specific data
   clientData: TClientData,
 
-  // dependency ranges
+  // dependency to fetch
   dependency: PackageDependency;
-
-  // package to fetch
-  package: TPackageResource;
 
   // number of fallback attempts
   attempt: number;

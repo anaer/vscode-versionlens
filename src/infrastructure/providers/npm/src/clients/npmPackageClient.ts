@@ -42,6 +42,7 @@ export class NpmPackageClient implements IPackageClient<null> {
 
   async fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
     let source: PackageSourceType;
+    const requestedPackage = request.dependency.package;
 
     return new Promise<TPackageClientResponse>((resolve, reject) => {
       let npaSpec: NpaSpec;
@@ -49,9 +50,9 @@ export class NpmPackageClient implements IPackageClient<null> {
       // try parse the package
       try {
         npaSpec = npa.resolve(
-          request.package.name,
-          request.package.version,
-          request.package.path
+          requestedPackage.name,
+          requestedPackage.version,
+          requestedPackage.path
         );
       }
       catch (error) {
@@ -65,7 +66,7 @@ export class NpmPackageClient implements IPackageClient<null> {
         source = PackageSourceType.Directory;
         return resolve(
           PackageFactory.createDirectory(
-            request.package,
+            requestedPackage,
             ClientResponseFactory.createResponseStatus(ClientResponseSource.local, 200),
             npaSpec,
           )
@@ -98,7 +99,7 @@ export class NpmPackageClient implements IPackageClient<null> {
 
         // resolve tags, committishes
         source = PackageSourceType.Github;
-        return resolve(this.githubClient.fetchGithub(request, npaSpec));
+        return resolve(this.githubClient.fetchGithub(npaSpec));
       }
 
       // otherwise return registry result

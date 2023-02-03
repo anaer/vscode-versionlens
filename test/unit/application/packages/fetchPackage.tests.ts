@@ -24,15 +24,15 @@ export const fetchPackageTests = {
   "returns package suggestions": async () => {
     const testProviderName = "test provider";
 
-    const testPackageId = createPackageResource(
+    const testPackageRes = createPackageResource(
       "testPackageName",
       "1.0.0",
       "test/path"
     );
 
     const testPackageNameVersion = createPackageNameVersion(
-      testPackageId.name,
-      testPackageId.version
+      testPackageRes.name,
+      testPackageRes.version
     );
 
     // logger
@@ -50,7 +50,7 @@ export const fetchPackageTests = {
       resolved: testPackageNameVersion,
       suggestions: [
         {
-          name: testPackageId.name,
+          name: testPackageRes.name,
           version: "1.0.0",
           flags: SuggestionFlags.release
         }
@@ -61,13 +61,8 @@ export const fetchPackageTests = {
       providerName: testProviderName,
       attempt: 1,
       clientData: {},
-      package: testPackageId,
       dependency: new PackageDependency(
-        createPackageResource(
-          testPackageNameVersion.name,
-          testPackageNameVersion.version,
-          "testPath"
-        ),
+        testPackageRes,
         //nameRange
         createDependencyRange(1, 20),
         //versionRange
@@ -95,8 +90,8 @@ export const fetchPackageTests = {
             'Fetched %s package from %s: %s@%s (%s ms)',
             testClient.config.providerName,
             testRespDoc.responseStatus.source,
-            testRequest.package.name,
-            testRequest.package.version,
+            testRequest.dependency.package.name,
+            testRequest.dependency.package.version,
             any()
           )
         ).once();
@@ -111,7 +106,7 @@ export const fetchPackageTests = {
         assert.equal(actual[0].versionRange, testRequest.dependency.versionRange);
         assert.equal(actual[0].order, 0);
 
-        assert.equal(actual[0].requested, testRequest.package);
+        assert.equal(actual[0].requested, testRequest.dependency.package);
         assert.equal(actual[0].resolved, testRespDoc.resolved);
         assert.equal(actual[0].suggestion, testRespDoc.suggestions[0]);
       });

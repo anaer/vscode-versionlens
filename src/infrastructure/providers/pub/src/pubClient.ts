@@ -34,10 +34,11 @@ export class PubClient implements IPackageClient<null> {
   }
 
   async fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
-    const semverSpec = VersionHelpers.parseSemver(request.package.version);
-    const url = `${this.config.apiUrl}api/documentation/${request.package.name}`;
+    const requestedPackage = request.dependency.package;
+    const semverSpec = VersionHelpers.parseSemver(requestedPackage.version);
+    const url = `${this.config.apiUrl}api/documentation/${requestedPackage.name}`;
 
-    return this.createRemotePackageDocument(url, request, semverSpec)
+    return this.createRemotePackageDocument(url, requestedPackage.name, semverSpec)
       .catch((error: HttpClientResponse) => {
 
         this.logger.debug(
@@ -60,7 +61,7 @@ export class PubClient implements IPackageClient<null> {
 
   async createRemotePackageDocument(
     url: string,
-    request: TPackageClientRequest<null>,
+    packageName: string,
     semverSpec: TSemverSpec
   ): Promise<TPackageClientResponse> {
 
@@ -75,7 +76,7 @@ export class PubClient implements IPackageClient<null> {
         const versionRange = semverSpec.rawVersion;
 
         const resolved = {
-          name: request.package.name,
+          name: packageName,
           version: versionRange,
         };
 

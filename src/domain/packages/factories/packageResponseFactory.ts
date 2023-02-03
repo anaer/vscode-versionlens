@@ -15,10 +15,10 @@ export function createSuccess<TClientData>(
         providerName,
         nameRange: request.dependency.nameRange,
         versionRange: request.dependency.versionRange,
+        requested: request.dependency.package,
+        resolved: response.resolved,
         source: response.source,
         type: response.type,
-        requested: request.package,
-        resolved: response.resolved,
         suggestion,
         order,
       };

@@ -32,11 +32,12 @@ export class MavenClient implements IPackageClient<MavenClientData> {
     this.logger = logger;
   }
   async fetchPackage(request: TPackageClientRequest<MavenClientData>): Promise<TPackageClientResponse> {
-    const semverSpec = VersionHelpers.parseSemver(request.package.version);
+    const requestedPackage = request.dependency.package;
+    const semverSpec = VersionHelpers.parseSemver(requestedPackage.version);
 
     const { repositories } = request.clientData;
     const url = repositories[0].url
-    let [group, artifact] = request.package.name.split(':');
+    let [group, artifact] = requestedPackage.name.split(':');
     let search = group.replace(/\./g, "/") + "/" + artifact
     const queryUrl = `${url}${search}/maven-metadata.xml`;
 
@@ -79,11 +80,10 @@ export class MavenClient implements IPackageClient<MavenClientData> {
       .then(function (httpResponse): TPackageClientResponse {
 
         const { data } = httpResponse;
-
         const source = PackageSourceType.Registry;
-
         const versionRange = semverSpec.rawVersion;
-
+        const requestedPackage = request.dependency.package;
+        
         const responseStatus = {
           source: httpResponse.source,
           status: httpResponse.status,
@@ -101,7 +101,7 @@ export class MavenClient implements IPackageClient<MavenClientData> {
         );
 
         const resolved = {
-          name: request.package.name,
+          name: requestedPackage.name,
           version: versionRange,
         };
 

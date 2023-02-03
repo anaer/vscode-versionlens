@@ -37,8 +37,9 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
     request: TPackageClientRequest<null>,
     npaSpec: NpaSpec
   ): Promise<TPackageClientResponse> {
+    const requestedPackage = request.dependency.package;
 
-    const cacheKey = `${request.package.name}@${request.package.version}_${request.package.path}`;
+    const cacheKey = `${requestedPackage.name}@${requestedPackage.version}_${requestedPackage.path}`;
     if (this.cache.cachingOpts.duration > 0 && this.cache.hasExpired(cacheKey) === false) {
       this.logger.debug("Fetching from cache using key: %s", cacheKey);
       const cachedResp = this.cache.get(cacheKey);
@@ -53,19 +54,19 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
     const npmConfig = new this.NpmCliConfig({
       shorthands: {},
       definitions: {},
-      npmPath: request.package.path,
-      cwd: request.package.path,
+      npmPath: requestedPackage.path,
+      cwd: requestedPackage.path,
       // ensure user config is parsed by npm
       argv: ['', '', `--userconfig=${userConfigPath}`],
       // setup up a custom env for .env files
-      env: NpmUtils.getDotEnv(request.package.path)
+      env: NpmUtils.getDotEnv(requestedPackage.path)
     });
     await npmConfig.load();
 
     // flatten all the options
     const npmOpts = npmConfig.list.reduce(
       (memo, list) => ({ ...memo, ...list }),
-      { cwd: request.package.path }
+      { cwd: requestedPackage.path }
     );
 
     // fetch the package from npm's pacote
@@ -127,7 +128,7 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
         if (npaSpec.type === NpaTypes.Tag) {
 
           // get the tagged version. eg latest|next
-          versionRange = distTags[request.package.version];
+          versionRange = distTags[requestedPackage.version];
           if (!versionRange) {
 
             // No match

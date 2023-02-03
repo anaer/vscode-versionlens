@@ -40,8 +40,9 @@ export class ComposerClient implements IPackageClient<null> {
   async fetchPackage<TClientData>(
     request: TPackageClientRequest<TClientData>
   ): Promise<TPackageClientResponse> {
-    const semverSpec = VersionHelpers.parseSemver(request.package.version);
-    const url = `${this.config.apiUrl}${request.package.name}.json`;
+    const requestedPackage = request.dependency.package;
+    const semverSpec = VersionHelpers.parseSemver(requestedPackage.version);
+    const url = `${this.config.apiUrl}${requestedPackage.name}.json`;
 
     return this.createRemotePackageDocument(url, request, semverSpec)
       .catch((error: HttpClientResponse) => {
@@ -76,12 +77,11 @@ export class ComposerClient implements IPackageClient<null> {
 
     return this.client.request(HttpClientRequestMethods.get, url, query, headers)
       .then(function (httpResponse: JsonClientResponse): TPackageClientResponse {
-        const packageInfo = httpResponse.data.packages[request.package.name];
-
+        const requestPackage = request.dependency.package;
         const versionRange = semverSpec.rawVersion;
 
         const resolved = {
-          name: request.package.name,
+          name: requestPackage.name,
           version: versionRange,
         };
 
@@ -90,16 +90,15 @@ export class ComposerClient implements IPackageClient<null> {
           status: httpResponse.status,
         };
 
-        let rawVersions: string[] = [];
+        const responseVersions: IPackagistApiItem[] = httpResponse.data.packages[requestPackage.name];
 
+        let rawVersions: string[] = [];
         if (url.indexOf('/p2/') !== -1) {
-          packageInfo
+          rawVersions = responseVersions
             .reverse()
-            .forEach(
-              (packageObject: IPackagistApiItem) => rawVersions.push(packageObject.version)
-            )
+            .map((p: IPackagistApiItem) => p.version);
         } else {
-          rawVersions = Object.keys(packageInfo);
+          rawVersions = Object.keys(responseVersions);
         }
 
         // extract semver versions only
@@ -107,7 +106,7 @@ export class ComposerClient implements IPackageClient<null> {
 
         // seperate versions to releases and prereleases
         const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(
-          VersionHelpers.filterSemverVersions(semverVersions)
+          semverVersions
         );
 
         // analyse suggestions

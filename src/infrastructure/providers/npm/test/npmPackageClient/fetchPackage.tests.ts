@@ -1,6 +1,8 @@
 import assert from 'assert';
-import { ClientResponseSource } from 'domain/clients/index';
-import { SuggestionFlags } from 'domain/suggestions/index';
+import { ClientResponseSource } from 'domain/clients';
+import { PackageDependency, TPackageClientRequest } from 'domain/packages';
+import { createPackageResource } from 'domain/packages/packageUtils';
+import { SuggestionFlags } from 'domain/suggestions';
 import {
   GitHubClient,
   NpmConfig,
@@ -29,17 +31,25 @@ export const fetchPackageTests = {
   'returns a file:// directory package': async () => {
     const expectedSource = 'directory';
 
-    const testRequest: any = {
-      clientData: {
-        providerName: 'testnpmprovider',
-      },
-      source: 'npmtest',
-      package: {
-        path: 'filepackagepath',
-        name: 'filepackage',
-        version: 'file://some/path/out/there',
-      }
-    }
+    const testPackageRes = createPackageResource(
+      // package name
+      'filepackage',
+      // package version
+      'file://some/path/out/there',
+      // package path
+      'filepackagepath',
+    );
+
+    const testRequest: TPackageClientRequest<any> = {
+      providerName: 'testnpmprovider',
+      clientData: {},
+      dependency: new PackageDependency(
+        testPackageRes,
+        null,
+        null,
+      ),
+      attempt: 1
+    };
 
     const cut = new NpmPackageClient(
       instance(configMock),
@@ -51,21 +61,30 @@ export const fetchPackageTests = {
     return cut.fetchPackage(testRequest)
       .then(actual => {
         assert.equal(actual.source, 'directory', `expected to see ${expectedSource}`)
-        assert.deepEqual(actual.resolved.name, testRequest.package.name)
+        assert.deepEqual(actual.resolved.name, testPackageRes.name)
       })
   },
 
   'returns fixed package for git:// requests': async () => {
 
-    const testRequest: any = {
-      clientData: {
-        providerName: 'testnpmprovider',
-      },
-      package: {
-        path: 'packagepath',
-        name: 'core.js',
-        version: 'git+https://git@github.com/testuser/test.git',
-      }
+    const testPackageRes = createPackageResource(
+      // package name
+      'core.js',
+      // package version
+      'git+https://git@github.com/testuser/test.git',
+      // package path
+      'packagepath',
+    );
+
+    const testRequest: TPackageClientRequest<any> = {
+      providerName: 'testnpmprovider',
+      clientData: {},
+      dependency: new PackageDependency(
+        testPackageRes,
+        null,
+        null,
+      ),
+      attempt: 1
     };
 
     when(pacoteMock.fetchPackage(anything(), anything()))
@@ -104,16 +123,24 @@ export const fetchPackageTests = {
   },
 
   'returns unsupported suggestion when not github': async () => {
+    const testPackageRes = createPackageResource(
+      // package name
+      'core.js',
+      // package version
+      'git+https://git@not-gihub.com/testuser/test.git',
+      // package path
+      'packagepath',
+    );
 
-    const testRequest: any = {
-      clientData: {
-        providerName: 'testnpmprovider',
-      },
-      package: {
-        path: 'packagepath',
-        name: 'core.js',
-        version: 'git+https://git@not-gihub.com/testuser/test.git',
-      }
+    const testRequest: TPackageClientRequest<any> = {
+      providerName: 'testnpmprovider',
+      clientData: {},
+      dependency: new PackageDependency(
+        testPackageRes,
+        null,
+        null,
+      ),
+      attempt: 1
     };
 
     // setup initial call
@@ -141,13 +168,24 @@ export const fetchPackageTests = {
   },
 
   'returns 401, 404 and ECONNREFUSED suggestion statuses': async () => {
-    const testRequest: any = {
+    const testPackageRes = createPackageResource(
+      // package name
+      'private-reg',
+      // package version
+      '1.2.3',
+      // package path
+      'packagepath',
+    );
+
+    const testRequest: TPackageClientRequest<any> = {
       providerName: 'testnpmprovider',
-      package: {
-        path: 'packagepath',
-        name: 'private-reg',
-        version: '1.2.3',
-      }
+      clientData: {},
+      dependency: new PackageDependency(
+        testPackageRes,
+        null,
+        null,
+      ),
+      attempt: 1
     };
 
     const testStates = [

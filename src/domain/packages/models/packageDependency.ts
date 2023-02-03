@@ -4,11 +4,11 @@ import { TPackageResource } from "../index";
 export class PackageDependency {
 
   constructor(
-    packageInfo: TPackageResource,
+    packageRes: TPackageResource,
     nameRange: TPackageDependencyRange,
     versionRange: TPackageDependencyRange
   ) {
-    this.packageInfo = packageInfo;
+    this.package = packageRes;
     this.nameRange = nameRange;
     this.versionRange = versionRange;
   }
@@ -17,11 +17,11 @@ export class PackageDependency {
 
   versionRange: TPackageDependencyRange;
 
-  packageInfo: TPackageResource;
+  package: TPackageResource;
 
   equals(other: PackageDependency) {
-    return other.packageInfo.name === this.packageInfo.name
-      && other.packageInfo.version === this.packageInfo.version
+    return other.package.name === this.package.name
+      && other.package.version === this.package.version
       && other.versionRange.start === this.versionRange.start
       && other.versionRange.end === this.versionRange.end
       && other.nameRange.start === this.nameRange.start

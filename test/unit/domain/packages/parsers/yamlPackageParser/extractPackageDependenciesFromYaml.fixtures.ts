@@ -1,3 +1,5 @@
+import { PackageDependency } from "domain/packages";
+
 export default {
 
   "extractDependencyEntries": {
@@ -21,50 +23,50 @@ dependencies:
     version: ^0.4.0 # complex version with comments
 `,
 
-    "expected": [
-      {
-        "nameRange": {
-          "start": 376,
-          "end": 376
+    expected: [
+      <PackageDependency>{
+        nameRange: {
+          start: 376,
+          end: 376
         },
-        "versionRange": {
-          "start": 382,
-          "end": 388
+        versionRange: {
+          start: 382,
+          end: 388
         },
-        "packageInfo": {
-          "path": "testPath",
-          "name": "efts",
-          "version": "^2.0.4"
+        package: {
+          path: "testPath",
+          name: "efts",
+          version: "^2.0.4"
         }
       },
-      {
-        "nameRange": {
-          "start": 391,
-          "end": 391
+      <PackageDependency>{
+        nameRange: {
+          start: 391,
+          end: 391
         },
-        "versionRange": {
-          "start": 397,
-          "end": 397
+        versionRange: {
+          start: 397,
+          end: 397
         },
-        "packageInfo": {
-          "path": "testPath",
-          "name": "http",
-          "version": ""
+        package: {
+          path: "testPath",
+          name: "http",
+          version: ""
         }
       },
-      {
-        "nameRange": {
-          "start": 421,
-          "end": 421
+      <PackageDependency>{
+        nameRange: {
+          start: 421,
+          end: 421
         },
-        "versionRange": {
-          "start": 448,
-          "end": 486
+        versionRange: {
+          start: 448,
+          end: 486
         },
-        "packageInfo": {
-          "path": "testPath",
-          "name": "transmogrify",
-          "version": "^0.4.0"
+        package: {
+          path: "testPath",
+          name: "transmogrify",
+          version: "^0.4.0"
         }
       }
     ]

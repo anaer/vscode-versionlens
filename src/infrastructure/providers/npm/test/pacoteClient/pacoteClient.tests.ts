@@ -1,6 +1,11 @@
 import assert from 'assert';
 import { CachingOptions, ICachingOptions } from 'domain/clients';
 import { ILogger } from 'domain/logging';
+import {
+  createPackageResource,
+  PackageDependency,
+  TPackageClientRequest
+} from 'domain/packages';
 import { SuggestionFlags } from 'domain/suggestions';
 import fs from 'fs';
 import {
@@ -40,22 +45,30 @@ export const fetchPackageTests = {
   },
 
   'returns a registry range package': async () => {
+    const testPackageRes = createPackageResource(
+      // package name
+      'pacote',
+      // package version
+      '10.1.*',
+      // package path
+      'packagepath',
+    );
 
-    const testRequest: any = {
-      clientData: {
-        providerName: 'testnpmprovider',
-      },
-      package: {
-        path: 'packagepath',
-        name: 'pacote',
-        version: '10.1.*',
-      }
+    const testRequest: TPackageClientRequest<any> = {
+      providerName: 'testnpmprovider',
+      clientData: {},
+      dependency: new PackageDependency(
+        testPackageRes,
+        null,
+        null,
+      ),
+      attempt: 1
     }
 
     const npaSpec = npa.resolve(
-      testRequest.package.name,
-      testRequest.package.version,
-      testRequest.package.path
+      testPackageRes.name,
+      testPackageRes.version,
+      testPackageRes.path
     );
 
     when(pacoteMock.packument(anything(), anything()))
@@ -73,28 +86,36 @@ export const fetchPackageTests = {
       .then((actual) => {
         assert.equal(actual.source, 'registry')
         assert.equal(actual.type, 'range')
-        assert.equal(actual.resolved.name, testRequest.package.name)
-        assert.deepEqual(actual.resolved.version, testRequest.package.version)
+        assert.equal(actual.resolved.name, testPackageRes.name)
+        assert.deepEqual(actual.resolved.version, testPackageRes.version)
       })
   },
 
   'returns a registry version package': async () => {
+    const testPackageRes = createPackageResource(
+      // package name
+      'npm-package-arg',
+      // package version
+      '8.0.1',
+      // package path
+      'packagepath',
+    );
 
-    const testRequest: any = {
-      clientData: {
-        providerName: 'testnpmprovider',
-      },
-      package: {
-        path: 'packagepath',
-        name: 'npm-package-arg',
-        version: '8.0.1',
-      }
+    const testRequest: TPackageClientRequest<any> = {
+      providerName: 'testnpmprovider',
+      clientData: {},
+      dependency: new PackageDependency(
+        testPackageRes,
+        null,
+        null,
+      ),
+      attempt: 1
     }
 
     const npaSpec = npa.resolve(
-      testRequest.package.name,
-      testRequest.package.version,
-      testRequest.package.path
+      testPackageRes.name,
+      testPackageRes.version,
+      testPackageRes.path
     );
 
     when(pacoteMock.packument(anything(), anything()))
@@ -112,27 +133,35 @@ export const fetchPackageTests = {
       .then((actual) => {
         assert.equal(actual.source, 'registry')
         assert.equal(actual.type, 'version')
-        assert.equal(actual.resolved.name, testRequest.package.name)
+        assert.equal(actual.resolved.name, testPackageRes.name)
       })
   },
 
   'returns capped latest versions': async () => {
+    const testPackageRes = createPackageResource(
+      // package name
+      'npm-package-arg',
+      // package version
+      '7.0.0',
+      // package path
+      'packagepath',
+    );
 
-    const testRequest: any = {
-      clientData: {
-        providerName: 'testnpmprovider',
-      },
-      package: {
-        path: 'packagepath',
-        name: 'npm-package-arg',
-        version: '7.0.0',
-      }
+    const testRequest: TPackageClientRequest<any> = {
+      providerName: 'testnpmprovider',
+      clientData: {},
+      dependency: new PackageDependency(
+        testPackageRes,
+        null,
+        null,
+      ),
+      attempt: 1
     }
 
     const npaSpec = npa.resolve(
-      testRequest.package.name,
-      testRequest.package.version,
-      testRequest.package.path
+      testPackageRes.name,
+      testPackageRes.version,
+      testPackageRes.path
     );
 
     when(pacoteMock.packument(anything(), anything()))
@@ -157,21 +186,30 @@ export const fetchPackageTests = {
   },
 
   'returns a registry alias package': async () => {
-    const testRequest: any = {
-      clientData: {
-        providerName: 'testnpmprovider',
-      },
-      package: {
-        path: 'packagepath',
-        name: 'aliased',
-        version: 'npm:pacote@11.1.9',
-      }
+    const testPackageRes = createPackageResource(
+      // package name
+      'aliased',
+      // package version
+      'npm:pacote@11.1.9',
+      // package path
+      'packagepath',
+    );
+
+    const testRequest: TPackageClientRequest<any> = {
+      providerName: 'testnpmprovider',
+      clientData: {},
+      dependency: new PackageDependency(
+        testPackageRes,
+        null,
+        null,
+      ),
+      attempt: 1
     }
 
     const npaSpec = npa.resolve(
-      testRequest.package.name,
-      testRequest.package.version,
-      testRequest.package.path
+      testPackageRes.name,
+      testPackageRes.version,
+      testPackageRes.path
     );
 
     when(pacoteMock.packument(anything(), anything()))
@@ -200,23 +238,30 @@ export const fetchPackageTests = {
       'infrastructure/providers/npm/test/pacoteClient/npmrc-test'
     );
 
-    const testRequest: any = {
-      clientData: {
-        providerName: 'testnpmprovider',
-      },
-      source: 'npmtest',
-      package: {
-        path: packagePath,
-        name: 'aliased',
-        version: 'npm:pacote@11.1.9',
-      },
+    const testPackageRes = createPackageResource(
+      // package name
+      'pacote',
+      // package version
+      '11.1.9',
+      packagePath,
+    );
+
+    const testRequest: TPackageClientRequest<any> = {
+      providerName: 'testnpmprovider',
+      clientData: {},
+      dependency: new PackageDependency(
+        testPackageRes,
+        null,
+        null,
+      ),
+      attempt: 1
     }
 
     // write the npmrc file
     const npmrcPath = packagePath + '/.npmrc';
     fs.writeFileSync(npmrcPath, Fixtures[".npmrc"])
     fs.writeFileSync(`${packagePath}/.env`, Fixtures[".npmrc-env"])
-    assert.ok(fs.existsSync(testRequest.package.path), 'test .npmrc doesnt exist?')
+    assert.ok(fs.existsSync(testPackageRes.path), 'test .npmrc doesnt exist?')
 
     when(pacoteMock.packument(anything(), anything()))
       .thenResolve(Fixtures.packumentGit)
@@ -230,9 +275,9 @@ export const fetchPackageTests = {
     cut.NpmCliConfig = require("@npmcli/config")
 
     const npaSpec = npa.resolve(
-      testRequest.package.name,
-      testRequest.package.version,
-      testRequest.package.path
+      testPackageRes.name,
+      testPackageRes.version,
+      testPackageRes.path
     )
 
     return cut.fetchPackage(testRequest, npaSpec)
@@ -240,7 +285,7 @@ export const fetchPackageTests = {
         const expectedRegistryAuth = "//registry.npmjs.example/:_authToken";
 
         const [, actualOpts] = capture(pacoteMock.packument).first()
-        assert.equal(actualOpts.cwd, testRequest.package.path);
+        assert.equal(actualOpts.cwd, testPackageRes.path);
 
         const expectedPassword = "12345678";
         assert.equal(actualOpts[expectedRegistryAuth], expectedPassword);

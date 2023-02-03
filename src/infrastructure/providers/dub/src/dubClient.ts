@@ -37,8 +37,9 @@ export class DubClient implements IPackageClient<null> {
   }
 
   async fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
-    const semverSpec = VersionHelpers.parseSemver(request.package.version);
-    const url = `${this.config.apiUrl}${encodeURIComponent(request.package.name)}/info`;
+    const requestedPackage = request.dependency.package;
+    const semverSpec = VersionHelpers.parseSemver(requestedPackage.version);
+    const url = `${this.config.apiUrl}${encodeURIComponent(requestedPackage.name)}/info`;
 
     return this.createRemotePackageDocument(url, request, semverSpec)
       .catch((error: HttpClientResponse) => {
@@ -67,6 +68,8 @@ export class DubClient implements IPackageClient<null> {
     semverSpec: TSemverSpec
   ): Promise<TPackageClientResponse> {
 
+    const requestedPackage = request.dependency.package;
+
     const query = {
       minimize: 'true',
     }
@@ -75,13 +78,11 @@ export class DubClient implements IPackageClient<null> {
 
     return this.client.request(HttpClientRequestMethods.get, url, query, headers)
       .then(function (httpResponse): TPackageClientResponse {
-
         const packageInfo = httpResponse.data;
-
         const versionRange = semverSpec.rawVersion;
 
         const resolved = {
-          name: request.package.name,
+          name: requestedPackage.name,
           version: versionRange,
         };
 

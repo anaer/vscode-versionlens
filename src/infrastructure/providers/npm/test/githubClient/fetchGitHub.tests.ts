@@ -8,6 +8,7 @@ import { SuggestionFlags } from 'domain/suggestions';
 import {
   GitHubClient,
   GitHubOptions,
+  NpaSpec,
   NpmConfig
 } from 'infrastructure/providers/npm';
 import npa from 'npm-package-arg';
@@ -43,7 +44,7 @@ export const fetchGithubTests = {
       }
     };
 
-    const testSpec = npa.resolve(
+    const testSpec: NpaSpec = npa.resolve(
       testRequest.package.name,
       testRequest.package.version,
       testRequest.package.path
@@ -63,7 +64,7 @@ export const fetchGithubTests = {
       instance(loggerMock)
     );
 
-    return cut.fetchGithub(testRequest, <any>testSpec)
+    return cut.fetchGithub(testSpec)
       .then((actual) => {
         assert.equal(actual.source, 'github')
         assert.equal(actual.type, 'range')
@@ -123,7 +124,7 @@ export const fetchGithubTests = {
       instance(loggerMock)
     );
 
-    return cut.fetchGithub(testRequest, testSpec)
+    return cut.fetchGithub(testSpec)
       .then((actual) => {
         assert.equal(actual.source, 'github')
         assert.equal(actual.type, 'range')
@@ -182,7 +183,7 @@ export const fetchGithubTests = {
       instance(loggerMock)
     );
 
-    return cut.fetchGithub(testRequest, testSpec)
+    return cut.fetchGithub(testSpec)
       .then((actual) => {
         assert.equal(actual.source, 'github')
         assert.equal(actual.type, 'committish')
@@ -237,7 +238,7 @@ export const fetchGithubTests = {
       instance(loggerMock)
     );
 
-    await cut.fetchGithub(testRequest, testSpec)
+    await cut.fetchGithub(testSpec)
 
     const [, , , actualHeaders] = capture(jsonClientMock.request).first();
     assert.equal(actualHeaders['authorization'], 'token ' + testToken);
