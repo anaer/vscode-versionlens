@@ -83,8 +83,6 @@ export class MavenClient implements IPackageClient<MavenClientData> {
 
         const source = PackageSourceTypes.Registry;
 
-        const { providerName } = request;
-
         const requested = request.package;
 
         const versionRange = semverSpec.rawVersion;
@@ -118,7 +116,6 @@ export class MavenClient implements IPackageClient<MavenClientData> {
         );
 
         return {
-          providerName,
           source,
           response,
           type: semverSpec.type,

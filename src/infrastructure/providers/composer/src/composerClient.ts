@@ -79,8 +79,6 @@ export class ComposerClient implements IPackageClient<null> {
       .then(function (httpResponse: JsonClientResponse): TPackageDocument {
         const packageInfo = httpResponse.data.packages[request.package.name];
 
-        const { providerName } = request;
-
         const versionRange = semverSpec.rawVersion;
 
         const requested = request.package;
@@ -123,7 +121,6 @@ export class ComposerClient implements IPackageClient<null> {
         );
 
         return {
-          providerName,
           source: PackageSourceTypes.Registry,
           response,
           type: semverSpec.type,

@@ -41,7 +41,6 @@ export const fetchPackageTests = {
 
     // response
     const testRespDoc: TPackageDocument = {
-      providerName: testProviderName,
       type: PackageVersionTypes.Version,
       source: PackageSourceTypes.Registry,
       response: {
@@ -77,10 +76,14 @@ export const fetchPackageTests = {
     // client
     const clientMock: IPackageClient<any> = mock<IPackageClient<any>>();
     when(clientMock.logger).thenReturn(testLogger);
+    when(clientMock.config).thenReturn(<any>{
+      providerName: testProviderName
+    })
     when(clientMock.fetchPackage(testRequest)).thenResolve(testRespDoc);
+    const testClient = instance(clientMock);
 
     // test
-    return fetchPackage(instance(clientMock), testRequest)
+    return fetchPackage(testClient, testRequest)
       .then(actual => {
         // verify
         verify(loggerMock.debug("Queued package: %s", "testPackageName")).once();
@@ -88,7 +91,7 @@ export const fetchPackageTests = {
         verify(
           loggerMock.info(
             'Fetched %s package from %s: %s@%s',
-            testRespDoc.providerName,
+            testClient.config.providerName,
             testRespDoc.response.source,
             testRequest.package.name,
             testRequest.package.version
@@ -97,7 +100,7 @@ export const fetchPackageTests = {
 
         // assert
         assert.equal(actual.length, 1);
-        assert.equal(actual[0].providerName, testRespDoc.providerName);
+        assert.equal(actual[0].providerName, testClient.config.providerName);
         assert.equal(actual[0].source, testRespDoc.source);
         assert.equal(actual[0].type, testRespDoc.type);
 

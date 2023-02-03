@@ -74,8 +74,6 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
 
         const { compareLoose } = require("semver");
 
-        const { providerName } = request;
-
         const source: PackageSourceTypes = PackageSourceTypes.Registry;
 
         const type: PackageVersionTypes = <any>npaSpec.type;
@@ -135,7 +133,6 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
 
             // No match
             return DocumentFactory.createNoMatch(
-              providerName,
               source,
               type,
               requested,
@@ -156,7 +153,6 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
         );
 
         return {
-          providerName,
           source,
           response,
           type,

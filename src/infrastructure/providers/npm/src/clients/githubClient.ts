@@ -79,8 +79,6 @@ export class GitHubClient {
 
         const source: PackageSourceTypes = PackageSourceTypes.Github;
 
-        const { providerName } = request;
-
         const requested = request.package;
 
         const type: PackageVersionTypes = npaSpec.gitRange ?
@@ -107,7 +105,6 @@ export class GitHubClient {
         );
 
         return {
-          providerName,
           source,
           response,
           type,

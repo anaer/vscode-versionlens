@@ -135,7 +135,6 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
         // no match if null type
         if (dotnetSpec.type === null) {
           return DocumentFactory.createNoMatch(
-            providerName,
             source,
             PackageVersionTypes.Version,
             requested,

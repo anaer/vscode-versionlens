@@ -90,7 +90,6 @@ export class NpmPackageClient implements IPackageClient<null> {
         if (!npaSpec.gitCommittish && npaSpec.hosted.default !== 'shortcut') {
           return resolve(
             DocumentFactory.createFixed(
-              request.providerName,
               PackageSourceTypes.Git,
               request.package,
               ResponseFactory.createResponseStatus(ClientResponseSource.local, 0),

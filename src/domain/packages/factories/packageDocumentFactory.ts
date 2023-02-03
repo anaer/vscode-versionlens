@@ -1,5 +1,4 @@
 import { TPackageSuggestion, SuggestionFactory } from 'domain/suggestions'
-
 import { PackageSourceTypes } from "../definitions/ePackageSourceTypes";
 import { PackageVersionTypes } from "../definitions/ePackageVersionTypes";
 import { TPackageDocument } from "../definitions/tPackageDocument";
@@ -14,10 +13,9 @@ export function create(
   suggestions: Array<TPackageSuggestion>
 ): TPackageDocument {
 
-  const { providerName, package: requested } = request;
+  const { package: requested } = request;
 
   return {
-    providerName,
     source,
     type: null,
     requested,
@@ -29,7 +27,6 @@ export function create(
 }
 
 export function createInvalidVersion(
-  providerName: string,
   requested: TPackageIdentifier,
   response: TPackageResponseStatus,
   type: PackageVersionTypes
@@ -41,7 +38,6 @@ export function createInvalidVersion(
   ];
 
   return {
-    providerName,
     source,
     type,
     requested,
@@ -52,7 +48,6 @@ export function createInvalidVersion(
 }
 
 export function createNoMatch(
-  providerName: string,
   source: PackageSourceTypes,
   type: PackageVersionTypes,
   requested: TPackageIdentifier,
@@ -66,7 +61,6 @@ export function createNoMatch(
   ];
 
   return {
-    providerName,
     source,
     type,
     requested,
@@ -77,7 +71,6 @@ export function createNoMatch(
 }
 
 export function createFixed(
-  providerName: string,
   source: PackageSourceTypes,
   requested: TPackageIdentifier,
   response: TPackageResponseStatus,
@@ -90,7 +83,6 @@ export function createFixed(
   ];
 
   return {
-    providerName,
     source,
     type,
     requested,

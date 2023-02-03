@@ -8,8 +8,6 @@ import { TPackageNameVersion } from './tPackageNameVersion';
 
 export type TPackageDocument = {
 
-  providerName: string;
-
   source: PackageSourceTypes;
 
   response?: TPackageResponseStatus;

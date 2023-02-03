@@ -79,8 +79,6 @@ export class DubClient implements IPackageClient<null> {
 
         const packageInfo = httpResponse.data;
 
-        const { providerName } = request;
-
         const versionRange = semverSpec.rawVersion;
 
         const requested = request.package;
@@ -108,7 +106,6 @@ export class DubClient implements IPackageClient<null> {
         );
 
         return {
-          providerName,
           source: PackageSourceTypes.Registry,
           response,
           type: semverSpec.type,

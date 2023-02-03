@@ -18,13 +18,17 @@ export function fetchPackage<TClientData>(
 
       client.logger.info(
         'Fetched %s package from %s: %s@%s',
-        document.providerName,
+        client.config.providerName,
         document.response.source,
         request.package.name,
         request.package.version
       );
 
-      return ResponseFactory.createSuccess(request, document);
+      return ResponseFactory.createSuccess(
+        client.config.providerName,
+        request,
+        document
+      );
     })
     .catch(function (error: PackageResponse) {
 
