@@ -11,7 +11,7 @@ import {
   PackageSourceType,
   PackageVersionType,
   TPackageClientResponse,
-  TPackageRequest
+  TPackageClientRequest
 } from 'domain/packages';
 import { SuggestionFlags } from 'domain/suggestions/index';
 import { test } from 'mocha-ui-esm';
@@ -57,7 +57,7 @@ export const fetchPackageTests = {
       ]
     };
 
-    const testRequest: TPackageRequest<any> = {
+    const testRequest: TPackageClientRequest<any> = {
       providerName: testProviderName,
       attempt: 1,
       clientData: {},

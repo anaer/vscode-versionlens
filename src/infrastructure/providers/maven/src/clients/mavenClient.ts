@@ -5,11 +5,11 @@ import {
 } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
-  DocumentFactory,
+  ClientResponseFactory,
   IPackageClient,
   PackageSourceType,
   TPackageClientResponse,
-  TPackageRequest,
+  TPackageClientRequest,
   TSemverSpec,
   VersionHelpers
 } from 'domain/packages';
@@ -31,7 +31,7 @@ export class MavenClient implements IPackageClient<MavenClientData> {
     this.httpClient = httpClient;
     this.logger = logger;
   }
-  async fetchPackage(request: TPackageRequest<MavenClientData>): Promise<TPackageClientResponse> {
+  async fetchPackage(request: TPackageClientRequest<MavenClientData>): Promise<TPackageClientResponse> {
     const semverSpec = VersionHelpers.parseSemver(request.package.version);
 
     const { repositories } = request.clientData;
@@ -51,7 +51,7 @@ export class MavenClient implements IPackageClient<MavenClientData> {
 
         const suggestion = SuggestionFactory.createFromHttpStatus(error.status);
         if (suggestion != null) {
-          return DocumentFactory.create(
+          return ClientResponseFactory.create(
             PackageSourceType.Registry,
             error,
             [suggestion]
@@ -63,7 +63,7 @@ export class MavenClient implements IPackageClient<MavenClientData> {
 
   async createRemotePackageDocument(
     url: string,
-    request: TPackageRequest<MavenClientData>,
+    request: TPackageClientRequest<MavenClientData>,
     semverSpec: TSemverSpec
   ): Promise<TPackageClientResponse> {
 

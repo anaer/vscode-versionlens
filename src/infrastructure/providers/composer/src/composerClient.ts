@@ -6,11 +6,11 @@ import {
 } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
-  DocumentFactory,
+  ClientResponseFactory,
   IPackageClient,
   PackageSourceType,
   TPackageClientResponse,
-  TPackageRequest,
+  TPackageClientRequest,
   TSemverSpec,
   VersionHelpers
 } from 'domain/packages';
@@ -38,7 +38,7 @@ export class ComposerClient implements IPackageClient<null> {
   }
 
   async fetchPackage<TClientData>(
-    request: TPackageRequest<TClientData>
+    request: TPackageClientRequest<TClientData>
   ): Promise<TPackageClientResponse> {
     const semverSpec = VersionHelpers.parseSemver(request.package.version);
     const url = `${this.config.apiUrl}${request.package.name}.json`;
@@ -54,7 +54,7 @@ export class ComposerClient implements IPackageClient<null> {
 
         const suggestion = SuggestionFactory.createFromHttpStatus(error.status);
         if (suggestion != null) {
-          return DocumentFactory.create(
+          return ClientResponseFactory.create(
             PackageSourceType.Registry,
             error,
             [suggestion]
@@ -67,7 +67,7 @@ export class ComposerClient implements IPackageClient<null> {
 
   async createRemotePackageDocument<TClientData>(
     url: string,
-    request: TPackageRequest<TClientData>,
+    request: TPackageClientRequest<TClientData>,
     semverSpec: TSemverSpec
   ): Promise<TPackageClientResponse> {
 

@@ -5,11 +5,11 @@ import {
 } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
-  DocumentFactory,
+  ClientResponseFactory,
   IPackageClient,
   PackageSourceType,
   TPackageClientResponse,
-  TPackageRequest,
+  TPackageClientRequest,
   TSemverSpec,
   VersionHelpers
 } from 'domain/packages';
@@ -36,7 +36,7 @@ export class DubClient implements IPackageClient<null> {
     this.logger = logger;
   }
 
-  async fetchPackage(request: TPackageRequest<null>): Promise<TPackageClientResponse> {
+  async fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
     const semverSpec = VersionHelpers.parseSemver(request.package.version);
     const url = `${this.config.apiUrl}${encodeURIComponent(request.package.name)}/info`;
 
@@ -51,7 +51,7 @@ export class DubClient implements IPackageClient<null> {
 
         const suggestion = SuggestionFactory.createFromHttpStatus(error.status);
         if (suggestion != null) {
-          return DocumentFactory.create(
+          return ClientResponseFactory.create(
             PackageSourceType.Registry,
             error,
             [suggestion]
@@ -63,7 +63,7 @@ export class DubClient implements IPackageClient<null> {
 
   async createRemotePackageDocument(
     url: string,
-    request: TPackageRequest<null>,
+    request: TPackageClientRequest<null>,
     semverSpec: TSemverSpec
   ): Promise<TPackageClientResponse> {
 

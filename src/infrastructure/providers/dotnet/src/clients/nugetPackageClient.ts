@@ -1,11 +1,11 @@
 import { ILogger } from 'domain/logging';
 import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
 import {
-  DocumentFactory,
+  ClientResponseFactory,
   TPackageClientResponse,
   PackageSourceType,
   PackageVersionType,
-  TPackageRequest,
+  TPackageClientRequest,
   VersionHelpers,
   IPackageClient
 } from 'domain/packages';
@@ -36,13 +36,13 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
     this.logger = logger;
   }
 
-  async fetchPackage(request: TPackageRequest<NuGetClientData>): Promise<TPackageClientResponse> {
+  async fetchPackage(request: TPackageClientRequest<NuGetClientData>): Promise<TPackageClientResponse> {
     const dotnetSpec = parseVersionSpec(request.package.version);
     return this.fetchPackageRetry(request, dotnetSpec);
   }
 
   async fetchPackageRetry(
-    request: TPackageRequest<NuGetClientData>,
+    request: TPackageClientRequest<NuGetClientData>,
     dotnetSpec: DotNetVersionSpec
   ): Promise<TPackageClientResponse> {
     const urls = request.clientData.serviceUrls;
@@ -68,7 +68,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 
         const suggestion = SuggestionFactory.createFromHttpStatus(error.status);
         if (suggestion != null) {
-          return DocumentFactory.create(
+          return ClientResponseFactory.create(
             PackageSourceType.Registry,
             error,
             [suggestion]
@@ -83,7 +83,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 
   async createRemotePackageDocument(
     url: string,
-    request: TPackageRequest<NuGetClientData>,
+    request: TPackageClientRequest<NuGetClientData>,
     dotnetSpec: DotNetVersionSpec
   ): Promise<TPackageClientResponse> {
 
@@ -118,7 +118,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 
         // four segment is not supported
         if (dotnetSpec.spec && dotnetSpec.spec.hasFourSegments) {
-          return DocumentFactory.create(
+          return ClientResponseFactory.create(
             PackageSourceType.Registry,
             httpResponse,
             [],
@@ -127,10 +127,10 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 
         // no match if null type
         if (dotnetSpec.type === null) {
-          return DocumentFactory.createNoMatch(
+          return ClientResponseFactory.createNoMatch(
             source,
             PackageVersionType.Version,
-            DocumentFactory.createResponseStatus(httpResponse.source, 404),
+            ClientResponseFactory.createResponseStatus(httpResponse.source, 404),
             // suggest the latest release if available
             releases.length > 0 ? releases[releases.length - 1] : null,
           )

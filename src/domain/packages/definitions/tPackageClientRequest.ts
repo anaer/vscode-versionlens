@@ -1,7 +1,7 @@
 import { PackageDependency } from '../models/packageDependency';
 import { TPackageIdentifier } from './tPackageIdentifier';
 
-export type TPackageRequest<TClientData> = {
+export type TPackageClientRequest<TClientData> = {
   // provider descriptor
   providerName: string;
 

@@ -5,11 +5,11 @@ import {
 } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
-  DocumentFactory,
+  ClientResponseFactory,
   PackageSourceType,
   PackageVersionType,
   TPackageClientResponse,
-  TPackageRequest,
+  TPackageClientRequest,
   VersionHelpers
 } from 'domain/packages';
 import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
@@ -36,7 +36,7 @@ export class GitHubClient {
     this.logger = logger;
   }
 
-  fetchGithub(request: TPackageRequest<null>, npaSpec: NpaSpec): Promise<TPackageClientResponse> {
+  fetchGithub(request: TPackageClientRequest<null>, npaSpec: NpaSpec): Promise<TPackageClientResponse> {
     const { validRange } = semver;
 
     if (npaSpec.gitRange) {
@@ -54,7 +54,7 @@ export class GitHubClient {
     return this.fetchCommits(request, npaSpec);
   }
 
-  fetchTags(request: TPackageRequest<null>, npaSpec: NpaSpec): Promise<TPackageClientResponse> {
+  fetchTags(request: TPackageClientRequest<null>, npaSpec: NpaSpec): Promise<TPackageClientResponse> {
     // todo pass in auth
     const { user, project } = npaSpec.hosted;
     const tagsRepoUrl = `https://api.github.com/repos/${user}/${project}/tags`;
@@ -117,7 +117,7 @@ export class GitHubClient {
 
   }
 
-  fetchCommits(request: TPackageRequest<null>, npaSpec: NpaSpec): Promise<TPackageClientResponse> {
+  fetchCommits(request: TPackageClientRequest<null>, npaSpec: NpaSpec): Promise<TPackageClientResponse> {
     // todo pass in auth
     const { user, project } = npaSpec.hosted;
     const commitsRepoUrl = `https://api.github.com/repos/${user}/${project}/commits`;
@@ -144,7 +144,7 @@ export class GitHubClient {
 
         if (commits.length === 0) {
           // no commits found
-          return DocumentFactory.create(
+          return ClientResponseFactory.create(
             PackageSourceType.Github,
             clientResponse,
             [SuggestionFactory.createNotFound()]

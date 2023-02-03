@@ -1,12 +1,12 @@
 import { ClientResponseSource } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
-  DocumentFactory,
+  ClientResponseFactory,
   IPackageClient,
   PackageSourceType,
   PackageVersionType,
   TPackageClientResponse,
-  TPackageRequest
+  TPackageClientRequest
 } from 'domain/packages';
 import { SuggestionFactory, TPackageSuggestion } from 'domain/suggestions';
 import npa from 'npm-package-arg';
@@ -40,7 +40,7 @@ export class NpmPackageClient implements IPackageClient<null> {
     this.logger = logger;
   }
 
-  async fetchPackage(request: TPackageRequest<null>): Promise<TPackageClientResponse> {
+  async fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
     let source: PackageSourceType;
 
     return new Promise<TPackageClientResponse>((resolve, reject) => {
@@ -66,7 +66,7 @@ export class NpmPackageClient implements IPackageClient<null> {
         return resolve(
           PackageFactory.createDirectory(
             request.package,
-            DocumentFactory.createResponseStatus(ClientResponseSource.local, 200),
+            ClientResponseFactory.createResponseStatus(ClientResponseSource.local, 200),
             npaSpec,
           )
         );
@@ -87,9 +87,9 @@ export class NpmPackageClient implements IPackageClient<null> {
 
         if (!npaSpec.gitCommittish && npaSpec.hosted.default !== 'shortcut') {
           return resolve(
-            DocumentFactory.createFixed(
+            ClientResponseFactory.createFixed(
               PackageSourceType.Git,
-              DocumentFactory.createResponseStatus(ClientResponseSource.local, 0),
+              ClientResponseFactory.createResponseStatus(ClientResponseSource.local, 0),
               PackageVersionType.Committish,
               'git repository'
             )
@@ -144,9 +144,9 @@ export class NpmPackageClient implements IPackageClient<null> {
 
       if (suggestions === null) return Promise.reject(response);
 
-      return DocumentFactory.create(
+      return ClientResponseFactory.create(
         source,
-        DocumentFactory.createResponseStatus(response.source, response.status),
+        ClientResponseFactory.createResponseStatus(response.source, response.status),
         suggestions
       );
 

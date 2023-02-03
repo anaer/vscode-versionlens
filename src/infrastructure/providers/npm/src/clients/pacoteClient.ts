@@ -1,11 +1,11 @@
 import { AbstractCachedRequest, ClientResponseSource } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
-  DocumentFactory,
+  ClientResponseFactory,
   PackageSourceType,
   PackageVersionType,
   TPackageClientResponse,
-  TPackageRequest,
+  TPackageClientRequest,
   VersionHelpers
 } from 'domain/packages';
 import { createSuggestions } from 'domain/suggestions';
@@ -34,7 +34,7 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
   }
 
   async fetchPackage(
-    request: TPackageRequest<null>,
+    request: TPackageClientRequest<null>,
     npaSpec: NpaSpec
   ): Promise<TPackageClientResponse> {
 
@@ -131,7 +131,7 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
           if (!versionRange) {
 
             // No match
-            return DocumentFactory.createNoMatch(
+            return ClientResponseFactory.createNoMatch(
               source,
               type,
               responseStatus,

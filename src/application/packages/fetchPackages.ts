@@ -2,7 +2,7 @@ import {
   IPackageClient,
   PackageDependency,
   PackageResponse,
-  TPackageRequest
+  TPackageClientRequest
 } from "domain/packages";
 import { fetchPackage } from "./fetchPackage";
 
@@ -20,7 +20,7 @@ export async function fetchPackages<TClientData>(
   for (const dependency of dependencies) {
     // build the client request
     const { name, version } = dependency.packageInfo;
-    const clientRequest: TPackageRequest<TClientData> = {
+    const clientRequest: TPackageClientRequest<TClientData> = {
       providerName,
       clientData,
       dependency,

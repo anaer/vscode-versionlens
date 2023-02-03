@@ -1,5 +1,5 @@
 import {
-  DocumentFactory,
+  ClientResponseFactory,
   TPackageIdentifier,
   TClientResponseStatus,
   TPackageClientResponse,
@@ -20,7 +20,7 @@ export function createDirectory(
 
   const fileRegExpResult = fileDependencyRegex.exec(requested.version);
   if (!fileRegExpResult) {
-    return DocumentFactory.createInvalidVersion(
+    return ClientResponseFactory.createInvalidVersion(
       responseStatus,
       <any>npaSpec.type // todo create a converter
     );

@@ -1,14 +1,14 @@
 import {
   IPackageClient,
   PackageResponse,
-  ResponseFactory,
-  TPackageClientResponse,
-  TPackageRequest
+  ResponseFactory, 
+  TPackageClientRequest, 
+  TPackageClientResponse
 } from 'domain/packages';
 
 export function fetchPackage<TClientData>(
   client: IPackageClient<TClientData>,
-  request: TPackageRequest<TClientData>,
+  request: TPackageClientRequest<TClientData>,
 ): Promise<Array<PackageResponse>> {
 
   client.logger.debug("Queued package: %s", request.package.name);

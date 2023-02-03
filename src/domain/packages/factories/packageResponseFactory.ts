@@ -1,11 +1,11 @@
 import { TPackageSuggestion } from "domain/suggestions";
-import { TPackageRequest } from "../definitions/tPackageRequest";
+import { TPackageClientRequest } from "../definitions/tPackageClientRequest";
 import { TPackageClientResponse } from "../definitions/tPackageClientResponse";
 import { PackageResponse } from "../models/packageResponse";
 
 export function createSuccess<TClientData>(
   providerName: string,
-  request: TPackageRequest<TClientData>,
+  request: TPackageClientRequest<TClientData>,
   response: TPackageClientResponse
 ): Array<PackageResponse> {
   // map the documents to responses
