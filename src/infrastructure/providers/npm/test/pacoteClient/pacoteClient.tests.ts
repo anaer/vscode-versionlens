@@ -74,7 +74,7 @@ export const fetchPackageTests = {
         assert.equal(actual.source, 'registry')
         assert.equal(actual.type, 'range')
         assert.equal(actual.resolved.name, testRequest.package.name)
-        assert.deepEqual(actual.requested, testRequest.package)
+        assert.deepEqual(actual.resolved.version, testRequest.package.version)
       })
   },
 
@@ -189,9 +189,8 @@ export const fetchPackageTests = {
       .then((actual) => {
         assert.equal(actual.source, 'registry')
         assert.equal(actual.type, 'alias')
-        assert.equal(actual.requested.name, testRequest.package.name)
         assert.equal(actual.resolved.name, 'pacote')
-        assert.deepEqual(actual.requested, testRequest.package)
+        assert.equal(actual.resolved.version, '11.1.9')
       })
   },
 

@@ -51,7 +51,7 @@ export const fetchPackageTests = {
     return cut.fetchPackage(testRequest)
       .then(actual => {
         assert.equal(actual.source, 'directory', `expected to see ${expectedSource}`)
-        assert.deepEqual(actual.requested, testRequest.package)
+        assert.deepEqual(actual.resolved.name, testRequest.package.name)
       })
   },
 
@@ -87,7 +87,6 @@ export const fetchPackageTests = {
       .then((actual) => {
         assert.equal(actual.source, 'git')
         assert.equal(actual.resolved, null)
-        assert.deepEqual(actual.requested, testRequest.package)
 
         assert.deepEqual(
           actual.suggestions,
@@ -180,7 +179,7 @@ export const fetchPackageTests = {
         cut.fetchPackage(testRequest)
           .then((actual) => {
             assert.equal(actual.source, 'registry')
-            assert.deepEqual(actual.requested, testRequest.package)
+            assert.equal(actual.resolved, null)
             assert.deepEqual(
               actual.suggestions,
               [{

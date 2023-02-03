@@ -50,7 +50,6 @@ export class PubClient implements IPackageClient<null> {
         if (suggestion != null) {
           return DocumentFactory.create(
             PackageSourceTypes.Registry,
-            request,
             error,
             [suggestion]
           )
@@ -75,10 +74,8 @@ export class PubClient implements IPackageClient<null> {
 
         const versionRange = semverSpec.rawVersion;
 
-        const requested = request.package;
-
         const resolved = {
-          name: requested.name,
+          name: request.package.name,
           version: versionRange,
         };
 
@@ -104,7 +101,6 @@ export class PubClient implements IPackageClient<null> {
           source: PackageSourceTypes.Registry,
           response,
           type: semverSpec.type,
-          requested,
           resolved,
           suggestions,
         };

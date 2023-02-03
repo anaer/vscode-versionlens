@@ -1,24 +1,19 @@
+import { ClientResponseSource } from 'domain/clients/index';
 import { TPackageSuggestion, SuggestionFactory } from 'domain/suggestions'
 import { PackageSourceTypes } from "../definitions/ePackageSourceTypes";
 import { PackageVersionTypes } from "../definitions/ePackageVersionTypes";
 import { TPackageDocument } from "../definitions/tPackageDocument";
-import { TPackageIdentifier } from "../definitions/tPackageIdentifier";
 import { TPackageResponseStatus } from "../definitions/tPackageResponseStatus";
-import { TPackageRequest } from '../definitions/tPackageRequest';
 
 export function create(
   source: PackageSourceTypes,
-  request: TPackageRequest<any>,
   response: TPackageResponseStatus,
   suggestions: Array<TPackageSuggestion>
 ): TPackageDocument {
 
-  const { package: requested } = request;
-
   return {
     source,
     type: null,
-    requested,
     resolved: null,
     response,
     suggestions
@@ -27,7 +22,6 @@ export function create(
 }
 
 export function createInvalidVersion(
-  requested: TPackageIdentifier,
   response: TPackageResponseStatus,
   type: PackageVersionTypes
 ): TPackageDocument {
@@ -40,7 +34,6 @@ export function createInvalidVersion(
   return {
     source,
     type,
-    requested,
     response,
     resolved: null,
     suggestions
@@ -50,7 +43,6 @@ export function createInvalidVersion(
 export function createNoMatch(
   source: PackageSourceTypes,
   type: PackageVersionTypes,
-  requested: TPackageIdentifier,
   response: TPackageResponseStatus,
   latestVersion?: string
 ): TPackageDocument {
@@ -63,7 +55,6 @@ export function createNoMatch(
   return {
     source,
     type,
-    requested,
     response,
     resolved: null,
     suggestions
@@ -72,7 +63,6 @@ export function createNoMatch(
 
 export function createFixed(
   source: PackageSourceTypes,
-  requested: TPackageIdentifier,
   response: TPackageResponseStatus,
   type: PackageVersionTypes,
   fixedVersion: string
@@ -85,9 +75,15 @@ export function createFixed(
   return {
     source,
     type,
-    requested,
     response,
     resolved: null,
     suggestions
+  };
+}
+
+export function createResponseStatus(source: ClientResponseSource, status: number): TPackageResponseStatus {
+  return {
+    source,
+    status
   };
 }

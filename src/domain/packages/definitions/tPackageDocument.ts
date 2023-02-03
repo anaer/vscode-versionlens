@@ -1,8 +1,6 @@
 import { TPackageSuggestion } from 'domain/suggestions';
-
 import { PackageSourceTypes } from './ePackageSourceTypes';
 import { PackageVersionTypes } from './ePackageVersionTypes';
-import { TPackageIdentifier } from './tPackageIdentifier';
 import { TPackageResponseStatus } from './tPackageResponseStatus';
 import { TPackageNameVersion } from './tPackageNameVersion';
 
@@ -13,8 +11,6 @@ export type TPackageDocument = {
   response?: TPackageResponseStatus;
 
   type: PackageVersionTypes;
-
-  requested: TPackageIdentifier;
 
   resolved: TPackageNameVersion;
 

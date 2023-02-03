@@ -47,7 +47,6 @@ export const fetchPackageTests = {
         status: 202,
         source: ClientResponseSource.local
       },
-      requested: testPackageId,
       resolved: testPackageNameVersion,
       suggestions: [
         {
@@ -108,7 +107,7 @@ export const fetchPackageTests = {
         assert.equal(actual[0].versionRange, testRequest.dependency.versionRange);
         assert.equal(actual[0].order, 0);
 
-        assert.equal(actual[0].requested, testRespDoc.requested);
+        assert.equal(actual[0].requested, testRequest.package);
         assert.equal(actual[0].resolved, testRespDoc.resolved);
         assert.equal(actual[0].suggestion, testRespDoc.suggestions[0]);
       });

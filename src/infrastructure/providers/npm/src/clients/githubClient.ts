@@ -79,8 +79,6 @@ export class GitHubClient {
 
         const source: PackageSourceTypes = PackageSourceTypes.Github;
 
-        const requested = request.package;
-
         const type: PackageVersionTypes = npaSpec.gitRange ?
           PackageVersionTypes.Range :
           PackageVersionTypes.Version;
@@ -108,7 +106,6 @@ export class GitHubClient {
           source,
           response,
           type,
-          requested,
           resolved,
           suggestions
         };
@@ -130,17 +127,13 @@ export class GitHubClient {
       query,
       headers
     )
-      .then((response: JsonClientResponse) => {
+      .then((response: JsonClientResponse): TPackageDocument => {
 
         const commitInfos = <[]>response.data
 
         const commits = commitInfos.map((commit: any) => commit.sha);
 
         const source: PackageSourceTypes = PackageSourceTypes.Github;
-
-        const { providerName } = request;
-
-        const requested = request.package;
 
         const type = PackageVersionTypes.Committish;
 
@@ -150,7 +143,6 @@ export class GitHubClient {
           // no commits found
           return DocumentFactory.create(
             PackageSourceTypes.Github,
-            request,
             response,
             [SuggestionFactory.createNotFound()]
           )
@@ -190,11 +182,9 @@ export class GitHubClient {
         }
 
         return {
-          providerName,
           source,
           response,
           type,
-          requested,
           resolved,
           suggestions,
           gitSpec: npaSpec.saveSpec

@@ -68,7 +68,6 @@ export const fetchGithubTests = {
         assert.equal(actual.source, 'github')
         assert.equal(actual.type, 'range')
         assert.equal(actual.resolved.name, testRequest.package.name)
-        assert.deepEqual(actual.requested, testRequest.package)
 
         assert.deepEqual(
           actual.suggestions,
@@ -129,7 +128,6 @@ export const fetchGithubTests = {
         assert.equal(actual.source, 'github')
         assert.equal(actual.type, 'range')
         assert.equal(actual.resolved.name, testRequest.package.name)
-        assert.deepEqual(actual.requested, testRequest.package)
 
         assert.deepEqual(
           actual.suggestions,
@@ -189,7 +187,6 @@ export const fetchGithubTests = {
         assert.equal(actual.source, 'github')
         assert.equal(actual.type, 'committish')
         assert.equal(actual.resolved.name, testRequest.package.name)
-        assert.deepEqual(actual.requested, testRequest.package)
 
         assert.deepEqual(
           actual.suggestions,

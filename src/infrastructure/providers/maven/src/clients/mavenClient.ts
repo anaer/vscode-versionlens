@@ -53,7 +53,6 @@ export class MavenClient implements IPackageClient<MavenClientData> {
         if (suggestion != null) {
           return DocumentFactory.create(
             PackageSourceTypes.Registry,
-            request,
             error,
             [suggestion]
           )
@@ -83,8 +82,6 @@ export class MavenClient implements IPackageClient<MavenClientData> {
 
         const source = PackageSourceTypes.Registry;
 
-        const requested = request.package;
-
         const versionRange = semverSpec.rawVersion;
 
         const response = {
@@ -104,7 +101,7 @@ export class MavenClient implements IPackageClient<MavenClientData> {
         );
 
         const resolved = {
-          name: requested.name,
+          name: request.package.name,
           version: versionRange,
         };
 
@@ -119,7 +116,6 @@ export class MavenClient implements IPackageClient<MavenClientData> {
           source,
           response,
           type: semverSpec.type,
-          requested,
           resolved,
           suggestions,
         };

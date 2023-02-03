@@ -22,7 +22,6 @@ export function createDirectory(
   const fileRegExpResult = fileDependencyRegex.exec(requested.version);
   if (!fileRegExpResult) {
     return DocumentFactory.createInvalidVersion(
-      requested,
       response,
       <any>npaSpec.type // todo create a converter
     );
@@ -47,7 +46,6 @@ export function createDirectory(
   return {
     source,
     type,
-    requested,
     response,
     resolved,
     suggestions

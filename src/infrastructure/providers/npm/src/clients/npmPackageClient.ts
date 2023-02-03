@@ -5,7 +5,6 @@ import {
   IPackageClient,
   PackageSourceTypes,
   PackageVersionTypes,
-  ResponseFactory,
   TPackageDocument,
   TPackageRequest
 } from 'domain/packages';
@@ -68,7 +67,7 @@ export class NpmPackageClient implements IPackageClient<null> {
           PackageFactory.createDirectory(
             request.providerName,
             request.package,
-            ResponseFactory.createResponseStatus(ClientResponseSource.local, 200),
+            DocumentFactory.createResponseStatus(ClientResponseSource.local, 200),
             npaSpec,
           )
         );
@@ -91,8 +90,7 @@ export class NpmPackageClient implements IPackageClient<null> {
           return resolve(
             DocumentFactory.createFixed(
               PackageSourceTypes.Git,
-              request.package,
-              ResponseFactory.createResponseStatus(ClientResponseSource.local, 0),
+              DocumentFactory.createResponseStatus(ClientResponseSource.local, 0),
               PackageVersionTypes.Committish,
               'git repository'
             )
@@ -149,8 +147,7 @@ export class NpmPackageClient implements IPackageClient<null> {
 
       return DocumentFactory.create(
         source,
-        request,
-        ResponseFactory.createResponseStatus(response.source, response.status),
+        DocumentFactory.createResponseStatus(response.source, response.status),
         suggestions
       );
 

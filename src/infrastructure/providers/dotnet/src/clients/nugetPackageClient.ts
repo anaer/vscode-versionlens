@@ -7,8 +7,7 @@ import {
   PackageVersionTypes,
   TPackageRequest,
   VersionHelpers,
-  IPackageClient,
-  ResponseFactory,
+  IPackageClient
 } from 'domain/packages';
 
 import {
@@ -71,7 +70,6 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
         if (suggestion != null) {
           return DocumentFactory.create(
             PackageSourceTypes.Registry,
-            request,
             error,
             [suggestion]
           )
@@ -107,8 +105,6 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 
         const { providerName } = request;
 
-        const requested = request.package;
-
         const packageInfo = data;
 
         const response = {
@@ -126,7 +122,6 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
         if (dotnetSpec.spec && dotnetSpec.spec.hasFourSegments) {
           return DocumentFactory.create(
             PackageSourceTypes.Registry,
-            request,
             httpResponse,
             [],
           )
@@ -137,8 +132,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
           return DocumentFactory.createNoMatch(
             source,
             PackageVersionTypes.Version,
-            requested,
-            ResponseFactory.createResponseStatus(httpResponse.source, 404),
+            DocumentFactory.createResponseStatus(httpResponse.source, 404),
             // suggest the latest release if available
             releases.length > 0 ? releases[releases.length - 1] : null,
           )
@@ -147,7 +141,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
         const versionRange = dotnetSpec.resolvedVersion;
 
         const resolved = {
-          name: requested.name,
+          name: request.package.name,
           version: versionRange,
         };
 
@@ -163,7 +157,6 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
           source,
           response,
           type: dotnetSpec.type,
-          requested,
           resolved,
           suggestions,
         };

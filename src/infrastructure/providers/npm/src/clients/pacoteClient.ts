@@ -124,18 +124,16 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
             null
         );
 
-        const requested = request.package;
         if (npaSpec.type === NpaTypes.Tag) {
 
           // get the tagged version. eg latest|next
-          versionRange = distTags[requested.version];
+          versionRange = distTags[request.package.version];
           if (!versionRange) {
 
             // No match
             return DocumentFactory.createNoMatch(
               source,
               type,
-              requested,
               response,
               suggestLatestVersion
             );
@@ -156,7 +154,6 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
           source,
           response,
           type,
-          requested,
           resolved,
           suggestions,
         };
