@@ -1,6 +1,5 @@
-import { IFrozenOptions } from 'domain/configuration';
 import { ICachingOptions, IHttpOptions } from 'domain/clients';
-
+import { IFrozenOptions } from 'domain/configuration';
 import { ProviderSupport } from './eProviderSupport';
 import { TProviderFileMatcher } from './tProviderFileMatcher';
 

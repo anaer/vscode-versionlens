@@ -1,10 +1,10 @@
-import { fetchPackages } from 'application/packages';
 import { ILogger } from 'domain/logging';
 import {
   extractPackageDependenciesFromJson,
   PackageDependency,
   PackageResponse
 } from 'domain/packages';
+import { AbstractSuggestionProvider } from 'domain/providers/abstractSuggestionProvider';
 import {
   defaultReplaceFn,
   ISuggestionProvider,
@@ -13,20 +13,18 @@ import {
 import { DubClient } from './dubClient';
 import { DubConfig } from './dubConfig';
 
-export class DubSuggestionProvider implements ISuggestionProvider {
-
-  config: DubConfig;
+export class DubSuggestionProvider
+  extends AbstractSuggestionProvider<DubConfig>
+  implements ISuggestionProvider {
 
   client: DubClient;
-
-  logger: ILogger;
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
 
   constructor(client: DubClient, logger: ILogger) {
+    super(client.config, logger);
     this.client = client;
-    this.config = client.config;
-    this.logger = logger;
+
     this.suggestionReplaceFn = defaultReplaceFn
   }
 
@@ -49,7 +47,7 @@ export class DubSuggestionProvider implements ISuggestionProvider {
   ): Promise<Array<PackageResponse>> {
     const clientData = null;
 
-    return fetchPackages(
+    return this.fetchPackages(
       this.client,
       clientData,
       packageDependencies,

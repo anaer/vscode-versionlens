@@ -1,29 +1,26 @@
-import { fetchPackages } from 'application/packages';
 import { ILogger } from 'domain/logging';
 import {
   extractPackageDependenciesFromJson,
   PackageDependency,
   PackageResponse
 } from 'domain/packages';
+import { AbstractSuggestionProvider } from 'domain/providers';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import { NpmPackageClient } from './clients/npmPackageClient';
 import { NpmConfig } from './npmConfig';
 import { npmReplaceVersion } from './npmUtils';
 
-export class NpmSuggestionProvider implements ISuggestionProvider {
-
-  config: NpmConfig;
+export class NpmSuggestionProvider 
+extends AbstractSuggestionProvider<NpmConfig>
+implements ISuggestionProvider {
 
   client: NpmPackageClient;
-
-  logger: ILogger;
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
 
   constructor(client: NpmPackageClient, logger: ILogger) {
+    super(client.config, logger);
     this.client = client;
-    this.config = client.config;
-    this.logger = logger;
     this.suggestionReplaceFn = npmReplaceVersion;
   }
 
@@ -52,7 +49,7 @@ export class NpmSuggestionProvider implements ISuggestionProvider {
     }
 
     const clientData = null;
-    return fetchPackages(
+    return this.fetchPackages(
       this.client,
       clientData,
       packageDependencies,

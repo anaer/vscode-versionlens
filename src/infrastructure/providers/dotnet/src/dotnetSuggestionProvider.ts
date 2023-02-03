@@ -1,7 +1,7 @@
-import { fetchPackages } from 'application/packages';
 import { UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import { PackageDependency, PackageResponse } from 'domain/packages';
+import { AbstractSuggestionProvider } from 'domain/providers';
 import {
   defaultReplaceFn,
   ISuggestionProvider,
@@ -14,17 +14,15 @@ import { NuGetClientData } from './definitions/nuget';
 import { DotNetConfig } from './dotnetConfig';
 import { createDependenciesFromXml } from './dotnetXmlParserFactory';
 
-export class DotNetSuggestionProvider implements ISuggestionProvider {
+export class DotNetSuggestionProvider 
+  extends AbstractSuggestionProvider<DotNetConfig>
+  implements ISuggestionProvider {
 
   dotnetClient: DotNetCli;
 
   nugetPackageClient: NuGetPackageClient;
 
   nugetResClient: NuGetResourceClient;
-
-  config: DotNetConfig;
-
-  logger: ILogger;
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
 
@@ -34,11 +32,11 @@ export class DotNetSuggestionProvider implements ISuggestionProvider {
     nugetResClient: NuGetResourceClient,
     logger: ILogger
   ) {
+    super(nugetClient.config, logger);
+
     this.dotnetClient = dotnetCli;
     this.nugetPackageClient = nugetClient;
     this.nugetResClient = nugetResClient;
-    this.config = nugetClient.config;
-    this.logger = logger;
     this.suggestionReplaceFn = defaultReplaceFn
   }
 
@@ -89,7 +87,7 @@ export class DotNetSuggestionProvider implements ISuggestionProvider {
 
     const clientData: NuGetClientData = { serviceUrls: serviceUrls }
 
-    return fetchPackages(
+    return this.fetchPackages(
       this.nugetPackageClient,
       clientData,
       packageDependencies,

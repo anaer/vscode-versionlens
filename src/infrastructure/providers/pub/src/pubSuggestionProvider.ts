@@ -1,29 +1,26 @@
-import { fetchPackages } from 'application/packages';
 import { ILogger } from 'domain/logging';
 import {
   extractPackageDependenciesFromYaml,
   PackageDependency,
   PackageResponse
 } from 'domain/packages';
+import { AbstractSuggestionProvider } from 'domain/providers';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import { PubClient } from './pubClient';
 import { PubConfig } from './pubConfig';
 import { pubReplaceVersion } from './pubUtils';
 
-export class PubSuggestionProvider implements ISuggestionProvider {
+export class PubSuggestionProvider
+  extends AbstractSuggestionProvider<PubConfig>
+  implements ISuggestionProvider {
 
   client: PubClient;
-
-  config: PubConfig;
-
-  logger: ILogger
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
 
   constructor(client: PubClient, logger: ILogger) {
+    super(client.config, logger);
     this.client = client;
-    this.config = client.config;
-    this.logger = logger;
     this.suggestionReplaceFn = pubReplaceVersion
   }
 
@@ -48,7 +45,7 @@ export class PubSuggestionProvider implements ISuggestionProvider {
     // this.customReplaceFn = pubReplaceVersion.bind(yamlText);
 
     const clientData = null;
-    return fetchPackages(
+    return this.fetchPackages(
       this.client,
       clientData,
       packageDependencies,

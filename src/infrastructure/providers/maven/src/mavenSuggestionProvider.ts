@@ -1,7 +1,7 @@
-import { fetchPackages } from 'application/packages';
 import { UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import { PackageDependency, PackageResponse } from 'domain/packages';
+import { AbstractSuggestionProvider } from 'domain/providers';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import { MavenClient } from './clients/mavenClient';
 import { MvnCli } from './clients/mvnCli';
@@ -9,23 +9,20 @@ import { MavenClientData } from './definitions/mavenClientData';
 import { MavenConfig } from './mavenConfig';
 import * as MavenXmlFactory from './mavenXmlParserFactory';
 
-export class MavenSuggestionProvider implements ISuggestionProvider {
+export class MavenSuggestionProvider
+  extends AbstractSuggestionProvider<MavenConfig>
+  implements ISuggestionProvider {
 
   mvnCli: MvnCli;
 
-  config: MavenConfig;
-
   client: MavenClient;
-
-  logger: ILogger;
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
 
   constructor(mnvCli: MvnCli, client: MavenClient, logger: ILogger) {
+    super(client.config, logger);
     this.mvnCli = mnvCli;
     this.client = client;
-    this.config = client.config;
-    this.logger = logger;
   }
 
   parseDependencies(
@@ -57,7 +54,7 @@ export class MavenSuggestionProvider implements ISuggestionProvider {
 
       const clientData: MavenClientData = { repositories }
 
-      return fetchPackages(
+      return this.fetchPackages(
         this.client,
         clientData,
         packageDependencies
