@@ -1,6 +1,6 @@
 import { TPackageNameVersion } from './tPackageNameVersion';
 
-export type TPackageIdentifier = TPackageNameVersion & {
+export type TPackageResource = TPackageNameVersion & {
 
   path: string;
 

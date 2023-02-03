@@ -1,4 +1,8 @@
-import { TPackageDependencyRange, TPackageIdentifier, TPackageNameVersion } from "./index";
+import {
+  TPackageDependencyRange,
+  TPackageNameVersion,
+  TPackageResource
+} from "./index";
 
 export function createDependencyRange(
   start: number,
@@ -20,11 +24,11 @@ export function createPackageNameVersion(
   }
 }
 
-export function createPackageIdentifier(
+export function createPackageResource(
   name: string,
   version: string,
   path: string
-): TPackageIdentifier {
+): TPackageResource {
   return {
     name,
     version,

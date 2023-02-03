@@ -1,5 +1,5 @@
 import { PackageDependency } from '../models/packageDependency';
-import { TPackageIdentifier } from './tPackageIdentifier';
+import { TPackageResource } from './tPackageResource';
 
 export type TPackageClientRequest<TClientData> = {
   // provider descriptor
@@ -12,7 +12,7 @@ export type TPackageClientRequest<TClientData> = {
   dependency: PackageDependency;
 
   // package to fetch
-  package: TPackageIdentifier;
+  package: TPackageResource;
 
   // number of fallback attempts
   attempt: number;

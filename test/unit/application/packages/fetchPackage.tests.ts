@@ -4,8 +4,8 @@ import { ClientResponseSource } from 'domain/clients/index';
 import { ILogger } from 'domain/logging';
 import {
   createDependencyRange,
-  createPackageIdentifier,
   createPackageNameVersion,
+  createPackageResource,
   IPackageClient,
   PackageDependency,
   PackageSourceType,
@@ -24,7 +24,7 @@ export const fetchPackageTests = {
   "returns package suggestions": async () => {
     const testProviderName = "test provider";
 
-    const testPackageId = createPackageIdentifier(
+    const testPackageId = createPackageResource(
       "testPackageName",
       "1.0.0",
       "test/path"
