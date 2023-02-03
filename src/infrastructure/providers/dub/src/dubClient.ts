@@ -85,7 +85,7 @@ export class DubClient implements IPackageClient<null> {
           version: versionRange,
         };
 
-        const response = {
+        const responseStatus = {
           source: httpResponse.source,
           status: httpResponse.status,
         };
@@ -104,7 +104,7 @@ export class DubClient implements IPackageClient<null> {
 
         return {
           source: PackageSourceTypes.Registry,
-          response,
+          responseStatus,
           type: semverSpec.type,
           resolved,
           suggestions,

@@ -79,7 +79,7 @@ export class PubClient implements IPackageClient<null> {
           version: versionRange,
         };
 
-        const response = {
+        const responseStatus = {
           source: httpResponse.source,
           status: httpResponse.status,
         };
@@ -99,7 +99,7 @@ export class PubClient implements IPackageClient<null> {
         // return PackageDocument
         return {
           source: PackageSourceTypes.Registry,
-          response,
+          responseStatus,
           type: semverSpec.type,
           resolved,
           suggestions,

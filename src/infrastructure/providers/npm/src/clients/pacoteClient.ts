@@ -44,7 +44,7 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
       const cachedResp = this.cache.get(cacheKey);
       if (cachedResp.rejected) return Promise.reject(cachedResp);
 
-      cachedResp.data.response.source = ClientResponseSource.cache;
+      cachedResp.data.responseStatus.source = ClientResponseSource.cache;
       return Promise.resolve(cachedResp.data);
     }
 
@@ -110,7 +110,7 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
           );
         }
 
-        const response = {
+        const responseStatus = {
           source: ClientResponseSource.remote,
           status: 200,
         };
@@ -134,7 +134,7 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
             return DocumentFactory.createNoMatch(
               source,
               type,
-              response,
+              responseStatus,
               suggestLatestVersion
             );
 
@@ -152,7 +152,7 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
 
         return {
           source,
-          response,
+          responseStatus,
           type,
           resolved,
           suggestions,

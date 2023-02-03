@@ -1,7 +1,7 @@
 import {
   DocumentFactory,
   TPackageIdentifier,
-  TPackageResponseStatus,
+  TClientResponseStatus,
   TPackageDocument,
   PackageVersionTypes,
   PackageSourceTypes
@@ -13,16 +13,15 @@ import { NpaSpec } from '../models/npaSpec';
 export const fileDependencyRegex = /^file:(.*)$/;
 
 export function createDirectory(
-  providerName: string,
   requested: TPackageIdentifier,
-  response: TPackageResponseStatus,
+  responseStatus: TClientResponseStatus,
   npaSpec: NpaSpec
 ): TPackageDocument {
 
   const fileRegExpResult = fileDependencyRegex.exec(requested.version);
   if (!fileRegExpResult) {
     return DocumentFactory.createInvalidVersion(
-      response,
+      responseStatus,
       <any>npaSpec.type // todo create a converter
     );
   }
@@ -46,7 +45,7 @@ export function createDirectory(
   return {
     source,
     type,
-    response,
+    responseStatus,
     resolved,
     suggestions
   };

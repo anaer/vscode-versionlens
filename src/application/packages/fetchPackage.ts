@@ -19,7 +19,7 @@ export function fetchPackage<TClientData>(
       client.logger.info(
         'Fetched %s package from %s: %s@%s',
         client.config.providerName,
-        document.response.source,
+        document.responseStatus.source,
         request.package.name,
         request.package.version
       );

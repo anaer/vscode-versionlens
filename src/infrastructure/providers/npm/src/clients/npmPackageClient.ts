@@ -65,7 +65,6 @@ export class NpmPackageClient implements IPackageClient<null> {
         source = PackageSourceTypes.Directory;
         return resolve(
           PackageFactory.createDirectory(
-            request.providerName,
             request.package,
             DocumentFactory.createResponseStatus(ClientResponseSource.local, 200),
             npaSpec,

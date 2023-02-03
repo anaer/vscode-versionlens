@@ -103,11 +103,9 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 
         const source = PackageSourceTypes.Registry;
 
-        const { providerName } = request;
-
         const packageInfo = data;
 
-        const response = {
+        const responseStatus = {
           source: httpResponse.source,
           status: httpResponse.status,
         };
@@ -153,9 +151,8 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
         );
 
         return {
-          providerName,
           source,
-          response,
+          responseStatus,
           type: dotnetSpec.type,
           resolved,
           suggestions,

@@ -84,7 +84,7 @@ export class MavenClient implements IPackageClient<MavenClientData> {
 
         const versionRange = semverSpec.rawVersion;
 
-        const response = {
+        const responseStatus = {
           source: httpResponse.source,
           status: httpResponse.status,
         };
@@ -114,7 +114,7 @@ export class MavenClient implements IPackageClient<MavenClientData> {
 
         return {
           source,
-          response,
+          responseStatus,
           type: semverSpec.type,
           resolved,
           suggestions,

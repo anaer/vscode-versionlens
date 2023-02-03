@@ -5,7 +5,7 @@ import { PackageVersionTypes } from '../definitions/ePackageVersionTypes';
 import { PackageResponseErrors } from '../definitions/ePackageResponseErrors';
 import { TPackageNameVersion } from '../definitions/tPackageNameVersion';
 import { TPackageIdentifier } from '../definitions/tPackageIdentifier';
-import { TPackageResponseStatus } from '../definitions/tPackageResponseStatus';
+import { TClientResponseStatus } from '../definitions/tPackageResponseStatus';
 import { TPackageDependencyRange } from '../definitions/tPackageDependencyRange';
 
 export class PackageResponse {
@@ -19,7 +19,7 @@ export class PackageResponse {
   error?: PackageResponseErrors;
   errorMessage?: string;
   source?: PackageSourceTypes;
-  response?: TPackageResponseStatus;
+  response?: TClientResponseStatus;
   type?: PackageVersionTypes;
   resolved?: TPackageNameVersion;
   suggestion?: TPackageSuggestion;

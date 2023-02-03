@@ -43,7 +43,7 @@ export const fetchPackageTests = {
     const testRespDoc: TPackageDocument = {
       type: PackageVersionTypes.Version,
       source: PackageSourceTypes.Registry,
-      response: {
+      responseStatus: {
         status: 202,
         source: ClientResponseSource.local
       },
@@ -91,7 +91,7 @@ export const fetchPackageTests = {
           loggerMock.info(
             'Fetched %s package from %s: %s@%s',
             testClient.config.providerName,
-            testRespDoc.response.source,
+            testRespDoc.responseStatus.source,
             testRequest.package.name,
             testRequest.package.version
           )

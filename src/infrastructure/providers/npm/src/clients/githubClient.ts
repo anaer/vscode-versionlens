@@ -67,11 +67,11 @@ export class GitHubClient {
       query,
       headers
     )
-      .then(function (response: JsonClientResponse): TPackageDocument {
+      .then(function (clientResponse: JsonClientResponse): TPackageDocument {
         const { compareLoose } = require("semver");
 
         // extract versions
-        const tags = <[]>response.data;
+        const tags = <[]>clientResponse.data;
 
         const rawVersions = tags.map((tag: any) => tag.name);
 
@@ -104,7 +104,10 @@ export class GitHubClient {
 
         return {
           source,
-          response,
+          responseStatus: {
+            source: clientResponse.source,
+            status: clientResponse.status
+          },
           type,
           resolved,
           suggestions
@@ -127,9 +130,9 @@ export class GitHubClient {
       query,
       headers
     )
-      .then((response: JsonClientResponse): TPackageDocument => {
+      .then((clientResponse: JsonClientResponse): TPackageDocument => {
 
-        const commitInfos = <[]>response.data
+        const commitInfos = <[]>clientResponse.data
 
         const commits = commitInfos.map((commit: any) => commit.sha);
 
@@ -143,7 +146,7 @@ export class GitHubClient {
           // no commits found
           return DocumentFactory.create(
             PackageSourceTypes.Github,
-            response,
+            clientResponse,
             [SuggestionFactory.createNotFound()]
           )
         }
@@ -183,7 +186,10 @@ export class GitHubClient {
 
         return {
           source,
-          response,
+          responseStatus: {
+            source: clientResponse.source,
+            status: clientResponse.status
+          },
           type,
           resolved,
           suggestions,
