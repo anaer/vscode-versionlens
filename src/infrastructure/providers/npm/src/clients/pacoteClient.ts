@@ -2,9 +2,9 @@ import { AbstractCachedRequest, ClientResponseSource } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
   DocumentFactory,
-  PackageSourceTypes,
-  PackageVersionTypes,
-  TPackageDocument,
+  PackageSourceType,
+  PackageVersionType,
+  TPackageClientResponse,
   TPackageRequest,
   VersionHelpers
 } from 'domain/packages';
@@ -15,7 +15,7 @@ import { NpaSpec, NpaTypes } from '../models/npaSpec';
 import { NpmConfig } from '../npmConfig';
 import * as NpmUtils from '../npmUtils';
 
-export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument> {
+export class PacoteClient extends AbstractCachedRequest<number, TPackageClientResponse> {
 
   config: NpmConfig;
 
@@ -36,7 +36,7 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
   async fetchPackage(
     request: TPackageRequest<null>,
     npaSpec: NpaSpec
-  ): Promise<TPackageDocument> {
+  ): Promise<TPackageClientResponse> {
 
     const cacheKey = `${request.package.name}@${request.package.version}_${request.package.path}`;
     if (this.cache.cachingOpts.duration > 0 && this.cache.hasExpired(cacheKey) === false) {
@@ -70,20 +70,20 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
 
     // fetch the package from npm's pacote
     return this.pacote.packument(npaSpec, npmOpts)
-      .then(function (packumentResponse): TPackageDocument {
+      .then(function (packumentResponse): TPackageClientResponse {
 
         const { compareLoose } = require("semver");
 
-        const source: PackageSourceTypes = PackageSourceTypes.Registry;
+        const source: PackageSourceType = PackageSourceType.Registry;
 
-        const type: PackageVersionTypes = <any>npaSpec.type;
+        const type: PackageVersionType = <any>npaSpec.type;
 
-        let versionRange: string = (type === PackageVersionTypes.Alias) ?
+        let versionRange: string = (type === PackageVersionType.Alias) ?
           npaSpec.subSpec.rawSpec :
           npaSpec.rawSpec;
 
         const resolved = {
-          name: (type === PackageVersionTypes.Alias) ?
+          name: (type === PackageVersionType.Alias) ?
             npaSpec.subSpec.name :
             npaSpec.name,
           version: versionRange,

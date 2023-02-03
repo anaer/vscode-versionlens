@@ -1,16 +1,16 @@
 import { TPackageSuggestion } from 'domain/suggestions';
-import { PackageSourceTypes } from './ePackageSourceTypes';
-import { PackageVersionTypes } from './ePackageVersionTypes';
+import { PackageSourceType } from './ePackageSourceType';
+import { PackageVersionType } from './ePackageVersionType';
 import { TClientResponseStatus } from './tPackageResponseStatus';
 import { TPackageNameVersion } from './tPackageNameVersion';
 
-export type TPackageDocument = {
+export type TPackageClientResponse = {
 
-  source: PackageSourceTypes;
+  source: PackageSourceType;
 
   responseStatus?: TClientResponseStatus;
 
-  type: PackageVersionTypes;
+  type: PackageVersionType;
 
   resolved?: TPackageNameVersion;
 

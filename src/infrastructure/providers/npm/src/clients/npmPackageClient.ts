@@ -3,9 +3,9 @@ import { ILogger } from 'domain/logging';
 import {
   DocumentFactory,
   IPackageClient,
-  PackageSourceTypes,
-  PackageVersionTypes,
-  TPackageDocument,
+  PackageSourceType,
+  PackageVersionType,
+  TPackageClientResponse,
   TPackageRequest
 } from 'domain/packages';
 import { SuggestionFactory, TPackageSuggestion } from 'domain/suggestions';
@@ -40,10 +40,10 @@ export class NpmPackageClient implements IPackageClient<null> {
     this.logger = logger;
   }
 
-  async fetchPackage(request: TPackageRequest<null>): Promise<TPackageDocument> {
-    let source: PackageSourceTypes;
+  async fetchPackage(request: TPackageRequest<null>): Promise<TPackageClientResponse> {
+    let source: PackageSourceType;
 
-    return new Promise<TPackageDocument>((resolve, reject) => {
+    return new Promise<TPackageClientResponse>((resolve, reject) => {
       let npaSpec: NpaSpec;
 
       // try parse the package
@@ -62,7 +62,7 @@ export class NpmPackageClient implements IPackageClient<null> {
 
       // return if directory or file document
       if (npaSpec.type === NpaTypes.Directory || npaSpec.type === NpaTypes.File) {
-        source = PackageSourceTypes.Directory;
+        source = PackageSourceType.Directory;
         return resolve(
           PackageFactory.createDirectory(
             request.package,
@@ -74,7 +74,7 @@ export class NpmPackageClient implements IPackageClient<null> {
 
       if (npaSpec.type === NpaTypes.Git) {
 
-        source = PackageSourceTypes.Git;
+        source = PackageSourceType.Git;
 
         if (!npaSpec.hosted) {
           // could not resolve
@@ -88,21 +88,21 @@ export class NpmPackageClient implements IPackageClient<null> {
         if (!npaSpec.gitCommittish && npaSpec.hosted.default !== 'shortcut') {
           return resolve(
             DocumentFactory.createFixed(
-              PackageSourceTypes.Git,
+              PackageSourceType.Git,
               DocumentFactory.createResponseStatus(ClientResponseSource.local, 0),
-              PackageVersionTypes.Committish,
+              PackageVersionType.Committish,
               'git repository'
             )
           );
         }
 
         // resolve tags, committishes
-        source = PackageSourceTypes.Github;
+        source = PackageSourceType.Github;
         return resolve(this.githubClient.fetchGithub(request, npaSpec));
       }
 
       // otherwise return registry result
-      source = PackageSourceTypes.Registry;
+      source = PackageSourceType.Registry;
       return resolve(this.pacoteClient.fetchPackage(request, npaSpec));
 
     }).catch(response => {

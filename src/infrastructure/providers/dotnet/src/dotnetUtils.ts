@@ -1,4 +1,4 @@
-import { PackageVersionTypes, VersionHelpers } from 'domain/packages';
+import { PackageVersionType, VersionHelpers } from 'domain/packages';
 import semver from 'semver';
 import { DotNetVersionSpec } from './definitions/dotnet';
 import { NugetVersionSpec } from './definitions/nuget';
@@ -48,9 +48,9 @@ export function parseVersionSpec(rawVersion: string): DotNetVersionSpec {
     isValidRange = !isValidVersion && validRange(version, VersionHelpers.loosePrereleases) !== null;
   }
 
-  const type: PackageVersionTypes = isValidVersion ?
-    PackageVersionTypes.Version :
-    isValidRange ? PackageVersionTypes.Range : null
+  const type: PackageVersionType = isValidVersion ?
+    PackageVersionType.Version :
+    isValidRange ? PackageVersionType.Range : null
 
   const resolvedVersion = spec ? version : '';
 

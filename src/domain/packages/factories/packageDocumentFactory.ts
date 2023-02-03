@@ -1,15 +1,15 @@
 import { ClientResponseSource } from 'domain/clients/index';
 import { TPackageSuggestion, SuggestionFactory } from 'domain/suggestions'
-import { PackageSourceTypes } from "../definitions/ePackageSourceTypes";
-import { PackageVersionTypes } from "../definitions/ePackageVersionTypes";
-import { TPackageDocument } from "../definitions/tPackageDocument";
+import { PackageSourceType } from "../definitions/ePackageSourceType";
+import { PackageVersionType } from "../definitions/ePackageVersionType";
+import { TPackageClientResponse } from "../definitions/tPackageClientResponse";
 import { TClientResponseStatus } from "../definitions/tPackageResponseStatus";
 
 export function create(
-  source: PackageSourceTypes,
+  source: PackageSourceType,
   responseStatus: TClientResponseStatus,
   suggestions: Array<TPackageSuggestion>
-): TPackageDocument {
+): TPackageClientResponse {
 
   return {
     source,
@@ -23,9 +23,9 @@ export function create(
 
 export function createInvalidVersion(
   responseStatus: TClientResponseStatus,
-  type: PackageVersionTypes
-): TPackageDocument {
-  const source: PackageSourceTypes = PackageSourceTypes.Registry;
+  type: PackageVersionType
+): TPackageClientResponse {
+  const source: PackageSourceType = PackageSourceType.Registry;
   const suggestions: Array<TPackageSuggestion> = [
     SuggestionFactory.createInvalid(''),
     SuggestionFactory.createLatest(),
@@ -41,11 +41,11 @@ export function createInvalidVersion(
 }
 
 export function createNoMatch(
-  source: PackageSourceTypes,
-  type: PackageVersionTypes,
+  source: PackageSourceType,
+  type: PackageVersionType,
   responseStatus: TClientResponseStatus,
   latestVersion?: string
-): TPackageDocument {
+): TPackageClientResponse {
 
   const suggestions: Array<TPackageSuggestion> = [
     SuggestionFactory.createNoMatch(),
@@ -62,11 +62,11 @@ export function createNoMatch(
 }
 
 export function createFixed(
-  source: PackageSourceTypes,
+  source: PackageSourceType,
   responseStatus: TClientResponseStatus,
-  type: PackageVersionTypes,
+  type: PackageVersionType,
   fixedVersion: string
-): TPackageDocument {
+): TPackageClientResponse {
 
   const suggestions: Array<TPackageSuggestion> = [
     SuggestionFactory.createFixedStatus(fixedVersion)

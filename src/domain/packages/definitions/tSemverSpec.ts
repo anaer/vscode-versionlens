@@ -1,9 +1,9 @@
-import { PackageVersionTypes } from "./ePackageVersionTypes";
+import { PackageVersionType } from "./ePackageVersionType";
 
 export type TSemverSpec = {
 
   rawVersion: string,
 
-  type: PackageVersionTypes,
+  type: PackageVersionType,
 
 };

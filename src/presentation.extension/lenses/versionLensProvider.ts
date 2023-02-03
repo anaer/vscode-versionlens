@@ -1,5 +1,5 @@
 import { ILogger } from 'domain/logging';
-import { PackageSourceTypes } from 'domain/packages';
+import { PackageSourceType } from 'domain/packages';
 import { IProvider, IProviderConfig } from 'domain/providers';
 import {
   defaultReplaceFn,
@@ -154,7 +154,7 @@ export class VersionLensProvider implements CodeLensProvider, IProvider {
   }
 
   evaluateCodeLens(codeLens: VersionLens, token: CancellationToken) {
-    if (codeLens.hasPackageSource(PackageSourceTypes.Directory))
+    if (codeLens.hasPackageSource(PackageSourceType.Directory))
       return CommandFactory.createDirectoryLinkCommand(codeLens);
 
     return CommandFactory.createSuggestedVersionCommand(codeLens)

@@ -2,7 +2,7 @@ import { dirname, resolve } from 'path';
 import { workspace, WorkspaceEdit, Disposable, env } from 'vscode';
 
 import { ILogger } from 'domain/logging';
-import { PackageSourceTypes } from 'domain/packages';
+import { PackageSourceType } from 'domain/packages';
 
 import { CommandHelpers, VersionLens } from 'presentation.extension';
 
@@ -32,7 +32,7 @@ export class SuggestionCommands {
 
   onLinkCommand(codeLens: VersionLens) {
 
-    if (codeLens.package.source !== PackageSourceTypes.Directory) {
+    if (codeLens.package.source !== PackageSourceType.Directory) {
       this.logger.error(
         "onLinkCommand can only open local directories.\nPackage: %o",
         codeLens.package

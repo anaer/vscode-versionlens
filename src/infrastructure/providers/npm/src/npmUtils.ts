@@ -1,8 +1,8 @@
 import { ClientResponse, ClientResponseSource } from 'domain/clients';
 import {
   PackageResponse,
-  PackageSourceTypes,
-  PackageVersionTypes,
+  PackageSourceType,
+  PackageVersionType,
   VersionHelpers
 } from 'domain/packages';
 import dotenv from 'dotenv';
@@ -11,11 +11,11 @@ import findConfig from 'find-config';
 import { KeyStringDictionary } from 'domain/generics';
 
 export function npmReplaceVersion(packageInfo: PackageResponse, newVersion: string): string {
-  if (packageInfo.source === PackageSourceTypes.Github) {
+  if (packageInfo.source === PackageSourceType.Github) {
     return replaceGitVersion(packageInfo, newVersion);
   }
 
-  if (packageInfo.type === PackageVersionTypes.Alias) {
+  if (packageInfo.type === PackageVersionType.Alias) {
     return replaceAliasVersion(packageInfo, newVersion);
   }
 

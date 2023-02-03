@@ -1,8 +1,7 @@
 import { ILogger } from 'domain/logging';
 import { IProviderConfig } from 'domain/providers';
-
+import { TPackageClientResponse } from "./tPackageClientResponse";
 import { TPackageRequest } from "./tPackageRequest";
-import { TPackageDocument } from "./tPackageDocument";
 
 export interface IPackageClient<TClientData> {
 
@@ -11,6 +10,6 @@ export interface IPackageClient<TClientData> {
   config: IProviderConfig,
 
   fetchPackage: (request: TPackageRequest<TClientData>)
-    => Promise<TPackageDocument>;
+    => Promise<TPackageClientResponse>;
 
 }

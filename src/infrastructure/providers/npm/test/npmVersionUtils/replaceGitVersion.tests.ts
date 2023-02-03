@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { PackageResponse, PackageSourceTypes } from 'domain/packages';
+import { PackageResponse, PackageSourceType } from 'domain/packages';
 import * as NpmUtils from 'infrastructure/providers/npm';
 
 export const npmReplaceVersionTests = {
@@ -9,7 +9,7 @@ export const npmReplaceVersionTests = {
   "handles #tag|commit|semver:": () => {
     const packageInfo: PackageResponse = {
       providerName: 'testreplace',
-      source: PackageSourceTypes.Github,
+      source: PackageSourceType.Github,
       nameRange: null,
       versionRange: null,
       order: 0,

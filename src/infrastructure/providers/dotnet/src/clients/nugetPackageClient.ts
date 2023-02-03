@@ -2,9 +2,9 @@ import { ILogger } from 'domain/logging';
 import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
 import {
   DocumentFactory,
-  TPackageDocument,
-  PackageSourceTypes,
-  PackageVersionTypes,
+  TPackageClientResponse,
+  PackageSourceType,
+  PackageVersionType,
   TPackageRequest,
   VersionHelpers,
   IPackageClient
@@ -36,7 +36,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
     this.logger = logger;
   }
 
-  async fetchPackage(request: TPackageRequest<NuGetClientData>): Promise<TPackageDocument> {
+  async fetchPackage(request: TPackageRequest<NuGetClientData>): Promise<TPackageClientResponse> {
     const dotnetSpec = parseVersionSpec(request.package.version);
     return this.fetchPackageRetry(request, dotnetSpec);
   }
@@ -44,7 +44,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
   async fetchPackageRetry(
     request: TPackageRequest<NuGetClientData>,
     dotnetSpec: DotNetVersionSpec
-  ): Promise<TPackageDocument> {
+  ): Promise<TPackageClientResponse> {
     const urls = request.clientData.serviceUrls;
     const autoCompleteUrl = urls[request.attempt];
 
@@ -53,7 +53,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 
         this.logger.debug(
           "Caught exception from %s: %O",
-          PackageSourceTypes.Registry,
+          PackageSourceType.Registry,
           error
         );
 
@@ -69,7 +69,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
         const suggestion = SuggestionFactory.createFromHttpStatus(error.status);
         if (suggestion != null) {
           return DocumentFactory.create(
-            PackageSourceTypes.Registry,
+            PackageSourceType.Registry,
             error,
             [suggestion]
           )
@@ -85,7 +85,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
     url: string,
     request: TPackageRequest<NuGetClientData>,
     dotnetSpec: DotNetVersionSpec
-  ): Promise<TPackageDocument> {
+  ): Promise<TPackageClientResponse> {
 
     const query = {};
     const headers = {};
@@ -101,7 +101,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 
         const { data } = httpResponse;
 
-        const source = PackageSourceTypes.Registry;
+        const source = PackageSourceType.Registry;
 
         const packageInfo = data;
 
@@ -119,7 +119,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
         // four segment is not supported
         if (dotnetSpec.spec && dotnetSpec.spec.hasFourSegments) {
           return DocumentFactory.create(
-            PackageSourceTypes.Registry,
+            PackageSourceType.Registry,
             httpResponse,
             [],
           )
@@ -129,7 +129,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
         if (dotnetSpec.type === null) {
           return DocumentFactory.createNoMatch(
             source,
-            PackageVersionTypes.Version,
+            PackageVersionType.Version,
             DocumentFactory.createResponseStatus(httpResponse.source, 404),
             // suggest the latest release if available
             releases.length > 0 ? releases[releases.length - 1] : null,

@@ -7,8 +7,8 @@ import { ILogger } from 'domain/logging';
 import {
   DocumentFactory,
   IPackageClient,
-  PackageSourceTypes,
-  TPackageDocument,
+  PackageSourceType,
+  TPackageClientResponse,
   TPackageRequest,
   TSemverSpec,
   VersionHelpers
@@ -36,7 +36,7 @@ export class DubClient implements IPackageClient<null> {
     this.logger = logger;
   }
 
-  async fetchPackage(request: TPackageRequest<null>): Promise<TPackageDocument> {
+  async fetchPackage(request: TPackageRequest<null>): Promise<TPackageClientResponse> {
     const semverSpec = VersionHelpers.parseSemver(request.package.version);
     const url = `${this.config.apiUrl}${encodeURIComponent(request.package.name)}/info`;
 
@@ -45,14 +45,14 @@ export class DubClient implements IPackageClient<null> {
 
         this.logger.debug(
           "Caught exception from %s: %O",
-          PackageSourceTypes.Registry,
+          PackageSourceType.Registry,
           error
         );
 
         const suggestion = SuggestionFactory.createFromHttpStatus(error.status);
         if (suggestion != null) {
           return DocumentFactory.create(
-            PackageSourceTypes.Registry,
+            PackageSourceType.Registry,
             error,
             [suggestion]
           )
@@ -65,7 +65,7 @@ export class DubClient implements IPackageClient<null> {
     url: string,
     request: TPackageRequest<null>,
     semverSpec: TSemverSpec
-  ): Promise<TPackageDocument> {
+  ): Promise<TPackageClientResponse> {
 
     const query = {
       minimize: 'true',
@@ -74,7 +74,7 @@ export class DubClient implements IPackageClient<null> {
     const headers = {};
 
     return this.client.request(HttpClientRequestMethods.get, url, query, headers)
-      .then(function (httpResponse): TPackageDocument {
+      .then(function (httpResponse): TPackageClientResponse {
 
         const packageInfo = httpResponse.data;
 
@@ -103,7 +103,7 @@ export class DubClient implements IPackageClient<null> {
         );
 
         return {
-          source: PackageSourceTypes.Registry,
+          source: PackageSourceType.Registry,
           responseStatus,
           type: semverSpec.type,
           resolved,

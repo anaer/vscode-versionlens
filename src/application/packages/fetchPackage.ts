@@ -2,7 +2,7 @@ import {
   IPackageClient,
   PackageResponse,
   ResponseFactory,
-  TPackageDocument,
+  TPackageClientResponse,
   TPackageRequest
 } from 'domain/packages';
 
@@ -14,7 +14,7 @@ export function fetchPackage<TClientData>(
   client.logger.debug("Queued package: %s", request.package.name);
 
   return client.fetchPackage(request)
-    .then(function (document: TPackageDocument) {
+    .then(function (document: TPackageClientResponse) {
 
       client.logger.info(
         'Fetched %s package from %s: %s@%s',

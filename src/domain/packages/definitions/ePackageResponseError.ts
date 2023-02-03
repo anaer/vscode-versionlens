@@ -1,4 +1,4 @@
-export enum PackageResponseErrors {
+export enum PackageResponseError {
   None,
   NotFound,
   NotSupported,

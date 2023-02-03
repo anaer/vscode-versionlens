@@ -6,9 +6,9 @@ import {
 import { ILogger } from 'domain/logging';
 import {
   DocumentFactory,
-  PackageSourceTypes,
-  PackageVersionTypes,
-  TPackageDocument,
+  PackageSourceType,
+  PackageVersionType,
+  TPackageClientResponse,
   TPackageRequest,
   VersionHelpers
 } from 'domain/packages';
@@ -36,7 +36,7 @@ export class GitHubClient {
     this.logger = logger;
   }
 
-  fetchGithub(request: TPackageRequest<null>, npaSpec: NpaSpec): Promise<TPackageDocument> {
+  fetchGithub(request: TPackageRequest<null>, npaSpec: NpaSpec): Promise<TPackageClientResponse> {
     const { validRange } = semver;
 
     if (npaSpec.gitRange) {
@@ -54,7 +54,7 @@ export class GitHubClient {
     return this.fetchCommits(request, npaSpec);
   }
 
-  fetchTags(request: TPackageRequest<null>, npaSpec: NpaSpec): Promise<TPackageDocument> {
+  fetchTags(request: TPackageRequest<null>, npaSpec: NpaSpec): Promise<TPackageClientResponse> {
     // todo pass in auth
     const { user, project } = npaSpec.hosted;
     const tagsRepoUrl = `https://api.github.com/repos/${user}/${project}/tags`;
@@ -67,7 +67,7 @@ export class GitHubClient {
       query,
       headers
     )
-      .then(function (clientResponse: JsonClientResponse): TPackageDocument {
+      .then(function (clientResponse: JsonClientResponse): TPackageClientResponse {
         const { compareLoose } = require("semver");
 
         // extract versions
@@ -77,11 +77,11 @@ export class GitHubClient {
 
         const allVersions = VersionHelpers.filterSemverVersions(rawVersions).sort(compareLoose);
 
-        const source: PackageSourceTypes = PackageSourceTypes.Github;
+        const source: PackageSourceType = PackageSourceType.Github;
 
-        const type: PackageVersionTypes = npaSpec.gitRange ?
-          PackageVersionTypes.Range :
-          PackageVersionTypes.Version;
+        const type: PackageVersionType = npaSpec.gitRange ?
+          PackageVersionType.Range :
+          PackageVersionType.Version;
 
         const versionRange = npaSpec.gitRange;
 
@@ -117,7 +117,7 @@ export class GitHubClient {
 
   }
 
-  fetchCommits(request: TPackageRequest<null>, npaSpec: NpaSpec): Promise<TPackageDocument> {
+  fetchCommits(request: TPackageRequest<null>, npaSpec: NpaSpec): Promise<TPackageClientResponse> {
     // todo pass in auth
     const { user, project } = npaSpec.hosted;
     const commitsRepoUrl = `https://api.github.com/repos/${user}/${project}/commits`;
@@ -130,22 +130,22 @@ export class GitHubClient {
       query,
       headers
     )
-      .then((clientResponse: JsonClientResponse): TPackageDocument => {
+      .then((clientResponse: JsonClientResponse): TPackageClientResponse => {
 
         const commitInfos = <[]>clientResponse.data
 
         const commits = commitInfos.map((commit: any) => commit.sha);
 
-        const source: PackageSourceTypes = PackageSourceTypes.Github;
+        const source: PackageSourceType = PackageSourceType.Github;
 
-        const type = PackageVersionTypes.Committish;
+        const type = PackageVersionType.Committish;
 
         const versionRange = npaSpec.gitCommittish;
 
         if (commits.length === 0) {
           // no commits found
           return DocumentFactory.create(
-            PackageSourceTypes.Github,
+            PackageSourceType.Github,
             clientResponse,
             [SuggestionFactory.createNotFound()]
           )

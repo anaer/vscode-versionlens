@@ -4,8 +4,8 @@ import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
 import {
   TPackageRequest,
   DocumentFactory,
-  TPackageDocument,
-  PackageSourceTypes,
+  TPackageClientResponse,
+  PackageSourceType,
   VersionHelpers,
   TSemverSpec,
   IPackageClient,
@@ -33,7 +33,7 @@ export class PubClient implements IPackageClient<null> {
     this.logger = logger;
   }
 
-  async fetchPackage(request: TPackageRequest<null>): Promise<TPackageDocument> {
+  async fetchPackage(request: TPackageRequest<null>): Promise<TPackageClientResponse> {
     const semverSpec = VersionHelpers.parseSemver(request.package.version);
     const url = `${this.config.apiUrl}api/documentation/${request.package.name}`;
 
@@ -42,14 +42,14 @@ export class PubClient implements IPackageClient<null> {
 
         this.logger.debug(
           "Caught exception from %s: %O",
-          PackageSourceTypes.Registry,
+          PackageSourceType.Registry,
           error
         );
 
         const suggestion = SuggestionFactory.createFromHttpStatus(error.status);
         if (suggestion != null) {
           return DocumentFactory.create(
-            PackageSourceTypes.Registry,
+            PackageSourceType.Registry,
             error,
             [suggestion]
           )
@@ -62,13 +62,13 @@ export class PubClient implements IPackageClient<null> {
     url: string,
     request: TPackageRequest<null>,
     semverSpec: TSemverSpec
-  ): Promise<TPackageDocument> {
+  ): Promise<TPackageClientResponse> {
 
     const query = {};
     const headers = {};
 
     return this.client.request(HttpClientRequestMethods.get, url, query, headers)
-      .then(function (httpResponse): TPackageDocument {
+      .then(function (httpResponse): TPackageClientResponse {
 
         const packageInfo = httpResponse.data;
 
@@ -98,7 +98,7 @@ export class PubClient implements IPackageClient<null> {
 
         // return PackageDocument
         return {
-          source: PackageSourceTypes.Registry,
+          source: PackageSourceType.Registry,
           responseStatus,
           type: semverSpec.type,
           resolved,

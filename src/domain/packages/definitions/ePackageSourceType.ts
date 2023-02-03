@@ -1,4 +1,4 @@
-export enum PackageSourceTypes {
+export enum PackageSourceType {
   Directory = 'directory',
   File = 'file',
   Git = 'git',

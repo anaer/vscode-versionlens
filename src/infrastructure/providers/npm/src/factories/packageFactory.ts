@@ -2,9 +2,9 @@ import {
   DocumentFactory,
   TPackageIdentifier,
   TClientResponseStatus,
-  TPackageDocument,
-  PackageVersionTypes,
-  PackageSourceTypes
+  TPackageClientResponse,
+  PackageVersionType,
+  PackageSourceType
 } from 'domain/packages';
 import { TPackageSuggestion, SuggestionFlags } from 'domain/suggestions';
 
@@ -16,7 +16,7 @@ export function createDirectory(
   requested: TPackageIdentifier,
   responseStatus: TClientResponseStatus,
   npaSpec: NpaSpec
-): TPackageDocument {
+): TPackageClientResponse {
 
   const fileRegExpResult = fileDependencyRegex.exec(requested.version);
   if (!fileRegExpResult) {
@@ -26,8 +26,8 @@ export function createDirectory(
     );
   }
 
-  const source = PackageSourceTypes.Directory;
-  const type = PackageVersionTypes.Version;
+  const source = PackageSourceType.Directory;
+  const type = PackageVersionType.Version;
 
   const resolved = {
     name: npaSpec.name,

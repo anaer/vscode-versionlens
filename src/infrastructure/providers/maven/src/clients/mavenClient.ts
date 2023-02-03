@@ -7,8 +7,8 @@ import { ILogger } from 'domain/logging';
 import {
   DocumentFactory,
   IPackageClient,
-  PackageSourceTypes,
-  TPackageDocument,
+  PackageSourceType,
+  TPackageClientResponse,
   TPackageRequest,
   TSemverSpec,
   VersionHelpers
@@ -31,7 +31,7 @@ export class MavenClient implements IPackageClient<MavenClientData> {
     this.httpClient = httpClient;
     this.logger = logger;
   }
-  async fetchPackage(request: TPackageRequest<MavenClientData>): Promise<TPackageDocument> {
+  async fetchPackage(request: TPackageRequest<MavenClientData>): Promise<TPackageClientResponse> {
     const semverSpec = VersionHelpers.parseSemver(request.package.version);
 
     const { repositories } = request.clientData;
@@ -45,14 +45,14 @@ export class MavenClient implements IPackageClient<MavenClientData> {
 
         this.logger.debug(
           "Caught exception from %s: %O",
-          PackageSourceTypes.Registry,
+          PackageSourceType.Registry,
           error
         );
 
         const suggestion = SuggestionFactory.createFromHttpStatus(error.status);
         if (suggestion != null) {
           return DocumentFactory.create(
-            PackageSourceTypes.Registry,
+            PackageSourceType.Registry,
             error,
             [suggestion]
           )
@@ -65,7 +65,7 @@ export class MavenClient implements IPackageClient<MavenClientData> {
     url: string,
     request: TPackageRequest<MavenClientData>,
     semverSpec: TSemverSpec
-  ): Promise<TPackageDocument> {
+  ): Promise<TPackageClientResponse> {
 
     const query = {};
     const headers = {};
@@ -76,11 +76,11 @@ export class MavenClient implements IPackageClient<MavenClientData> {
       query,
       headers
     )
-      .then(function (httpResponse): TPackageDocument {
+      .then(function (httpResponse): TPackageClientResponse {
 
         const { data } = httpResponse;
 
-        const source = PackageSourceTypes.Registry;
+        const source = PackageSourceType.Registry;
 
         const versionRange = semverSpec.rawVersion;
 

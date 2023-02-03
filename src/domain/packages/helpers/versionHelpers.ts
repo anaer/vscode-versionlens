@@ -1,6 +1,6 @@
 import { KeyStringArrayDictionary } from 'domain/generics';
 import semver from 'semver';
-import { PackageVersionTypes } from '../definitions/ePackageVersionTypes';
+import { PackageVersionType } from '../definitions/ePackageVersionType';
 import { TPackageNameVersion } from '../definitions/tPackageNameVersion';
 import { TSemverSpec } from '../definitions/tSemverSpec';
 
@@ -128,8 +128,8 @@ export function parseSemver(packageVersion: string): TSemverSpec {
   return {
     rawVersion: packageVersion,
     type: !!isVersion ?
-      PackageVersionTypes.Version :
-      !!isRange ? PackageVersionTypes.Range :
+      PackageVersionType.Version :
+      !!isRange ? PackageVersionType.Range :
         null,
   };
 }

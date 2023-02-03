@@ -1,8 +1,8 @@
 import { TPackageSuggestion } from 'domain/suggestions';
 
-import { PackageSourceTypes } from '../definitions/ePackageSourceTypes';
-import { PackageVersionTypes } from '../definitions/ePackageVersionTypes';
-import { PackageResponseErrors } from '../definitions/ePackageResponseErrors';
+import { PackageSourceType } from '../definitions/ePackageSourceType';
+import { PackageVersionType } from '../definitions/ePackageVersionType';
+import { PackageResponseError } from '../definitions/ePackageResponseError';
 import { TPackageNameVersion } from '../definitions/tPackageNameVersion';
 import { TPackageIdentifier } from '../definitions/tPackageIdentifier';
 import { TClientResponseStatus } from '../definitions/tPackageResponseStatus';
@@ -16,11 +16,11 @@ export class PackageResponse {
   versionRange: TPackageDependencyRange;
   order: number;
 
-  error?: PackageResponseErrors;
+  error?: PackageResponseError;
   errorMessage?: string;
-  source?: PackageSourceTypes;
+  source?: PackageSourceType;
   response?: TClientResponseStatus;
-  type?: PackageVersionTypes;
+  type?: PackageVersionType;
   resolved?: TPackageNameVersion;
   suggestion?: TPackageSuggestion;
 }

@@ -8,9 +8,9 @@ import {
   createPackageNameVersion,
   IPackageClient,
   PackageDependency,
-  PackageSourceTypes,
-  PackageVersionTypes,
-  TPackageDocument,
+  PackageSourceType,
+  PackageVersionType,
+  TPackageClientResponse,
   TPackageRequest
 } from 'domain/packages';
 import { SuggestionFlags } from 'domain/suggestions/index';
@@ -40,9 +40,9 @@ export const fetchPackageTests = {
     const testLogger = instance(loggerMock);
 
     // response
-    const testRespDoc: TPackageDocument = {
-      type: PackageVersionTypes.Version,
-      source: PackageSourceTypes.Registry,
+    const testRespDoc: TPackageClientResponse = {
+      type: PackageVersionType.Version,
+      source: PackageSourceType.Registry,
       responseStatus: {
         status: 202,
         source: ClientResponseSource.local
