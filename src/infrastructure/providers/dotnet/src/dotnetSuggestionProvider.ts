@@ -90,7 +90,6 @@ export class DotNetSuggestionProvider implements ISuggestionProvider {
     const clientData: NuGetClientData = { serviceUrls: serviceUrls }
 
     return fetchPackages(
-      packagePath,
       this.nugetPackageClient,
       clientData,
       packageDependencies,

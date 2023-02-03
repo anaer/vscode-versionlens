@@ -7,7 +7,6 @@ import {
 import { fetchPackage } from "./fetchPackage";
 
 export async function fetchPackages<TClientData>(
-  packagePath: string,
   client: IPackageClient<TClientData>,
   clientData: TClientData,
   dependencies: Array<PackageDependency>,

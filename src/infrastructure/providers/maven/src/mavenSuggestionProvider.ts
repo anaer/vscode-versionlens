@@ -58,7 +58,6 @@ export class MavenSuggestionProvider implements ISuggestionProvider {
       const clientData: MavenClientData = { repositories }
 
       return fetchPackages(
-        packagePath,
         this.client,
         clientData,
         packageDependencies

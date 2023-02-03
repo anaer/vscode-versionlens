@@ -51,7 +51,6 @@ export class ComposerSuggestionProvider implements ISuggestionProvider {
     const clientData = null;
 
     return fetchPackages(
-      packagePath,
       this.client,
       clientData,
       packageDependencies,
