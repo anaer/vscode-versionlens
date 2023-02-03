@@ -10,9 +10,9 @@ import { NpmPackageClient } from './clients/npmPackageClient';
 import { NpmConfig } from './npmConfig';
 import { npmReplaceVersion } from './npmUtils';
 
-export class NpmSuggestionProvider 
-extends AbstractSuggestionProvider<NpmConfig>
-implements ISuggestionProvider {
+export class NpmSuggestionProvider
+  extends AbstractSuggestionProvider<NpmConfig>
+  implements ISuggestionProvider {
 
   client: NpmPackageClient;
 
@@ -22,6 +22,12 @@ implements ISuggestionProvider {
     super(client.config, logger);
     this.client = client;
     this.suggestionReplaceFn = npmReplaceVersion;
+  }
+
+  clearCache() {
+    this.client.pacoteClient.cache.clear();
+    // @ts-ignore
+    this.client.githubClient.jsonClient.clearCache();
   }
 
   parseDependencies(

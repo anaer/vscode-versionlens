@@ -26,13 +26,13 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 
   config: DotNetConfig;
 
-  client: IJsonHttpClient;
+  jsonClient: IJsonHttpClient;
 
   logger: ILogger;
 
   constructor(config: DotNetConfig, client: IJsonHttpClient, logger: ILogger) {
     this.config = config;
-    this.client = client;
+    this.jsonClient = client;
     this.logger = logger;
   }
 
@@ -93,7 +93,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
     const requestedPackage = request.dependency.package;
     const packageUrl = UrlHelpers.ensureEndSlash(url) + `${requestedPackage.name.toLowerCase()}/index.json`;
 
-    return this.client.request(
+    return this.jsonClient.request(
       HttpClientRequestMethods.get,
       packageUrl,
       query,

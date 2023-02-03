@@ -1,3 +1,16 @@
+# 1.2.0
+
+  **All providers**
+
+  - Cache is now reset each time the version lens icon "V" is turned on.
+
+    This prevents having to wait for the cache to expire when 
+    wanting the very latest updates or diagnosing issues.
+
+    **NOTE** caching still defaults to 3 minutes in the `versionlens.caching.duration` contribution settings. It's not recommended to set this to 0 unless your diagnosing issues.
+
+  - added the time taken in milliseconds for each package fetch request to the info log
+
 # 1.1.1
 
   - **pnpm** added override name dependency handling. i.e `axios@<1`

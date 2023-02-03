@@ -2,6 +2,7 @@ import { KeyStringDictionary } from 'domain/generics';
 
 import { HttpClientRequestMethods } from "./eHttpClientRequestMethods";
 import { JsonClientResponse } from './clientResponses';
+import { IHttpClient } from './iHttpClient';
 
 export interface TJsonClientRequestFn {
 
@@ -15,6 +16,10 @@ export interface TJsonClientRequestFn {
 }
 
 export interface IJsonHttpClient {
+
+  httpClient: IHttpClient;
+
+  clearCache: () => void;
 
   request: TJsonClientRequestFn;
 

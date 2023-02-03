@@ -13,6 +13,8 @@ export interface THttpClientRequestFn {
 
 export interface IHttpClient {
 
+  clearCache: () => void;
+
   request: THttpClientRequestFn;
 
 }

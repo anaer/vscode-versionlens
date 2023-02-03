@@ -23,13 +23,13 @@ export class PubClient implements IPackageClient<null> {
 
   config: PubConfig;
 
-  client: IJsonHttpClient;
+  jsonClient: IJsonHttpClient;
 
   logger: ILogger;
 
-  constructor(config: PubConfig, client: IJsonHttpClient, logger: ILogger) {
+  constructor(config: PubConfig, jsonClient: IJsonHttpClient, logger: ILogger) {
     this.config = config;
-    this.client = client;
+    this.jsonClient = jsonClient;
     this.logger = logger;
   }
 
@@ -68,7 +68,7 @@ export class PubClient implements IPackageClient<null> {
     const query = {};
     const headers = {};
 
-    return this.client.request(HttpClientRequestMethods.get, url, query, headers)
+    return this.jsonClient.request(HttpClientRequestMethods.get, url, query, headers)
       .then(function (httpResponse): TPackageClientResponse {
 
         const packageInfo = httpResponse.data;

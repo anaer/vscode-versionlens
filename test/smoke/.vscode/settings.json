@@ -1,7 +1,7 @@
 // Place your settings in this file to overwrite default and user settings.
 {
   "versionlens.logging.level": "debug",
-  "versionlens.caching.duration": 0,
+  "versionlens.caching.duration": 3,
   "versionlens.suggestions.showOnStartup": false,
   "versionlens.suggestions.showPrereleasesOnStartup": false,
   "versionlens.dotnet.nuget.sources": [],

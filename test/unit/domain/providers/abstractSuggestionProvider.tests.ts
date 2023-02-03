@@ -91,15 +91,14 @@ export const AbstractSuggestionProviderTests = {
       return abstractProvider.fetchPackage(testClient, testRequest)
         .then(actual => {
           // verify
-          verify(loggerMock.debug("Queued package: %s", "testPackageName")).once();
+          verify(loggerMock.debug("Fetching %s", "testPackageName")).once();
           verify(clientMock.fetchPackage(testRequest)).once();
           verify(
             loggerMock.info(
-              'Fetched %s package from %s: %s@%s (%s ms)',
-              testClient.config.providerName,
-              testRespDoc.responseStatus.source,
+              'Fetched %s@%s from %s (%s ms)',
               testRequest.dependency.package.name,
               testRequest.dependency.package.version,
+              testRespDoc.responseStatus.source,
               any()
             )
           ).once();

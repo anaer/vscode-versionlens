@@ -14,7 +14,7 @@ import { NuGetClientData } from './definitions/nuget';
 import { DotNetConfig } from './dotnetConfig';
 import { createDependenciesFromXml } from './dotnetXmlParserFactory';
 
-export class DotNetSuggestionProvider 
+export class DotNetSuggestionProvider
   extends AbstractSuggestionProvider<DotNetConfig>
   implements ISuggestionProvider {
 
@@ -38,6 +38,11 @@ export class DotNetSuggestionProvider
     this.nugetPackageClient = nugetClient;
     this.nugetResClient = nugetResClient;
     this.suggestionReplaceFn = defaultReplaceFn
+  }
+
+  clearCache() {
+    this.dotnetClient.processClient.clearCache();
+    this.nugetPackageClient.jsonClient.clearCache();
   }
 
   parseDependencies(

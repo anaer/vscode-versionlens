@@ -27,11 +27,11 @@ export class GitHubClient {
 
   logger: ILogger;
 
-  client: IJsonHttpClient;
+  jsonClient: IJsonHttpClient;
 
   constructor(config: NpmConfig, client: IJsonHttpClient, logger: ILogger) {
     this.config = config;
-    this.client = client;
+    this.jsonClient = client;
     this.logger = logger;
   }
 
@@ -60,7 +60,7 @@ export class GitHubClient {
     const query = {};
     const headers = this.getHeaders();
 
-    return this.client.request(
+    return this.jsonClient.request(
       HttpClientRequestMethods.get,
       tagsRepoUrl,
       query,
@@ -123,7 +123,7 @@ export class GitHubClient {
     const query = {};
     const headers = this.getHeaders();
 
-    return this.client.request(
+    return this.jsonClient.request(
       HttpClientRequestMethods.get,
       commitsRepoUrl,
       query,

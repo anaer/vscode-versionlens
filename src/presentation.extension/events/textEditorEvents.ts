@@ -17,9 +17,7 @@ export class TextEditorEvents {
     this.loggerChannel = loggerChannel;
 
     // register editor events
-    window.onDidChangeActiveTextEditor(
-      this.onDidChangeActiveTextEditor.bind(this)
-    );
+    window.onDidChangeActiveTextEditor(this.onDidChangeActiveTextEditor, this);
   }
 
   state: VersionLensState;

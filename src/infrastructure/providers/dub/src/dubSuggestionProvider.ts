@@ -28,6 +28,10 @@ export class DubSuggestionProvider
     this.suggestionReplaceFn = defaultReplaceFn
   }
 
+  clearCache() {
+    this.client.jsonClient.clearCache();
+  }
+
   parseDependencies(
     packagePath: string,
     packageText: string

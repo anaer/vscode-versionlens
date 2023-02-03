@@ -26,13 +26,13 @@ export class DubClient implements IPackageClient<null> {
 
   config: DubConfig;
 
-  client: IJsonHttpClient;
+  jsonClient: IJsonHttpClient;
 
   logger: ILogger;
 
   constructor(config: DubConfig, client: IJsonHttpClient, logger: ILogger) {
     this.config = config;
-    this.client = client;
+    this.jsonClient = client;
     this.logger = logger;
   }
 
@@ -76,7 +76,7 @@ export class DubClient implements IPackageClient<null> {
 
     const headers = {};
 
-    return this.client.request(HttpClientRequestMethods.get, url, query, headers)
+    return this.jsonClient.request(HttpClientRequestMethods.get, url, query, headers)
       .then(function (httpResponse): TPackageClientResponse {
         const packageInfo = httpResponse.data;
         const versionRange = semverSpec.rawVersion;

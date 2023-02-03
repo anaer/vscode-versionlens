@@ -21,10 +21,10 @@ export function createSuggestionProvider(
         const provider = module.configureContainer(scopeContainer);
 
         logger.debug(
-          "Registered provider for %s:\t file pattern: %s\t caching: %s minutes\t strict ssl: %s",
+          "Registered provider for %s:\t file pattern: %s\t caching: %s seconds\t strict ssl: %s",
           providerName,
           provider.config.fileMatcher.pattern,
-          provider.config.caching.duration,
+          provider.config.caching.duration / 1000,
           provider.config.http.strictSSL,
         );
 

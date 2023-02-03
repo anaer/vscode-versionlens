@@ -39,14 +39,14 @@ export abstract class AbstractSuggestionProvider<T extends IProviderConfig> {
         attempt: 0
       };
 
-      // execute request
-      results.push.apply(
-        results,
-        await this.fetchPackage(
-          client,
-          clientRequest
-        )
+      // fetch package
+      const fetched = await this.fetchPackage(
+        client,
+        clientRequest
       );
+
+      // push fetched results
+      results.push.apply(results, fetched);
     }
 
     return results;
@@ -57,7 +57,7 @@ export abstract class AbstractSuggestionProvider<T extends IProviderConfig> {
     request: TPackageClientRequest<TClientData>,
   ): Promise<Array<PackageResponse>> {
     const requestedPackage = request.dependency.package;
-    client.logger.debug("Queued package: %s", requestedPackage.name);
+    client.logger.debug("Fetching %s", requestedPackage.name);
 
     const startedAt = performance.now();
 
@@ -66,11 +66,10 @@ export abstract class AbstractSuggestionProvider<T extends IProviderConfig> {
         const completedAt = performance.now();
 
         client.logger.info(
-          'Fetched %s package from %s: %s@%s (%s ms)',
-          client.config.providerName,
-          document.responseStatus.source,
+          'Fetched %s@%s from %s (%s ms)',
           requestedPackage.name,
           requestedPackage.version,
+          document.responseStatus.source,
           Math.floor(completedAt - startedAt)
         );
 

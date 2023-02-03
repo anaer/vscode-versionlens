@@ -63,6 +63,7 @@ export class VersionLensProvider implements CodeLensProvider, IProvider {
   }
 
   reloadCodeLenses() {
+    this.suggestionProvider.clearCache();
     this.notifyCodeLensesChanged.fire();
   }
 
@@ -89,9 +90,9 @@ export class VersionLensProvider implements CodeLensProvider, IProvider {
     // unfreeze config per file request
     this.config.caching.defrost();
 
-    this.logger.debug(
-      "Caching duration is set to %s milliseconds",
-      this.config.caching.duration
+    this.logger.info(
+      "Caching duration is set to %s seconds",
+      this.config.caching.duration / 1000
     );
 
     // get the dependencies

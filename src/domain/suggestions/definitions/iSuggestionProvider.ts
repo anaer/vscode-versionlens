@@ -16,4 +16,6 @@ export interface ISuggestionProvider extends IProvider {
     packageDependencies: Array<PackageDependency>
   ): Promise<Array<PackageResponse>>;
 
+  clearCache: () => void;
+
 }

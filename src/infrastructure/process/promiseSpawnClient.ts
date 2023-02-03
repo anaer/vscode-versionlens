@@ -22,6 +22,10 @@ export class PromiseSpawnClient extends AbstractCachedRequest<string, string>
     this.promiseSpawn = promiseSpawnFn;
   }
 
+  clearCache () {
+    this.cache.clear();
+  };
+
   async request(
     cmd: string, args: Array<string>, cwd: string
   ): Promise<ProcessClientResponse> {

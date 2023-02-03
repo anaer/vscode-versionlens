@@ -7,19 +7,19 @@ export class DotNetCli {
 
   config: DotNetConfig;
 
-  client: IProcessClient;
+  processClient: IProcessClient;
 
   logger: ILogger;
 
   constructor(config: DotNetConfig, client: IProcessClient, logger: ILogger) {
     this.config = config;
-    this.client = client;
+    this.processClient = client;
     this.logger = logger;
   }
 
   async fetchSources(cwd: string): Promise<Array<DotNetSource>> {
 
-    const promisedCli = this.client.request(
+    const promisedCli = this.processClient.request(
       'dotnet',
       ['nuget', 'list', 'source', '--format', 'short'],
       cwd

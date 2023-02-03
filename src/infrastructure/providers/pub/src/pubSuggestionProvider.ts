@@ -24,6 +24,11 @@ export class PubSuggestionProvider
     this.suggestionReplaceFn = pubReplaceVersion
   }
 
+  clearCache () {
+    // @ts-ignore
+    this.client.jsonClient.clearCache();
+  };
+  
   parseDependencies(
     packagePath: string,
     packageText: string

@@ -27,6 +27,10 @@ export class RequestLightClient extends AbstractCachedRequest<number, string>
     this.xhr = xhr;
   }
 
+  clearCache() {
+    this.cache.clear();
+  };
+
   async request(
     method: HttpClientRequestMethods,
     baseUrl: string,

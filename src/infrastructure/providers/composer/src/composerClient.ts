@@ -23,18 +23,23 @@ export class ComposerClient implements IPackageClient<null> {
 
   config: ComposerConfig;
 
-  client: IJsonHttpClient;
+  jsonClient: IJsonHttpClient;
 
   logger: ILogger;
 
   constructor(
     config: ComposerConfig,
-    client: IJsonHttpClient,
+    jsonClient: IJsonHttpClient,
     logger: ILogger
   ) {
     this.config = config;
-    this.client = client;
+    this.jsonClient = jsonClient;
     this.logger = logger;
+  }
+
+  clearCache() {
+    // @ts-ignore
+    this.jsonClient.cache.clear();
   }
 
   async fetchPackage<TClientData>(
@@ -75,7 +80,7 @@ export class ComposerClient implements IPackageClient<null> {
     const query = {};
     const headers = {};
 
-    return this.client.request(HttpClientRequestMethods.get, url, query, headers)
+    return this.jsonClient.request(HttpClientRequestMethods.get, url, query, headers)
       .then(function (httpResponse: JsonClientResponse): TPackageClientResponse {
         const requestPackage = request.dependency.package;
         const versionRange = semverSpec.rawVersion;
