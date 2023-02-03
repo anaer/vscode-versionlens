@@ -10,12 +10,12 @@ import {
   PackageDependency,
   PackageSourceType,
   PackageVersionType,
-  TPackageClientResponse,
-  TPackageClientRequest
+  TPackageClientRequest,
+  TPackageClientResponse
 } from 'domain/packages';
 import { SuggestionFlags } from 'domain/suggestions/index';
 import { test } from 'mocha-ui-esm';
-import { instance, mock, verify, when } from 'ts-mockito';
+import { anything as any, instance, mock, verify, when } from 'ts-mockito';
 
 export const fetchPackageTests = {
 
@@ -89,11 +89,12 @@ export const fetchPackageTests = {
         verify(clientMock.fetchPackage(testRequest)).once();
         verify(
           loggerMock.info(
-            'Fetched %s package from %s: %s@%s',
+            'Fetched %s package from %s: %s@%s (%s ms)',
             testClient.config.providerName,
             testRespDoc.responseStatus.source,
             testRequest.package.name,
-            testRequest.package.version
+            testRequest.package.version,
+            any()
           )
         ).once();
 

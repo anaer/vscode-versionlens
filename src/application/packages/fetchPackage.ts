@@ -12,16 +12,19 @@ export function fetchPackage<TClientData>(
 ): Promise<Array<PackageResponse>> {
 
   client.logger.debug("Queued package: %s", request.package.name);
-
+  const startedAt = performance.now();
   return client.fetchPackage(request)
     .then(function (document: TPackageClientResponse) {
 
+      const completedAt = performance.now();
+
       client.logger.info(
-        'Fetched %s package from %s: %s@%s',
+        'Fetched %s package from %s: %s@%s (%s ms)',
         client.config.providerName,
         document.responseStatus.source,
         request.package.name,
-        request.package.version
+        request.package.version,
+        Math.floor(completedAt - startedAt)
       );
 
       return ResponseFactory.createSuccess(
