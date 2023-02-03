@@ -12,7 +12,7 @@ export type TPackageDocument = {
 
   type: PackageVersionTypes;
 
-  resolved: TPackageNameVersion;
+  resolved?: TPackageNameVersion;
 
   suggestions: Array<TPackageSuggestion>;
 
