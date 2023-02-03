@@ -1,6 +1,6 @@
 import {
   IPackageClient,
-  IPackageDependency,
+  PackageDependency,
   PackageResponse,
   TPackageRequest
 } from "domain/packages";
@@ -10,48 +10,37 @@ export async function fetchPackages<TClientData>(
   packagePath: string,
   client: IPackageClient<TClientData>,
   clientData: TClientData,
-  dependencies: Array<IPackageDependency>,
+  dependencies: Array<PackageDependency>,
 ): Promise<Array<PackageResponse>> {
 
   const { providerName } = client.config;
 
-  const results = [];
-  const promises = dependencies.map(
-    function (dependency) {
+  const results: PackageResponse[] = [];
 
-      // build the client request
-      const { name, version } = dependency.packageInfo;
-      const clientRequest: TPackageRequest<TClientData> = {
-        providerName,
-        clientData,
-        dependency,
-        package: {
-          name,
-          version,
-          path: packagePath,
-        },
-        attempt: 0
-      };
+  for (const dependency of dependencies) {
+    // build the client request
+    const { name, version } = dependency.packageInfo;
+    const clientRequest: TPackageRequest<TClientData> = {
+      providerName,
+      clientData,
+      dependency,
+      package: {
+        name,
+        version,
+        path: packagePath,
+      },
+      attempt: 0
+    };
 
-      // execute request
-      const promisedDependency = fetchPackage(
+    // execute request
+    results.push.apply(
+      results,
+      await fetchPackage(
         client,
         clientRequest
-      );
+      )
+    );
+  }
 
-      // flatten responses
-      return promisedDependency.then(
-        function (responses) {
-          if (Array.isArray(responses))
-            results.push(...responses)
-          else
-            results.push(responses);
-        }
-      );
-
-    }
-
-  );
-
-  return Promise.all(promises).then(_ => results)
+  return results;
 }

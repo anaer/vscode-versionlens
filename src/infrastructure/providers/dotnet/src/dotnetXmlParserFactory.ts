@@ -1,10 +1,10 @@
 import { Nullable } from 'domain/generics';
-import { IPackageDependency, TPackageDependencyRange } from 'domain/packages';
+import { PackageDependency, TPackageDependencyRange } from 'domain/packages';
 import xmldoc from 'xmldoc';
 
 export function createDependenciesFromXml(
   xml: string, includePropertyNames: Array<string>
-): Array<IPackageDependency> {
+): Array<PackageDependency> {
 
   let document = null
 
@@ -40,10 +40,10 @@ function extractPackageLensDataFromNodes(
     if (dependencyLens) collector.push(dependencyLens);
   }
 
-  return collector
+  return collector;
 }
 
-function createFromAttribute(node, xml: string): IPackageDependency {
+function createFromAttribute(node, xml: string): PackageDependency {
   const nameRange = {
     start: node.startTagPosition,
     end: node.startTagPosition,
@@ -56,13 +56,13 @@ function createFromAttribute(node, xml: string): IPackageDependency {
   const packageInfo = {
     name: node.attr.Include || node.attr.Update || node.attr.Name,
     version: node.attr.Version,
-  }
+  };
 
-  return {
+  return new PackageDependency(
     nameRange,
     versionRange,
     packageInfo,
-  }
+  );
 }
 
 function getAttributeRange(

@@ -1,10 +1,10 @@
-import { IPackageDependency } from 'domain/packages';
+import { PackageDependency } from 'domain/packages';
 import xmldoc from 'xmldoc';
 import { MavenProjectProperty } from "./definitions/mavenProjectProperty";
 
 export function createDependenciesFromXml(
   xml: string, includePropertyNames: Array<string>
-): Array<IPackageDependency> {
+): Array<PackageDependency> {
   let document = null
 
   try {
@@ -23,7 +23,7 @@ export function createDependenciesFromXml(
 function extractPackageLensDataFromNodes(
   xmlDoc, properties: Array<MavenProjectProperty>, includePropertyNames: Array<string>
 ) {
-  const collector: Array<IPackageDependency> = [];
+  const collector: Array<PackageDependency> = [];
 
   xmlDoc.eachChild(group => {
 
@@ -51,7 +51,7 @@ function extractPackageLensDataFromNodes(
 function collectFromChildVersionTag(
   parentNode,
   properties: Array<MavenProjectProperty>,
-  collector: Array<IPackageDependency>
+  collector: Array<PackageDependency>
 ) {
   parentNode.eachChild(childNode => {
     let versionNode;
@@ -88,13 +88,15 @@ function collectFromChildVersionTag(
     const packageInfo = {
       name: group + ":" + artifact,
       version: versionNode.val,
-    }
+    };
 
-    collector.push({
-      nameRange,
-      versionRange,
-      packageInfo
-    });
+    collector.push(
+      new PackageDependency(
+        nameRange,
+        versionRange,
+        packageInfo,
+      )
+    );
   });
 }
 

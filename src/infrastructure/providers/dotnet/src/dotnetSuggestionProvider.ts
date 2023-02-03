@@ -1,7 +1,7 @@
 import { fetchPackages } from 'application/packages';
 import { UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
-import { IPackageDependency, PackageResponse } from 'domain/packages';
+import { PackageDependency, PackageResponse } from 'domain/packages';
 import {
   defaultReplaceFn,
   ISuggestionProvider,
@@ -42,7 +42,7 @@ export class DotNetSuggestionProvider implements ISuggestionProvider {
     this.suggestionReplaceFn = defaultReplaceFn
   }
 
-  parseDependencies(packageText: string): Array<IPackageDependency> {
+  parseDependencies(packageText: string): Array<PackageDependency> {
     const packageDependencies = createDependenciesFromXml(
       packageText,
       this.config.dependencyProperties
@@ -53,7 +53,7 @@ export class DotNetSuggestionProvider implements ISuggestionProvider {
 
   async fetchSuggestions(
     packagePath: string,
-    packageDependencies: Array<IPackageDependency>
+    packageDependencies: Array<PackageDependency>
   ): Promise<Array<PackageResponse>> {
 
     // ensure latest nuget sources from settings

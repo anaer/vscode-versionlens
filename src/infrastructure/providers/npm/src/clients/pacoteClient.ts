@@ -34,7 +34,8 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageDocument
   }
 
   async fetchPackage(
-    request: TPackageRequest<null>, npaSpec: NpaSpec
+    request: TPackageRequest<null>,
+    npaSpec: NpaSpec
   ): Promise<TPackageDocument> {
 
     const cacheKey = `${request.package.name}@${request.package.version}_${request.package.path}`;

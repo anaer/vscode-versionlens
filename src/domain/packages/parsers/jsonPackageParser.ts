@@ -1,10 +1,10 @@
 import * as JsonC from 'jsonc-parser';
-import { IPackageDependency } from '../definitions/iPackageDependency';
+import { PackageDependency } from '../models/packageDependency';
 
 export function extractPackageDependenciesFromJson(
   json: string,
   includePropNames: Array<string>
-): Array<IPackageDependency> {
+): Array<PackageDependency> {
   const jsonErrors = [];
   const jsonTree = JsonC.parseTree(json, jsonErrors);
   if (!jsonTree || jsonTree.children.length === 0 || jsonErrors.length > 0) return [];
@@ -14,7 +14,7 @@ export function extractPackageDependenciesFromJson(
 export function extractFromNodes(
   jsonTree: JsonC.Node,
   includePropNames: string[]
-): IPackageDependency[] {
+): PackageDependency[] {
   const collector = [];
 
   for (const property of includePropNames) {
@@ -41,7 +41,7 @@ function collectDependencyNodes(nodes, parentKey, filterName: string, collector 
   )
 }
 
-function createFromProperty(keyEntry, valueEntry): IPackageDependency {
+function createFromProperty(keyEntry, valueEntry): PackageDependency {
   const nameRange = {
     start: keyEntry.offset,
     end: keyEntry.offset,
@@ -65,9 +65,9 @@ function createFromProperty(keyEntry, valueEntry): IPackageDependency {
     version: valueEntry.value
   }
 
-  return {
+  return new PackageDependency(
     nameRange,
     versionRange,
     packageInfo
-  }
+  );
 }

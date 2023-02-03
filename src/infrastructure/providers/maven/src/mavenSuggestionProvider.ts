@@ -1,7 +1,7 @@
 import { fetchPackages } from 'application/packages';
 import { UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
-import { IPackageDependency, PackageResponse } from 'domain/packages';
+import { PackageDependency, PackageResponse } from 'domain/packages';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import { MavenClient } from './clients/mavenClient';
 import { MvnCli } from './clients/mvnCli';
@@ -28,7 +28,7 @@ export class MavenSuggestionProvider implements ISuggestionProvider {
     this.logger = logger;
   }
 
-  parseDependencies(packageText: string): Array<IPackageDependency> {
+  parseDependencies(packageText: string): Array<PackageDependency> {
     const packageDependencies = MavenXmlFactory.createDependenciesFromXml(
       packageText,
       this.config.dependencyProperties
@@ -39,7 +39,7 @@ export class MavenSuggestionProvider implements ISuggestionProvider {
 
   async fetchSuggestions(
     packagePath: string,
-    packageDependencies: Array<IPackageDependency>
+    packageDependencies: Array<PackageDependency>
   ): Promise<Array<PackageResponse>> {
 
     // gets source feeds from the project path

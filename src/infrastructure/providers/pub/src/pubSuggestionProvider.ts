@@ -2,7 +2,7 @@ import { fetchPackages } from 'application/packages';
 import { ILogger } from 'domain/logging';
 import {
   extractPackageDependenciesFromYaml,
-  IPackageDependency,
+  PackageDependency,
   PackageResponse
 } from 'domain/packages';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
@@ -27,7 +27,7 @@ export class PubSuggestionProvider implements ISuggestionProvider {
     this.suggestionReplaceFn = pubReplaceVersion
   }
 
-  parseDependencies(packageText: string): Array<IPackageDependency> {
+  parseDependencies(packageText: string): Array<PackageDependency> {
     const packageDependencies = extractPackageDependenciesFromYaml(
       packageText,
       this.config.dependencyProperties
@@ -38,7 +38,7 @@ export class PubSuggestionProvider implements ISuggestionProvider {
 
   async fetchSuggestions(
     packagePath: string,
-    packageDependencies: Array<IPackageDependency>
+    packageDependencies: Array<PackageDependency>
   ): Promise<Array<PackageResponse>> {
 
     // this.customReplaceFn = pubReplaceVersion.bind(yamlText);

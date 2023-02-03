@@ -1,4 +1,4 @@
-import { IPackageDependency } from './iPackageDependency';
+import { PackageDependency } from '../models/packageDependency';
 import { TPackageIdentifier } from './tPackageIdentifier';
 
 export type TPackageRequest<TClientData> = {
@@ -9,7 +9,7 @@ export type TPackageRequest<TClientData> = {
   clientData: TClientData,
 
   // dependency ranges
-  dependency: IPackageDependency;
+  dependency: PackageDependency;
 
   // package to fetch
   package: TPackageIdentifier;

@@ -1,5 +1,5 @@
 import { Document, parseCST } from 'yaml';
-import { IPackageDependency } from '../definitions/iPackageDependency';
+import { PackageDependency } from '../models/packageDependency';
 
 type YamlOptions = {
   hasCrLf: boolean,
@@ -9,7 +9,7 @@ type YamlOptions = {
 export function extractPackageDependenciesFromYaml(
   yaml: string,
   filterPropertyNames: Array<string>
-): Array<IPackageDependency> {
+): Array<PackageDependency> {
   // verbose parsing to handle CRLF scenarios
   const cst = parseCST(yaml)
 
@@ -26,7 +26,7 @@ export function extractPackageDependenciesFromYaml(
   return extractDependenciesFromNodes(yamlDoc.contents.items, opts);
 }
 
-export function extractDependenciesFromNodes(topLevelNodes, opts: YamlOptions): IPackageDependency[] {
+export function extractDependenciesFromNodes(topLevelNodes, opts: YamlOptions): PackageDependency[] {
   const collector = [];
 
   topLevelNodes.forEach(
@@ -40,7 +40,7 @@ export function extractDependenciesFromNodes(topLevelNodes, opts: YamlOptions): 
   return collector
 }
 
-function collectDependencyNodes(nodes, opts: YamlOptions, collector: Array<IPackageDependency>) {
+function collectDependencyNodes(nodes, opts: YamlOptions, collector: Array<PackageDependency>) {
   nodes.forEach(
     function (pair) {
       // node may be in the form "no_version_dep:", which we will indicate as the latest
@@ -67,7 +67,7 @@ function collectDependencyNodes(nodes, opts: YamlOptions, collector: Array<IPack
 }
 
 export function createDependencyLensFromMapType(
-  nodes, parentKey, opts: YamlOptions, collector: Array<IPackageDependency>
+  nodes, parentKey, opts: YamlOptions, collector: Array<PackageDependency>
 ) {
   nodes.forEach(
     function (pair) {
@@ -91,18 +91,20 @@ export function createDependencyLensFromMapType(
           name: parentKey.value,
           version: pair.value.value
         };
-        collector.push({
-          nameRange,
-          versionRange,
-          packageInfo
-        });
+        collector.push(
+          new PackageDependency(
+            nameRange,
+            versionRange,
+            packageInfo
+          )
+        );
       }
     }
   )
 
 }
 
-export function createDependencyLensFromPlainType(pair, opts: YamlOptions): IPackageDependency {
+export function createDependencyLensFromPlainType(pair, opts: YamlOptions): PackageDependency {
   const keyRange = getRangeFromCstNode(pair.key.cstNode, opts);
   const nameRange = createRange(
     keyRange.start,
@@ -130,11 +132,11 @@ export function createDependencyLensFromPlainType(pair, opts: YamlOptions): IPac
     version: pair.value.value
   };
 
-  return {
+  return new PackageDependency(
     nameRange,
     versionRange,
     packageInfo
-  }
+  );
 }
 
 function createRange(start, end, valueType: string) {

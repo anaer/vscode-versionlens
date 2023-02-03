@@ -7,6 +7,7 @@ import {
   createPackageIdentifier,
   createPackageNameVersion,
   IPackageClient,
+  PackageDependency,
   PackageSourceTypes,
   PackageVersionTypes,
   TPackageDocument,
@@ -63,11 +64,14 @@ export const fetchPackageTests = {
       attempt: 1,
       clientData: {},
       package: testPackageId,
-      dependency: {
-        nameRange: createDependencyRange(1, 20),
-        versionRange: createDependencyRange(25, 30),
-        packageInfo: testPackageNameVersion
-      }
+      dependency: new PackageDependency(
+        //nameRange
+        createDependencyRange(1, 20),
+        //versionRange
+        createDependencyRange(25, 30),
+        // packageInfo
+        testPackageNameVersion
+      )
     };
 
     // client

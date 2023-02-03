@@ -2,7 +2,7 @@ import { fetchPackages } from 'application/packages';
 import { ILogger } from 'domain/logging';
 import {
   extractPackageDependenciesFromJson,
-  IPackageDependency,
+  PackageDependency,
   PackageResponse
 } from 'domain/packages';
 import {
@@ -30,7 +30,7 @@ export class ComposerSuggestionProvider implements ISuggestionProvider {
     this.suggestionReplaceFn = defaultReplaceFn
   }
 
-  parseDependencies(packageText: string): Array<IPackageDependency> {
+  parseDependencies(packageText: string): Array<PackageDependency> {
     const packageDependencies = extractPackageDependenciesFromJson(
       packageText,
       this.config.dependencyProperties
@@ -41,7 +41,7 @@ export class ComposerSuggestionProvider implements ISuggestionProvider {
 
   async fetchSuggestions(
     packagePath: string,
-    packageDependencies: Array<IPackageDependency>
+    packageDependencies: Array<PackageDependency>
   ): Promise<Array<PackageResponse>> {
 
     const clientData = null;
