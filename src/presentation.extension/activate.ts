@@ -1,9 +1,9 @@
 import { ExtensionContext, window } from 'vscode';
-import { configureContainer } from 'presentation.extension';
+import { configureContainer } from './extensionContainer';
 
 export async function activate(context: ExtensionContext) {
 
-  configureContainer(context)
+  await configureContainer(context)
     .then(container => {
 
       const { version } = require('../package.json');
