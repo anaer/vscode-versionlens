@@ -27,8 +27,12 @@ export class PubSuggestionProvider implements ISuggestionProvider {
     this.suggestionReplaceFn = pubReplaceVersion
   }
 
-  parseDependencies(packageText: string): Array<PackageDependency> {
+  parseDependencies(
+    packagePath: string,
+    packageText: string
+  ): Array<PackageDependency> {
     const packageDependencies = extractPackageDependenciesFromYaml(
+      packagePath,
       packageText,
       this.config.dependencyProperties
     );

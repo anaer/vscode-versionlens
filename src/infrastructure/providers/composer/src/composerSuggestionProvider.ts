@@ -30,8 +30,12 @@ export class ComposerSuggestionProvider implements ISuggestionProvider {
     this.suggestionReplaceFn = defaultReplaceFn
   }
 
-  parseDependencies(packageText: string): Array<PackageDependency> {
+  parseDependencies(
+    packagePath: string,
+    packageText: string
+  ): Array<PackageDependency> {
     const packageDependencies = extractPackageDependenciesFromJson(
+      packagePath,
       packageText,
       this.config.dependencyProperties
     );

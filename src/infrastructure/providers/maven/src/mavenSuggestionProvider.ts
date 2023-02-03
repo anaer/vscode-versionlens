@@ -28,8 +28,12 @@ export class MavenSuggestionProvider implements ISuggestionProvider {
     this.logger = logger;
   }
 
-  parseDependencies(packageText: string): Array<PackageDependency> {
+  parseDependencies(
+    packagePath: string,
+    packageText: string
+  ): Array<PackageDependency> {
     const packageDependencies = MavenXmlFactory.createDependenciesFromXml(
+      packagePath,
       packageText,
       this.config.dependencyProperties
     );

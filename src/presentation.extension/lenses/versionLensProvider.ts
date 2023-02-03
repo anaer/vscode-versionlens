@@ -95,7 +95,10 @@ export class VersionLensProvider implements CodeLensProvider, IProvider {
     );
 
     // get the dependencies
-    const packageDeps = this.suggestionProvider.parseDependencies(document.getText());
+    const packageDeps = this.suggestionProvider.parseDependencies(
+      packagePath,
+      document.getText()
+    );
 
     // fetch suggestions
     return this.suggestionProvider.fetchSuggestions(packagePath, packageDeps)

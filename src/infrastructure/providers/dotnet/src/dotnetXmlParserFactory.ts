@@ -1,9 +1,16 @@
 import { Nullable } from 'domain/generics';
-import { PackageDependency, TPackageDependencyRange } from 'domain/packages';
+import {
+  createPackageResource,
+  PackageDependency,
+  TPackageDependencyRange,
+  TPackageFileLocationDescriptor
+} from 'domain/packages';
 import xmldoc from 'xmldoc';
 
 export function createDependenciesFromXml(
-  xml: string, includePropertyNames: Array<string>
+  packagePath: string,
+  xml: string,
+  includePropertyNames: Array<string>
 ): Array<PackageDependency> {
 
   let document = null
@@ -15,7 +22,22 @@ export function createDependenciesFromXml(
   }
 
   if (!document) return [];
-  return extractPackageLensDataFromNodes(document, xml, includePropertyNames);
+
+  const packageDescriptors = extractPackageLensDataFromNodes(
+    document,
+    xml,
+    includePropertyNames
+  );
+
+  return packageDescriptors.map(descriptor => new PackageDependency(
+    createPackageResource(
+      descriptor.name,
+      descriptor.version,
+      packagePath
+    ),
+    descriptor.nameRange,
+    descriptor.versionRange
+  ));
 }
 
 function extractPackageLensDataFromNodes(
@@ -43,7 +65,7 @@ function extractPackageLensDataFromNodes(
   return collector;
 }
 
-function createFromAttribute(node, xml: string): PackageDependency {
+function createFromAttribute(node, xml: string): TPackageFileLocationDescriptor {
   const nameRange = {
     start: node.startTagPosition,
     end: node.startTagPosition,
@@ -53,16 +75,15 @@ function createFromAttribute(node, xml: string): PackageDependency {
   const versionRange = getAttributeRange(node, ' version="', xml);
   if (versionRange === null) return null;
 
-  const packageInfo = {
-    name: node.attr.Include || node.attr.Update || node.attr.Name,
-    version: node.attr.Version,
-  };
+  const name = node.attr.Include || node.attr.Update || node.attr.Name;
+  const version = node.attr.Version;
 
-  return new PackageDependency(
+  return {
+    name,
+    version,
     nameRange,
-    versionRange,
-    packageInfo,
-  );
+    versionRange
+  };
 }
 
 function getAttributeRange(

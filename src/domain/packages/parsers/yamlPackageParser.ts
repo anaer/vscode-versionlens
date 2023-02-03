@@ -1,5 +1,7 @@
 import { Document, parseCST } from 'yaml';
+import { TPackageFileLocationDescriptor } from '../index';
 import { PackageDependency } from '../models/packageDependency';
+import { createPackageResource } from '../packageUtils';
 
 type YamlOptions = {
   hasCrLf: boolean,
@@ -7,6 +9,7 @@ type YamlOptions = {
 }
 
 export function extractPackageDependenciesFromYaml(
+  packagePath: string,
   yaml: string,
   filterPropertyNames: Array<string>
 ): Array<PackageDependency> {
@@ -23,10 +26,26 @@ export function extractPackageDependenciesFromYaml(
     yaml,
   };
 
-  return extractDependenciesFromNodes(yamlDoc.contents.items, opts);
+  const packageDescriptors = extractDependenciesFromNodes(
+    yamlDoc.contents.items,
+    opts
+  );
+
+  return packageDescriptors.map(descriptor => new PackageDependency(
+    createPackageResource(
+      descriptor.name,
+      descriptor.version,
+      packagePath
+    ),
+    descriptor.nameRange,
+    descriptor.versionRange,
+  ));
 }
 
-export function extractDependenciesFromNodes(topLevelNodes, opts: YamlOptions): PackageDependency[] {
+export function extractDependenciesFromNodes(
+  topLevelNodes,
+  opts: YamlOptions
+): TPackageFileLocationDescriptor[] {
   const collector = [];
 
   topLevelNodes.forEach(
@@ -40,7 +59,11 @@ export function extractDependenciesFromNodes(topLevelNodes, opts: YamlOptions): 
   return collector
 }
 
-function collectDependencyNodes(nodes, opts: YamlOptions, collector: Array<PackageDependency>) {
+function collectDependencyNodes(
+  nodes,
+  opts: YamlOptions,
+  collector: Array<TPackageFileLocationDescriptor>
+) {
   nodes.forEach(
     function (pair) {
       // node may be in the form "no_version_dep:", which we will indicate as the latest
@@ -57,7 +80,12 @@ function collectDependencyNodes(nodes, opts: YamlOptions, collector: Array<Packa
       }
 
       if (pair.value.type === 'MAP') {
-        createDependencyLensFromMapType(pair.value.items, pair.key, opts, collector);
+        createDependencyLensFromMapType(
+          pair.value.items,
+          pair.key,
+          opts,
+          collector
+        );
       } else if (typeof pair.value.value === 'string') {
         const dependencyLens = createDependencyLensFromPlainType(pair, opts);
         collector.push(dependencyLens);
@@ -67,7 +95,10 @@ function collectDependencyNodes(nodes, opts: YamlOptions, collector: Array<Packa
 }
 
 export function createDependencyLensFromMapType(
-  nodes, parentKey, opts: YamlOptions, collector: Array<PackageDependency>
+  nodes,
+  parentKey,
+  opts: YamlOptions,
+  collector: Array<TPackageFileLocationDescriptor>
 ) {
   nodes.forEach(
     function (pair) {
@@ -87,24 +118,23 @@ export function createDependencyLensFromMapType(
           valueRange.end,
           pair.value.type
         );
-        const packageInfo = {
+
+        collector.push({
           name: parentKey.value,
-          version: pair.value.value
-        };
-        collector.push(
-          new PackageDependency(
-            nameRange,
-            versionRange,
-            packageInfo
-          )
-        );
+          version: pair.value.value,
+          nameRange,
+          versionRange
+        });
       }
     }
   )
 
 }
 
-export function createDependencyLensFromPlainType(pair, opts: YamlOptions): PackageDependency {
+export function createDependencyLensFromPlainType(
+  pair,
+  opts: YamlOptions
+): TPackageFileLocationDescriptor {
   const keyRange = getRangeFromCstNode(pair.key.cstNode, opts);
   const nameRange = createRange(
     keyRange.start,
@@ -127,16 +157,12 @@ export function createDependencyLensFromPlainType(pair, opts: YamlOptions): Pack
     pair.value.type
   );
 
-  const packageInfo = {
+  return {
     name: pair.key.value,
-    version: pair.value.value
-  };
-
-  return new PackageDependency(
+    version: pair.value.value,
     nameRange,
-    versionRange,
-    packageInfo
-  );
+    versionRange
+  };
 }
 
 function createRange(start, end, valueType: string) {
@@ -145,7 +171,7 @@ function createRange(start, end, valueType: string) {
   return {
     start: start + (quoted ? 1 : 0),
     end: end - (quoted ? 1 : 0),
-  }
+  };
 }
 
 function getRangeFromCstNode(cstNode, opts: YamlOptions) {
@@ -155,5 +181,5 @@ function getRangeFromCstNode(cstNode, opts: YamlOptions) {
   const start = cstNode.range.start + crLfLineOffset;
   const end = cstNode.range.end + crLfLineOffset;
 
-  return { start, end }
+  return { start, end };
 }

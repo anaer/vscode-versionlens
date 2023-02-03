@@ -63,12 +63,15 @@ export const fetchPackageTests = {
       clientData: {},
       package: testPackageId,
       dependency: new PackageDependency(
+        createPackageResource(
+          testPackageNameVersion.name,
+          testPackageNameVersion.version,
+          "testPath"
+        ),
         //nameRange
         createDependencyRange(1, 20),
         //versionRange
-        createDependencyRange(25, 30),
-        // packageInfo
-        testPackageNameVersion
+        createDependencyRange(25, 30)
       )
     };
 

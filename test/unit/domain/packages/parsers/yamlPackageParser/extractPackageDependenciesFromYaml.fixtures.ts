@@ -32,6 +32,7 @@ dependencies:
           "end": 388
         },
         "packageInfo": {
+          "path": "testPath",
           "name": "efts",
           "version": "^2.0.4"
         }
@@ -46,6 +47,7 @@ dependencies:
           "end": 397
         },
         "packageInfo": {
+          "path": "testPath",
           "name": "http",
           "version": ""
         }
@@ -60,6 +62,7 @@ dependencies:
           "end": 486
         },
         "packageInfo": {
+          "path": "testPath",
           "name": "transmogrify",
           "version": "^0.4.0"
         }

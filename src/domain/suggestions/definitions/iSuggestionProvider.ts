@@ -6,7 +6,10 @@ export interface ISuggestionProvider extends IProvider {
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
 
-  parseDependencies(packageText: string): Array<PackageDependency>;
+  parseDependencies(
+    packagePath: string,
+    packageText: string
+  ): Array<PackageDependency>;
 
   fetchSuggestions(
     packagePath: string,

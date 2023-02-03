@@ -5,6 +5,7 @@ export * from './definitions/iPackageClient';
 export * from "./definitions/tPackageClientRequest";
 export * from './definitions/tPackageClientResponse';
 export * from './definitions/tPackageDependencyRange';
+export * from './definitions/tPackageFileLocationDescriptor';
 export * from './definitions/tPackageNameVersion';
 export * from './definitions/tPackageResource';
 export * from "./definitions/tPackageResponseStatus";

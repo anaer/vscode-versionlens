@@ -1,20 +1,35 @@
 import * as JsonC from 'jsonc-parser';
+import { createPackageResource, TPackageFileLocationDescriptor } from '../index';
 import { PackageDependency } from '../models/packageDependency';
 
 export function extractPackageDependenciesFromJson(
+  packagePath: string,
   json: string,
   includePropNames: Array<string>
 ): Array<PackageDependency> {
   const jsonErrors = [];
   const jsonTree = JsonC.parseTree(json, jsonErrors);
-  if (!jsonTree || jsonTree.children.length === 0 || jsonErrors.length > 0) return [];
-  return extractFromNodes(jsonTree, includePropNames);
+  if (!jsonTree || jsonTree.children.length === 0 || jsonErrors.length > 0) {
+    return [];
+  }
+
+  const packageDescriptors = extractFromNodes(jsonTree, includePropNames);
+
+  return packageDescriptors.map(descriptor => new PackageDependency(
+    createPackageResource(
+      descriptor.name,
+      descriptor.version,
+      packagePath
+    ),
+    descriptor.nameRange,
+    descriptor.versionRange
+  ));
 }
 
 export function extractFromNodes(
   jsonTree: JsonC.Node,
   includePropNames: string[]
-): PackageDependency[] {
+): TPackageFileLocationDescriptor[] {
   const collector = [];
 
   for (const property of includePropNames) {
@@ -32,16 +47,23 @@ function collectDependencyNodes(nodes, parentKey, filterName: string, collector 
 
       if (valueEntry.type == "string" &&
         (filterName.length === 0 || keyEntry.value === filterName)) {
-        const dependencyLens = createFromProperty(parentKey || keyEntry, valueEntry);
+        const dependencyLens = createFromProperty(
+          parentKey || keyEntry, valueEntry
+        );
         collector.push(dependencyLens);
       } else if (valueEntry.type == "object") {
-        collectDependencyNodes(valueEntry.children, keyEntry, 'version', collector)
+        collectDependencyNodes(
+          valueEntry.children,
+          keyEntry,
+          'version',
+          collector
+        )
       }
     }
   )
 }
 
-function createFromProperty(keyEntry, valueEntry): PackageDependency {
+function createFromProperty(keyEntry, valueEntry): TPackageFileLocationDescriptor {
   const nameRange = {
     start: keyEntry.offset,
     end: keyEntry.offset,
@@ -60,14 +82,10 @@ function createFromProperty(keyEntry, valueEntry): PackageDependency {
     name = name.slice(0, atIndex);
   }
 
-  const packageInfo = {
+  return {
     name,
-    version: valueEntry.value
-  }
-
-  return new PackageDependency(
+    version: valueEntry.value,
     nameRange,
-    versionRange,
-    packageInfo
-  );
+    versionRange
+  };
 }

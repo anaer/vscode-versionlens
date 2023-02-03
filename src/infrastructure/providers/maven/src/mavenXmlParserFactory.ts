@@ -1,9 +1,15 @@
-import { PackageDependency } from 'domain/packages';
+import {
+  createPackageResource,
+  PackageDependency,
+  TPackageFileLocationDescriptor
+} from 'domain/packages';
 import xmldoc from 'xmldoc';
 import { MavenProjectProperty } from "./definitions/mavenProjectProperty";
 
 export function createDependenciesFromXml(
-  xml: string, includePropertyNames: Array<string>
+  packagePath: string,
+  xml: string,
+  includePropertyNames: Array<string>
 ): Array<PackageDependency> {
   let document = null
 
@@ -17,13 +23,29 @@ export function createDependenciesFromXml(
 
   const properties = extractPropertiesFromDocument(document);
 
-  return extractPackageLensDataFromNodes(document, properties, includePropertyNames);
+  const packageDescriptors = extractPackageDescriptorsFromNodes(
+    document,
+    properties,
+    includePropertyNames
+  );
+
+  return packageDescriptors.map(descriptor => new PackageDependency(
+    createPackageResource(
+      descriptor.name,
+      descriptor.version,
+      packagePath
+    ),
+    descriptor.nameRange,
+    descriptor.versionRange
+  ));
 }
 
-function extractPackageLensDataFromNodes(
-  xmlDoc, properties: Array<MavenProjectProperty>, includePropertyNames: Array<string>
+function extractPackageDescriptorsFromNodes(
+  xmlDoc,
+  properties: Array<MavenProjectProperty>,
+  includePropertyNames: Array<string>
 ) {
-  const collector: Array<PackageDependency> = [];
+  const collector: Array<TPackageFileLocationDescriptor> = [];
 
   xmlDoc.eachChild(group => {
 
@@ -51,7 +73,7 @@ function extractPackageLensDataFromNodes(
 function collectFromChildVersionTag(
   parentNode,
   properties: Array<MavenProjectProperty>,
-  collector: Array<PackageDependency>
+  collector: Array<TPackageFileLocationDescriptor>
 ) {
   parentNode.eachChild(childNode => {
     let versionNode;
@@ -85,32 +107,30 @@ function collectFromChildVersionTag(
       artifact = artifact.replace(/\$\{.*\}/ig, property[0].val)
     }
 
-    const packageInfo = {
-      name: group + ":" + artifact,
-      version: versionNode.val,
-    };
+    const name = group + ":" + artifact;
+    const version = versionNode.val;
 
-    collector.push(
-      new PackageDependency(
-        nameRange,
-        versionRange,
-        packageInfo,
-      )
-    );
+    collector.push({
+      name,
+      version,
+      nameRange,
+      versionRange
+    });
   });
 }
 
 function extractPropertiesFromDocument(xmlDoc): Array<MavenProjectProperty> {
-  let properties: Array<MavenProjectProperty> = []
-  let propertiesCurrentPom = xmlDoc.descendantWithPath("properties")
-  propertiesCurrentPom.eachChild(property => {
+  let properties: Array<MavenProjectProperty> = [];
+  let propertiesCurrentPom = xmlDoc.descendantWithPath("properties");
 
+  propertiesCurrentPom.eachChild(property => {
     properties.push({
       name: property.name,
       val: property.val,
       position: property.position
     })
-  })
+  });
+
   return properties;
 }
 

@@ -20,6 +20,7 @@ export default {
           start: 13
         },
         packageInfo: {
+          path: "testPath",
           name: 'Microsoft.Build.CentralPackageVersions',
           version: '2.1.3'
         },
@@ -34,6 +35,7 @@ export default {
           start: 103
         },
         packageInfo: {
+          path: "testPath",
           name: 'Microsoft.Extensions.DependencyInjection.Abstractions',
           version: '2.0.0'
         },
@@ -48,6 +50,7 @@ export default {
           start: 210
         },
         packageInfo: {
+          path: "testPath",
           name: 'Microsoft.Extensions.Logging.Abstractions',
           version: '2.0.1'
         },
@@ -57,15 +60,16 @@ export default {
         }
       },
       {
-        "nameRange": {
-          "start": 305,
-          "end": 305
+        nameRange: {
+          start: 305,
+          end: 305
         },
-        "packageInfo": {
-          "name": "System.Text.Json",
-          "version": "4.7.2"
+        packageInfo: {
+          path: "testPath",
+          name: "System.Text.Json",
+          version: "4.7.2"
         },
-        "versionRange": {
+        versionRange: {
           "end": 362,
           "start": 357
         }

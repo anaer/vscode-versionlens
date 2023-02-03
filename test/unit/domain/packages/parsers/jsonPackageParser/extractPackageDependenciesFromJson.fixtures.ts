@@ -30,6 +30,7 @@ export default {
           "end": 34
         },
         "packageInfo": {
+          "path": "testPath",
           "name": "Package1",
           "version": "1.0.0"
         }
@@ -44,6 +45,7 @@ export default {
           "end": 80
         },
         "packageInfo": {
+          "path": "testPath",
           "name": "Package2",
           "version": "github:repo/project#semver:1.2.3"
         }
@@ -58,6 +60,7 @@ export default {
           "end": 95
         },
         "packageInfo": {
+          "path": "testPath",
           "name": "Package3",
           "version": "*"
         }
@@ -72,6 +75,7 @@ export default {
           "end": 132
         },
         "packageInfo": {
+          "path": "testPath",
           "name": "ComplexPackage1",
           "version": "1.2.3"
         }
@@ -82,6 +86,7 @@ export default {
           "start": 135
         },
         "packageInfo": {
+          "path": "testPath",
           "name": "NameOverrides",
           "version": "1.0.0"
         },

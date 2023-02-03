@@ -27,8 +27,12 @@ export class NpmSuggestionProvider implements ISuggestionProvider {
     this.suggestionReplaceFn = npmReplaceVersion;
   }
 
-  parseDependencies(packageText: string): Array<PackageDependency> {
+  parseDependencies(
+    packagePath: string,
+    packageText: string
+  ): Array<PackageDependency> {
     const packageDependencies = extractPackageDependenciesFromJson(
+      packagePath,
       packageText,
       this.config.dependencyProperties
     );
