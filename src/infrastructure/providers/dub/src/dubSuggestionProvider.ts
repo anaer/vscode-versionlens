@@ -45,7 +45,7 @@ export class DubSuggestionProvider
     return packageDependencies;
   }
 
-  async fetchSuggestions(
+  fetchSuggestions(
     packagePath: string,
     packageDependencies: Array<PackageDependency>
   ): Promise<Array<PackageResponse>> {

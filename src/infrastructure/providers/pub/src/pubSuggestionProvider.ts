@@ -42,13 +42,10 @@ export class PubSuggestionProvider
     return packageDependencies;
   }
 
-  async fetchSuggestions(
+  fetchSuggestions(
     packagePath: string,
     packageDependencies: Array<PackageDependency>
   ): Promise<Array<PackageResponse>> {
-
-    // this.customReplaceFn = pubReplaceVersion.bind(yamlText);
-
     const clientData = null;
     return this.fetchPackages(
       this.client,

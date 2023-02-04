@@ -36,7 +36,7 @@ export class DubClient implements IPackageClient<null> {
     this.logger = logger;
   }
 
-  async fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
+  fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;
     const semverSpec = VersionHelpers.parseSemver(requestedPackage.version);
     const url = `${this.config.apiUrl}${encodeURIComponent(requestedPackage.name)}/info`;
@@ -62,7 +62,7 @@ export class DubClient implements IPackageClient<null> {
       });
   }
 
-  async createRemotePackageDocument(
+  createRemotePackageDocument(
     url: string,
     request: TPackageClientRequest<null>,
     semverSpec: TSemverSpec

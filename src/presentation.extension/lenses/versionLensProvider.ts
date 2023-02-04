@@ -136,10 +136,20 @@ export class VersionLensProvider implements CodeLensProvider, IProvider {
 
     let suggestions: Array<PackageResponse> = [];
     try {
+      const startedAt = performance.now();
+
       suggestions = await this.suggestionProvider.fetchSuggestions(
         packagePath,
         packageDeps
       );
+
+      const completedAt = performance.now();
+      this.logger.info(
+        'All packages fetched for %s (%s ms)',
+        this.suggestionProvider.name,
+        Math.floor(completedAt - startedAt)
+      );
+
     } catch (error) {
       this.state.providerError.value = true;
       this.state.providerBusy.change(0)

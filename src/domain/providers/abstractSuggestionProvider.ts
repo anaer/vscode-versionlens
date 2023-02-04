@@ -24,15 +24,13 @@ export abstract class AbstractSuggestionProvider<T extends IProviderConfig> {
 
   logger: ILogger;
 
-  async fetchPackages<TClientData>(
+  fetchPackages<TClientData>(
     client: IPackageClient<TClientData>,
     clientData: TClientData,
     dependencies: Array<PackageDependency>,
   ): Promise<Array<PackageResponse>> {
-
     const { providerName } = client.config;
-
-    const results: PackageResponse[] = [];
+    const promises = [];
 
     for (const dependency of dependencies) {
       // build the client request
@@ -44,16 +42,19 @@ export abstract class AbstractSuggestionProvider<T extends IProviderConfig> {
       };
 
       // fetch package
-      const fetched = await this.fetchPackage(
+      const fetched = this.fetchPackage(
         client,
         clientRequest
       );
 
       // push fetched results
-      results.push.apply(results, fetched);
+      promises.push(fetched);
     }
 
-    return results;
+    // parallel the promises
+    return Promise.all(promises)
+      // flatten results
+      .then(x => x.flat());
   }
 
   fetchPackage<TClientData>(

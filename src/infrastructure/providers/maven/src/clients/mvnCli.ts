@@ -19,7 +19,7 @@ export class MvnCli {
     this.logger = logger;
   }
 
-  async fetchRepositories(cwd: string): Promise<Array<MavenRepository>> {
+  fetchRepositories(cwd: string): Promise<Array<MavenRepository>> {
     const promisedCli = this.client.request(
       'mvn ',
       ['help:effective-settings'],

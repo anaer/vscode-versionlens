@@ -26,8 +26,10 @@ export class PromiseSpawnClient extends AbstractCachedRequest<string, string>
     this.cache.clear();
   };
 
-  async request(
-    cmd: string, args: Array<string>, cwd: string
+  request(
+    cmd: string, 
+    args: Array<string>, 
+    cwd: string
   ): Promise<ProcessClientResponse> {
 
     const cacheKey = `${cmd} ${args.join(' ')}`;

@@ -42,7 +42,7 @@ export class ComposerClient implements IPackageClient<null> {
     this.jsonClient.cache.clear();
   }
 
-  async fetchPackage<TClientData>(
+  fetchPackage<TClientData>(
     request: TPackageClientRequest<TClientData>
   ): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;
@@ -71,7 +71,7 @@ export class ComposerClient implements IPackageClient<null> {
       });
   }
 
-  async createRemotePackageDocument<TClientData>(
+  createRemotePackageDocument<TClientData>(
     url: string,
     request: TPackageClientRequest<TClientData>,
     semverSpec: TSemverSpec
@@ -130,7 +130,6 @@ export class ComposerClient implements IPackageClient<null> {
         };
       });
   }
-
 }
 
 export function readComposerSelections(filePath) {

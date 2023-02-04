@@ -31,7 +31,8 @@ export class MavenClient implements IPackageClient<MavenClientData> {
     this.httpClient = httpClient;
     this.logger = logger;
   }
-  async fetchPackage(request: TPackageClientRequest<MavenClientData>): Promise<TPackageClientResponse> {
+
+  fetchPackage(request: TPackageClientRequest<MavenClientData>): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;
     const semverSpec = VersionHelpers.parseSemver(requestedPackage.version);
 
@@ -62,7 +63,7 @@ export class MavenClient implements IPackageClient<MavenClientData> {
       });
   }
 
-  async createRemotePackageDocument(
+  createRemotePackageDocument(
     url: string,
     request: TPackageClientRequest<MavenClientData>,
     semverSpec: TSemverSpec

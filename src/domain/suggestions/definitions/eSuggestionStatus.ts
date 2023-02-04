@@ -6,6 +6,7 @@ export enum SuggestionStatus {
   InternalServerError = '500 internal server error',
   NotSupported = 'not supported',
   ConnectionRefused = 'connection refused',
+  ConnectionReset = 'connection reset',
   Invalid = 'invalid entry',
   NoMatch = 'no match',
   Satisfies = 'satisfies',

@@ -20,7 +20,7 @@ export class JsonHttpClient implements IJsonHttpClient {
     this.httpClient.clearCache();
   }
 
-  async request(
+  request(
     method: HttpClientRequestMethods,
     url: string,
     query: KeyStringDictionary = {},

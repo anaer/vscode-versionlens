@@ -44,7 +44,7 @@ export class ComposerSuggestionProvider
     return packageDependencies;
   }
 
-  async fetchSuggestions(
+  fetchSuggestions(
     packagePath: string,
     packageDependencies: Array<PackageDependency>
   ): Promise<Array<PackageResponse>> {

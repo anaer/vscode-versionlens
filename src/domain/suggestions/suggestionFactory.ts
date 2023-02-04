@@ -45,6 +45,14 @@ export function createConnectionRefused(): TPackageSuggestion {
   };
 }
 
+export function createConnectionReset(): TPackageSuggestion {
+  return {
+    name: SuggestionStatus.ConnectionReset,
+    version: '',
+    flags: SuggestionFlags.status
+  };
+}
+
 export function createForbidden(): TPackageSuggestion {
   return {
     name: SuggestionStatus.Forbidden,

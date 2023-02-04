@@ -40,7 +40,7 @@ export class NpmPackageClient implements IPackageClient<null> {
     this.logger = logger;
   }
 
-  async fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
+  fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
     let source: PackageSourceType;
     const requestedPackage = request.dependency.package;
 
@@ -127,6 +127,8 @@ export class NpmPackageClient implements IPackageClient<null> {
 
       if (status == 'CONNREFUSED')
         suggestions = [SuggestionFactory.createConnectionRefused()];
+      else if (status == 'CONNRESET')
+        suggestions = [SuggestionFactory.createConnectionReset()];
       else if (status == 'UNSUPPORTEDPROTOCOL' || response.data == 'Not implemented yet')
         suggestions = [SuggestionFactory.createNotSupported()];
       else if (status == 'INVALIDTAGNAME' || response.data.includes('Invalid comparator:'))

@@ -33,7 +33,7 @@ export class PubClient implements IPackageClient<null> {
     this.logger = logger;
   }
 
-  async fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
+  fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;
     const semverSpec = VersionHelpers.parseSemver(requestedPackage.version);
     const url = `${this.config.apiUrl}api/documentation/${requestedPackage.name}`;
@@ -59,7 +59,7 @@ export class PubClient implements IPackageClient<null> {
       });
   }
 
-  async createRemotePackageDocument(
+  createRemotePackageDocument(
     url: string,
     packageName: string,
     semverSpec: TSemverSpec

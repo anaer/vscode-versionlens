@@ -37,12 +37,13 @@ export async function addSuggestionProviders(
 
   logger.debug('Loading suggestion providers %o', providerNames.join(', '));
 
-  const results: Array<ISuggestionProvider> = [];
+  const promises = [];
 
   for (const providerName of providerNames) {
-    const provider = await createSuggestionProvider(providerName, container, logger);
-    if (provider) results.push(provider);
+    const promise = createSuggestionProvider(providerName, container, logger);
+    promises.push(promise);
   }
 
-  return results;
+  // parallel the promises
+  return Promise.all(promises);
 }

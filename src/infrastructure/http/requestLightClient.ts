@@ -31,7 +31,7 @@ export class RequestLightClient extends AbstractCachedRequest<number, string>
     this.cache.clear();
   };
 
-  async request(
+  request(
     method: HttpClientRequestMethods,
     baseUrl: string,
     query: KeyStringDictionary = {},

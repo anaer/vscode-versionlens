@@ -36,13 +36,13 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
     this.logger = logger;
   }
 
-  async fetchPackage(request: TPackageClientRequest<NuGetClientData>): Promise<TPackageClientResponse> {
+  fetchPackage(request: TPackageClientRequest<NuGetClientData>): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;
     const dotnetSpec = parseVersionSpec(requestedPackage.version);
     return this.fetchPackageRetry(request, dotnetSpec);
   }
 
-  async fetchPackageRetry(
+  fetchPackageRetry(
     request: TPackageClientRequest<NuGetClientData>,
     dotnetSpec: DotNetVersionSpec
   ): Promise<TPackageClientResponse> {
@@ -82,7 +82,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 
   }
 
-  async createRemotePackageDocument(
+  createRemotePackageDocument(
     url: string,
     request: TPackageClientRequest<NuGetClientData>,
     dotnetSpec: DotNetVersionSpec

@@ -58,12 +58,12 @@ You then set the `{provider}.onSaveChanges` setting to the your install task "la
 
 **Example**
 
-```json
+```js
 // in your settings.json snippet
 { "npm.onSaveChanges": "npm install" }
 ```
 
-```json
+```js
 // tasks.json
 {
   "label": "npm install",
