@@ -1,13 +1,4 @@
 import {
-  addCachingOptions,
-  addHttpOptions,
-  addLoggingOptions,
-  addSuggestionProviderNames,
-  addSuggestionProviders,
-  addWinstonChannelLogger,
-  addWinstonLogger
-} from 'application/serviceUtils';
-import {
   asFunction,
   asValue,
   AwilixContainer,
@@ -15,6 +6,9 @@ import {
   InjectionMode
 } from 'awilix';
 import { AppConfig } from 'domain/configuration';
+import * as DomainServiceUtils from "domain/servicesUtils";
+import * as InfraServiceUtils from "infrastructure/servicesUtils";
+import { addSuggestionProviders } from 'infrastructure/servicesUtils';
 import {
   registerIconCommands,
   registerSuggestionCommands,
@@ -23,8 +17,8 @@ import {
   VersionLensExtension
 } from 'presentation.extension';
 import { ExtensionContext, window, workspace } from 'vscode';
+import { IExtensionServices } from './container/iExtensionServices';
 import { registerVersionLensProviders } from './container/registerVersionLensProviders';
-import { IExtensionServices } from './definitions/iExtensionServices';
 
 export async function configureContainer(
   context: ExtensionContext
@@ -36,25 +30,20 @@ export async function configureContainer(
 
   const services = {
 
-    // application services
+    // domain services
+    loggingOptions: DomainServiceUtils.addLoggingOptions(),
+    httpOptions: DomainServiceUtils.addHttpOptions(),
+    cachingOptions: DomainServiceUtils.addCachingOptions(),
 
+    // infrastructure services
+    loggerChannel: InfraServiceUtils.addWinstonChannelLogger(),
+    logger: InfraServiceUtils.addWinstonLogger("extension"),
+    providerNames: InfraServiceUtils.addSuggestionProviderNames(),
+
+    // extension services
     appConfig: asFunction(
       extensionName => new AppConfig(workspace, extensionName.toLowerCase())
     ).singleton(),
-
-    loggingOptions: addLoggingOptions(),
-
-    httpOptions: addHttpOptions(),
-
-    cachingOptions: addCachingOptions(),
-
-    loggerChannel: addWinstonChannelLogger(),
-
-    logger: addWinstonLogger("extension"),
-
-    providerNames: addSuggestionProviderNames(),
-
-    // extension services
 
     extensionName: asValue(VersionLensExtension.extensionName),
 

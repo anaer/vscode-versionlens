@@ -1,28 +1,8 @@
 import { asFunction, asValue, AwilixContainer, BuildResolver, Resolver } from "awilix";
-import { CachingOptions, HttpOptions } from "domain/clients";
-import { ILogger, ILoggerChannel, LoggingOptions } from "domain/logging";
+import { ILogger, ILoggerChannel } from "domain/logging";
 import { ISuggestionProvider } from "domain/suggestions";
 import { createWinstonLogger, OutputChannelTransport } from "infrastructure/logging";
-import { createSuggestionProvider } from "./providers";
-
-export function addHttpOptions(): BuildResolver<HttpOptions> {
-  return asFunction(
-    appConfig => new HttpOptions(appConfig, 'http')
-  ).singleton();
-}
-
-export function addCachingOptions(): BuildResolver<CachingOptions> {
-  return asFunction(
-    appConfig => new CachingOptions(appConfig, 'caching')
-  ).singleton();
-}
-
-export function addLoggingOptions(): BuildResolver<LoggingOptions> {
-  // logging options
-  return asFunction(
-    appConfig => new LoggingOptions(appConfig, 'logging')
-  ).singleton()
-}
+import { createSuggestionProvider } from "../application/providers/index";
 
 export function addWinstonChannelLogger(): BuildResolver<ILoggerChannel> {
   return asFunction(

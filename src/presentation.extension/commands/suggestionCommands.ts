@@ -3,8 +3,10 @@ import { PackageSourceType } from 'domain/packages';
 import { dirname, resolve } from 'path';
 import { CommandUtils, VersionLens } from 'presentation.extension';
 import { Disposable, env, workspace, WorkspaceEdit } from 'vscode';
-import { SuggestionCommandContributions } from '../definitions/eSuggestionCommandContributions';
 import { VersionLensState } from '../state/versionLensState';
+import {
+  SuggestionCommandContributions
+} from '../suggestions/eSuggestionCommandContributions';
 
 export class SuggestionCommands {
 

@@ -1,6 +1,6 @@
 import { IFrozenOptions } from 'domain/configuration';
 import { VersionLensState } from "presentation.extension";
-import { SuggestionsOptions } from "./options/suggestionsOptions";
+import { SuggestionsOptions } from "./suggestions/suggestionsOptions";
 
 export class VersionLensExtension {
 

@@ -14,7 +14,6 @@ import { Disposable, OutputChannel } from 'vscode';
 export interface IExtensionServices {
 
   // application services
-
   loggingOptions: LoggingOptions,
 
   httpOptions: HttpOptions,
@@ -30,7 +29,6 @@ export interface IExtensionServices {
   suggestionProviders: Array<ISuggestionProvider>,
 
   // extension services
-
   appConfig: AppConfig,
 
   extensionName: string,

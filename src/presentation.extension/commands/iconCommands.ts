@@ -1,10 +1,10 @@
 // vscode references
-import { ILogger } from 'domain/logging';
 import { getSuggestionProvidersByFileName } from 'application/providers';
+import { ILogger } from 'domain/logging';
 import { CommandUtils, VersionLensProvider } from 'presentation.extension';
 import * as VsCode from 'vscode';
-import { IconCommandContributions } from '../definitions/eIconCommandContributions';
 import { VersionLensState } from '../state/versionLensState';
+import { IconCommandContributions } from './eIconCommandContributions';
 
 export class IconCommands {
 

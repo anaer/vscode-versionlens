@@ -1,5 +1,5 @@
 import { IConfig } from 'domain/configuration';
-import { SuggestionContributions } from '../definitions/eSuggestionContributions';
+import { SuggestionContributions } from './eSuggestionContributions';
 
 export class SuggestionsOptions {
 

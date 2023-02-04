@@ -1,8 +1,8 @@
 import { KeyDictionary } from "domain/generics/collections";
 import { PackageDependency } from "domain/packages/index";
-import { StateContributions } from "../definitions/eStateContributions";
 import { VersionLensExtension } from "../versionLensExtension";
 import { ContextState } from "./contextState";
+import { StateContributions } from "./eStateContributions";
 
 export class VersionLensState {
 

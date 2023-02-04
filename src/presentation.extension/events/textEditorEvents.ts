@@ -3,7 +3,7 @@ import { ProviderSupport } from 'domain/providers';
 import { ISuggestionProvider } from 'domain/suggestions';
 import { TextEditor, window } from 'vscode';
 import { VersionLensState } from '../state/versionLensState';
-import { getDocumentSuggestionProviders } from '../utils/textDocumentUtils';
+import { getDocumentSuggestionProviders } from './textDocumentUtils';
 
 export class TextEditorEvents {
 
