@@ -15,8 +15,6 @@ export class VersionLensState {
 
   providerActive: ContextState<boolean>;
 
-  providerOpened: ContextState<string>;
-
   providerBusy: ContextState<number>;
 
   providerError: ContextState<boolean>;

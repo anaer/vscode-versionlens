@@ -112,7 +112,7 @@ export class VersionLensProvider implements CodeLensProvider, IProvider {
       document.getText()
     );
 
-    // check if this is the document was just opened
+    // check if the document was just opened
     if (documentOpened) {
       this.logger.debug(
         "%s provider opened. Saving original state",
