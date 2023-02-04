@@ -1,8 +1,8 @@
+import { IProvider } from "domain/providers";
 import minimatch from 'minimatch';
 import { basename } from 'path';
-import { IProvider } from "../../domain/providers";
 
-export function getSuggestionProvidersByFileName<T extends IProvider>(
+export function getProvidersByFileName<T extends IProvider>(
   fileName: string,
   providers: Array<T>
 ): Array<T> {

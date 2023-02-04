@@ -1,2 +1,2 @@
 export * from './createSuggestionProvider';
-export * from './getSuggestionProvidersByFileName';
+export * from './getProvidersByFileName';

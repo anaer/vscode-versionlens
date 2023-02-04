@@ -3,7 +3,7 @@ import { ProviderSupport } from 'domain/providers';
 import { ISuggestionProvider } from 'domain/suggestions';
 import { TextEditor, window } from 'vscode';
 import { VersionLensState } from '../state/versionLensState';
-import { getDocumentSuggestionProviders } from './textDocumentUtils';
+import { getDocumentProviders } from './textDocumentUtils';
 
 export class TextEditorEvents {
 
@@ -38,7 +38,7 @@ export class TextEditorEvents {
       return;
     }
 
-    const providers = getDocumentSuggestionProviders(
+    const providers = getDocumentProviders(
       textEditor.document,
       this.suggestionProviders
     );

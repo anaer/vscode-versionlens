@@ -1,7 +1,6 @@
 import { hasPackageDepsChanged } from 'application/packages';
 import { ILogger } from 'domain/logging';
-import { ISuggestionProvider } from 'domain/suggestions';
-import { TextDocumentUtils } from 'presentation.extension';
+import { TextDocumentUtils, VersionLensProvider } from 'presentation.extension';
 import { commands, TextDocument, window, workspace } from 'vscode';
 import { VersionLensState } from '../state/versionLensState';
 
@@ -9,11 +8,11 @@ export class TextDocumentEvents {
 
   constructor(
     state: VersionLensState,
-    suggestionProviders: Array<ISuggestionProvider>,
+    versionLensProviders: Array<VersionLensProvider>,
     logger: ILogger
   ) {
     this.state = state;
-    this.suggestionProviders = suggestionProviders;
+    this.versionLensProviders = versionLensProviders;
     this.logger = logger;
 
     // regsiter document events
@@ -26,51 +25,50 @@ export class TextDocumentEvents {
 
   state: VersionLensState;
 
-  suggestionProviders: Array<ISuggestionProvider>;
+  versionLensProviders: Array<VersionLensProvider>;
 
   logger: ILogger;
 
   onDidOpenTextDocument(document: TextDocument) {
-    const providers = TextDocumentUtils.getDocumentSuggestionProviders(
+    const matchedProviders = TextDocumentUtils.getDocumentProviders(
       document,
-      this.suggestionProviders
+      this.versionLensProviders
     )
 
-    if (providers.length === 0) return;
+    if (matchedProviders.length === 0) return;
 
     const packagePath = document.uri.path;
 
-    providers.forEach(
+    matchedProviders.forEach(
       p => {
         this.logger.debug(
           "Provider opened %s %s",
-          p.name,
+          p.config.providerName,
           packagePath
         );
 
         this.state.setOriginalParsedPackages(
-          p.name,
+          p.config.providerName,
           packagePath,
           []
         );
 
         this.state.setRecentParsedPackages(
-          p.name,
+          p.config.providerName,
           packagePath,
           []
         );
 
-        // @ts-ignore
-        p.opened = true;
+        (<VersionLensProvider>p).opened = true;
       }
     );
 
   }
 
   onDidSaveTextDocument(document: TextDocument) {
-    const providers = TextDocumentUtils.getDocumentSuggestionProviders(
+    const providers = TextDocumentUtils.getDocumentProviders(
       document,
-      this.suggestionProviders
+      this.versionLensProviders
     )
 
     if (providers.length === 0) return;
@@ -83,14 +81,25 @@ export class TextDocumentEvents {
         if (p.config.onSaveChangesTask.length === 0) return;
 
         // get the original and recent parsed packages
-        const original = this.state.getOriginalParsedPackages(p.name, packagePath);
-        const recent = this.state.getRecentParsedPackages(p.name, packagePath);
+        const original = this.state.getOriginalParsedPackages(
+          p.config.providerName,
+          packagePath
+        );
+
+        const recent = this.state.getRecentParsedPackages(
+          p.config.providerName,
+          packagePath
+        );
 
         // test if anything has changed
         if (hasPackageDepsChanged(original, recent)) {
 
           // set original to recent
-          this.state.setOriginalParsedPackages(p.name, packagePath, recent)
+          this.state.setOriginalParsedPackages(
+            p.config.providerName,
+            packagePath,
+            recent
+          );
 
           // run the custom task for the provider
           commands.executeCommand(
