@@ -1,9 +1,9 @@
-import { createAllSuggestionProviders } from 'application/providers';
 import {
   addCachingOptions,
   addHttpOptions,
   addLoggingOptions,
   addSuggestionProviderNames,
+  addSuggestionProviders,
   addWinstonChannelLogger,
   addWinstonLogger
 } from 'application/serviceUtils';
@@ -129,7 +129,7 @@ export async function configureContainer(
   const { logger, providerNames } = container.cradle;
   container.register({
     suggestionProviders: asValue(
-      await createAllSuggestionProviders(
+      await addSuggestionProviders(
         providerNames,
         container,
         logger.child({ namespace: 'registry' })

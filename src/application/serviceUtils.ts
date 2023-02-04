@@ -1,7 +1,9 @@
-import { asFunction, asValue, BuildResolver, Resolver } from "awilix";
+import { asFunction, asValue, AwilixContainer, BuildResolver, Resolver } from "awilix";
 import { CachingOptions, HttpOptions } from "domain/clients";
 import { ILogger, ILoggerChannel, LoggingOptions } from "domain/logging";
+import { ISuggestionProvider } from "domain/suggestions";
 import { createWinstonLogger, OutputChannelTransport } from "infrastructure/logging";
+import { createSuggestionProvider } from "./providers";
 
 export function addHttpOptions(): BuildResolver<HttpOptions> {
   return asFunction(
@@ -45,4 +47,22 @@ export function addSuggestionProviderNames(): Resolver<Array<string>> {
     'npm',
     'pub',
   ]);
+}
+
+export async function addSuggestionProviders(
+  providerNames: Array<string>,
+  container: AwilixContainer<any>,
+  logger: ILogger
+): Promise<Array<ISuggestionProvider>> {
+
+  logger.debug('Loading suggestion providers %o', providerNames.join(', '));
+
+  const results: Array<ISuggestionProvider> = [];
+
+  for (const providerName of providerNames) {
+    const provider = await createSuggestionProvider(providerName, container, logger);
+    if (provider) results.push(provider);
+  }
+
+  return results;
 }
