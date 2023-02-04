@@ -5,6 +5,7 @@ import { ISuggestionProvider } from 'domain/suggestions';
 import {
   IconCommands,
   SuggestionCommands,
+  TextDocumentEvents,
   TextEditorEvents,
   VersionLensExtension,
   VersionLensProvider
@@ -44,6 +45,8 @@ export interface IExtensionServices {
   suggestionCommands: SuggestionCommands,
 
   textEditorEvents: TextEditorEvents,
+
+  textDocumentEvents: TextDocumentEvents,
 
   versionLensProviders: Array<VersionLensProvider>
 }

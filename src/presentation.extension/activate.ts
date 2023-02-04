@@ -20,7 +20,7 @@ export async function activate(context: ExtensionContext) {
       container.resolve('suggestionCommands');
 
       // instantiate events
-      container.resolve('TextDocumentEvents');
+      container.resolve('textDocumentEvents');
       container.resolve('textEditorEvents');
     });
 

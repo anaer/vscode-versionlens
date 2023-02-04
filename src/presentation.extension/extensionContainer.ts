@@ -89,7 +89,7 @@ export async function configureContainer(
         )
     ).singleton(),
 
-    TextDocumentEvents: asFunction(
+    textDocumentEvents: asFunction(
       (extension, suggestionProviders, logger) =>
         new TextDocumentEvents(
           extension.state,
