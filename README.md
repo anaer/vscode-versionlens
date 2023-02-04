@@ -18,6 +18,20 @@ This extension shows __version__ information when opening a package or project f
   - pnpm https://pnpm.io/
 - pub https://pub.dev/
 
+## Contents
+
+- [How do I install this extension?](#how-do-i-install-this-extension)
+- [How do I see version information?](#how-do-i-see-version-information)
+- [Can I see pre-release versions?](#can-i-see-pre-release-versions)
+- [Will this extension install packages?](#will-this-extension-install-packages)
+- [Can I install this extension manually?](#can-i-install-this-extension-manually)
+- [I'm not able to install this extention](#im-not-able-to-install-this-extention)
+- [How do I troubleshoot this extension?](#how-do-i-troubleshoot-this-extension)
+
+## How do I install this extension?
+
+Follow this link on [how to install vscode extensions](https://code.visualstudio.com/docs/editor/extension-gallery)
+
 ## How do I see version information?
 
 Click the V icon in the package\project file toolbar.
@@ -26,17 +40,54 @@ You can also choose the default startup state by setting `versionlens.suggestion
 
 ![Show releases](https://gitlab.com/versionlens/vscode-versionlens/-/raw/master/images/faq/show-releases.gif)
 
-## Can I see prerelease versions?
+## Can I see pre-release versions?
 
-Yes! click on the tag icon in the package\project file toolbar.
+Yes, click on the tag icon in the package\project file toolbar.
 
 You can also choose the default startup state by setting `versionlens.suggestions.showPrereleasesOnStartup`
 
 ![Show prereleases](https://gitlab.com/versionlens/vscode-versionlens/-/raw/master/images/faq/show-prereleases.gif)
 
-## How do I install this extension?
+## Will this extension install packages?
 
-Follow this link on [how to install vscode extensions](https://code.visualstudio.com/docs/editor/extension-gallery)
+You can define a task that will run when you save a package document that has dependency changes.
+
+The install task needs to be defined in your tasks.json.
+
+You then set the `{provider}.onSaveChanges` setting to the your install task "label".
+
+**Example**
+
+```json
+// in your settings.json snippet
+{ "npm.onSaveChanges": "npm install" }
+```
+
+```json
+// tasks.json
+{
+  "label": "npm install",
+  "command": "npm",
+  "type": "shell",
+  "args": ["install"],
+  "options": {
+    // sets the cwd to the current file dir
+    "cwd": "${fileDirname}"
+  },
+  "presentation": {
+    "echo": true,
+    "reveal": "always",
+    "panel": "shared",
+    "clear": true,
+  },
+}
+```
+
+> **NOTE**
+>
+> - Versionlens needs to be enabled before **making and saving changes**
+> - If your provider is already setup to detect changes and install packages on save (i.e. dotnet [c# extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)) then you won't need to have a custom install task
+> - Ensure to set the `task.options.cwd` to the [built-in predefined variable](https://code.visualstudio.com/docs/editor/variables-reference) called `${fileDirname}` when running an install task
 
 ## Can I install this extension manually?
 
@@ -67,6 +118,8 @@ If that fails then have a look in the `Log (Extension Host)` channel. Report it 
   Then open the channel like:
     
   ![image](https://gitlab.com/versionlens/vscode-versionlens/-/raw/master/images/faq/ext-log.png)
+
+- In the worst case no logs are output. There maybe an error in the developer tools of vscode. You can open the dev tools from the `help menu` in vscode (Ctrl+Shift+I)
 
 ## License
 

@@ -1,26 +1,23 @@
 {
   "version": "2.0.0",
-  "command": "npm",
   "type": "shell",
   "echoCommand": true,
   "tasks": [
     {
       "label": "smoke npm install",
+      "command": "npm",
+      "type": "shell",
+      "args": ["install"],
+      "options": {
+        // set the cwd to the current file dir
+        "cwd": "${fileDirname}"
+      },
       "presentation": {
         "echo": true,
         "reveal": "always",
         "panel": "shared",
         "clear": true,
       },
-      "group": {
-        "isDefault": true,
-        "kind": "build",
-      },
-      "options": {
-        // set the cwd to the current file dir
-        "cwd": "${fileDirname}"
-      },
-      "args": ["install"]
     }
   ]
 }
