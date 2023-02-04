@@ -18,6 +18,7 @@ import { AppConfig } from 'domain/configuration';
 import {
   registerIconCommands,
   registerSuggestionCommands,
+  TextDocumentEvents,
   TextEditorEvents,
   VersionLensExtension
 } from 'presentation.extension';
@@ -58,7 +59,7 @@ export async function configureContainer(
     extensionName: asValue(VersionLensExtension.extensionName),
 
     extension: asFunction(
-      appConfig => new VersionLensExtension(appConfig)
+      (appConfig, providerNames) => new VersionLensExtension(appConfig, providerNames)
     ).singleton(),
 
     outputChannel: asFunction(
@@ -96,6 +97,15 @@ export async function configureContainer(
           extension.state,
           suggestionProviders,
           loggerChannel
+        )
+    ).singleton(),
+
+    TextDocumentEvents: asFunction(
+      (extension, suggestionProviders, logger) =>
+        new TextDocumentEvents(
+          extension.state,
+          suggestionProviders,
+          logger.child({ namespace: 'text document event' })
         )
     ).singleton(),
 

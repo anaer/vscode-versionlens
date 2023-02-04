@@ -4,6 +4,8 @@ import { TSuggestionReplaceFunction } from "./tSuggestionReplaceFunction";
 
 export interface ISuggestionProvider extends IProvider {
 
+  name: string;
+
   suggestionReplaceFn: TSuggestionReplaceFunction;
 
   parseDependencies(

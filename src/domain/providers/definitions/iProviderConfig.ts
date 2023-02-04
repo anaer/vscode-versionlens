@@ -17,4 +17,6 @@ export interface IProviderConfig {
 
   http: IHttpOptions;
 
+  onSaveChangesTask: string;
+
 }

@@ -17,7 +17,7 @@ export function registerVersionLensProviders(
       const versionLensProvider = new VersionLensProvider(
         extension,
         provider,
-        logger.child({ namespace: `${provider.config.providerName} codelens` })
+        logger.child({ namespace: `${provider.name} codelens` })
       );
 
       results.push(versionLensProvider);

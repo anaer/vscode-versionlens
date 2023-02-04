@@ -4,4 +4,5 @@ export enum ComposerContributions {
   DependencyProperties = 'composer.dependencyProperties',
   ApiUrl = 'composer.apiUrl',
   FilePatterns = 'composer.files',
+  OnSaveChangesTask = 'composer.onSaveChanges'
 }

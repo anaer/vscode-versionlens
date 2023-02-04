@@ -43,4 +43,8 @@ export class DotNetConfig extends AbstractProviderConfig implements IProviderCon
     return 'https://api.nuget.org/v3/index.json';
   }
 
+  get onSaveChangesTask(): string {
+    return this.config.get(DotNetContributions.OnSaveChangesTask);
+  }
+
 }

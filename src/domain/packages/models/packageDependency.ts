@@ -19,13 +19,16 @@ export class PackageDependency {
 
   package: TPackageResource;
 
-  equals(other: PackageDependency) {
+  packageEquals(other: PackageDependency) {
     return other.package.name === this.package.name
       && other.package.version === this.package.version
-      && other.versionRange.start === this.versionRange.start
-      && other.versionRange.end === this.versionRange.end
-      && other.nameRange.start === this.nameRange.start
-      && other.nameRange.end === this.nameRange.end;
   }
+
+  // rangeEquals(other: PackageDependency) {
+  //   return other.versionRange.start === this.versionRange.start
+  //     && other.versionRange.end === this.versionRange.end
+  //     && other.nameRange.start === this.nameRange.start
+  //     && other.nameRange.end === this.nameRange.end;
+  // }
 
 };

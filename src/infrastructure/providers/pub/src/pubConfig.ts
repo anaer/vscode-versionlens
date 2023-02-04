@@ -34,4 +34,8 @@ export class PubConfig extends AbstractProviderConfig implements IProviderConfig
     return UrlHelpers.ensureEndSlash(this.config.get(PubContributions.ApiUrl));
   }
 
+  get onSaveChangesTask(): string {
+    return this.config.get(PubContributions.OnSaveChangesTask);
+  }
+
 }

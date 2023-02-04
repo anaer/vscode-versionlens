@@ -1,30 +1,27 @@
-import { ExtensionContext, window } from 'vscode';
+import { ExtensionContext } from 'vscode';
 import { configureContainer } from './extensionContainer';
 
 export async function activate(context: ExtensionContext) {
 
-  await configureContainer(context)
+  return await configureContainer(context)
     .then(container => {
 
       const { version } = require('../package.json');
 
-      const {
-        logger,
-        loggingOptions,
-        textEditorEvents,
-      } = container.cradle;
+      const { logger, loggingOptions } = container.cradle;
 
       // log general start up info
       logger.info('version: %s', version);
       logger.info('log level: %s', loggingOptions.level);
       logger.info('log path: %s', context.logPath);
 
-      // resolve commands
+      // instantiate commands
       container.resolve('iconCommands');
       container.resolve('suggestionCommands');
 
-      // ensure icons are shown if editor is already active
-      textEditorEvents.onDidChangeActiveTextEditor(window.activeTextEditor);
+      // instantiate events
+      container.resolve('TextDocumentEvents');
+      container.resolve('textEditorEvents');
     });
 
 }

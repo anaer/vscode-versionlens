@@ -5,4 +5,5 @@ export enum NpmContributions {
   DependencyProperties = 'npm.dependencyProperties',
   DistTagFilter = 'npm.distTagFilter',
   FilePatterns = 'npm.files',
+  OnSaveChangesTask = 'npm.onSaveChanges'
 }

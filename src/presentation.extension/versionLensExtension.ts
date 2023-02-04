@@ -12,11 +12,11 @@ export class VersionLensExtension {
 
   state: VersionLensState;
 
-  constructor(appConfig: IFrozenOptions) {
+  constructor(appConfig: IFrozenOptions, providerNames: string[]) {
     this.config = appConfig;
     this.suggestions = new SuggestionsOptions(appConfig);
     // instantiate setContext options
-    this.state = new VersionLensState(this);
+    this.state = new VersionLensState(this, providerNames);
   }
 
 }

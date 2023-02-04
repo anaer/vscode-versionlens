@@ -1,24 +1,19 @@
-export * from './definitions/iExtensionServices';
+export * from './commands/iconCommands';
+export * from './commands/suggestionCommands';
 export * from './definitions/eIconCommandContributions';
 export * from './definitions/eSuggestionCommandContributions';
 export * from './definitions/eSuggestionContributions';
 export * from './definitions/eSuggestionIndicators';
-
-export * from './commands/suggestionCommands';
-export * from './commands/iconCommands';
-
-export * from './events/textEditorEvents';
+export * from './definitions/iExtensionServices';
 export * from './events/textDocumentEvents';
-
-export * from './state/contextState';
-export * from './state/versionLensState';
-
-export * as CommandHelpers from './helpers/commandHelpers';
-
-export * from './versionLensExtension';
+export * from './events/textEditorEvents';
 export * from './extensionContainer';
-
+export * as CommandHelpers from './helpers/commandHelpers';
+export * as TextDocumentUtils from './helpers/textDocumentUtils';
 export * as CommandFactory from './lenses/suggestionCommandFactory';
+export * from './lenses/versionLens';
 export * as VersionLensFactory from './lenses/versionLensFactory';
 export * from './lenses/versionLensProvider';
-export * from './lenses/versionLens';
+export * from './state/contextState';
+export * from './state/versionLensState';
+export * from './versionLensExtension';

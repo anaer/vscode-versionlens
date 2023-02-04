@@ -38,4 +38,8 @@ export class MavenConfig extends AbstractProviderConfig implements IProviderConf
     return UrlHelpers.ensureEndSlash(this.config.get(MavenContributions.ApiUrl));
   }
 
+  get onSaveChangesTask(): string {
+    return this.config.get(MavenContributions.OnSaveChangesTask);
+  }
+
 }

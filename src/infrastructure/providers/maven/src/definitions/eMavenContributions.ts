@@ -6,4 +6,5 @@ export enum MavenContributions {
   TagFilter = 'maven.tagFilter',
   ApiUrl = 'maven.apiUrl',
   FilePatterns = 'maven.files',
+  OnSaveChangesTask = 'maven.onSaveChanges'
 }

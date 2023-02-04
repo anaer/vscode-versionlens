@@ -34,4 +34,8 @@ export class DubConfig extends AbstractProviderConfig implements IProviderConfig
     return UrlHelpers.ensureEndSlash(this.config.get(DubContributions.ApiUrl));
   }
 
+  get onSaveChangesTask(): string {
+    return this.config.get(DubContributions.OnSaveChangesTask);
+  }
+
 }

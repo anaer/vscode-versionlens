@@ -34,4 +34,8 @@ export class ComposerConfig extends AbstractProviderConfig implements IProviderC
     return UrlHelpers.ensureEndSlash(this.config.get(ComposerContributions.ApiUrl));
   }
 
+  get onSaveChangesTask(): string {
+    return this.config.get(ComposerContributions.OnSaveChangesTask);
+  }
+
 }

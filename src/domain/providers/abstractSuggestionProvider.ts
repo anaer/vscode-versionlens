@@ -16,6 +16,10 @@ export abstract class AbstractSuggestionProvider<T extends IProviderConfig> {
     this.logger = logger;
   }
 
+  get name() {
+    return this.config.providerName;
+  }
+
   config: T;
 
   logger: ILogger;

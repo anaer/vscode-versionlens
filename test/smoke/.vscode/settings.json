@@ -17,5 +17,6 @@
     "jspm.optionalDependencies",
     "pnpm.overrides"
   ],
-  "versionlens.npm.files": "**/{package.json,web-module.json}"
+  "versionlens.npm.files": "**/{package.json,web-module.json}",
+  "versionlens.npm.onSaveChanges": "smoke npm install"
 }

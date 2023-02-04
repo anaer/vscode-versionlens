@@ -39,4 +39,8 @@ export class NpmConfig extends AbstractProviderConfig implements IProviderConfig
     return this.config.get(NpmContributions.DistTagFilter);
   }
 
+  get onSaveChangesTask(): string {
+    return this.config.get(NpmContributions.OnSaveChangesTask);
+  }
+
 }

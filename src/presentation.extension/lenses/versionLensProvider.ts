@@ -1,5 +1,5 @@
 import { ILogger } from 'domain/logging';
-import { PackageSourceType } from 'domain/packages';
+import { PackageResponse, PackageSourceType } from 'domain/packages';
 import { IProvider, IProviderConfig } from 'domain/providers';
 import {
   defaultReplaceFn,
@@ -63,14 +63,25 @@ export class VersionLensProvider implements CodeLensProvider, IProvider {
   }
 
   reloadCodeLenses() {
+    // clear the cache
     this.suggestionProvider.clearCache();
+    // notify vscode to refresh version lenses
     this.notifyCodeLensesChanged.fire();
   }
 
-  provideCodeLenses(
-    document: TextDocument, token: CancellationToken
+  async provideCodeLenses(
+    document: TextDocument,
+    token: CancellationToken
   ): Promise<Array<CodeLens>> {
     if (this.state.enabled.value === false) return null;
+
+    // @ts-ignore
+    // get the opened state
+    const documentOpened = this.suggestionProvider.opened;
+
+    // @ts-ignore
+    // reset opened state
+    this.suggestionProvider.opened = false;
 
     // package path
     const packagePath = dirname(document.uri.fsPath);
@@ -81,12 +92,6 @@ export class VersionLensProvider implements CodeLensProvider, IProvider {
     // set in progress
     this.state.providerBusy.value++;
 
-    this.logger.info(
-      "Analysing %s dependencies in %s",
-      this.config.providerName,
-      document.uri.fsPath
-    );
-
     // unfreeze config per file request
     this.config.caching.defrost();
 
@@ -95,69 +100,98 @@ export class VersionLensProvider implements CodeLensProvider, IProvider {
       this.config.caching.duration / 1000
     );
 
-    // get the dependencies
+    this.logger.info(
+      "Analysing %s dependencies in %s",
+      this.suggestionProvider.name,
+      document.uri.fsPath
+    );
+
+    // parse the document text dependencies
     const packageDeps = this.suggestionProvider.parseDependencies(
       packagePath,
       document.getText()
     );
 
-    // fetch suggestions
-    return this.suggestionProvider.fetchSuggestions(packagePath, packageDeps)
-      .then(responses => {
+    // check if this is the document was just opened
+    if (documentOpened) {
+      this.logger.debug(
+        "%s provider opened. Saving original state",
+        this.suggestionProvider.name
+      );
 
-        this.state.providerBusy.value--;
+      // store the originally fetched dependencies
+      this.state.setOriginalParsedPackages(
+        this.suggestionProvider.name,
+        document.uri.path,
+        packageDeps
+      );
+    }
 
-        if (responses === null) {
-          this.logger.info(
-            "No %s dependencies found in %s",
-            this.config.providerName,
-            document.uri.fsPath
-          );
-          return null;
+    // store the recently fetched dependencies
+    this.state.setRecentParsedPackages(
+      this.suggestionProvider.name,
+      document.uri.path,
+      packageDeps
+    );
+
+    let suggestions: Array<PackageResponse> = [];
+    try {
+      suggestions = await this.suggestionProvider.fetchSuggestions(
+        packagePath,
+        packageDeps
+      );
+    } catch (error) {
+      this.state.providerError.value = true;
+      this.state.providerBusy.change(0)
+      return Promise.reject(error);
+    }
+
+    this.state.providerBusy.value--;
+
+    if (suggestions === null) {
+      this.logger.info(
+        "No %s suggestions found in %s",
+        this.suggestionProvider.name,
+        document.uri.fsPath
+      );
+      return null;
+    }
+
+    this.logger.info(
+      "Resolved %s %s package release and pre-release suggestions",
+      suggestions.length,
+      this.suggestionProvider.name
+    );
+
+    if (this.state.prereleasesEnabled.value === false) {
+      suggestions = suggestions.filter(
+        function (response) {
+          const { suggestion } = response;
+          return (suggestion.flags & SuggestionFlags.prerelease) === 0 ||
+            suggestion.name.includes(SuggestionStatus.LatestIsPrerelease);
         }
+      )
+    }
 
-        this.logger.info(
-          "Resolved %s %s dependencies",
-          responses.length,
-          this.config.providerName
-        );
-
-        if (this.state.prereleasesEnabled.value === false) {
-          responses = responses.filter(
-            function (response) {
-              const { suggestion } = response;
-              return (suggestion.flags & SuggestionFlags.prerelease) === 0 ||
-                suggestion.name.includes(SuggestionStatus.LatestIsPrerelease);
-            }
-          )
-        }
-
-        return VersionLensFactory.createFromPackageResponses(
-          document,
-          responses,
-          this.suggestionProvider.suggestionReplaceFn || defaultReplaceFn
-        );
-      })
-      .catch(error => {
-        this.state.providerError.value = true;
-        this.state.providerBusy.change(0)
-        return Promise.reject(error);
-      })
+    // convert suggestions in to code lenses
+    return VersionLensFactory.createFromPackageResponses(
+      document,
+      suggestions,
+      this.suggestionProvider.suggestionReplaceFn || defaultReplaceFn
+    );
   }
 
-  async resolveCodeLens(
-    codeLens: CodeLens, token: CancellationToken
-  ): Promise<CodeLens> {
+  resolveCodeLens(codeLens: CodeLens, token: CancellationToken): CodeLens {
     if (codeLens instanceof VersionLens) {
       // evaluate the code lens
-      const evaluated = this.evaluateCodeLens(codeLens, token);
+      const evaluated = this.evaluateCodeLens(codeLens);
 
       // update the progress
-      return Promise.resolve(evaluated);
+      return evaluated;
     }
   }
 
-  evaluateCodeLens(codeLens: VersionLens, token: CancellationToken) {
+  evaluateCodeLens(codeLens: VersionLens) {
     if (codeLens.hasPackageSource(PackageSourceType.Directory))
       return CommandFactory.createDirectoryLinkCommand(codeLens);
 

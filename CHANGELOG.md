@@ -2,12 +2,31 @@
 
   **All providers**
 
+  - Added ability to run a custom task in your tasks.json when you save a package document that has dependency changes.
+
+    A task label defined in your tasks.json will be executed when you save a package document that has dependency changes. 
+
+    Ensure to set your `task.options.cwd` to the built-in predefined variable called `${fileDirname}` when running an install task
+
+    > **NOTE** If your provider already detects changes and installs packages (i.e. dotnet) then you won't need to have a custom install task. But you can still have a custom task if you wish.
+
+    The new contributions are:
+
+    |Provider|Type|Contribution|Default
+    |-|-|-|-
+    |**Composer**|json|`versionlens.composer.onSaveChanges`|""
+    |**Dotnet**|xml|`versionlens.dotnet.onSaveChanges`|""
+    |**Dub**|json|`versionlens.dub.onSaveChanges`|""
+    |**Npm**|json|`versionlens.npm.onSaveChanges`|""
+    |**Maven**|xml|`versionlens.maven.onSaveChanges`|""
+    |**Pub**|yaml|`versionlens.pub.onSaveChanges`|""
+
   - Cache is now reset each time the version lens icon "V" is turned on.
 
     This prevents having to wait for the cache to expire when 
     wanting the very latest updates or diagnosing issues.
 
-    **NOTE** caching still defaults to 3 minutes in the `versionlens.caching.duration` contribution settings. It's not recommended to set this to 0 unless your diagnosing issues.
+    > **NOTE** caching still defaults to 3 minutes in the `versionlens.caching.duration` contribution settings. It's not recommended to set this to 0 unless your diagnosing issues.
 
   - added the time taken in milliseconds for each package fetch request to the info log
 

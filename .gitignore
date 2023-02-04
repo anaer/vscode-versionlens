@@ -1,11 +1,12 @@
 out
-node_modules
+**/node_modules
 npm-debug.log
 .vscode-test
 test/smoke/dotnet/obj/
 test/smoke/dotnet/bin/
 **/.npmrc
 **/.env
+**/package-lock.json
 dist/
 trace.log
 artifacts/

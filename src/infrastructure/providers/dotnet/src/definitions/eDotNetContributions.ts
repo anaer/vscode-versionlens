@@ -5,4 +5,5 @@ export enum DotNetContributions {
   DependencyProperties = 'dotnet.dependencyProperties',
   TagFilter = 'dotnet.tagFilter',
   FilePatterns = 'dotnet.files',
+  OnSaveChangesTask = 'dotnet.onSaveChanges'
 }
