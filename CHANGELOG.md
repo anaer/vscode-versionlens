@@ -2,7 +2,9 @@
 
   **All providers**
 
-  - Added ability to run a custom task defined in your tasks.json when you save a package document that has dependency changes. 
+  - Added parallism to all fetch requests for a performance boost
+
+  - Added ability to run a custom task defined in your tasks.json when you save a package document. (runs only when there are dependency changes)
 
     The new contributions are:
 
@@ -27,6 +29,8 @@
     > Caching `versionlens.caching.duration` setting still defaults to 3 minutes. It's not recommended to set this to 0 unless your diagnosing issues.
 
   - Added the time taken (in milliseconds) for each package fetch request to the info log
+
+  - Added overall time taken for all package fetches to the info log
 
 # 1.1.1
 

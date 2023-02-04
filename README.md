@@ -50,11 +50,11 @@ You can also choose the default startup state by setting `versionlens.suggestion
 
 ## Will this extension install packages?
 
-You can define a task that will run when you save a package document that has dependency changes.
+You can define a task that will run when you save a package document. (runs only when there are dependency changes)
 
 The install task needs to be defined in your tasks.json.
 
-You then set the `{provider}.onSaveChanges` setting to the your install task "label".
+You then set the `{provider}.onSaveChanges` setting to the your install task label.
 
 **Example**
 
