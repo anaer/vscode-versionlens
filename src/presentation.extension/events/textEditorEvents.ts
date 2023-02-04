@@ -2,8 +2,8 @@ import { ILoggerChannel } from 'domain/logging';
 import { ProviderSupport } from 'domain/providers';
 import { ISuggestionProvider } from 'domain/suggestions';
 import { TextEditor, window } from 'vscode';
-import { getDocumentSuggestionProviders } from '../helpers/textDocumentUtils';
 import { VersionLensState } from '../state/versionLensState';
+import { getDocumentSuggestionProviders } from '../utils/textDocumentUtils';
 
 export class TextEditorEvents {
 

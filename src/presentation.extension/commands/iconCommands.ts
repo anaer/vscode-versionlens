@@ -1,7 +1,7 @@
 // vscode references
 import { ILogger } from 'domain/logging';
 import { getSuggestionProvidersByFileName } from 'application/providers';
-import { CommandHelpers, VersionLensProvider } from 'presentation.extension';
+import { CommandUtils, VersionLensProvider } from 'presentation.extension';
 import * as VsCode from 'vscode';
 import { IconCommandContributions } from '../definitions/eIconCommandContributions';
 import { VersionLensState } from '../state/versionLensState';
@@ -101,7 +101,7 @@ export function registerIconCommands(
 
   // register commands with vscode
   subscriptions.push(
-    ...CommandHelpers.registerCommands(
+    ...CommandUtils.registerCommands(
       IconCommandContributions,
       <any>iconCommands,
       logger

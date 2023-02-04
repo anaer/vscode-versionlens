@@ -1,13 +1,10 @@
-import { dirname, resolve } from 'path';
-import { workspace, WorkspaceEdit, Disposable, env } from 'vscode';
-
 import { ILogger } from 'domain/logging';
 import { PackageSourceType } from 'domain/packages';
-
-import { CommandHelpers, VersionLens } from 'presentation.extension';
-
-import { VersionLensState } from '../state/versionLensState';
+import { dirname, resolve } from 'path';
+import { CommandUtils, VersionLens } from 'presentation.extension';
+import { Disposable, env, workspace, WorkspaceEdit } from 'vscode';
 import { SuggestionCommandContributions } from '../definitions/eSuggestionCommandContributions';
+import { VersionLensState } from '../state/versionLensState';
 
 export class SuggestionCommands {
 
@@ -61,7 +58,7 @@ export function registerSuggestionCommands(
 
   // register commands with vscode
   subscriptions.push(
-    ...CommandHelpers.registerCommands(
+    ...CommandUtils.registerCommands(
       SuggestionCommandContributions,
       <any>suggestionCommands,
       logger
