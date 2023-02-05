@@ -60,13 +60,13 @@ You then set the `{provider}.onSaveChanges` setting to the your install task lab
 
 ```js
 // in your settings.json snippet
-{ "npm.onSaveChanges": "npm install" }
+{ "npm.onSaveChanges": "versionlens npm install" }
 ```
 
 ```js
 // tasks.json
 {
-  "label": "npm install",
+  "label": "versionlens npm install",
   "command": "npm",
   "type": "shell",
   "args": ["install"],
@@ -74,6 +74,7 @@ You then set the `{provider}.onSaveChanges` setting to the your install task lab
     // sets the cwd to the current file dir
     "cwd": "${fileDirname}"
   },
+  // customizable settings
   "presentation": {
     "echo": true,
     "reveal": "always",
@@ -85,8 +86,11 @@ You then set the `{provider}.onSaveChanges` setting to the your install task lab
 
 > **NOTE**
 >
-> - Versionlens needs to be enabled before **making and saving changes**
-> - If your provider is already setup to detect changes and install packages on save (i.e. dotnet [c# extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)) then you won't need to have a custom install task
+> - If your provider already detects changes then installs packages (i.e. dotnet [c# extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)) then you won't need to have a custom install task
+> - Versionlens will need to be enabled before **making and saving changes**
+> - Will not run anything when the `onSaveChanges` setting is set to the default value of `null`
+> - Optionally you can add the task to your user `tasks.json` file if you dont want to define the task for every project. This is done by pressing `ctrl+p` then selecting `Tasks: Open User Tasks`. 
+> - If the specified task is not found then vscode (by default) will prompt which task you want to run (this will never be saved in to your versionlens settings).
 > - Ensure to set the `task.options.cwd` to the [built-in predefined variable](https://code.visualstudio.com/docs/editor/variables-reference) called `${fileDirname}` when running an install task
 
 ## Can I install this extension manually?
