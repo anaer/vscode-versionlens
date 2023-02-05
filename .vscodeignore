@@ -3,6 +3,9 @@
 !node_modules/**/*.js
 !node_modules/**/*.cjs
 !node_modules/**/*.mjs
+node_modules/**/node_modules
+node_modules/**/test
+test/**/node_modules
 !images/**/*.*
 !dist/**/*.js
 # adding a * to the end of a single file name is a workaround 
