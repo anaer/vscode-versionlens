@@ -26,7 +26,6 @@ export class NpmSuggestionProvider
 
   clearCache() {
     this.client.pacoteClient.cache.clear();
-    // @ts-ignore
     this.client.githubClient.jsonClient.clearCache();
   }
 

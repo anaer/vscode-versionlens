@@ -9,8 +9,8 @@ import {
   ClientResponseFactory,
   IPackageClient,
   PackageSourceType,
-  TPackageClientResponse,
   TPackageClientRequest,
+  TPackageClientResponse,
   TSemverSpec,
   VersionHelpers
 } from 'domain/packages';
@@ -38,8 +38,7 @@ export class ComposerClient implements IPackageClient<null> {
   }
 
   clearCache() {
-    // @ts-ignore
-    this.jsonClient.cache.clear();
+    this.jsonClient.clearCache();
   }
 
   fetchPackage<TClientData>(

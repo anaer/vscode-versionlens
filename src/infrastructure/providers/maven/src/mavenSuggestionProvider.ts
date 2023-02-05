@@ -26,8 +26,7 @@ export class MavenSuggestionProvider
   }
 
   clearCache() {
-    // @ts-ignore
-    this.client.httpClient.cache.clear();
+    this.client.httpClient.clearCache();
   }
 
   parseDependencies(

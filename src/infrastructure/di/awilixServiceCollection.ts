@@ -27,7 +27,6 @@ export class AwilixServiceCollection implements IServiceCollection {
     let awilixResolver: any;
 
     if (resolver instanceof AsyncFunction) {
-      // @ts-ignore
       this.asyncSingletons[name] = resolver;
     } else if (resolver instanceof Function) {
       awilixResolver = asFunction(resolver).scoped().singleton();
@@ -64,7 +63,7 @@ export class AwilixServiceCollection implements IServiceCollection {
   }
 
   private async buildAwilixContainer(
-    name,
+    name: string,
     container: AwilixContainer<any>
   ): Promise<IServiceProvider> {
     // add the service provider to the container

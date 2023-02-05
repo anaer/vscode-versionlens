@@ -25,7 +25,6 @@ export class PubSuggestionProvider
   }
 
   clearCache () {
-    // @ts-ignore
     this.client.jsonClient.clearCache();
   };
   
