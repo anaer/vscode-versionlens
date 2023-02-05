@@ -34,7 +34,7 @@
   ],
   "main": "./dist/extension.bundle.js",
   "scripts": {
-    "fresh": "npm run -s clean && rimraf ./node_modules && rm -f ./package-lock.json",
+    "fresh": "npm run -s clean && rimraf ./node_modules test/**/node_modules && rm -f ./package-lock.json",
     "clean": "rimraf ./out ./dist",
     "precompile": "npm run -s clean && npm run -s lint:src",
     "compile": "npm run -s pack:src",
@@ -232,7 +232,7 @@
         },
         "versionlens.npm.onSaveChanges": {
           "type": "string",
-          "default": "",
+          "default": null,
           "description": "A task label defined in your tasks.json that will be executed when you save a package document that has dependency changes. Ensure to set your `task.options.cwd` to the predefined variable called `${fileDirname}` when running an install task"
         },
         "versionlens.npm.files": {
@@ -286,7 +286,7 @@
         },
         "versionlens.pub.onSaveChanges": {
           "type": "string",
-          "default": "",
+          "default": null,
           "description": "A task label defined in your tasks.json that will be executed when you save a package document that has dependency changes. Ensure to set your `task.options.cwd` to the predefined variable called `${fileDirname}` when running an install task"
         },
         "versionlens.pub.files": {
@@ -328,7 +328,7 @@
         },
         "versionlens.dotnet.onSaveChanges": {
           "type": "string",
-          "default": "",
+          "default": null,
           "description": "A task label defined in your tasks.json that will be executed when you save a package document that has dependency changes. Ensure to set your `task.options.cwd` to the predefined variable called `${fileDirname}` when running an install task"
         },
         "versionlens.dotnet.files": {
@@ -389,7 +389,7 @@
         },
         "versionlens.dub.onSaveChanges": {
           "type": "string",
-          "default": "",
+          "default": null,
           "description": "A task label defined in your tasks.json that will be executed when you save a package document that has dependency changes. Ensure to set your `task.options.cwd` to the predefined variable called `${fileDirname}` when running an install task"
         },
         "versionlens.dub.files": {
@@ -431,7 +431,7 @@
         },
         "versionlens.composer.onSaveChanges": {
           "type": "string",
-          "default": "",
+          "default": null,
           "description": "A task label defined in your tasks.json that will be executed when you save a package document that has dependency changes. Ensure to set your `task.options.cwd` to the predefined variable called `${fileDirname}` when running an install task"
         },
         "versionlens.composer.files": {
@@ -473,7 +473,7 @@
         },
         "versionlens.maven.onSaveChanges": {
           "type": "string",
-          "default": "",
+          "default": null,
           "description": "A task label defined in your tasks.json that will be executed when you save a package document that has dependency changes. Ensure to set your `task.options.cwd` to the predefined variable called `${fileDirname}` when running an install task"
         },
         "versionlens.maven.files": {
