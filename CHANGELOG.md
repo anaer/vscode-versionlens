@@ -1,3 +1,11 @@
+# 1.2.1
+
+  **All providers**
+
+  - The previous release (v1.2.0) was supposed to be a `preview release`. Vscode no longer recognizes previews whilst marketplace still does.
+
+  - Fixed wrong default settings for `onSaveChanges` settings which stops the annoying task popup on save.
+
 # 1.2.0
 
   **All providers**
