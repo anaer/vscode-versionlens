@@ -1,34 +1,40 @@
-import { AwilixContainer } from "awilix";
-import { ILogger } from "domain/logging/index";
-import { IProviderModule } from "domain/providers/index";
-import { ISuggestionProvider } from "domain/suggestions/index";
+import { IServiceProvider } from "domain/di";
+import { ILogger } from "domain/logging";
+import { IProviderModule } from "domain/providers";
+import { DomainService } from "domain/services/eDomainService";
+import { ISuggestionProvider } from "domain/suggestions";
+import { AwilixServiceCollection } from "infrastructure/di";
 
-export function createSuggestionProvider(
+export function importSuggestionProvider(
+  serviceProvider: IServiceProvider,
   providerName: string,
-  container: AwilixContainer<any>,
   logger: ILogger
 ): Promise<ISuggestionProvider | void> {
 
   return import(`infrastructure/providers/${providerName}/index`)
     .then(
-      function (module: IProviderModule) {
+      async function (module: IProviderModule) {
         logger.debug('Activating container scope for %s', providerName);
 
-        // create a container scope for the provider
-        const scopeContainer = container.createScope();
-
         // register the provider
-        const provider = module.configureContainer(scopeContainer);
+        const childServiceProvider = await module.configureContainer(
+          serviceProvider,
+          new AwilixServiceCollection()
+        );
+
+        const suggestionProvider = childServiceProvider.getService<ISuggestionProvider>(
+          `${providerName}${DomainService.suggestionProvider}`
+        );
 
         logger.debug(
           "Registered provider for %s:\t file pattern: %s\t caching: %s seconds\t strict ssl: %s",
           providerName,
-          provider.config.fileMatcher.pattern,
-          provider.config.caching.duration / 1000,
-          provider.config.http.strictSSL,
+          suggestionProvider.config.fileMatcher.pattern,
+          suggestionProvider.config.caching.duration / 1000,
+          suggestionProvider.config.http.strictSSL,
         );
 
-        return provider;
+        return suggestionProvider;
       }
     )
     .catch(error => {

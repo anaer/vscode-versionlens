@@ -1,107 +1,38 @@
-import { AwilixContainer, asFunction } from 'awilix';
+import { IServiceCollection, IServiceProvider } from 'domain/di';
+import {
+  addCachingOptions,
+  addNpmConfig,
+  addGitHubClient,
+  addGithubOptions,
+  addHttpOptions,
+  addJsonClient,
+  addNpmPackageClient,
+  addPacoteClient,
+  addSuggestionProvider
+} from './services';
 
-import { CachingOptions, HttpOptions } from 'domain/clients';
-import { ISuggestionProvider } from 'domain/suggestions';
+export async function configureContainer(
+  serviceProvider: IServiceProvider,
+  services: IServiceCollection
+): Promise<IServiceProvider> {
 
-import { createJsonClient } from 'infrastructure/http';
+  addCachingOptions(services);
 
-import { NpmContributions } from './definitions/eNpmContributions';
-import { INpmServices } from './definitions/iNpmServices';
-import { GitHubOptions } from './options/githubOptions';
-import { NpmPackageClient } from './clients/npmPackageClient';
-import { PacoteClient } from './clients/pacoteClient';
-import { GitHubClient } from './clients/githubClient';
-import { NpmSuggestionProvider } from './npmSuggestionProvider'
-import { NpmConfig } from './npmConfig';
+  addHttpOptions(services);
 
-export function configureContainer(
-  container: AwilixContainer<INpmServices>
-): ISuggestionProvider {
+  addGithubOptions(services);
 
-  const services = {
+  addNpmConfig(services);
 
-    // options
-    npmCachingOpts: asFunction(
-      appConfig => new CachingOptions(
-        appConfig,
-        NpmContributions.Caching,
-        'caching'
-      )
-    ).singleton(),
+  addJsonClient(services);
 
-    npmHttpOpts: asFunction(
-      appConfig => new HttpOptions(
-        appConfig,
-        NpmContributions.Http,
-        'http'
-      )
-    ).singleton(),
+  addGitHubClient(services);
 
-    npmGitHubOpts: asFunction(
-      appConfig => new GitHubOptions(
-        appConfig,
-        NpmContributions.Github,
-        'github'
-      )
-    ).singleton(),
+  addPacoteClient(services);
 
-    // config
-    npmConfig: asFunction(
-      (appConfig, npmCachingOpts, npmHttpOpts, npmGitHubOpts) =>
-        new NpmConfig(appConfig, npmCachingOpts, npmHttpOpts, npmGitHubOpts)
-    ).singleton(),
+  addNpmPackageClient(services);
 
-    // clients
-    githubJsonClient: asFunction(
-      (npmCachingOpts, npmHttpOpts, logger) =>
-        createJsonClient(
-          {
-            caching: npmCachingOpts,
-            http: npmHttpOpts
-          },
-          logger.child({ namespace: 'npm request' })
-        )
-    ).singleton(),
+  addSuggestionProvider(services);
 
-    githubClient: asFunction(
-      (npmConfig, githubJsonClient, logger) =>
-        new GitHubClient(
-          npmConfig,
-          githubJsonClient,
-          logger.child({ namespace: 'npm github' })
-        )
-    ).singleton(),
-
-    pacoteClient: asFunction(
-      (npmConfig, logger) =>
-        new PacoteClient(
-          npmConfig,
-          logger.child({ namespace: 'npm pacote' })
-        )
-    ).singleton(),
-
-    npmClient: asFunction(
-      (npmConfig, githubClient, pacoteClient, logger) =>
-        new NpmPackageClient(
-          npmConfig,
-          pacoteClient,
-          githubClient,
-          logger.child({ namespace: 'npm client' })
-        )
-    ).singleton(),
-
-    // provider
-    npmProvider: asFunction(
-      (npmClient, logger) =>
-        new NpmSuggestionProvider(
-          npmClient,
-          logger.child({ namespace: 'npm provider' })
-        )
-    ).singleton(),
-
-  };
-
-  container.register(services);
-
-  return container.cradle.npmProvider;
+  return await services.buildScope("npm", serviceProvider);
 }

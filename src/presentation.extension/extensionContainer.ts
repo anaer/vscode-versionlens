@@ -1,130 +1,79 @@
 import {
-  asFunction,
-  asValue,
-  AwilixContainer,
-  createContainer,
-  InjectionMode
-} from 'awilix';
-import { AppConfig } from 'domain/configuration';
-import * as DomainServiceUtils from "domain/servicesUtils";
-import * as InfraServiceUtils from "infrastructure/servicesUtils";
-import { addSuggestionProviders } from 'infrastructure/servicesUtils';
+  addSuggestionProviderNames,
+  addSuggestionProviders
+} from 'application/services';
+import { IServiceProvider } from 'domain/di';
+
 import {
-  registerIconCommands,
-  registerSuggestionCommands,
-  TextDocumentEvents,
-  TextEditorEvents,
+  addCachingOptions,
+  addHttpOptions,
+  addLoggingOptions
+} from 'domain/services';
+import { AwilixServiceCollection } from 'infrastructure/di';
+import {
+  addWinstonChannelLogger,
+  addWinstonLogger
+} from 'infrastructure/services';
+import {
   VersionLensExtension
 } from 'presentation.extension';
-import { ExtensionContext, window, workspace } from 'vscode';
-import { IExtensionServices } from './container/iExtensionServices';
-import { registerVersionLensProviders } from './container/registerVersionLensProviders';
+import { ExtensionContext } from 'vscode';
+import {
+  addAppConfig,
+  addExtensionName,
+  addIconCommands,
+  addOutputChannel,
+  addSubscriptions,
+  addSuggestionCommands,
+  addTextDocumentEvents,
+  addTextEditorEvents,
+  addVersionLensExtension,
+  addVersionLensProviders
+} from './services';
 
 export async function configureContainer(
   context: ExtensionContext
-): Promise<AwilixContainer<IExtensionServices>> {
+): Promise<IServiceProvider> {
 
-  const container: AwilixContainer<IExtensionServices> = createContainer({
-    injectionMode: InjectionMode.CLASSIC
-  });
+  const services = new AwilixServiceCollection();
 
-  const services = {
+  // application
+  addSuggestionProviderNames(services);
 
-    // domain services
-    loggingOptions: DomainServiceUtils.addLoggingOptions(),
-    httpOptions: DomainServiceUtils.addHttpOptions(),
-    cachingOptions: DomainServiceUtils.addCachingOptions(),
+  addSuggestionProviders(services);
 
-    // infrastructure services
-    loggerChannel: InfraServiceUtils.addWinstonChannelLogger(),
-    logger: InfraServiceUtils.addWinstonLogger("extension"),
-    providerNames: InfraServiceUtils.addSuggestionProviderNames(),
+  // domain
+  addHttpOptions(services);
 
-    // extension services
-    appConfig: asFunction(
-      extensionName => new AppConfig(workspace, extensionName.toLowerCase())
-    ).singleton(),
+  addCachingOptions(services);
 
-    extensionName: asValue(VersionLensExtension.extensionName),
+  addLoggingOptions(services);
 
-    extension: asFunction(
-      (appConfig, providerNames) => new VersionLensExtension(appConfig, providerNames)
-    ).singleton(),
+  // infrastructure
+  addWinstonChannelLogger(services);
 
-    outputChannel: asFunction(
-      // vscode output channel called "VersionLens"
-      extensionName => window.createOutputChannel(extensionName)
-    ).singleton(),
+  addWinstonLogger(services, "extension");
 
-    // commands
-    subscriptions: asValue(context.subscriptions),
+  // extension
+  addExtensionName(services, VersionLensExtension.extensionName);
 
-    iconCommands: asFunction(
-      (extension, versionLensProviders, subscriptions, outputChannel, logger) =>
-        registerIconCommands(
-          extension.state,
-          versionLensProviders,
-          subscriptions,
-          outputChannel,
-          logger.child({ namespace: 'icon commands' })
-        )
-    ).singleton(),
+  addAppConfig(services);
 
-    suggestionCommands: asFunction(
-      (extension, subscriptions, logger) =>
-        registerSuggestionCommands(
-          extension.state,
-          subscriptions,
-          logger.child({ namespace: 'suggestion commands' })
-        )
-    ).singleton(),
+  addVersionLensExtension(services);
 
-    // events
-    textEditorEvents: asFunction(
-      (extension, suggestionProviders, loggerChannel) =>
-        new TextEditorEvents(
-          extension.state,
-          suggestionProviders,
-          loggerChannel
-        )
-    ).singleton(),
+  addOutputChannel(services);
 
-    textDocumentEvents: asFunction(
-      (extension, suggestionProviders, logger) =>
-        new TextDocumentEvents(
-          extension.state,
-          suggestionProviders,
-          logger.child({ namespace: 'text document event' })
-        )
-    ).singleton(),
+  addSubscriptions(services, context);
 
-    // version lenses
-    versionLensProviders: asFunction(
-      (extension, suggestionProviders, subscriptions, logger) =>
-        registerVersionLensProviders(
-          extension,
-          suggestionProviders,
-          subscriptions,
-          logger
-        )
-    )
+  addIconCommands(services);
 
-  };
+  addSuggestionCommands(services);
 
-  // register the services
-  container.register(services);
+  addTextEditorEvents(services);
 
-  // register async suggestionProviders
-  const { logger, providerNames } = container.cradle;
-  container.register({
-    suggestionProviders: asValue(
-      await addSuggestionProviders(
-        providerNames,
-        container,
-        logger.child({ namespace: 'registry' })
-      )
-    ),
-  });
+  addTextDocumentEvents(services);
 
-  return container;
+  addVersionLensProviders(services);
+
+  return await services.build();
 }

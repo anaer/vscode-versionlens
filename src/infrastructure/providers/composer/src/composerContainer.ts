@@ -1,74 +1,29 @@
-import { asFunction, AwilixContainer } from 'awilix';
-import { CachingOptions, HttpOptions } from 'domain/clients';
-import { ISuggestionProvider } from 'domain/suggestions';
-import { createJsonClient } from 'infrastructure/http';
-import { ComposerClient } from './composerClient';
-import { ComposerConfig } from './composerConfig';
-import { ComposerSuggestionProvider } from './composerSuggestionProvider';
-import { ComposerContributions } from './definitions/eComposerContributions';
-import { IComposerServices } from './definitions/iComposerServices';
+import { IServiceCollection, IServiceProvider } from 'domain/di';
+import {
+  addCachingOptions,
+  addComposerClient,
+  addComposerConfig,
+  addHttpOptions,
+  addJsonClient,
+  addSuggestionProvider
+} from './services';
 
-export function configureContainer(
-  container: AwilixContainer<IComposerServices>
-): ISuggestionProvider {
+export async function configureContainer(
+  serviceProvider: IServiceProvider,
+  services: IServiceCollection
+): Promise<IServiceProvider> {
 
-  const services = {
+  addCachingOptions(services);
 
-    // options
-    composerCachingOpts: asFunction(
-      appConfig => new CachingOptions(
-        appConfig,
-        ComposerContributions.Caching,
-        'caching'
-      )
-    ).singleton(),
+  addHttpOptions(services);
 
-    composerHttpOpts: asFunction(
-      appConfig => new HttpOptions(
-        appConfig,
-        ComposerContributions.Http,
-        'http'
-      )
-    ).singleton(),
+  addComposerConfig(services);
 
-    // config
-    composerConfig: asFunction(
-      (appConfig, composerCachingOpts, composerHttpOpts) =>
-        new ComposerConfig(appConfig, composerCachingOpts, composerHttpOpts)
-    ).singleton(),
+  addJsonClient(services);
 
-    // clients
-    composerJsonClient: asFunction(
-      (composerCachingOpts, composerHttpOpts, logger) =>
-        createJsonClient(
-          {
-            caching: composerCachingOpts,
-            http: composerHttpOpts
-          },
-          logger.child({ namespace: 'composer request' })
-        )
-    ).singleton(),
+  addComposerClient(services);
 
-    composerClient: asFunction(
-      (composerConfig, composerJsonClient, logger) =>
-        new ComposerClient(
-          composerConfig,
-          composerJsonClient,
-          logger.child({ namespace: 'composer client' })
-        )
-    ).singleton(),
+  addSuggestionProvider(services);
 
-    // provider
-    composerProvider: asFunction(
-      (composerClient, logger) =>
-        new ComposerSuggestionProvider(
-          composerClient,
-          logger.child({ namespace: 'composer provider' })
-        )
-    ).singleton(),
-  };
-
-  container.register(services)
-
-  return container.cradle.composerProvider;
+  return await services.buildScope("composer", serviceProvider);
 }

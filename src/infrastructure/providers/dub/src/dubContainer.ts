@@ -1,74 +1,29 @@
-import { asFunction, AwilixContainer } from 'awilix';
-import { CachingOptions, HttpOptions } from 'domain/clients';
-import { ISuggestionProvider } from 'domain/suggestions';
-import { createJsonClient } from 'infrastructure/http';
-import { DubContributions } from './definitions/eDubContributions';
-import { IDubServices } from './definitions/iDubServices';
-import { DubClient } from './dubClient';
-import { DubConfig } from './dubConfig';
-import { DubSuggestionProvider } from './dubSuggestionProvider';
+import { IServiceCollection, IServiceProvider } from 'domain/di';
+import {
+  addCachingOptions,
+  addDubConfig,
+  addDubClient,
+  addHttpOptions,
+  addJsonClient,
+  addSuggestionProvider
+} from './services';
 
-export function configureContainer(
-  container: AwilixContainer<IDubServices>
-): ISuggestionProvider {
+export async function configureContainer(
+  serviceProvider: IServiceProvider,
+  services: IServiceCollection
+): Promise<IServiceProvider> {
 
-  const services = {
+  addCachingOptions(services);
 
-    // options
-    dubCachingOpts: asFunction(
-      appConfig => new CachingOptions(
-        appConfig,
-        DubContributions.Caching,
-        'caching'
-      )
-    ).singleton(),
+  addHttpOptions(services);
 
-    dubHttpOpts: asFunction(
-      appConfig => new HttpOptions(
-        appConfig,
-        DubContributions.Http,
-        'http'
-      )
-    ).singleton(),
+  addDubConfig(services);
 
-    // config
-    dubConfig: asFunction(
-      (appConfig, dubCachingOpts, dubHttpOpts) =>
-        new DubConfig(appConfig, dubCachingOpts, dubHttpOpts)
-    ).singleton(),
+  addJsonClient(services);
 
-    // clients
-    dubJsonClient: asFunction(
-      (dubCachingOpts, dubHttpOpts, logger) =>
-        createJsonClient(
-          {
-            caching: dubCachingOpts,
-            http: dubHttpOpts
-          },
-          logger.child({ namespace: 'dub request' })
-        )
-    ).singleton(),
+  addDubClient(services);
 
-    dubClient: asFunction(
-      (dubConfig, dubJsonClient, logger) =>
-        new DubClient(
-          dubConfig,
-          dubJsonClient,
-          logger.child({ namespace: 'dub client' })
-        )
-    ).singleton(),
+  addSuggestionProvider(services);
 
-    // provider
-    dubProvider: asFunction(
-      (dubClient, logger) =>
-        new DubSuggestionProvider(
-          dubClient,
-          logger.child({ namespace: 'dub provider' })
-        )
-    ).singleton(),
-  };
-
-  container.register(services)
-
-  return container.cradle.dubProvider;
+  return await services.buildScope("dub", serviceProvider);
 }

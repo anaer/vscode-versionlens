@@ -1,74 +1,29 @@
-import { asFunction, AwilixContainer } from 'awilix';
-import { CachingOptions, HttpOptions } from 'domain/clients';
-import { ISuggestionProvider } from 'domain/suggestions';
-import { createJsonClient } from 'infrastructure/http';
-import { PubContributions } from './definitions/ePubContributions';
-import { IPubServices } from './definitions/iPubServices';
-import { PubClient } from './pubClient';
-import { PubConfig } from './pubConfig';
-import { PubSuggestionProvider } from './pubSuggestionProvider';
+import { IServiceCollection, IServiceProvider } from 'domain/di';
+import {
+  addCachingOptions,
+  addPubConfig,
+  addHttpOptions,
+  addJsonClient,
+  addPubClient,
+  addSuggestionProvider
+} from './services';
 
-export function configureContainer(
-  container: AwilixContainer<IPubServices>
-): ISuggestionProvider {
+export async function configureContainer(
+  serviceProvider: IServiceProvider,
+  services: IServiceCollection
+): Promise<IServiceProvider> {
 
-  const services = {
+  addCachingOptions(services);
 
-    // options
-    pubCachingOpts: asFunction(
-      appConfig => new CachingOptions(
-        appConfig,
-        PubContributions.Caching,
-        'caching'
-      )
-    ).singleton(),
+  addHttpOptions(services);
 
-    pubHttpOpts: asFunction(
-      appConfig => new HttpOptions(
-        appConfig,
-        PubContributions.Http,
-        'http'
-      )
-    ).singleton(),
+  addPubConfig(services);
 
-    // config
-    pubConfig: asFunction(
-      (appConfig, pubCachingOpts, pubHttpOpts) =>
-        new PubConfig(appConfig, pubCachingOpts, pubHttpOpts)
-    ).singleton(),
+  addJsonClient(services);
 
-    // clients
-    pubJsonClient: asFunction(
-      (pubCachingOpts, pubHttpOpts, logger) =>
-        createJsonClient(
-          {
-            caching: pubCachingOpts,
-            http: pubHttpOpts
-          },
-          logger.child({ namespace: 'pub request' })
-        )
-    ).singleton(),
+  addPubClient(services);
 
-    pubClient: asFunction(
-      (pubConfig, pubJsonClient, logger) =>
-        new PubClient(
-          pubConfig,
-          pubJsonClient,
-          logger.child({ namespace: 'pub client' })
-        )
-    ).singleton(),
+  addSuggestionProvider(services);
 
-    // provider
-    pubProvider: asFunction(
-      (pubClient, logger) =>
-        new PubSuggestionProvider(
-          pubClient,
-          logger.child({ namespace: 'pub provider' })
-        )
-    ).singleton(),
-  };
-
-  container.register(services)
-
-  return container.cradle.pubProvider;
+  return await services.buildScope("pub", serviceProvider);
 }

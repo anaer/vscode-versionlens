@@ -1,7 +1,10 @@
-import { ISuggestionProvider } from "domain/suggestions";
+import { IServiceCollection, IServiceProvider } from "domain/di";
 
 export interface IProviderModule {
 
-  configureContainer(container: any): ISuggestionProvider
+  configureContainer(
+    serviceProvider: IServiceProvider,
+    services: IServiceCollection
+  ): Promise<IServiceProvider>
 
 }
