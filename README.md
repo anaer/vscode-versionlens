@@ -54,13 +54,13 @@ You can define a task that will run when you save a package document. (runs only
 
 The install task needs to be defined in your tasks.json.
 
-You then set the `{provider}.onSaveChanges` setting to the your install task label.
+You then set the `versionlens.{provider}.onSaveChanges` setting to the your install task label.
 
 **Example**
 
 ```js
 // in your settings.json snippet
-{ "npm.onSaveChanges": "versionlens npm install" }
+{ "versionlens.npm.onSaveChanges": "versionlens npm install" }
 ```
 
 ```js
