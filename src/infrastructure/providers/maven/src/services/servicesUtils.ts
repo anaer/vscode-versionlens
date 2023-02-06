@@ -1,5 +1,5 @@
 import { CachingOptions, HttpOptions } from "domain/clients";
-import { IServiceCollection, ServiceInjectionMode } from "domain/di";
+import { IServiceCollection } from "domain/di";
 import { DomainService } from "domain/services/domainService";
 import { nameOf } from "domain/utils";
 import { createHttpClient } from 'infrastructure/http';
@@ -19,8 +19,7 @@ export function addCachingOptions(services: IServiceCollection) {
         container.appConfig,
         MavenContributions.Caching,
         'caching'
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -32,8 +31,7 @@ export function addHttpOptions(services: IServiceCollection) {
         container.appConfig,
         MavenContributions.Http,
         'http'
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -45,8 +43,7 @@ export function addMavenConfig(services: IServiceCollection) {
         container.appConfig,
         container.mavenCachingOpts,
         container.mavenHttpOpts
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -57,8 +54,7 @@ export function addProcessClient(services: IServiceCollection) {
       createProcessClient(
         container.mavenCachingOpts,
         container.logger.child({ namespace: 'maven mvn process' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -70,8 +66,7 @@ export function addCliClient(services: IServiceCollection) {
         container.mavenConfig,
         container.mvnProcess,
         container.logger.child({ namespace: 'maven mvn cli' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -85,8 +80,7 @@ export function addHttpClient(services: IServiceCollection) {
           http: container.mavenHttpOpts
         },
         container.logger.child({ namespace: 'maven request' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -98,8 +92,7 @@ export function addMavenClient(services: IServiceCollection) {
         container.mavenConfig,
         container.mavenHttpClient,
         container.logger.child({ namespace: 'maven client' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -111,7 +104,6 @@ export function addSuggestionProvider(services: IServiceCollection) {
         container.mvnCli,
         container.mavenClient,
         container.logger.child({ namespace: 'maven provider' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }

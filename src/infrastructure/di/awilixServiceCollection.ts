@@ -27,7 +27,7 @@ export class AwilixServiceCollection implements IServiceCollection {
   addSingleton<T>(
     name: string,
     resolver: TServiceResolver<T>,
-    injectionMode: ServiceInjectionMode = ServiceInjectionMode.classic
+    injectionMode: ServiceInjectionMode = ServiceInjectionMode.proxy
   ): IServiceCollection {
     let awilixResolver: any;
 

@@ -1,5 +1,5 @@
 import { CachingOptions, HttpOptions } from "domain/clients";
-import { IServiceCollection, ServiceInjectionMode } from "domain/di";
+import { IServiceCollection } from "domain/di";
 import { DomainService } from "domain/services/domainService";
 import { nameOf } from "domain/utils";
 import { createJsonClient } from 'infrastructure/http';
@@ -21,8 +21,7 @@ export function addCachingOptions(services: IServiceCollection) {
         container.appConfig,
         DotNetContributions.Caching,
         'caching'
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -34,8 +33,7 @@ export function addHttpOptions(services: IServiceCollection) {
         container.appConfig,
         DotNetContributions.Http,
         'http'
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -46,8 +44,7 @@ export function addNugetOptions(services: IServiceCollection) {
       new NugetOptions(
         container.appConfig,
         DotNetContributions.Nuget
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -60,8 +57,7 @@ export function addDotNetConfig(services: IServiceCollection) {
         container.dotnetCachingOpts,
         container.dotnetHttpOpts,
         container.nugetOpts
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -72,8 +68,7 @@ export function addProcessClient(services: IServiceCollection) {
       createProcessClient(
         container.dotnetCachingOpts,
         container.logger.child({ namespace: 'dotnet process' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -85,8 +80,7 @@ export function addCliClient(services: IServiceCollection) {
         container.dotnetConfig,
         container.dotnetProcess,
         container.logger.child({ namespace: 'dotnet cli' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -100,8 +94,7 @@ export function addJsonClient(services: IServiceCollection) {
           http: container.dotnetHttpOpts
         },
         container.logger.child({ namespace: 'dotnet request' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -113,8 +106,7 @@ export function addNuGetPackageClient(services: IServiceCollection) {
         container.dotnetConfig,
         container.dotnetJsonClient,
         container.logger.child({ namespace: 'dotnet client' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -125,8 +117,7 @@ export function addNuGetResourceClient(services: IServiceCollection) {
       new NuGetResourceClient(
         container.dotnetJsonClient,
         container.logger.child({ namespace: 'dotnet resource service' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -139,7 +130,6 @@ export function addSuggestionProvider(services: IServiceCollection) {
         container.nugetClient,
         container.nugetResClient,
         container.logger.child({ namespace: 'dotnet provider' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }

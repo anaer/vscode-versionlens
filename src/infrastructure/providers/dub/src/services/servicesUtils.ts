@@ -1,5 +1,5 @@
 import { CachingOptions, HttpOptions } from "domain/clients";
-import { IServiceCollection, ServiceInjectionMode } from "domain/di";
+import { IServiceCollection } from "domain/di";
 import { DomainService } from "domain/services/domainService";
 import { nameOf } from "domain/utils";
 import { createJsonClient } from "infrastructure/http";
@@ -18,8 +18,7 @@ export function addCachingOptions(services: IServiceCollection) {
         container.appConfig,
         DubContributions.Caching,
         'caching'
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -31,8 +30,7 @@ export function addHttpOptions(services: IServiceCollection) {
         container.appConfig,
         DubContributions.Http,
         'http'
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -44,8 +42,7 @@ export function addDubConfig(services: IServiceCollection) {
         container.appConfig,
         container.dubCachingOpts,
         container.dubHttpOpts
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -59,8 +56,7 @@ export function addJsonClient(services: IServiceCollection) {
           http: container.dubHttpOpts
         },
         container.logger.child({ namespace: 'dub request' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -72,8 +68,7 @@ export function addDubClient(services: IServiceCollection) {
         container.dubConfig,
         container.dubJsonClient,
         container.logger.child({ namespace: 'dub client' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -84,7 +79,6 @@ export function addSuggestionProvider(services: IServiceCollection) {
       new DubSuggestionProvider(
         container.dubClient,
         container.logger.child({ namespace: 'dub provider' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }

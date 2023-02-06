@@ -1,5 +1,5 @@
 import { importSuggestionProviders } from "application/providers";
-import { IServiceCollection, ServiceInjectionMode } from "domain/di";
+import { IServiceCollection } from "domain/di";
 import { DomainService } from "domain/services/domainService";
 import { nameOf } from "domain/utils";
 import { ApplicationService } from "./applicationService";
@@ -12,8 +12,8 @@ export async function addSuggestionProviders(services: IServiceCollection) {
         container.serviceProvider,
         container.providerNames,
         container.logger
-      )},
-    ServiceInjectionMode.proxy
+      )
+    }
   )
 }
 
@@ -28,6 +28,5 @@ export function addSuggestionProviderNames(services: IServiceCollection) {
       'npm',
       'pub',
     ]
-  ),
-    ServiceInjectionMode.proxy
+  )
 }

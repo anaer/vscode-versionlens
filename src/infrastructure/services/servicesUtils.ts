@@ -20,7 +20,6 @@ export function addWinstonLogger(services: IServiceCollection, namespace: string
   services.addSingleton(
     nameOf<DomainService>().logger,
     (container: DomainService) =>
-      createWinstonLogger(container.loggerChannel, { namespace }),
-    ServiceInjectionMode.proxy
+      createWinstonLogger(container.loggerChannel, { namespace })
   );
 }

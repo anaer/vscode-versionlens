@@ -1,6 +1,6 @@
 import { ApplicationService } from "application/services";
 import { AppConfig } from "domain/configuration";
-import { IServiceCollection, ServiceInjectionMode } from "domain/di";
+import { IServiceCollection } from "domain/di";
 import { DomainService } from "domain/services";
 import { nameOf } from "domain/utils";
 import {
@@ -25,8 +25,7 @@ export function addAppConfig(services: IServiceCollection, appName: string) {
   services.addSingleton(
     nameOf<DomainService>().appConfig,
     // TODO pass workspace.getConfiguration only 
-    () => new AppConfig(workspace, appName),
-    ServiceInjectionMode.proxy
+    () => new AppConfig(workspace, appName)
   )
 }
 
@@ -37,8 +36,7 @@ export function addVersionLensExtension(services: IServiceCollection) {
       new VersionLensExtension(
         container.appConfig,
         container.providerNames
-      ),
-    ServiceInjectionMode.proxy
+      )
   )
 }
 
@@ -47,8 +45,7 @@ export function addOutputChannel(services: IServiceCollection) {
     nameOf<ExtensionService>().outputChannel,
     // vscode output channel called "VersionLens"
     (container: ExtensionService) =>
-      window.createOutputChannel(container.extensionName),
-    ServiceInjectionMode.proxy
+      window.createOutputChannel(container.extensionName)
   )
 }
 
@@ -69,8 +66,7 @@ export function addIconCommands(services: IServiceCollection) {
         container.subscriptions,
         container.outputChannel,
         container.logger.child({ namespace: 'icon commands' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   )
 }
 
@@ -82,8 +78,7 @@ export function addSuggestionCommands(services: IServiceCollection) {
         container.extension.state,
         container.subscriptions,
         container.logger.child({ namespace: 'suggestion commands' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   )
 }
 
@@ -95,8 +90,7 @@ export function addTextEditorEvents(services: IServiceCollection) {
         container.extension.state,
         container.suggestionProviders,
         container.loggerChannel
-      ),
-    ServiceInjectionMode.proxy
+      )
   )
 }
 
@@ -108,8 +102,7 @@ export function addTextDocumentEvents(services: IServiceCollection) {
         container.extension.state,
         container.versionLensProviders,
         container.logger.child({ namespace: 'text document event' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   )
 }
 
@@ -122,7 +115,6 @@ export function addVersionLensProviders(services: IServiceCollection) {
         container.suggestionProviders,
         container.subscriptions,
         container.logger
-      ),
-    ServiceInjectionMode.proxy
+      )
   )
 }

@@ -1,5 +1,5 @@
 import { CachingOptions, HttpOptions } from "domain/clients";
-import { IServiceCollection, ServiceInjectionMode } from "domain/di";
+import { IServiceCollection } from "domain/di";
 import { DomainService } from "domain/services/domainService";
 import { nameOf } from "domain/utils";
 import { createJsonClient } from "infrastructure/http";
@@ -17,8 +17,7 @@ export function addCachingOptions(services: IServiceCollection) {
         container.appConfig,
         ComposerContributions.Caching,
         'caching'
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -30,8 +29,7 @@ export function addHttpOptions(services: IServiceCollection) {
         container.appConfig,
         ComposerContributions.Http,
         'http'
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -43,8 +41,7 @@ export function addComposerConfig(services: IServiceCollection) {
         container.appConfig,
         container.composerCachingOpts,
         container.composerHttpOpts
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -58,8 +55,7 @@ export function addJsonClient(services: IServiceCollection) {
           http: container.composerHttpOpts
         },
         container.logger.child({ namespace: 'composer request' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -71,8 +67,7 @@ export function addComposerClient(services: IServiceCollection) {
         container.composerConfig,
         container.composerJsonClient,
         container.logger.child({ namespace: 'composer client' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -83,7 +78,6 @@ export function addSuggestionProvider(services: IServiceCollection) {
       new ComposerSuggestionProvider(
         container.composerClient,
         container.logger.child({ namespace: 'composer provider' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }

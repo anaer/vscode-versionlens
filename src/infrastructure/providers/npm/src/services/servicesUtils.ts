@@ -1,5 +1,5 @@
 import { CachingOptions, HttpOptions } from "domain/clients";
-import { IServiceCollection, ServiceInjectionMode } from "domain/di";
+import { IServiceCollection } from "domain/di";
 import { DomainService } from "domain/services/domainService";
 import { nameOf } from "domain/utils";
 import { createJsonClient } from "infrastructure/http";
@@ -20,8 +20,7 @@ export function addCachingOptions(services: IServiceCollection) {
         container.appConfig,
         NpmContributions.Caching,
         'caching'
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -33,8 +32,7 @@ export function addHttpOptions(services: IServiceCollection) {
         container.appConfig,
         NpmContributions.Http,
         'http'
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -46,8 +44,7 @@ export function addGithubOptions(services: IServiceCollection) {
         container.appConfig,
         NpmContributions.Github,
         'github'
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -60,8 +57,7 @@ export function addNpmConfig(services: IServiceCollection) {
         container.npmCachingOpts,
         container.npmHttpOpts,
         container.npmGitHubOpts
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -75,8 +71,7 @@ export function addJsonClient(services: IServiceCollection) {
           http: container.npmHttpOpts
         },
         container.logger.child({ namespace: 'npm request' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -88,8 +83,7 @@ export function addGitHubClient(services: IServiceCollection) {
         container.npmConfig,
         container.githubJsonClient,
         container.logger.child({ namespace: 'npm github' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -100,8 +94,7 @@ export function addPacoteClient(services: IServiceCollection) {
       new PacoteClient(
         container.npmConfig,
         container.logger.child({ namespace: 'npm pacote' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -114,8 +107,7 @@ export function addNpmPackageClient(services: IServiceCollection) {
         container.pacoteClient,
         container.githubClient,
         container.logger.child({ namespace: 'npm client' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
 
@@ -126,7 +118,6 @@ export function addSuggestionProvider(services: IServiceCollection) {
       new NpmSuggestionProvider(
         container.npmClient,
         container.logger.child({ namespace: 'npm provider' })
-      ),
-    ServiceInjectionMode.proxy
+      )
   );
 }
