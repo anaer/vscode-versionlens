@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@types/mocha": "10.0.1",
-    "@types/node": "18.11.18",
+    "@types/node": "18.11.19",
     "@types/vscode": "1.75.0",
     "@vscode/test-electron": "2.2.3",
     "mocha": "10.2.0",
@@ -68,7 +68,7 @@
     "webpack-cli": "5.0.1"
   },
   "dependencies": {
-    "@npmcli/config": "6.1.1",
+    "@npmcli/config": "6.1.2",
     "@npmcli/promise-spawn": "6.0.2",
     "awilix": "8.0.0",
     "dotenv": "16.0.3",
