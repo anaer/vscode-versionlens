@@ -20,7 +20,7 @@ import {
   mock,
   when
 } from 'ts-mockito';
-import { RequestLightStub } from './stubs/requestLightStub';
+import { RequestLightStub } from './requestLightStub';
 
 let cachingOptsMock: ICachingOptions;
 let httpOptsMock: IHttpOptions;

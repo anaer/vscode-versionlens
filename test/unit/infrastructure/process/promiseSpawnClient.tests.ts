@@ -8,7 +8,7 @@ import { ILogger } from 'domain/logging';
 import { PromiseSpawnClient } from 'infrastructure/process';
 import { LoggerStub } from 'test/unit/domain/logging';
 import { anything, instance, mock, when } from 'ts-mockito';
-import { ProcessSpawnStub } from './stubs/processSpawnStub';
+import { ProcessSpawnStub } from './processSpawnStub';
 
 let psMock: ProcessSpawnStub;
 let cachingMock: ICachingOptions;
