@@ -4,5 +4,6 @@ export enum StateContributions {
   ProviderActive = 'versionlens.providerActive',
   ProviderBusy = 'versionlens.providerBusy',
   ProviderError = 'versionlens.providerError',
+  ProviderOpened = 'versionlens.providerOpened',
   ProviderSupportsPrereleases = 'versionlens.providerSupportsPrereleases',
 }

@@ -19,6 +19,8 @@ export class VersionLensState {
 
   providerError: ContextState<boolean>;
 
+  providerOpened: ContextState<boolean>;
+
   providerSupportsPrereleases: ContextState<boolean>;
 
   providerOriginalParsedPackages: KeyDictionary<ContextState<KeyDictionary<PackageDependency[]>>> = {};
@@ -49,6 +51,11 @@ export class VersionLensState {
 
     this.providerError = new ContextState(
       StateContributions.ProviderError,
+      false
+    );
+
+    this.providerOpened = new ContextState(
+      StateContributions.ProviderOpened,
       false
     );
 
