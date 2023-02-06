@@ -3,7 +3,7 @@ import { ILogger } from "domain/logging";
 import { ISuggestionProvider } from "domain/suggestions";
 import { importSuggestionProvider } from "./importSuggestionProvider";
 
-export async function importSuggestionProviders(
+export function importSuggestionProviders(
   serviceProvider: IServiceProvider,
   providerNames: Array<string>,
   logger: ILogger

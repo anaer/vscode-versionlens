@@ -148,8 +148,7 @@ export function parseSuggestions(
   return suggestions;
 }
 
-export async function readDubSelections(filePath) {
-
+export function readDubSelections(filePath) {
   return new Promise(function (resolve, reject) {
     if (fs.existsSync(filePath) === false) {
       reject(null);
@@ -170,7 +169,5 @@ export async function readDubSelections(filePath) {
 
       resolve(selectionsJson);
     });
-
   });
-
 }

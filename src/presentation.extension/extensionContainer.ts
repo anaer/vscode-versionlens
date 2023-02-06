@@ -59,7 +59,6 @@ export async function configureContainer(
   // extension
   addExtensionName(services, VersionLensExtension.extensionName);
 
-
   addVersionLensExtension(services);
 
   addOutputChannel(services);
