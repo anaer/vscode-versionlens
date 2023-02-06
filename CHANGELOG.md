@@ -1,3 +1,9 @@
+# 1.2.2
+
+  - Fixed an issue where sometimes the open flag was false when opening a document
+
+  - Added handled error logs to the output channel to show failed fetch status codes
+
 # 1.2.1
 
   **All providers**
