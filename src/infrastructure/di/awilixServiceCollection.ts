@@ -2,16 +2,17 @@ import {
   asFunction,
   asValue,
   AwilixContainer,
-  createContainer,
-  InjectionMode
+  createContainer
 } from 'awilix';
 import {
   IServiceCollection,
   IServiceProvider,
+  ServiceInjectionMode,
   TServiceResolver
 } from 'domain/di';
 import { KeyDictionary } from 'domain/generics';
-import { DomainService } from 'domain/services';
+import { DomainService } from 'domain/services/domainService';
+import { nameOf } from 'domain/utils';
 import { AwilixServiceProvider } from './awilixServiceProvider';
 import { registerAsyncSingletons } from './awillixUtils';
 
@@ -23,13 +24,17 @@ export class AwilixServiceCollection implements IServiceCollection {
 
   private asyncSingletons: KeyDictionary<any> = {};
 
-  addSingleton<T>(name: string, resolver: TServiceResolver<T>): IServiceCollection {
+  addSingleton<T>(
+    name: string,
+    resolver: TServiceResolver<T>,
+    injectionMode: ServiceInjectionMode = ServiceInjectionMode.classic
+  ): IServiceCollection {
     let awilixResolver: any;
 
     if (resolver instanceof AsyncFunction) {
       this.asyncSingletons[name] = resolver;
     } else if (resolver instanceof Function) {
-      awilixResolver = asFunction(resolver).scoped().singleton();
+      awilixResolver = asFunction(resolver)[injectionMode]().scoped().singleton();
     } else {
       awilixResolver = asValue(resolver);
     }
@@ -41,7 +46,7 @@ export class AwilixServiceCollection implements IServiceCollection {
 
   build(): Promise<IServiceProvider> {
     const container: AwilixContainer<any> = createContainer({
-      injectionMode: InjectionMode.CLASSIC,
+      // injectionMode: InjectionMode.CLASSIC,
     });
 
     return this.buildAwilixContainer("root", container);
@@ -66,9 +71,13 @@ export class AwilixServiceCollection implements IServiceCollection {
     name: string,
     container: AwilixContainer<any>
   ): Promise<IServiceProvider> {
+
     // add the service provider to the container
     const serviceProvider = new AwilixServiceProvider(name, container);
-    this.addSingleton(DomainService.serviceProvider, serviceProvider);
+    this.addSingleton(
+      nameOf<DomainService>().serviceProvider,
+      serviceProvider
+    );
 
     // register sync
     container.register(this.resolvers);

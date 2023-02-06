@@ -1,25 +1,32 @@
 import { CachingOptions, HttpOptions } from "domain/clients";
-import { IServiceCollection } from "domain/di";
+import { IServiceCollection, ServiceInjectionMode } from "domain/di";
 import { LoggingOptions } from "domain/logging";
-import { DomainService } from "./eDomainService";
+import { nameOf } from "domain/utils";
+import { DomainService } from "./domainService";
 
 export function addHttpOptions(services: IServiceCollection) {
   services.addSingleton(
-    DomainService.httpOptions,
-    appConfig => new HttpOptions(appConfig, 'http')
+    nameOf<DomainService>().httpOptions,
+    (container: DomainService) =>
+      new HttpOptions(container.appConfig, 'http'),
+    ServiceInjectionMode.proxy
   )
 }
 
 export function addCachingOptions(services: IServiceCollection) {
   services.addSingleton(
-    DomainService.cachingOptions,
-    appConfig => new CachingOptions(appConfig, 'caching')
+    nameOf<DomainService>().cachingOptions,
+    (container: DomainService) =>
+      new CachingOptions(container.appConfig, 'caching'),
+    ServiceInjectionMode.proxy
   )
 }
 
 export function addLoggingOptions(services: IServiceCollection) {
   services.addSingleton(
-    DomainService.loggingOptions,
-    appConfig => new LoggingOptions(appConfig, 'logging')
+    nameOf<DomainService>().loggingOptions,
+    (container: DomainService) =>
+      new LoggingOptions(container.appConfig, 'logging'),
+    ServiceInjectionMode.proxy
   )
 }

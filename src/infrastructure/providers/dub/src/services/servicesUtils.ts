@@ -1,76 +1,90 @@
 import { CachingOptions, HttpOptions } from "domain/clients";
-import { IServiceCollection } from "domain/di";
-import { DomainService } from "domain/services/eDomainService";
+import { IServiceCollection, ServiceInjectionMode } from "domain/di";
+import { DomainService } from "domain/services/domainService";
+import { nameOf } from "domain/utils";
 import { createJsonClient } from "infrastructure/http";
 import { DubContributions } from "../definitions/eDubContributions";
+import { IDubServices } from "../definitions/iDubServices";
 import { DubClient } from "../dubClient";
 import { DubConfig } from "../dubConfig";
 import { DubSuggestionProvider } from "../dubSuggestionProvider";
-import { DubService } from "./eDubService";
+import { DubService } from "./dubService";
 
 export function addCachingOptions(services: IServiceCollection) {
   services.addSingleton(
-    DubService.dubCachingOpts,
-    appConfig => new CachingOptions(
-      appConfig,
-      DubContributions.Caching,
-      'caching'
-    )
+    nameOf<DubService>().dubCachingOpts,
+    (container: DomainService) =>
+      new CachingOptions(
+        container.appConfig,
+        DubContributions.Caching,
+        'caching'
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addHttpOptions(services: IServiceCollection) {
   services.addSingleton(
-    DubService.dubHttpOpts,
-    appConfig => new HttpOptions(
-      appConfig,
-      DubContributions.Http,
-      'http'
-    )
+    nameOf<DubService>().dubHttpOpts,
+    (container: DomainService) =>
+      new HttpOptions(
+        container.appConfig,
+        DubContributions.Http,
+        'http'
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addDubConfig(services: IServiceCollection) {
   services.addSingleton(
-    DubService.dubConfig,
-    (appConfig, dubCachingOpts, dubHttpOpts) =>
-      new DubConfig(appConfig, dubCachingOpts, dubHttpOpts)
+    nameOf<DubService>().dubConfig,
+    (container: IDubServices & DomainService) =>
+      new DubConfig(
+        container.appConfig,
+        container.dubCachingOpts,
+        container.dubHttpOpts
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addJsonClient(services: IServiceCollection) {
   services.addSingleton(
-    DubService.dubJsonClient,
-    (dubCachingOpts, dubHttpOpts, logger) =>
+    nameOf<DubService>().dubJsonClient,
+    (container: IDubServices & DomainService) =>
       createJsonClient(
         {
-          caching: dubCachingOpts,
-          http: dubHttpOpts
+          caching: container.dubCachingOpts,
+          http: container.dubHttpOpts
         },
-        logger.child({ namespace: 'dub request' })
-      )
+        container.logger.child({ namespace: 'dub request' })
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addDubClient(services: IServiceCollection) {
   services.addSingleton(
-    DubService.dubClient,
-    (dubConfig, dubJsonClient, logger) =>
+    nameOf<DubService>().dubClient,
+    (container: IDubServices & DomainService) =>
       new DubClient(
-        dubConfig,
-        dubJsonClient,
-        logger.child({ namespace: 'dub client' })
-      )
+        container.dubConfig,
+        container.dubJsonClient,
+        container.logger.child({ namespace: 'dub client' })
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addSuggestionProvider(services: IServiceCollection) {
   services.addSingleton(
-    `dub${DomainService.suggestionProvider}`,
-    (dubClient, logger) =>
+    nameOf<DubService>().dubSuggestionProvider,
+    (container: IDubServices & DomainService) =>
       new DubSuggestionProvider(
-        dubClient,
-        logger.child({ namespace: 'dub provider' })
-      )
+        container.dubClient,
+        container.logger.child({ namespace: 'dub provider' })
+      ),
+    ServiceInjectionMode.proxy
   );
 }

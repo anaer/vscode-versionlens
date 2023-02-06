@@ -1,2 +1,2 @@
-export * from './eApplicationService'
+export * from './applicationService'
 export * from './servicesUtils'

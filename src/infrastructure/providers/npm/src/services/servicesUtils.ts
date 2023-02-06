@@ -1,6 +1,7 @@
 import { CachingOptions, HttpOptions } from "domain/clients";
-import { IServiceCollection } from "domain/di";
-import { DomainService } from "domain/services/eDomainService";
+import { IServiceCollection, ServiceInjectionMode } from "domain/di";
+import { DomainService } from "domain/services/domainService";
+import { nameOf } from "domain/utils";
 import { createJsonClient } from "infrastructure/http";
 import { GitHubClient } from '../clients/githubClient';
 import { NpmPackageClient } from '../clients/npmPackageClient';
@@ -9,106 +10,123 @@ import { NpmContributions } from '../definitions/eNpmContributions';
 import { NpmConfig } from '../npmConfig';
 import { NpmSuggestionProvider } from "../npmSuggestionProvider";
 import { GitHubOptions } from '../options/githubOptions';
-import { NpmService } from "./eNpmService";
+import { NpmService } from "./npmService";
 
 export function addCachingOptions(services: IServiceCollection) {
   services.addSingleton(
-    NpmService.npmCachingOpts,
-    appConfig => new CachingOptions(
-      appConfig,
-      NpmContributions.Caching,
-      'caching'
-    )
+    nameOf<NpmService>().npmCachingOpts,
+    (container: DomainService) =>
+      new CachingOptions(
+        container.appConfig,
+        NpmContributions.Caching,
+        'caching'
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addHttpOptions(services: IServiceCollection) {
   services.addSingleton(
-    NpmService.npmHttpOpts,
-    appConfig => new HttpOptions(
-      appConfig,
-      NpmContributions.Http,
-      'http'
-    )
+    nameOf<NpmService>().npmHttpOpts,
+    (container: DomainService) =>
+      new HttpOptions(
+        container.appConfig,
+        NpmContributions.Http,
+        'http'
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addGithubOptions(services: IServiceCollection) {
   services.addSingleton(
-    NpmService.npmGitHubOpts,
-    appConfig => new GitHubOptions(
-      appConfig,
-      NpmContributions.Github,
-      'github'
-    )
+    nameOf<NpmService>().npmGitHubOpts,
+    (container: DomainService) =>
+      new GitHubOptions(
+        container.appConfig,
+        NpmContributions.Github,
+        'github'
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addNpmConfig(services: IServiceCollection) {
   services.addSingleton(
-    NpmService.npmConfig,
-    (appConfig, npmCachingOpts, npmHttpOpts, npmGitHubOpts) =>
-      new NpmConfig(appConfig, npmCachingOpts, npmHttpOpts, npmGitHubOpts)
+    nameOf<NpmService>().npmConfig,
+    (container: NpmService & DomainService) =>
+      new NpmConfig(
+        container.appConfig,
+        container.npmCachingOpts,
+        container.npmHttpOpts,
+        container.npmGitHubOpts
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addJsonClient(services: IServiceCollection) {
   services.addSingleton(
-    NpmService.githubJsonClient,
-    (npmCachingOpts, npmHttpOpts, logger) =>
+    nameOf<NpmService>().githubJsonClient,
+    (container: NpmService & DomainService) =>
       createJsonClient(
         {
-          caching: npmCachingOpts,
-          http: npmHttpOpts
+          caching: container.npmCachingOpts,
+          http: container.npmHttpOpts
         },
-        logger.child({ namespace: 'npm request' })
-      )
+        container.logger.child({ namespace: 'npm request' })
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addGitHubClient(services: IServiceCollection) {
   services.addSingleton(
-    NpmService.githubClient,
-    (npmConfig, githubJsonClient, logger) =>
+    nameOf<NpmService>().githubClient,
+    (container: NpmService & DomainService) =>
       new GitHubClient(
-        npmConfig,
-        githubJsonClient,
-        logger.child({ namespace: 'npm github' })
-      )
+        container.npmConfig,
+        container.githubJsonClient,
+        container.logger.child({ namespace: 'npm github' })
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addPacoteClient(services: IServiceCollection) {
   services.addSingleton(
-    NpmService.pacoteClient,
-    (npmConfig, logger) =>
+    nameOf<NpmService>().pacoteClient,
+    (container: NpmService & DomainService) =>
       new PacoteClient(
-        npmConfig,
-        logger.child({ namespace: 'npm pacote' })
-      )
+        container.npmConfig,
+        container.logger.child({ namespace: 'npm pacote' })
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addNpmPackageClient(services: IServiceCollection) {
   services.addSingleton(
-    NpmService.npmClient,
-    (npmConfig, githubClient, pacoteClient, logger) =>
+    nameOf<NpmService>().npmClient,
+    (container: NpmService & DomainService) =>
       new NpmPackageClient(
-        npmConfig,
-        pacoteClient,
-        githubClient,
-        logger.child({ namespace: 'npm client' })
-      )
+        container.npmConfig,
+        container.pacoteClient,
+        container.githubClient,
+        container.logger.child({ namespace: 'npm client' })
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addSuggestionProvider(services: IServiceCollection) {
   services.addSingleton(
-    `npm${DomainService.suggestionProvider}`,
-    (npmClient, logger) =>
+    nameOf<NpmService>().npmSuggestionProvider,
+    (container: NpmService & DomainService) =>
       new NpmSuggestionProvider(
-        npmClient,
-        logger.child({ namespace: 'npm provider' })
-      )
+        container.npmClient,
+        container.logger.child({ namespace: 'npm provider' })
+      ),
+    ServiceInjectionMode.proxy
   );
 }

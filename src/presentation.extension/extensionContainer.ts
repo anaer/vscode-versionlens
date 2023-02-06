@@ -43,6 +43,8 @@ export async function configureContainer(
   addSuggestionProviders(services);
 
   // domain
+  addAppConfig(services, VersionLensExtension.extensionName.toLowerCase());
+
   addHttpOptions(services);
 
   addCachingOptions(services);
@@ -57,7 +59,6 @@ export async function configureContainer(
   // extension
   addExtensionName(services, VersionLensExtension.extensionName);
 
-  addAppConfig(services);
 
   addVersionLensExtension(services);
 

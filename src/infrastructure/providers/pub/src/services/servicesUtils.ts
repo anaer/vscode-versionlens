@@ -1,6 +1,7 @@
 import { CachingOptions, HttpOptions } from "domain/clients";
-import { IServiceCollection } from "domain/di";
-import { DomainService } from "domain/services/eDomainService";
+import { IServiceCollection, ServiceInjectionMode } from "domain/di";
+import { DomainService } from "domain/services/domainService";
+import { nameOf } from "domain/utils";
 import { createJsonClient } from "infrastructure/http";
 import { PubContributions } from "../definitions/ePubContributions";
 import { PubClient } from "../pubClient";
@@ -10,67 +11,79 @@ import { PubService } from "./ePubService";
 
 export function addCachingOptions(services: IServiceCollection) {
   services.addSingleton(
-    PubService.pubCachingOpts,
-    appConfig => new CachingOptions(
-      appConfig,
-      PubContributions.Caching,
-      'caching'
-    )
+    nameOf<PubService>().pubCachingOpts,
+    (container: DomainService) =>
+      new CachingOptions(
+        container.appConfig,
+        PubContributions.Caching,
+        'caching'
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addHttpOptions(services: IServiceCollection) {
   services.addSingleton(
-    PubService.pubHttpOpts,
-    appConfig => new HttpOptions(
-      appConfig,
-      PubContributions.Http,
-      'http'
-    )
+    nameOf<PubService>().pubHttpOpts,
+    (container: DomainService) =>
+      new HttpOptions(
+        container.appConfig,
+        PubContributions.Http,
+        'http'
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addPubConfig(services: IServiceCollection) {
   services.addSingleton(
-    PubService.pubConfig,
-    (appConfig, pubCachingOpts, pubHttpOpts) =>
-      new PubConfig(appConfig, pubCachingOpts, pubHttpOpts)
+    nameOf<PubService>().pubConfig,
+    (container: PubService & DomainService) =>
+      new PubConfig(
+        container.appConfig,
+        container.pubCachingOpts,
+        container.pubHttpOpts
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addJsonClient(services: IServiceCollection) {
   services.addSingleton(
-    PubService.pubJsonClient,
-    (pubCachingOpts, pubHttpOpts, logger) =>
+    nameOf<PubService>().pubJsonClient,
+    (container: PubService & DomainService) =>
       createJsonClient(
         {
-          caching: pubCachingOpts,
-          http: pubHttpOpts
+          caching: container.pubCachingOpts,
+          http: container.pubHttpOpts
         },
-        logger.child({ namespace: 'pub request' })
-      )
+        container.logger.child({ namespace: 'pub request' })
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addPubClient(services: IServiceCollection) {
   services.addSingleton(
-    PubService.pubClient,
-    (pubConfig, pubJsonClient, logger) =>
+    nameOf<PubService>().pubClient,
+    (container: PubService & DomainService) =>
       new PubClient(
-        pubConfig,
-        pubJsonClient,
-        logger.child({ namespace: 'pub client' })
-      )
+        container.pubConfig,
+        container.pubJsonClient,
+        container.logger.child({ namespace: 'pub client' })
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addSuggestionProvider(services: IServiceCollection) {
   services.addSingleton(
-    `pub${DomainService.suggestionProvider}`,
-    (pubClient, logger) =>
+    nameOf<PubService>().pubSuggestionProvider,
+    (container: PubService & DomainService) =>
       new PubSuggestionProvider(
-        pubClient,
-        logger.child({ namespace: 'pub provider' })
-      )
+        container.pubClient,
+        container.logger.child({ namespace: 'pub provider' })
+      ),
+    ServiceInjectionMode.proxy
   );
 }

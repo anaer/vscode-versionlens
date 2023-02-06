@@ -10,16 +10,21 @@ export type TServiceResolver<T> = TServiceResolverFunction<T>
   | TServiceResolverAsyncFunction<T>
   | TServiceResolverValue<T>
 
+export enum ServiceInjectionMode {
+  classic = "classic",
+  proxy = "proxy"
+}
 
 export interface IServiceCollection {
 
   addSingleton: <T>(
     name: string,
-    descriptor: TServiceResolver<T>
+    descriptor: TServiceResolver<T>,
+    injectionMode?: ServiceInjectionMode
   ) => IServiceCollection;
 
   build: () => Promise<IServiceProvider>;
 
-  buildScope(name: string,serviceProvider: IServiceProvider): Promise<IServiceProvider>;
+  buildScope(name: string, serviceProvider: IServiceProvider): Promise<IServiceProvider>;
 
 }

@@ -1,2 +1,2 @@
-export * from './eMavenService'
+export * from './mavenService'
 export * from './servicesUtils'

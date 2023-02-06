@@ -1,7 +1,3 @@
-import { CachingOptions, HttpOptions } from 'domain/clients';
-import { AppConfig } from 'domain/configuration';
-import { ILogger, ILoggerChannel, LoggingOptions } from 'domain/logging';
-import { ISuggestionProvider } from 'domain/suggestions';
 import {
   IconCommands,
   SuggestionCommands,
@@ -12,25 +8,7 @@ import {
 } from 'presentation.extension';
 import { Disposable, OutputChannel } from 'vscode';
 
-export interface IExtensionServices {
-
-  // application services
-  loggingOptions: LoggingOptions,
-
-  httpOptions: HttpOptions,
-
-  cachingOptions: CachingOptions,
-
-  loggerChannel: ILoggerChannel,
-
-  logger: ILogger,
-
-  providerNames: Array<string>,
-
-  suggestionProviders: Array<ISuggestionProvider>,
-
-  // extension services
-  appConfig: AppConfig,
+export interface ExtensionService {
 
   extensionName: string,
 
@@ -49,4 +27,5 @@ export interface IExtensionServices {
   textDocumentEvents: TextDocumentEvents,
 
   versionLensProviders: Array<VersionLensProvider>
+
 }

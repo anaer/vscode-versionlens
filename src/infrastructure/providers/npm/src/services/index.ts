@@ -1,2 +1,2 @@
-export * from './eNpmService'
+export * from './npmService'
 export * from './servicesUtils'

@@ -1,2 +1,2 @@
-export * from './eDotNetService'
+export * from './dotnetService'
 export * from './servicesUtils'

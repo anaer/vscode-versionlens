@@ -1,113 +1,128 @@
+import { ApplicationService } from "application/services";
 import { AppConfig } from "domain/configuration";
-import { IServiceCollection } from "domain/di";
-import { ILogger } from "domain/logging";
-import { registerIconCommands, registerSuggestionCommands, TextDocumentEvents, TextEditorEvents, VersionLensExtension, VersionLensProvider } from "presentation.extension";
-import { ExtensionContext, OutputChannel, window, workspace } from "vscode";
+import { IServiceCollection, ServiceInjectionMode } from "domain/di";
+import { DomainService } from "domain/services";
+import { nameOf } from "domain/utils";
+import {
+  registerIconCommands,
+  registerSuggestionCommands,
+  TextDocumentEvents,
+  TextEditorEvents,
+  VersionLensExtension
+} from "presentation.extension";
+import { ExtensionContext, window, workspace } from "vscode";
 import { registerVersionLensProviders } from ".";
-import { ExtensionService } from "./eExtensionService";
+import { ExtensionService } from "./iExtensionServices";
 
 export function addExtensionName(services: IServiceCollection, extensionName: string) {
   services.addSingleton(
-    ExtensionService.extensionName,
+    nameOf<ExtensionService>().extensionName,
     extensionName
   )
 }
 
-export function addAppConfig(services: IServiceCollection) {
+export function addAppConfig(services: IServiceCollection, appName: string) {
   services.addSingleton(
-    ExtensionService.appConfig,
+    nameOf<DomainService>().appConfig,
     // TODO pass workspace.getConfiguration only 
-    extensionName => new AppConfig(workspace, extensionName.toLowerCase())
+    () => new AppConfig(workspace, appName),
+    ServiceInjectionMode.proxy
   )
 }
 
 export function addVersionLensExtension(services: IServiceCollection) {
   services.addSingleton(
-    ExtensionService.extension,
-    (appConfig, providerNames) => new VersionLensExtension(appConfig, providerNames)
+    nameOf<ExtensionService>().extension,
+    (container: ApplicationService & DomainService & ExtensionService) =>
+      new VersionLensExtension(
+        container.appConfig,
+        container.providerNames
+      ),
+    ServiceInjectionMode.proxy
   )
 }
 
 export function addOutputChannel(services: IServiceCollection) {
   services.addSingleton(
-    ExtensionService.outputChannel,
+    nameOf<ExtensionService>().outputChannel,
     // vscode output channel called "VersionLens"
-    extensionName => window.createOutputChannel(extensionName)
+    (container: ExtensionService) =>
+      window.createOutputChannel(container.extensionName),
+    ServiceInjectionMode.proxy
   )
 }
 
 export function addSubscriptions(services: IServiceCollection, context: ExtensionContext) {
   services.addSingleton(
-    ExtensionService.subscriptions,
+    nameOf<ExtensionService>().subscriptions,
     context.subscriptions
   )
 }
 
 export function addIconCommands(services: IServiceCollection) {
   services.addSingleton(
-    ExtensionService.iconCommands,
-    (
-      extension: VersionLensExtension,
-      versionLensProviders: VersionLensProvider[],
-      subscriptions: Array<any>,
-      outputChannel: OutputChannel,
-      logger: ILogger
-    ) =>
+    nameOf<ExtensionService>().iconCommands,
+    (container: DomainService & ExtensionService) =>
       registerIconCommands(
-        extension.state,
-        versionLensProviders,
-        subscriptions,
-        outputChannel,
-        logger.child({ namespace: 'icon commands' })
-      )
+        container.extension.state,
+        container.versionLensProviders,
+        container.subscriptions,
+        container.outputChannel,
+        container.logger.child({ namespace: 'icon commands' })
+      ),
+    ServiceInjectionMode.proxy
   )
 }
 
 export function addSuggestionCommands(services: IServiceCollection) {
   services.addSingleton(
-    ExtensionService.suggestionCommands,
-    (extension, subscriptions, logger) =>
+    nameOf<ExtensionService>().suggestionCommands,
+    (container: DomainService & ExtensionService) =>
       registerSuggestionCommands(
-        extension.state,
-        subscriptions,
-        logger.child({ namespace: 'suggestion commands' })
-      )
+        container.extension.state,
+        container.subscriptions,
+        container.logger.child({ namespace: 'suggestion commands' })
+      ),
+    ServiceInjectionMode.proxy
   )
 }
 
 export function addTextEditorEvents(services: IServiceCollection) {
   services.addSingleton(
-    ExtensionService.textEditorEvents,
-    (extension, suggestionProviders, loggerChannel) =>
+    nameOf<ExtensionService>().textEditorEvents,
+    (container: ApplicationService & DomainService & ExtensionService) =>
       new TextEditorEvents(
-        extension.state,
-        suggestionProviders,
-        loggerChannel
-      )
+        container.extension.state,
+        container.suggestionProviders,
+        container.loggerChannel
+      ),
+    ServiceInjectionMode.proxy
   )
 }
 
 export function addTextDocumentEvents(services: IServiceCollection) {
   services.addSingleton(
-    ExtensionService.textDocumentEvents,
-    (extension, suggestionProviders, logger) =>
+    nameOf<ExtensionService>().textDocumentEvents,
+    (container: DomainService & ExtensionService) =>
       new TextDocumentEvents(
-        extension.state,
-        suggestionProviders,
-        logger.child({ namespace: 'text document event' })
-      )
+        container.extension.state,
+        container.versionLensProviders,
+        container.logger.child({ namespace: 'text document event' })
+      ),
+    ServiceInjectionMode.proxy
   )
 }
 
 export function addVersionLensProviders(services: IServiceCollection) {
   services.addSingleton(
-    ExtensionService.versionLensProviders,
-    (extension, suggestionProviders, subscriptions, logger) =>
+    nameOf<ExtensionService>().versionLensProviders,
+    (container: ApplicationService & DomainService & ExtensionService) =>
       registerVersionLensProviders(
-        extension,
-        suggestionProviders,
-        subscriptions,
-        logger
-      )
+        container.extension,
+        container.suggestionProviders,
+        container.subscriptions,
+        container.logger
+      ),
+    ServiceInjectionMode.proxy
   )
 }

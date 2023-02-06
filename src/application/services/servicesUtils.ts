@@ -1,27 +1,25 @@
 import { importSuggestionProviders } from "application/providers";
-import { IServiceCollection, IServiceProvider } from "domain/di";
-import { ILogger } from "domain/logging";
-import { ApplicationService } from "./eApplicationService";
+import { IServiceCollection, ServiceInjectionMode } from "domain/di";
+import { DomainService } from "domain/services/domainService";
+import { nameOf } from "domain/utils";
+import { ApplicationService } from "./applicationService";
 
 export async function addSuggestionProviders(services: IServiceCollection) {
   services.addSingleton(
-    ApplicationService.suggestionProviders,
-    async (
-      serviceProvider: IServiceProvider,
-      providerNames: Array<string>,
-      logger: ILogger
-    ) =>
-      await importSuggestionProviders(
-        serviceProvider,
-        providerNames,
-        logger
-      )
+    nameOf<ApplicationService>().suggestionProviders,
+    async (container: ApplicationService & DomainService) => {
+      return await importSuggestionProviders(
+        container.serviceProvider,
+        container.providerNames,
+        container.logger
+      )},
+    ServiceInjectionMode.proxy
   )
 }
 
 export function addSuggestionProviderNames(services: IServiceCollection) {
   services.addSingleton(
-    ApplicationService.providerNames,
+    nameOf<ApplicationService>().providerNames,
     [
       'composer',
       'dotnet',
@@ -30,5 +28,6 @@ export function addSuggestionProviderNames(services: IServiceCollection) {
       'npm',
       'pub',
     ]
-  )
+  ),
+    ServiceInjectionMode.proxy
 }

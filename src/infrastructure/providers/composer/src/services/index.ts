@@ -1,2 +1,2 @@
-export * from './eComposerService'
+export * from './composerService'
 export * from './servicesUtils'

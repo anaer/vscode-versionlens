@@ -1,6 +1,7 @@
 import { CachingOptions, HttpOptions } from "domain/clients";
-import { IServiceCollection } from "domain/di";
-import { DomainService } from "domain/services/eDomainService";
+import { IServiceCollection, ServiceInjectionMode } from "domain/di";
+import { DomainService } from "domain/services/domainService";
+import { nameOf } from "domain/utils";
 import { createHttpClient } from 'infrastructure/http';
 import { createProcessClient } from 'infrastructure/process';
 import { MavenClient } from '../clients/mavenClient';
@@ -8,99 +9,109 @@ import { MvnCli } from '../clients/mvnCli';
 import { MavenContributions } from '../definitions/eMavenContributions';
 import { MavenConfig } from '../mavenConfig';
 import { MavenSuggestionProvider } from '../mavenSuggestionProvider';
-import { MavenService } from "./eMavenService";
+import { MavenService } from "./mavenService";
 
 export function addCachingOptions(services: IServiceCollection) {
   services.addSingleton(
-    MavenService.mavenCachingOpts,
-    appConfig => new CachingOptions(
-      appConfig,
-      MavenContributions.Caching,
-      'caching'
-    )
+    nameOf<MavenService>().mavenCachingOpts,
+    (container: DomainService) =>
+      new CachingOptions(
+        container.appConfig,
+        MavenContributions.Caching,
+        'caching'
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addHttpOptions(services: IServiceCollection) {
   services.addSingleton(
-    MavenService.mavenHttpOpts,
-    appConfig => new HttpOptions(
-      appConfig,
-      MavenContributions.Http,
-      'http'
-    )
+    nameOf<MavenService>().mavenHttpOpts,
+    (container: DomainService) =>
+      new HttpOptions(
+        container.appConfig,
+        MavenContributions.Http,
+        'http'
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addMavenConfig(services: IServiceCollection) {
   services.addSingleton(
-    MavenService.mavenConfig,
-    (appConfig, mavenCachingOpts, mavenHttpOpts) =>
+    nameOf<MavenService>().mavenConfig,
+    (container: MavenService & DomainService) =>
       new MavenConfig(
-        appConfig,
-        mavenCachingOpts,
-        mavenHttpOpts
-      )
+        container.appConfig,
+        container.mavenCachingOpts,
+        container.mavenHttpOpts
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addProcessClient(services: IServiceCollection) {
   services.addSingleton(
-    MavenService.mvnProcess,
-    (mavenCachingOpts, logger) =>
+    nameOf<MavenService>().mvnProcess,
+    (container: MavenService & DomainService) =>
       createProcessClient(
-        mavenCachingOpts,
-        logger.child({ namespace: 'maven mvn process' })
-      )
+        container.mavenCachingOpts,
+        container.logger.child({ namespace: 'maven mvn process' })
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addCliClient(services: IServiceCollection) {
   services.addSingleton(
-    MavenService.mvnCli,
-    (mavenConfig, mvnProcess, logger) =>
+    nameOf<MavenService>().mvnCli,
+    (container: MavenService & DomainService) =>
       new MvnCli(
-        mavenConfig,
-        mvnProcess,
-        logger.child({ namespace: 'maven mvn cli' })
-      )
+        container.mavenConfig,
+        container.mvnProcess,
+        container.logger.child({ namespace: 'maven mvn cli' })
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addHttpClient(services: IServiceCollection) {
   services.addSingleton(
-    MavenService.mavenHttpClient,
-    (mavenCachingOpts, mavenHttpOpts, logger) =>
+    nameOf<MavenService>().mavenHttpClient,
+    (container: MavenService & DomainService) =>
       createHttpClient(
         {
-          caching: mavenCachingOpts,
-          http: mavenHttpOpts
+          caching: container.mavenCachingOpts,
+          http: container.mavenHttpOpts
         },
-        logger.child({ namespace: 'maven request' })
-      )
+        container.logger.child({ namespace: 'maven request' })
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addMavenClient(services: IServiceCollection) {
   services.addSingleton(
-    MavenService.mavenClient,
-    (mavenConfig, mavenHttpClient, logger) =>
+    nameOf<MavenService>().mavenClient,
+    (container: MavenService & DomainService) =>
       new MavenClient(
-        mavenConfig,
-        mavenHttpClient,
-        logger.child({ namespace: 'maven client' })
-      )
+        container.mavenConfig,
+        container.mavenHttpClient,
+        container.logger.child({ namespace: 'maven client' })
+      ),
+    ServiceInjectionMode.proxy
   );
 }
 
 export function addSuggestionProvider(services: IServiceCollection) {
   services.addSingleton(
-    `maven${DomainService.suggestionProvider}`,
-    (mvnCli, mavenClient, logger) =>
+    nameOf<MavenService>().mavenSuggestionProvider,
+    (container: MavenService & DomainService) =>
       new MavenSuggestionProvider(
-        mvnCli,
-        mavenClient,
-        logger.child({ namespace: 'maven provider' })
-      )
+        container.mvnCli,
+        container.mavenClient,
+        container.logger.child({ namespace: 'maven provider' })
+      ),
+    ServiceInjectionMode.proxy
   );
 }
