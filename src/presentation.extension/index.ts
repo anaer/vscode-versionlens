@@ -9,7 +9,7 @@ export * from './extensionContainer';
 export * from './lenses/versionLens';
 export * as VersionLensFactory from './lenses/versionLensFactory';
 export * from './lenses/versionLensProvider';
-export * from './services/iExtensionServices';
+export * from './services/extensionService';
 export * from './state/contextState';
 export * from './state/versionLensState';
 export * from './suggestions/eSuggestionCommandContributions';

@@ -12,7 +12,7 @@ import {
 } from "presentation.extension";
 import { ExtensionContext, window, workspace } from "vscode";
 import { registerVersionLensProviders } from ".";
-import { ExtensionService } from "./iExtensionServices";
+import { ExtensionService } from "./extensionService";
 
 export function addExtensionName(services: IServiceCollection, extensionName: string) {
   services.addSingleton(
