@@ -1,7 +1,7 @@
 import { UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import { PackageDependency } from 'domain/packages';
-import { AbstractSuggestionProvider } from 'domain/providers';
+import { SuggestionProvider } from 'domain/providers';
 import {
   defaultReplaceFn,
   ISuggestionProvider,
@@ -15,14 +15,8 @@ import { DotNetConfig } from './dotnetConfig';
 import { createDependenciesFromXml } from './dotnetXmlParserFactory';
 
 export class DotNetSuggestionProvider
-  extends AbstractSuggestionProvider<DotNetConfig, NuGetPackageClient, NuGetClientData>
+  extends SuggestionProvider<NuGetPackageClient, NuGetClientData>
   implements ISuggestionProvider {
-
-  dotnetClient: DotNetCli;
-
-  nugetResClient: NuGetResourceClient;
-
-  suggestionReplaceFn: TSuggestionReplaceFunction;
 
   constructor(
     dotnetCli: DotNetCli,
@@ -30,12 +24,20 @@ export class DotNetSuggestionProvider
     nugetResClient: NuGetResourceClient,
     logger: ILogger
   ) {
-    super(nugetClient.config, nugetClient, logger);
-
+    super(nugetClient, logger);
+    this.config = nugetClient.config;
     this.dotnetClient = dotnetCli;
     this.nugetResClient = nugetResClient;
     this.suggestionReplaceFn = defaultReplaceFn
   }
+
+  config: DotNetConfig;
+
+  dotnetClient: DotNetCli;
+
+  nugetResClient: NuGetResourceClient;
+
+  suggestionReplaceFn: TSuggestionReplaceFunction;
 
   clearCache() {
     this.dotnetClient.processClient.clearCache();

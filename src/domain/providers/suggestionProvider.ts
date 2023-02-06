@@ -7,29 +7,24 @@ import {
   TPackageClientRequest,
   TPackageClientResponse
 } from "domain/packages";
-import { IProviderConfig } from "./definitions/iProviderConfig";
 
-export abstract class AbstractSuggestionProvider
+export class SuggestionProvider
   <
-    TConfig extends IProviderConfig,
     TClient extends IPackageClient<TClientData>,
-    TClientData,
+    TClientData
   > {
 
-  constructor(config: TConfig, client: TClient, logger: ILogger) {
-    this.config = config;
+  constructor(client: TClient, logger: ILogger) {
     this.client = client;
     this.logger = logger;
   }
-
-  config: TConfig;
 
   client: TClient;
 
   logger: ILogger;
 
   get name() {
-    return this.config.providerName;
+    return this.client.config.providerName;
   }
 
   /**
@@ -51,12 +46,11 @@ export abstract class AbstractSuggestionProvider
     }
 
     // queue package fetch tasks
-    const { providerName } = this.config;
     const promises = [];
     for (const dependency of dependencies) {
       // setup the client request
       const clientRequest: TPackageClientRequest<TClientData> = {
-        providerName,
+        providerName: this.name,
         clientData,
         dependency,
         attempt: 0

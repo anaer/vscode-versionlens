@@ -3,7 +3,7 @@ import {
   extractPackageDependenciesFromJson,
   PackageDependency
 } from 'domain/packages';
-import { AbstractSuggestionProvider } from 'domain/providers';
+import { SuggestionProvider } from 'domain/providers';
 import {
   defaultReplaceFn,
   ISuggestionProvider,
@@ -13,16 +13,18 @@ import { ComposerClient } from './composerClient';
 import { ComposerConfig } from './composerConfig';
 
 export class ComposerSuggestionProvider
-  extends AbstractSuggestionProvider<ComposerConfig, ComposerClient, any>
+  extends SuggestionProvider<ComposerClient, any>
   implements ISuggestionProvider {
 
-  suggestionReplaceFn: TSuggestionReplaceFunction;
-
   constructor(client: ComposerClient, logger: ILogger) {
-    super(client.config, client, logger);
-    this.client = client;
+    super(client, logger);
+    this.config = client.config;
     this.suggestionReplaceFn = defaultReplaceFn
   }
+
+  config: ComposerConfig;
+
+  suggestionReplaceFn: TSuggestionReplaceFunction;
 
   clearCache() {
     this.client.jsonClient.clearCache();

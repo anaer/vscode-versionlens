@@ -3,7 +3,7 @@ import {
   extractPackageDependenciesFromJson,
   PackageDependency
 } from 'domain/packages';
-import { AbstractSuggestionProvider } from 'domain/providers/abstractSuggestionProvider';
+import { SuggestionProvider } from 'domain/providers';
 import {
   defaultReplaceFn,
   ISuggestionProvider,
@@ -13,15 +13,18 @@ import { DubClient } from './dubClient';
 import { DubConfig } from './dubConfig';
 
 export class DubSuggestionProvider
-  extends AbstractSuggestionProvider<DubConfig, DubClient, null>
+  extends SuggestionProvider<DubClient, null>
   implements ISuggestionProvider {
 
-  suggestionReplaceFn: TSuggestionReplaceFunction;
-
   constructor(client: DubClient, logger: ILogger) {
-    super(client.config, client, logger);
+    super(client, logger);
+    this.config = client.config;
     this.suggestionReplaceFn = defaultReplaceFn
   }
+
+  config: DubConfig;
+
+  suggestionReplaceFn: TSuggestionReplaceFunction;
 
   clearCache() {
     this.client.jsonClient.clearCache();

@@ -3,22 +3,25 @@ import {
   extractPackageDependenciesFromJson,
   PackageDependency
 } from 'domain/packages';
-import { AbstractSuggestionProvider } from 'domain/providers';
+import { SuggestionProvider } from 'domain/providers';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import { NpmPackageClient } from './clients/npmPackageClient';
 import { NpmConfig } from './npmConfig';
 import { npmReplaceVersion } from './npmUtils';
 
 export class NpmSuggestionProvider
-  extends AbstractSuggestionProvider<NpmConfig, NpmPackageClient, null>
+  extends SuggestionProvider<NpmPackageClient, null>
   implements ISuggestionProvider {
 
-  suggestionReplaceFn: TSuggestionReplaceFunction;
-
   constructor(client: NpmPackageClient, logger: ILogger) {
-    super(client.config, client, logger);
+    super(client, logger);
+    this.config = client.config;
     this.suggestionReplaceFn = npmReplaceVersion;
   }
+
+  config: NpmConfig;
+
+  suggestionReplaceFn: TSuggestionReplaceFunction;
 
   clearCache() {
     this.client.pacoteClient.cache.clear();

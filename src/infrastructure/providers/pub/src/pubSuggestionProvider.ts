@@ -3,22 +3,25 @@ import {
   extractPackageDependenciesFromYaml,
   PackageDependency
 } from 'domain/packages';
-import { AbstractSuggestionProvider } from 'domain/providers';
+import { SuggestionProvider } from 'domain/providers';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import { PubClient } from './pubClient';
 import { PubConfig } from './pubConfig';
 import { pubReplaceVersion } from './pubUtils';
 
 export class PubSuggestionProvider
-  extends AbstractSuggestionProvider<PubConfig, PubClient, any>
+  extends SuggestionProvider<PubClient, any>
   implements ISuggestionProvider {
 
-  suggestionReplaceFn: TSuggestionReplaceFunction;
-
   constructor(client: PubClient, logger: ILogger) {
-    super(client.config, client, logger);
+    super(client, logger);
+    this.config = client.config;
     this.suggestionReplaceFn = pubReplaceVersion
   }
+
+  config: PubConfig;
+
+  suggestionReplaceFn: TSuggestionReplaceFunction;
 
   clearCache() {
     this.client.jsonClient.clearCache();

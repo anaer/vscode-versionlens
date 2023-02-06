@@ -15,7 +15,7 @@ import {
   TPackageNameVersion,
   TPackageResource
 } from 'domain/packages';
-import { AbstractSuggestionProvider, IProviderConfig } from 'domain/providers';
+import { SuggestionProvider, IProviderConfig } from 'domain/providers';
 import { SuggestionFlags } from 'domain/suggestions';
 import { test } from 'mocha-ui-esm';
 import { anything as any, instance, mock, verify, when } from 'ts-mockito';
@@ -33,7 +33,7 @@ type TestContext = {
 
 export const AbstractSuggestionProviderTests = {
 
-  [test.title]: AbstractSuggestionProvider.name,
+  [test.title]: SuggestionProvider.name,
 
   fetchPackage: {
 
@@ -104,13 +104,11 @@ export const AbstractSuggestionProviderTests = {
       when(clientMock.fetchPackage(testContext.testRequest)).thenResolve(testRespDoc);
       const testClient = instance(clientMock);
 
-      // @ts-ignore
       // test
-      const abstractProvider = new AbstractSuggestionProvider(
-        testContext.testConfig,
+      const abstractProvider = new SuggestionProvider<IPackageClient<any>, any>(
         testClient,
         null
-      ) as AbstractSuggestionProvider<IProviderConfig, IPackageClient<any>, any>;
+      );
 
       return abstractProvider.fetchPackage(testContext.testRequest)
         .then((actual: Array<PackageResponse>) => {
@@ -185,18 +183,14 @@ export const AbstractSuggestionProviderTests = {
       when(clientMock.fetchPackage(this.testRequest)).thenResolve(testRespDoc);
       const testClient = instance(clientMock);
 
-      // @ts-ignore
       // test
-      const abstractProvider = new AbstractSuggestionProvider(
-        null,
+      const abstractProvider = new SuggestionProvider<IPackageClient<any>, null>(
         testClient,
         null
-      ) as AbstractSuggestionProvider<IProviderConfig, IPackageClient<any>, null>;
+      );
 
       return abstractProvider.fetchPackage(this.testRequest)
         .then(actual => {
-          // verify
-          // verify(this.loggerMock.debug("Fetching %s", "testPackageName")).once();
           verify(clientMock.fetchPackage(this.testRequest)).once();
           verify(
             this.loggerMock.error(
