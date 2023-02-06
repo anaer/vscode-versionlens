@@ -50,8 +50,6 @@ export class VersionLensProvider implements CodeLensProvider, IProvider {
 
   logger: ILogger;
 
-  opened: boolean;
-
   get config(): IProviderConfig {
     return this.suggestionProvider.config;
   }
@@ -78,10 +76,10 @@ export class VersionLensProvider implements CodeLensProvider, IProvider {
     if (this.state.enabled.value === false) return null;
 
     // get the opened state
-    const documentOpened = this.opened;
+    const documentOpened = this.state.providerOpened.value;
 
     // reset opened state
-    this.opened = false;
+    this.state.providerOpened.change(false);
 
     // package path
     const packagePath = dirname(document.uri.fsPath);

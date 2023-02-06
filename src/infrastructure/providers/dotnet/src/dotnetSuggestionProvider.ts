@@ -1,6 +1,6 @@
 import { UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
-import { PackageDependency, PackageResponse } from 'domain/packages';
+import { PackageDependency } from 'domain/packages';
 import { AbstractSuggestionProvider } from 'domain/providers';
 import {
   defaultReplaceFn,
@@ -15,12 +15,10 @@ import { DotNetConfig } from './dotnetConfig';
 import { createDependenciesFromXml } from './dotnetXmlParserFactory';
 
 export class DotNetSuggestionProvider
-  extends AbstractSuggestionProvider<DotNetConfig>
+  extends AbstractSuggestionProvider<DotNetConfig, NuGetPackageClient, NuGetClientData>
   implements ISuggestionProvider {
 
   dotnetClient: DotNetCli;
-
-  nugetPackageClient: NuGetPackageClient;
 
   nugetResClient: NuGetResourceClient;
 
@@ -32,17 +30,16 @@ export class DotNetSuggestionProvider
     nugetResClient: NuGetResourceClient,
     logger: ILogger
   ) {
-    super(nugetClient.config, logger);
+    super(nugetClient.config, nugetClient, logger);
 
     this.dotnetClient = dotnetCli;
-    this.nugetPackageClient = nugetClient;
     this.nugetResClient = nugetResClient;
     this.suggestionReplaceFn = defaultReplaceFn
   }
 
   clearCache() {
     this.dotnetClient.processClient.clearCache();
-    this.nugetPackageClient.jsonClient.clearCache();
+    this.client.jsonClient.clearCache();
   }
 
   parseDependencies(
@@ -58,18 +55,14 @@ export class DotNetSuggestionProvider
     return packageDependencies;
   }
 
-  async fetchSuggestions(
-    packagePath: string,
-    packageDependencies: Array<PackageDependency>
-  ): Promise<Array<PackageResponse>> {
-
+  protected async preFetchSuggestions(packagePath: string) {
     // ensure latest nuget sources from settings
     this.config.nuget.defrost();
 
     // get each service index source from the dotnet cli
     const sources = await this.dotnetClient.fetchSources(packagePath)
 
-    // remote sources only
+    // filter remote sources only
     const remoteSources = sources.filter(
       s => s.protocol === UrlHelpers.RegistryProtocols.https ||
         s.protocol === UrlHelpers.RegistryProtocols.http
@@ -82,6 +75,7 @@ export class DotNetSuggestionProvider
       }
     );
 
+    // filter service urls
     const serviceUrls = (await Promise.all(promised))
       .filter(url => url.length > 0);
 
@@ -90,14 +84,7 @@ export class DotNetSuggestionProvider
       return null;
     }
 
-    const clientData: NuGetClientData = { serviceUrls: serviceUrls }
-
-    return this.fetchPackages(
-      this.nugetPackageClient,
-      clientData,
-      packageDependencies,
-    );
-
-  }
+    return { serviceUrls } as NuGetClientData
+  };
 
 }

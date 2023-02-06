@@ -7,33 +7,54 @@ import {
   TPackageClientRequest,
   TPackageClientResponse
 } from "domain/packages";
-import { IProviderConfig } from "./index";
+import { IProviderConfig } from "./definitions/iProviderConfig";
 
-export abstract class AbstractSuggestionProvider<T extends IProviderConfig> {
+export abstract class AbstractSuggestionProvider
+  <
+    TConfig extends IProviderConfig,
+    TClient extends IPackageClient<TClientData>,
+    TClientData,
+  > {
 
-  constructor(config: T, logger: ILogger) {
+  constructor(config: TConfig, client: TClient, logger: ILogger) {
     this.config = config;
+    this.client = client;
     this.logger = logger;
   }
+
+  config: TConfig;
+
+  client: TClient;
+
+  logger: ILogger;
 
   get name() {
     return this.config.providerName;
   }
 
-  config: T;
+  /**
+   * Called before queueing all package fetch requests.
+   * Providers can return custom client data that will be sent with each fetchPackage request
+   * @param packagePath 
+   */
+  protected preFetchSuggestions?(packagePath: string): Promise<TClientData>;
 
-  logger: ILogger;
-
-  fetchPackages<TClientData>(
-    client: IPackageClient<TClientData>,
-    clientData: TClientData,
+  async fetchSuggestions(
+    packagePath: string,
     dependencies: Array<PackageDependency>,
   ): Promise<Array<PackageResponse>> {
-    const { providerName } = client.config;
-    const promises = [];
 
+    // get any client data if implemented
+    let clientData: any = {};
+    if (this.preFetchSuggestions) {
+      clientData = await this.preFetchSuggestions(packagePath);
+    }
+
+    // queue package fetch tasks
+    const { providerName } = this.config;
+    const promises = [];
     for (const dependency of dependencies) {
-      // build the client request
+      // setup the client request
       const clientRequest: TPackageClientRequest<TClientData> = {
         providerName,
         clientData,
@@ -41,47 +62,54 @@ export abstract class AbstractSuggestionProvider<T extends IProviderConfig> {
         attempt: 0
       };
 
-      // fetch package
-      const fetched = this.fetchPackage(
-        client,
-        clientRequest
-      );
+      // get the fetch task
+      const promisedFetch = this.fetchPackage(clientRequest);
 
-      // push fetched results
-      promises.push(fetched);
+      // queue the fetch task
+      promises.push(promisedFetch);
     }
 
-    // parallel the promises
+    // parallel the fetch requests
     return Promise.all(promises)
       // flatten results
       .then(x => x.flat());
   }
 
-  fetchPackage<TClientData>(
-    client: IPackageClient<TClientData>,
-    request: TPackageClientRequest<TClientData>,
+  fetchPackage(
+    request: TPackageClientRequest<TClientData>
   ): Promise<Array<PackageResponse>> {
+    const client = this.client;
     const requestedPackage = request.dependency.package;
+
     client.logger.debug("Fetching %s", requestedPackage.name);
 
     const startedAt = performance.now();
 
     return client.fetchPackage(request)
-      .then(function (document: TPackageClientResponse) {
+      .then(function (response: TPackageClientResponse) {
         const completedAt = performance.now();
 
         client.logger.info(
           'Fetched %s@%s from %s (%s ms)',
           requestedPackage.name,
           requestedPackage.version,
-          document.responseStatus.source,
+          response.responseStatus.source,
           Math.floor(completedAt - startedAt)
         );
+
+        if (response.responseStatus.rejected) {
+          client.logger.error(
+            "%s@%s was rejected with the status code %s",
+            requestedPackage.name,
+            requestedPackage.version,
+            response.responseStatus.status
+          );
+        }
 
         return ResponseFactory.createSuccess(
           client.config.providerName,
           request,
-          document
+          response
         );
       })
       .catch(function (error: PackageResponse) {

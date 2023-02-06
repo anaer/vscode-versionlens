@@ -24,11 +24,11 @@ export class PackageDependency {
       && other.package.version === this.package.version
   }
 
-  // rangeEquals(other: PackageDependency) {
-  //   return other.versionRange.start === this.versionRange.start
-  //     && other.versionRange.end === this.versionRange.end
-  //     && other.nameRange.start === this.nameRange.start
-  //     && other.nameRange.end === this.nameRange.end;
-  // }
+  rangeEquals(other: PackageDependency) {
+    return other.versionRange.start === this.versionRange.start
+      && other.versionRange.end === this.versionRange.end
+      && other.nameRange.start === this.nameRange.start
+      && other.nameRange.end === this.nameRange.end;
+  }
 
 };

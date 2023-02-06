@@ -1,8 +1,7 @@
 import { ILogger } from 'domain/logging';
 import {
   extractPackageDependenciesFromYaml,
-  PackageDependency,
-  PackageResponse
+  PackageDependency
 } from 'domain/packages';
 import { AbstractSuggestionProvider } from 'domain/providers';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
@@ -11,23 +10,20 @@ import { PubConfig } from './pubConfig';
 import { pubReplaceVersion } from './pubUtils';
 
 export class PubSuggestionProvider
-  extends AbstractSuggestionProvider<PubConfig>
+  extends AbstractSuggestionProvider<PubConfig, PubClient, any>
   implements ISuggestionProvider {
-
-  client: PubClient;
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
 
   constructor(client: PubClient, logger: ILogger) {
-    super(client.config, logger);
-    this.client = client;
+    super(client.config, client, logger);
     this.suggestionReplaceFn = pubReplaceVersion
   }
 
-  clearCache () {
+  clearCache() {
     this.client.jsonClient.clearCache();
   };
-  
+
   parseDependencies(
     packagePath: string,
     packageText: string
@@ -39,18 +35,6 @@ export class PubSuggestionProvider
     );
 
     return packageDependencies;
-  }
-
-  fetchSuggestions(
-    packagePath: string,
-    packageDependencies: Array<PackageDependency>
-  ): Promise<Array<PackageResponse>> {
-    const clientData = null;
-    return this.fetchPackages(
-      this.client,
-      clientData,
-      packageDependencies,
-    );
   }
 
 }

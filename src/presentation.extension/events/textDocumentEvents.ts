@@ -59,7 +59,7 @@ export class TextDocumentEvents {
           []
         );
 
-        (<VersionLensProvider>p).opened = true;
+        this.state.providerOpened.change(true);
       }
     );
   }

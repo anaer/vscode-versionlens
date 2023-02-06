@@ -6,4 +6,6 @@ export type TClientResponseStatus = {
 
   status: number;
 
+  rejected?: boolean;
+
 };

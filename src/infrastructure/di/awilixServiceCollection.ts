@@ -11,7 +11,7 @@ import {
   TServiceResolver
 } from 'domain/di';
 import { KeyDictionary } from 'domain/generics';
-import { DomainService } from 'domain/services/eDomainService';
+import { DomainService } from 'domain/services';
 import { AwilixServiceProvider } from './awilixServiceProvider';
 import { registerAsyncSingletons } from './awillixUtils';
 

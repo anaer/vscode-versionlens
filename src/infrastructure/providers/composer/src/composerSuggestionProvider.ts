@@ -1,8 +1,7 @@
 import { ILogger } from 'domain/logging';
 import {
   extractPackageDependenciesFromJson,
-  PackageDependency,
-  PackageResponse
+  PackageDependency
 } from 'domain/packages';
 import { AbstractSuggestionProvider } from 'domain/providers';
 import {
@@ -14,15 +13,13 @@ import { ComposerClient } from './composerClient';
 import { ComposerConfig } from './composerConfig';
 
 export class ComposerSuggestionProvider
-  extends AbstractSuggestionProvider<ComposerConfig>
+  extends AbstractSuggestionProvider<ComposerConfig, ComposerClient, any>
   implements ISuggestionProvider {
-
-  client: ComposerClient;
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
 
   constructor(client: ComposerClient, logger: ILogger) {
-    super(client.config, logger);
+    super(client.config, client, logger);
     this.client = client;
     this.suggestionReplaceFn = defaultReplaceFn
   }
@@ -42,20 +39,6 @@ export class ComposerSuggestionProvider
     );
 
     return packageDependencies;
-  }
-
-  fetchSuggestions(
-    packagePath: string,
-    packageDependencies: Array<PackageDependency>
-  ): Promise<Array<PackageResponse>> {
-
-    const clientData = null;
-
-    return super.fetchPackages(
-      this.client,
-      clientData,
-      packageDependencies,
-    );
   }
 
 }

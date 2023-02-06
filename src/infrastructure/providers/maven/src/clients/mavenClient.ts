@@ -32,7 +32,9 @@ export class MavenClient implements IPackageClient<MavenClientData> {
     this.logger = logger;
   }
 
-  fetchPackage(request: TPackageClientRequest<MavenClientData>): Promise<TPackageClientResponse> {
+  fetchPackage(
+    request: TPackageClientRequest<MavenClientData>
+  ): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;
     const semverSpec = VersionHelpers.parseSemver(requestedPackage.version);
 
@@ -84,7 +86,7 @@ export class MavenClient implements IPackageClient<MavenClientData> {
         const source = PackageSourceType.Registry;
         const versionRange = semverSpec.rawVersion;
         const requestedPackage = request.dependency.package;
-        
+
         const responseStatus = {
           source: httpResponse.source,
           status: httpResponse.status,

@@ -1,8 +1,7 @@
 import { ILogger } from 'domain/logging';
 import {
   extractPackageDependenciesFromJson,
-  PackageDependency,
-  PackageResponse
+  PackageDependency
 } from 'domain/packages';
 import { AbstractSuggestionProvider } from 'domain/providers';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
@@ -11,16 +10,13 @@ import { NpmConfig } from './npmConfig';
 import { npmReplaceVersion } from './npmUtils';
 
 export class NpmSuggestionProvider
-  extends AbstractSuggestionProvider<NpmConfig>
+  extends AbstractSuggestionProvider<NpmConfig, NpmPackageClient, null>
   implements ISuggestionProvider {
-
-  client: NpmPackageClient;
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
 
   constructor(client: NpmPackageClient, logger: ILogger) {
-    super(client.config, logger);
-    this.client = client;
+    super(client.config, client, logger);
     this.suggestionReplaceFn = npmReplaceVersion;
   }
 
@@ -42,23 +38,12 @@ export class NpmSuggestionProvider
     return packageDependencies;
   }
 
-  fetchSuggestions(
-    packagePath: string,
-    packageDependencies: Array<PackageDependency>
-  ): Promise<Array<PackageResponse>> {
-
+  protected async preFetchSuggestions(packagePath: string): Promise<any> {
     if (this.config.github.accessToken &&
       this.config.github.accessToken.length > 0) {
       // defrost github parameters
       this.config.github.defrost();
     }
-
-    const clientData = null;
-    return this.fetchPackages(
-      this.client,
-      clientData,
-      packageDependencies,
-    );
   }
 
 }
