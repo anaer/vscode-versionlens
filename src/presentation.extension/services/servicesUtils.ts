@@ -1,5 +1,5 @@
 import { ApplicationService } from "application/services";
-import { AppConfig } from "domain/configuration";
+import { Config } from "domain/configuration";
 import { IServiceCollection } from "domain/di";
 import { DomainService } from "domain/services";
 import { nameOf } from "domain/utils";
@@ -24,7 +24,7 @@ export function addExtensionName(services: IServiceCollection, extensionName: st
 export function addAppConfig(services: IServiceCollection, appName: string) {
   services.addSingleton(
     nameOf<DomainService>().appConfig,
-    () => new AppConfig(workspace.getConfiguration, appName)
+    () => new Config(workspace.getConfiguration, appName)
   )
 }
 

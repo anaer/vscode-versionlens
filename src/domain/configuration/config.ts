@@ -9,7 +9,7 @@ import { IFrozenOptions } from './definitions/iOptions';
  * 
  * Can be defrosted using defrost() to fetch most recent settings from the source.
  */
-export class AppConfig implements IFrozenOptions {
+export class Config implements IFrozenOptions {
 
   constructor(resolver: TConfigSectionResolver, section: string) {
     this.resolver = resolver;

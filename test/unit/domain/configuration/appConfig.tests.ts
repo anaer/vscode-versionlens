@@ -1,5 +1,6 @@
 import assert from 'assert';
-import { AppConfig, IConfig } from 'domain/configuration';
+import { Config, IConfig } from 'domain/configuration';
+import { test } from 'mocha-ui-esm';
 import { instance, mock, when } from 'ts-mockito';
 import { ConfigResolverStub } from './stubs/configResolverStub';
 
@@ -7,7 +8,7 @@ let configResolverMock: ConfigResolverStub;
 
 export const AppConfigTests = {
 
-  title: AppConfig.name,
+  [test.title]: Config.name,
 
   beforeAll: () => {
     configResolverMock = mock(ConfigResolverStub);
@@ -26,7 +27,7 @@ export const AppConfigTests = {
         })
 
       // get original value
-      const cut = new AppConfig(instance(configResolverMock).getConfiguration, testSection);
+      const cut = new Config(instance(configResolverMock).getConfiguration, testSection);
       const first = cut.get(testKey);
       assert.equal(first, expectedFrozenValue)
 
@@ -57,7 +58,7 @@ export const AppConfigTests = {
         )
 
       // get original value
-      const cut = new AppConfig(instance(configResolverMock).getConfiguration, testSection);
+      const cut = new Config(instance(configResolverMock).getConfiguration, testSection);
       const first = cut.get(testKey);
       assert.equal(first, initialValue)
 
