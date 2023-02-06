@@ -1,26 +1,41 @@
 import { IConfig } from './definitions/iConfig';
-import { iConfigResolver } from './definitions/iConfigResolver';
+import { TConfigSectionResolver } from './definitions/tConfigResolver';
 import { IFrozenOptions } from './definitions/iOptions';
 
-// allows vscode configuration to be defrosted
-// Useful for accessing hot changing values from settings.json
-// Stays frozen until defrost() is called and then refrosts
+/**
+ * Configuration container.
+ * 
+ * Caches the configuration which can improve performance. i.e. when reading from a file source.
+ * 
+ * Can be defrosted using defrost() to fetch most recent settings from the source.
+ */
 export class AppConfig implements IFrozenOptions {
 
-  protected frozen: IConfig;
-
-  section: string;
-
-  configResolver: iConfigResolver;
-
-  constructor(configResolver: iConfigResolver, section: string) {
-    this.configResolver = configResolver;
+  constructor(resolver: TConfigSectionResolver, section: string) {
+    this.resolver = resolver;
     this.section = section;
     this.frozen = null;
   }
 
-  protected get raw(): IConfig {
-    return this.configResolver.getConfiguration(this.section);
+  /**
+   * Cached configuration
+   */
+  protected frozen: IConfig;
+
+  /**
+   * The section key fetched from the configuration source data
+   * 
+   * @example `versionlens`
+   */
+  section: string;
+
+  /**
+   * The function that reads from the configuration source
+   */
+  resolver: TConfigSectionResolver;
+
+  private get raw(): IConfig {
+    return this.resolver(this.section);
   }
 
   get<T>(key: string): T {

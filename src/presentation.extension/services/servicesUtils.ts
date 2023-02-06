@@ -24,8 +24,7 @@ export function addExtensionName(services: IServiceCollection, extensionName: st
 export function addAppConfig(services: IServiceCollection, appName: string) {
   services.addSingleton(
     nameOf<DomainService>().appConfig,
-    // TODO pass workspace.getConfiguration only 
-    () => new AppConfig(workspace, appName)
+    () => new AppConfig(workspace.getConfiguration, appName)
   )
 }
 

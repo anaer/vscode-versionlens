@@ -2,6 +2,10 @@ import { IConfig } from "./iConfig";
 
 export interface IFrozenOptions extends IConfig {
 
+  /**
+   * Clears the cached configuration so the next call to get(key)
+   * will read from the raw configuration source
+   */
   defrost(): void;
 
 }
