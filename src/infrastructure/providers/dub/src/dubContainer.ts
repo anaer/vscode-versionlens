@@ -1,8 +1,8 @@
 import { IServiceCollection, IServiceProvider } from 'domain/di';
 import {
   addCachingOptions,
-  addDubConfig,
   addDubClient,
+  addDubConfig,
   addHttpOptions,
   addJsonClient,
   addSuggestionProvider
@@ -25,5 +25,5 @@ export async function configureContainer(
 
   addSuggestionProvider(services);
 
-  return await services.buildScope("dub", serviceProvider);
+  return await services.buildChild("dub", serviceProvider);
 }

@@ -2,10 +2,10 @@ import { IServiceCollection, IServiceProvider } from 'domain/di';
 import {
   addCachingOptions,
   addCliClient,
-  addMavenConfig,
   addHttpClient,
   addHttpOptions,
   addMavenClient,
+  addMavenConfig,
   addProcessClient,
   addSuggestionProvider
 } from './services';
@@ -31,5 +31,5 @@ export async function configureContainer(
 
   addSuggestionProvider(services);
 
-  return await services.buildScope("maven", serviceProvider);
+  return await services.buildChild("maven", serviceProvider);
 }

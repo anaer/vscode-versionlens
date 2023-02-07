@@ -25,5 +25,5 @@ export async function configureContainer(
 
   addSuggestionProvider(services);
 
-  return await services.buildScope("composer", serviceProvider);
+  return await services.buildChild("composer", serviceProvider);
 }

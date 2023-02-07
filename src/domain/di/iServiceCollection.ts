@@ -10,6 +10,12 @@ export type TServiceResolver<T> = TServiceResolverFunction<T>
   | TServiceResolverAsyncFunction<T>
   | TServiceResolverValue<T>
 
+export enum ServiceLifetime {
+  singleton = "singleton",
+  scoped = "scoped",
+  transient = "transient"
+}
+
 export enum ServiceInjectionMode {
   classic = "classic",
   proxy = "proxy"
@@ -23,8 +29,14 @@ export interface IServiceCollection {
     injectionMode?: ServiceInjectionMode
   ) => IServiceCollection;
 
+  addScoped: <T>(
+    name: string,
+    descriptor: TServiceResolver<T>,
+    injectionMode?: ServiceInjectionMode
+  ) => IServiceCollection;
+
   build: () => Promise<IServiceProvider>;
 
-  buildScope(name: string, serviceProvider: IServiceProvider): Promise<IServiceProvider>;
+  buildChild(name: string, serviceProvider: IServiceProvider): Promise<IServiceProvider>;
 
 }

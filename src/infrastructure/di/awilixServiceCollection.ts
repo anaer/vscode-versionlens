@@ -8,6 +8,7 @@ import {
   IServiceCollection,
   IServiceProvider,
   ServiceInjectionMode,
+  ServiceLifetime,
   TServiceResolver
 } from 'domain/di';
 import { KeyDictionary } from 'domain/generics';
@@ -29,12 +30,48 @@ export class AwilixServiceCollection implements IServiceCollection {
     resolver: TServiceResolver<T>,
     injectionMode: ServiceInjectionMode = ServiceInjectionMode.proxy
   ): IServiceCollection {
+    this.add(name, resolver, ServiceLifetime.singleton, injectionMode);
+    return this;
+  }
+
+  addScoped<T>(
+    name: string,
+    resolver: TServiceResolver<T>,
+    injectionMode: ServiceInjectionMode = ServiceInjectionMode.proxy
+  ): IServiceCollection {
+    this.add(name, resolver, ServiceLifetime.scoped, injectionMode);
+    return this;
+  }
+
+  build(): Promise<IServiceProvider> {
+    const container: AwilixContainer<any> = createContainer();
+    return this.buildAwilixContainer("root", container);
+  }
+
+  async buildChild(
+    name: string,
+    serviceProvider: IServiceProvider
+  ): Promise<IServiceProvider> {
+    const container: AwilixContainer<any> = (<any>serviceProvider).container;
+    const childContainer = container.createScope();
+    return await this.buildAwilixContainer(
+      name,
+      childContainer
+    );
+  }
+
+  private add<T>(
+    name: string,
+    resolver: TServiceResolver<T>,
+    lifetime: ServiceLifetime,
+    injectionMode: ServiceInjectionMode
+  ): IServiceCollection {
     let awilixResolver: any;
 
     if (resolver instanceof AsyncFunction) {
       this.asyncSingletons[name] = resolver;
     } else if (resolver instanceof Function) {
-      awilixResolver = asFunction(resolver)[injectionMode]().scoped().singleton();
+      awilixResolver = asFunction(resolver)[injectionMode]()[lifetime]();
     } else {
       awilixResolver = asValue(resolver);
     }
@@ -42,29 +79,6 @@ export class AwilixServiceCollection implements IServiceCollection {
     this.resolvers[name] = awilixResolver;
 
     return this;
-  }
-
-  build(): Promise<IServiceProvider> {
-    const container: AwilixContainer<any> = createContainer({
-      // injectionMode: InjectionMode.CLASSIC,
-    });
-
-    return this.buildAwilixContainer("root", container);
-  }
-
-  async buildScope(
-    name: string,
-    serviceProvider: IServiceProvider
-  ): Promise<IServiceProvider> {
-    // @ts-ignore
-    const container: AwilixContainer<any> = serviceProvider.container;
-
-    const childContainer = container.createScope();
-
-    return await this.buildAwilixContainer(
-      name,
-      childContainer
-    );
   }
 
   private async buildAwilixContainer(

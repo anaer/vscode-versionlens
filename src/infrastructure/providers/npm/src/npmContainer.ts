@@ -1,11 +1,11 @@
 import { IServiceCollection, IServiceProvider } from 'domain/di';
 import {
   addCachingOptions,
-  addNpmConfig,
   addGitHubClient,
   addGithubOptions,
   addHttpOptions,
   addJsonClient,
+  addNpmConfig,
   addNpmPackageClient,
   addPacoteClient,
   addSuggestionProvider
@@ -34,5 +34,5 @@ export async function configureContainer(
 
   addSuggestionProvider(services);
 
-  return await services.buildScope("npm", serviceProvider);
+  return await services.buildChild("npm", serviceProvider);
 }

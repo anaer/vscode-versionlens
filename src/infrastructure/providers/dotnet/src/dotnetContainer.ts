@@ -37,5 +37,5 @@ export async function configureContainer(
 
   addSuggestionProvider(services);
 
-  return await services.buildScope("dotnet", serviceProvider);
+  return await services.buildChild("dotnet", serviceProvider);
 }

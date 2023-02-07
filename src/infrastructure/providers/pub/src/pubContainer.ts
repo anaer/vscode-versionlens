@@ -1,10 +1,10 @@
 import { IServiceCollection, IServiceProvider } from 'domain/di';
 import {
   addCachingOptions,
-  addPubConfig,
   addHttpOptions,
   addJsonClient,
   addPubClient,
+  addPubConfig,
   addSuggestionProvider
 } from './services';
 
@@ -25,5 +25,5 @@ export async function configureContainer(
 
   addSuggestionProvider(services);
 
-  return await services.buildScope("pub", serviceProvider);
+  return await services.buildChild("pub", serviceProvider);
 }
