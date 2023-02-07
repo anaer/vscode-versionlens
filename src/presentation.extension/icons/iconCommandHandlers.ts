@@ -1,10 +1,8 @@
 // vscode references
 import { getProvidersByFileName } from 'application/providers';
-import { ILogger } from 'domain/logging';
-import { CommandUtils, VersionLensProvider } from 'presentation.extension';
+import { VersionLensProvider } from 'presentation.extension';
 import * as VsCode from 'vscode';
 import { VersionLensState } from '../state/versionLensState';
-import { IconCommandContributions } from './eIconCommandContributions';
 
 export class IconCommandHandlers {
 
@@ -82,31 +80,4 @@ export class IconCommandHandlers {
     return true;
   }
 
-}
-
-export function registerIconCommands(
-  state: VersionLensState,
-  versionLensProviders: Array<VersionLensProvider>,
-  subscriptions: Array<VsCode.Disposable>,
-  outputChannel: VsCode.OutputChannel,
-  logger: ILogger
-): IconCommandHandlers {
-
-  // create the dependency
-  const iconCommands = new IconCommandHandlers(
-    state,
-    outputChannel,
-    versionLensProviders
-  );
-
-  // register commands with vscode
-  subscriptions.push(
-    ...CommandUtils.registerCommands(
-      IconCommandContributions,
-      <any>iconCommands,
-      logger
-    )
-  );
-
-  return iconCommands;
 }

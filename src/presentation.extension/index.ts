@@ -1,11 +1,12 @@
 export * as CommandUtils from './commands/commandUtils';
-export * from './commands/eIconCommandContributions';
-export * from './commands/iconCommandHandlers';
 export * from './commands/suggestionCommands';
 export * from './events/textDocumentEvents';
 export * as TextDocumentUtils from './events/textDocumentUtils';
 export * from './events/textEditorEvents';
 export * from './extensionContainer';
+export * from './icons/eIconCommandContributions';
+export * from './icons/iconCommandHandlers';
+export * from './icons/registerIconCommands';
 export * from './lenses/versionLens';
 export * as VersionLensFactory from './lenses/versionLensFactory';
 export * from './lenses/versionLensProvider';
