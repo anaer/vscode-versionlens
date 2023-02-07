@@ -11,11 +11,14 @@
     "peerDependencies",
     "optionalDependencies",
     "overrides",
+    "overrides.*",
     "jspm.dependencies",
     "jspm.devDependencies",
     "jspm.peerDependencies",
     "jspm.optionalDependencies",
-    "pnpm.overrides"
+    "pnpm.overrides",
+    "pnpm.overrides.*",
+    "customDependencies"
   ],
   "versionlens.npm.files": "**/{package.json,web-module.json}",
   "versionlens.npm.onSaveChanges": "smoke npm install"

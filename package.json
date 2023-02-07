@@ -267,11 +267,13 @@
             "peerDependencies",
             "optionalDependencies",
             "overrides",
+            "overrides.*",
             "jspm.dependencies",
             "jspm.devDependencies",
             "jspm.peerDependencies",
             "jspm.optionalDependencies",
-            "pnpm.overrides"
+            "pnpm.overrides",
+            "pnpm.overrides.*"
           ],
           "description": "Defines which properties in package.json should be parsed by this extension"
         },

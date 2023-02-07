@@ -98,6 +98,67 @@ export default {
       }
     ]
 
+  },
+
+  matchesPathExpressions: {
+    test: {
+      "overrides": {
+        "parentPackage1": {
+          "childPackage1": "2.0.0",
+          "childPackage2": "3.0.0",
+        },
+        "parentPackage2": {
+          "childPackage3": "4.0.0",
+        }
+      }
+    },
+    expected: [
+      <PackageDependency>{
+        nameRange: {
+          start: 32,
+          end: 32
+        },
+        versionRange: {
+          start: 49,
+          end: 54
+        },
+        package: {
+          path: "testPath",
+          name: "childPackage1",
+          version: "2.0.0"
+        }
+      },
+      <PackageDependency>{
+        nameRange: {
+          start: 56,
+          end: 56
+        },
+        versionRange: {
+          start: 73,
+          end: 78
+        },
+        package: {
+          path: "testPath",
+          name: "childPackage2",
+          version: "3.0.0"
+        }
+      },
+      <PackageDependency>{
+        nameRange: {
+          start: 99,
+          end: 99
+        },
+        versionRange: {
+          start: 116,
+          end: 121
+        },
+        package: {
+          path: "testPath",
+          name: "childPackage3",
+          version: "4.0.0"
+        }
+      },
+    ]
   }
 
 }

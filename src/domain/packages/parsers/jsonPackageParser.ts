@@ -33,14 +33,26 @@ export function extractFromNodes(
   const collector = [];
 
   for (const property of includePropNames) {
-    const node = JsonC.findNodeAtLocation(jsonTree, property.split('.'));
-    if (node) collectDependencyNodes(node.children, null, '', collector);
+    const node = findNodesAtLocation(jsonTree, property);
+    if (!node) continue;
+
+    if (node instanceof Array) {
+      collectDependencyNodes(node, null, '', collector);
+    } else {
+      collectDependencyNodes(node.children, null, '', collector);
+    }
+
   }
 
   return collector
 }
 
-function collectDependencyNodes(nodes, parentKey, filterName: string, collector = []) {
+function collectDependencyNodes(
+  nodes: Array<JsonC.Node>,
+  parentKey: JsonC.Node,
+  filterName: string,
+  collector = []
+) {
   nodes.forEach(
     function (node) {
       const [keyEntry, valueEntry] = node.children;
@@ -88,4 +100,36 @@ function createFromProperty(keyEntry, valueEntry): TPackageFileLocationDescripto
     nameRange,
     versionRange
   };
+}
+
+function findNodesAtLocation(
+  jsonTree: JsonC.Node,
+  expression: string
+): JsonC.Node | Array<JsonC.Node> {
+  const pathSegments = expression.split(".");
+
+  // if the path doesn't end with * then process a standard path
+  if (pathSegments[pathSegments.length - 1] !== "*") {
+    return JsonC.findNodeAtLocation(jsonTree, pathSegments);
+  }
+
+  // find the node up until the .*
+  const segmentsWithoutStar = pathSegments.slice(0, pathSegments.length - 1);
+  const nodeUntilDotStar = JsonC.findNodeAtLocation(
+    jsonTree,
+    segmentsWithoutStar
+  );
+
+  if (!nodeUntilDotStar) return null;
+
+  if (!nodeUntilDotStar.children || nodeUntilDotStar.children.length === 0) {
+    return null;
+  }
+
+  // filter the childrens children where the value type is "object"
+  return nodeUntilDotStar.children
+    .filter(x => x.children && x.children.length === 2)
+    .flat()
+    .filter(x => x.children[1].type === "object")
+    .flatMap(x => x.children[1].children);
 }

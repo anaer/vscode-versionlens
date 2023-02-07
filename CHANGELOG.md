@@ -1,3 +1,26 @@
+# 1.3.0
+
+  **npm**
+
+  - added `overrides` support by adding the ability to match child packages using a `.*` expression at the end of json paths in the `dependencyProperties` setting
+
+    **example**
+
+    ```js
+    "versionlens.npm.dependencyProperties": [
+      "overrides",
+      "overrides.*",
+      "pnpm.overrides",
+      "pnpm.overrides.*",
+    ]
+    ```
+
+    > **NOTE**
+    >
+    > - This can be applied to all json file types
+    > - It doesn't verify if parent package names are valid or if their child dependencies are actually child dependencies.
+    A good package manager should pick up these types of issues upon install
+
 # 1.2.2
 
   - Fixed an issue where sometimes the open flag was false when opening a document

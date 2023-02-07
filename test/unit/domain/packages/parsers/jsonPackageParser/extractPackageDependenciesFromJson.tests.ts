@@ -35,6 +35,16 @@ export const extractPackageDependenciesFromJsonTests = {
       includeNames
     );
     assert.deepEqual(results, Fixtures.extractDependencyEntries.expected);
+  },
+
+  "matches json expression paths": () => {
+    const includeNames = ["overrides.*"]
+    const results = extractPackageDependenciesFromJson(
+      "testPath",
+      JSON.stringify(Fixtures.matchesPathExpressions.test),
+      includeNames
+    );
+    assert.deepEqual(results, Fixtures.matchesPathExpressions.expected);
   }
 
 }
