@@ -6,9 +6,9 @@ import { Disposable, env, workspace, WorkspaceEdit } from 'vscode';
 import { VersionLensState } from '../state/versionLensState';
 import {
   SuggestionCommandContributions
-} from '../suggestions/eSuggestionCommandContributions';
+} from './eSuggestionCommandContributions';
 
-export class SuggestionCommands {
+export class SuggestionCommandHandlers {
 
   state: VersionLensState;
 
@@ -53,10 +53,10 @@ export function registerSuggestionCommands(
   state: VersionLensState,
   subscriptions: Array<Disposable>,
   logger: ILogger
-): SuggestionCommands {
+): SuggestionCommandHandlers {
 
   // create the dependency
-  const suggestionCommands = new SuggestionCommands(state, logger);
+  const suggestionCommands = new SuggestionCommandHandlers(state, logger);
 
   // register commands with vscode
   subscriptions.push(

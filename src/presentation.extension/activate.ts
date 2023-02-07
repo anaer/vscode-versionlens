@@ -35,7 +35,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   // instantiate command handlers
   serviceProvider.getService(extensionService.iconCommandHandlers);
-  serviceProvider.getService(extensionService.suggestionCommands);
+  serviceProvider.getService(extensionService.suggestionCommandHandlers);
 
   // instantiate events
   serviceProvider.getService(extensionService.textDocumentEvents);

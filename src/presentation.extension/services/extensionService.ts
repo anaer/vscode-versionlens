@@ -1,6 +1,6 @@
 import {
   IconCommandHandlers,
-  SuggestionCommands,
+  SuggestionCommandHandlers,
   TextDocumentEvents,
   TextEditorEvents,
   VersionLensExtension,
@@ -20,7 +20,7 @@ export interface ExtensionService {
 
   iconCommandHandlers: IconCommandHandlers,
 
-  suggestionCommands: SuggestionCommands,
+  suggestionCommandHandlers: SuggestionCommandHandlers,
 
   textEditorEvents: TextEditorEvents,
 

@@ -1,5 +1,5 @@
 export * as CommandUtils from './commands/commandUtils';
-export * from './commands/suggestionCommands';
+export * from './suggestions/suggestionCommands';
 export * from './events/textDocumentEvents';
 export * as TextDocumentUtils from './events/textDocumentUtils';
 export * from './events/textEditorEvents';
