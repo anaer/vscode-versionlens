@@ -1,23 +1,35 @@
+import { IDispose } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import { PackageSourceType } from 'domain/packages';
 import { dirname, resolve } from 'path';
 import { CommandUtils, VersionLens } from 'presentation.extension';
-import { Disposable, env, workspace, WorkspaceEdit } from 'vscode';
+import * as VsCode from 'vscode';
+import { env, workspace, WorkspaceEdit } from 'vscode';
 import { VersionLensState } from '../state/versionLensState';
 import {
   SuggestionCommandContributions
 } from './eSuggestionCommandContributions';
 
-export class SuggestionCommandHandlers {
+export class SuggestionCommandHandlers implements IDispose {
+
+  constructor(state: VersionLensState, logger: ILogger) {
+    this.state = state;
+    this.logger = logger;
+
+    // register the commands
+    this.disposables = CommandUtils.registerCommands(
+      SuggestionCommandContributions,
+      <any>this,
+      logger
+    );
+  }
 
   state: VersionLensState;
 
   logger: ILogger;
 
-  constructor(state: VersionLensState, logger: ILogger) {
-    this.state = state;
-    this.logger = logger;
-  }
+  // command disposables
+  disposables: Array<VsCode.Disposable>
 
   onUpdateDependencyCommand(codeLens: VersionLens, packageVersion: string) {
     if ((<any>codeLens).__replaced) return Promise.resolve();
@@ -47,25 +59,9 @@ export class SuggestionCommandHandlers {
     env.openExternal(<any>('file:///' + filePathToOpen));
   }
 
-}
+  dispose() {
+    this.disposables.forEach(x => x.dispose());
+    this.logger.debug(`disposed ${SuggestionCommandHandlers.name}`);
+  }
 
-export function registerSuggestionCommands(
-  state: VersionLensState,
-  subscriptions: Array<Disposable>,
-  logger: ILogger
-): SuggestionCommandHandlers {
-
-  // create the dependency
-  const suggestionCommands = new SuggestionCommandHandlers(state, logger);
-
-  // register commands with vscode
-  subscriptions.push(
-    ...CommandUtils.registerCommands(
-      SuggestionCommandContributions,
-      <any>suggestionCommands,
-      logger
-    )
-  );
-
-  return suggestionCommands;
 }

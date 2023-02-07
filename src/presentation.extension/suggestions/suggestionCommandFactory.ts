@@ -44,7 +44,6 @@ export function createSuggestedVersionCommand(codeLens: VersionLens) {
 
     const prefix = isTag ? '' : name + ': ';
     return codeLens.setCommand(
-
       `${prefix}${SuggestionIndicators.Update} ${version}`,
       SuggestionCommandContributions.UpdateDependencyCommand,
       [codeLens, `${replaceWithVersion}`]
