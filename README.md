@@ -5,8 +5,6 @@
 [![Rating](https://vsmarketplacebadges.dev/rating/pflannery.vscode-versionlens.png?color=blue&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=pflannery.vscode-versionlens)
 [![The ISC license](https://img.shields.io/badge/license-ISC-orange.png?color=blue&style=flat-square)](http://opensource.org/licenses/ISC)
 
-[![BuyMeACoffee](https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png)](https://www.buymeacoffee.com/peterf)
-
 This extension shows __version__ information when opening a package or project for one of the following:
 
 - composer https://getcomposer.org/
@@ -17,6 +15,10 @@ This extension shows __version__ information when opening a package or project f
   - jspm https://jspm.org/
   - pnpm https://pnpm.io/
 - pub https://pub.dev/
+
+This project `active` but not sponsored or funded.
+
+[![BuyMeACoffee](https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png)](https://www.buymeacoffee.com/peterf)
 
 ## Contents
 
