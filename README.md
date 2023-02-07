@@ -113,6 +113,8 @@ If that fails then have a look in the `Log (Extension Host)` channel. Report it 
 
 ## How do I troubleshoot this extension?
 
+- Ensure you have `"editor.codeLens": true` set in your settings.
+
 - Ensure that the package\project file open is using the correct file type. i.e. json instead of jsonc
 
   ![image](https://gitlab.com/versionlens/vscode-versionlens/-/raw/master/images/faq/json-file-type.png)
