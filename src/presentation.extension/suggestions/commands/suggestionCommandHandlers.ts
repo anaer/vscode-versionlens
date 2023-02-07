@@ -5,7 +5,7 @@ import { dirname, resolve } from 'path';
 import { CommandUtils, VersionLens } from 'presentation.extension';
 import * as VsCode from 'vscode';
 import { env, workspace, WorkspaceEdit } from 'vscode';
-import { VersionLensState } from '../state/versionLensState';
+import { VersionLensState } from '../../state/versionLensState';
 import {
   SuggestionCommandContributions
 } from './eSuggestionCommandContributions';

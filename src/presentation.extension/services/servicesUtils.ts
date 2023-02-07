@@ -5,7 +5,7 @@ import { DomainService } from "domain/services";
 import { nameOf } from "domain/utils";
 import {
   IconCommandHandlers,
-  registerSuggestionCommands,
+  SuggestionCommandHandlers,
   TextDocumentEvents,
   TextEditorEvents,
   VersionLensExtension
@@ -74,12 +74,14 @@ export function addIconCommands(services: IServiceCollection) {
 export function addSuggestionCommands(services: IServiceCollection) {
   services.addSingleton(
     nameOf<ExtensionService>().suggestionCommandHandlers,
-    (container: DomainService & ExtensionService) =>
-      registerSuggestionCommands(
+    (container: DomainService & ExtensionService) => {
+      const instance = new SuggestionCommandHandlers(
         container.extension.state,
-        container.subscriptions,
         container.logger.child({ namespace: 'suggestion commands' })
       )
+      container.subscriptions.push(instance);
+      return instance;
+    }
   )
 }
 
