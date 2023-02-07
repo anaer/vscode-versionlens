@@ -10,7 +10,7 @@
     "devDependencies",
     "peerDependencies",
     "optionalDependencies",
-    "customDependencies",
+    "overrides",
     "jspm.dependencies",
     "jspm.devDependencies",
     "jspm.peerDependencies",
