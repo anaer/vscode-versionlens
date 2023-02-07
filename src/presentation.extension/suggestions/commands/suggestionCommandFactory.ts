@@ -17,7 +17,7 @@ export function createTagCommand(tag, codeLens) {
 
 export function createDirectoryLinkCommand(codeLens) {
   let title;
-  let cmd = SuggestionCommandContributions.FileLinkCommand;
+  let cmd = SuggestionCommandContributions.FileLinkClicked;
   const filePath = path.resolve(
     path.dirname(codeLens.documentUrl.fsPath),
     codeLens.package.suggestion.version
@@ -45,7 +45,7 @@ export function createSuggestedVersionCommand(codeLens: VersionLens) {
     const prefix = isTag ? '' : name + ': ';
     return codeLens.setCommand(
       `${prefix}${SuggestionIndicators.Update} ${version}`,
-      SuggestionCommandContributions.UpdateDependencyCommand,
+      SuggestionCommandContributions.UpdateDependencyClicked,
       [codeLens, `${replaceWithVersion}`]
     );
   }

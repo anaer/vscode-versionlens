@@ -28,10 +28,15 @@ export class SuggestionCommandHandlers implements IDispose {
 
   logger: ILogger;
 
-  // command disposables
   disposables: Array<VsCode.Disposable>
 
-  onUpdateDependencyCommand(codeLens: VersionLens, packageVersion: string) {
+  /**
+   * Executes when a codelens update suggestion is clicked
+   * @param codeLens 
+   * @param packageVersion 
+   * @returns 
+   */
+  onUpdateDependencyClicked(codeLens: VersionLens, packageVersion: string) {
     if ((<any>codeLens).__replaced) return Promise.resolve();
 
     const edit = new WorkspaceEdit();
@@ -41,7 +46,12 @@ export class SuggestionCommandHandlers implements IDispose {
       .then(done => (<any>codeLens).__replaced = true);
   }
 
-  onFileLinkCommand(codeLens: VersionLens) {
+  /**
+   * Executes when a codelens file link suggestion is clicked
+   * @param codeLens 
+   * @returns 
+   */
+  onFileLinkClicked(codeLens: VersionLens) {
 
     if (codeLens.package.source !== PackageSourceType.Directory) {
       this.logger.error(
