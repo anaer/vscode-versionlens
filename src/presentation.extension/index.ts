@@ -1,6 +1,6 @@
 export * as CommandUtils from './commands/commandUtils';
 export * from './commands/eIconCommandContributions';
-export * from './commands/iconCommands';
+export * from './commands/iconCommandHandlers';
 export * from './commands/suggestionCommands';
 export * from './events/textDocumentEvents';
 export * as TextDocumentUtils from './events/textDocumentUtils';

@@ -57,7 +57,7 @@ export function addSubscriptions(services: IServiceCollection, context: Extensio
 
 export function addIconCommands(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<ExtensionService>().iconCommands,
+    nameOf<ExtensionService>().iconCommandHandlers,
     (container: DomainService & ExtensionService) =>
       registerIconCommands(
         container.extension.state,

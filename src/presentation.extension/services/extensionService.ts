@@ -1,5 +1,5 @@
 import {
-  IconCommands,
+  IconCommandHandlers,
   SuggestionCommands,
   TextDocumentEvents,
   TextEditorEvents,
@@ -18,7 +18,7 @@ export interface ExtensionService {
 
   subscriptions: Array<Disposable>,
 
-  iconCommands: IconCommands,
+  iconCommandHandlers: IconCommandHandlers,
 
   suggestionCommands: SuggestionCommands,
 

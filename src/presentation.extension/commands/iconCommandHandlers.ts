@@ -6,7 +6,7 @@ import * as VsCode from 'vscode';
 import { VersionLensState } from '../state/versionLensState';
 import { IconCommandContributions } from './eIconCommandContributions';
 
-export class IconCommands {
+export class IconCommandHandlers {
 
   state: VersionLensState;
 
@@ -90,10 +90,10 @@ export function registerIconCommands(
   subscriptions: Array<VsCode.Disposable>,
   outputChannel: VsCode.OutputChannel,
   logger: ILogger
-): IconCommands {
+): IconCommandHandlers {
 
   // create the dependency
-  const iconCommands = new IconCommands(
+  const iconCommands = new IconCommandHandlers(
     state,
     outputChannel,
     versionLensProviders

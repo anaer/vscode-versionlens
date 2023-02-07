@@ -30,8 +30,8 @@ export async function activate(context: ExtensionContext) {
 
       const extensionService = nameOf<ExtensionService>();
 
-      // instantiate commands
-      serviceProvider.getService(extensionService.iconCommands);
+      // instantiate command handlers
+      serviceProvider.getService(extensionService.iconCommandHandlers);
       serviceProvider.getService(extensionService.suggestionCommands);
 
       // instantiate events
