@@ -1,3 +1,4 @@
+import { IServiceProvider } from 'domain/di';
 import { ILogger, ILoggingOptions } from 'domain/logging';
 import { DomainService } from 'domain/services';
 import { nameOf } from 'domain/utils';
@@ -5,38 +6,42 @@ import { ExtensionContext, workspace } from 'vscode';
 import { configureContainer } from './extensionContainer';
 import { ExtensionService } from './services';
 
-export async function activate(context: ExtensionContext) {
+let serviceProvider: IServiceProvider;
 
-  return await configureContainer(context)
-    .then(serviceProvider => {
+export async function activate(context: ExtensionContext): Promise<void> {
 
-      const { version } = require('../package.json');
+  serviceProvider = await configureContainer(context)
 
-      // log general start up info
-      const domainService = nameOf<DomainService>();
-      const logger = serviceProvider.getService<ILogger>(domainService.logger);
-      const loggingOptions = serviceProvider.getService<ILoggingOptions>(domainService.loggingOptions);
-      const codeLensEnabled = workspace.getConfiguration().get('editor.codeLens')
+  const { version } = require('../package.json');
 
-      if (codeLensEnabled === false) {
-        logger.error(
-          "codelens is disabled. This extension won't work unless you enable 'editor.codeLens' in your vscode settings"
-        );
-      }
+  // log general start up info
+  const domainService = nameOf<DomainService>();
+  const logger = serviceProvider.getService<ILogger>(domainService.logger);
+  const loggingOptions = serviceProvider.getService<ILoggingOptions>(domainService.loggingOptions);
 
-      logger.info('version: %s', version);
-      logger.info('log level: %s', loggingOptions.level);
-      logger.info('log path: %s', context.logPath);
+  // check editor.codeLens is enabled
+  const codeLensEnabled = workspace.getConfiguration().get('editor.codeLens')
+  if (codeLensEnabled === false) {
+    logger.error(
+      "Code lenses are disabled. This extension won't work unless you enable 'editor.codeLens' in your vscode settings"
+    );
+  }
 
-      const extensionService = nameOf<ExtensionService>();
+  logger.info('version: %s', version);
+  logger.info('log level: %s', loggingOptions.level);
+  logger.info('log path: %s', context.logPath);
 
-      // instantiate command handlers
-      serviceProvider.getService(extensionService.iconCommandHandlers);
-      serviceProvider.getService(extensionService.suggestionCommands);
+  const extensionService = nameOf<ExtensionService>();
 
-      // instantiate events
-      serviceProvider.getService(extensionService.textDocumentEvents);
-      serviceProvider.getService(extensionService.textEditorEvents);
-    });
+  // instantiate command handlers
+  serviceProvider.getService(extensionService.iconCommandHandlers);
+  serviceProvider.getService(extensionService.suggestionCommands);
 
+  // instantiate events
+  serviceProvider.getService(extensionService.textDocumentEvents);
+  serviceProvider.getService(extensionService.textEditorEvents);
+}
+
+export function deactivate() {
+  serviceProvider.dispose();
 }

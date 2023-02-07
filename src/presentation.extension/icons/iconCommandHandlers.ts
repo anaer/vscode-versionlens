@@ -1,10 +1,35 @@
 // vscode references
 import { getProvidersByFileName } from 'application/providers';
-import { VersionLensProvider } from 'presentation.extension';
+import { IDispose } from 'domain/generics/iDispose';
+import { ILogger } from 'domain/logging';
+import {
+  CommandUtils,
+  IconCommandContributions,
+  VersionLensProvider
+} from 'presentation.extension';
 import * as VsCode from 'vscode';
 import { VersionLensState } from '../state/versionLensState';
 
-export class IconCommandHandlers {
+export class IconCommandHandlers implements IDispose {
+
+  constructor(
+    state: VersionLensState,
+    outputChannel: VsCode.OutputChannel,
+    versionLensProviders: Array<VersionLensProvider>,
+    logger: ILogger
+  ) {
+    this.state = state;
+    this.outputChannel = outputChannel;
+    this.versionLensProviders = versionLensProviders;
+    this.logger = logger;
+
+    // register the commands
+    this.disposables = CommandUtils.registerCommands(
+      IconCommandContributions,
+      <any>this,
+      logger
+    );
+  }
 
   state: VersionLensState;
 
@@ -12,15 +37,10 @@ export class IconCommandHandlers {
 
   versionLensProviders: Array<VersionLensProvider>;
 
-  constructor(
-    state: VersionLensState,
-    outputChannel: VsCode.OutputChannel,
-    versionLensProviders: Array<VersionLensProvider>
-  ) {
-    this.state = state;
-    this.outputChannel = outputChannel;
-    this.versionLensProviders = versionLensProviders;
-  }
+  logger: ILogger;
+
+  // command disposables
+  disposables: Array<VsCode.Disposable>
 
   onShowError(resourceUri: VsCode.Uri) {
     return Promise.all([
@@ -78,6 +98,11 @@ export class IconCommandHandlers {
     );
 
     return true;
+  }
+
+  dispose() {
+    this.disposables.forEach(x => x.dispose());
+    this.logger.debug(`disposed ${IconCommandHandlers.name}`);
   }
 
 }

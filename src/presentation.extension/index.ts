@@ -6,7 +6,6 @@ export * from './events/textEditorEvents';
 export * from './extensionContainer';
 export * from './icons/eIconCommandContributions';
 export * from './icons/iconCommandHandlers';
-export * from './icons/registerIconCommands';
 export * from './lenses/versionLens';
 export * as VersionLensFactory from './lenses/versionLensFactory';
 export * from './lenses/versionLensProvider';

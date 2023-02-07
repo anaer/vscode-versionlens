@@ -16,4 +16,8 @@ export class AwilixServiceProvider implements IServiceProvider {
     return this.container.resolve<T>(name);
   }
 
+  dispose() {
+    this.container.dispose();
+  }
+
 }

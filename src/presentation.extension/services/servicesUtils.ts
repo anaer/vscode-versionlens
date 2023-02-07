@@ -4,7 +4,7 @@ import { IServiceCollection } from "domain/di";
 import { DomainService } from "domain/services";
 import { nameOf } from "domain/utils";
 import {
-  registerIconCommands,
+  IconCommandHandlers,
   registerSuggestionCommands,
   TextDocumentEvents,
   TextEditorEvents,
@@ -58,14 +58,16 @@ export function addSubscriptions(services: IServiceCollection, context: Extensio
 export function addIconCommands(services: IServiceCollection) {
   services.addSingleton(
     nameOf<ExtensionService>().iconCommandHandlers,
-    (container: DomainService & ExtensionService) =>
-      registerIconCommands(
+    (container: DomainService & ExtensionService) => {
+      const instance = new IconCommandHandlers(
         container.extension.state,
-        container.versionLensProviders,
-        container.subscriptions,
         container.outputChannel,
+        container.versionLensProviders,
         container.logger.child({ namespace: 'icon commands' })
       )
+      container.subscriptions.push(instance);
+      return instance;
+    }
   )
 }
 
