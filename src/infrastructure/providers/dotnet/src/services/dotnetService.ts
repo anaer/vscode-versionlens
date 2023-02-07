@@ -11,7 +11,6 @@ import {
   NuGetResourceClient
 } from "../..";
 import { DotNetConfig } from "../dotnetConfig";
-import { DotNetSuggestionProvider } from "../dotnetSuggestionProvider";
 
 export interface DotNetService {
   dotnetCachingOpts: CachingOptions,
@@ -22,6 +21,5 @@ export interface DotNetService {
   dotnetCli: DotNetCli,
   dotnetJsonClient: IJsonHttpClient,
   nugetClient: NuGetPackageClient,
-  nugetResClient: NuGetResourceClient,
-  dotnetSuggestionProvider: DotNetSuggestionProvider,
+  nugetResClient: NuGetResourceClient
 }

@@ -72,8 +72,8 @@ export function addPubClient(services: IServiceCollection) {
 }
 
 export function addSuggestionProvider(services: IServiceCollection) {
-  services.addSingleton(
-    nameOf<PubService>().pubSuggestionProvider,
+  services.addScoped(
+    nameOf<DomainService>().suggestionProvider,
     (container: PubService & DomainService) =>
       new PubSuggestionProvider(
         container.pubClient,

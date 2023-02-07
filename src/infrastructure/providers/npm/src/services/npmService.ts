@@ -3,7 +3,6 @@ import { GitHubClient } from '../clients/githubClient';
 import { NpmPackageClient } from '../clients/npmPackageClient';
 import { PacoteClient } from '../clients/pacoteClient';
 import { NpmConfig } from '../npmConfig';
-import { NpmSuggestionProvider } from "../npmSuggestionProvider";
 import { GitHubOptions } from '../options/githubOptions';
 
 export interface NpmService {
@@ -14,6 +13,5 @@ export interface NpmService {
   githubJsonClient: IJsonHttpClient,
   githubClient: GitHubClient,
   pacoteClient: PacoteClient,
-  npmClient: NpmPackageClient,
-  npmSuggestionProvider: NpmSuggestionProvider
+  npmClient: NpmPackageClient
 }

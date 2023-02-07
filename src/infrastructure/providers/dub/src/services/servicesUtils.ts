@@ -73,8 +73,8 @@ export function addDubClient(services: IServiceCollection) {
 }
 
 export function addSuggestionProvider(services: IServiceCollection) {
-  services.addSingleton(
-    nameOf<DubService>().dubSuggestionProvider,
+  services.addScoped(
+    nameOf<DomainService>().suggestionProvider,
     (container: IDubServices & DomainService) =>
       new DubSuggestionProvider(
         container.dubClient,

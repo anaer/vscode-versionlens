@@ -72,8 +72,8 @@ export function addComposerClient(services: IServiceCollection) {
 }
 
 export function addSuggestionProvider(services: IServiceCollection) {
-  services.addSingleton(
-    nameOf<ComposerService>().composerSuggestionProvider,
+  services.addScoped(
+    nameOf<DomainService>().suggestionProvider,
     (container: ComposerService & DomainService) =>
       new ComposerSuggestionProvider(
         container.composerClient,

@@ -112,8 +112,8 @@ export function addNpmPackageClient(services: IServiceCollection) {
 }
 
 export function addSuggestionProvider(services: IServiceCollection) {
-  services.addSingleton(
-    nameOf<NpmService>().npmSuggestionProvider,
+  services.addScoped(
+    nameOf<DomainService>().suggestionProvider,
     (container: NpmService & DomainService) =>
       new NpmSuggestionProvider(
         container.npmClient,

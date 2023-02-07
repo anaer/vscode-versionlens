@@ -97,8 +97,8 @@ export function addMavenClient(services: IServiceCollection) {
 }
 
 export function addSuggestionProvider(services: IServiceCollection) {
-  services.addSingleton(
-    nameOf<MavenService>().mavenSuggestionProvider,
+  services.addScoped(
+    nameOf<DomainService>().suggestionProvider,
     (container: MavenService & DomainService) =>
       new MavenSuggestionProvider(
         container.mvnCli,

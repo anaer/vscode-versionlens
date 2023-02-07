@@ -1,7 +1,9 @@
 import { IServiceProvider } from "domain/di";
 import { ILogger } from "domain/logging";
 import { IProviderModule } from "domain/providers";
+import { DomainService } from "domain/services";
 import { ISuggestionProvider } from "domain/suggestions";
+import { nameOf } from "domain/utils";
 import { AwilixServiceCollection } from "infrastructure/di";
 
 export function importSuggestionProvider(
@@ -22,7 +24,7 @@ export function importSuggestionProvider(
         );
 
         const suggestionProvider = childServiceProvider.getService<ISuggestionProvider>(
-          `${providerName}SuggestionProvider`
+          nameOf<DomainService>().suggestionProvider
         );
 
         logger.debug(

@@ -122,8 +122,8 @@ export function addNuGetResourceClient(services: IServiceCollection) {
 }
 
 export function addSuggestionProvider(services: IServiceCollection) {
-  services.addSingleton(
-    nameOf<DotNetService>().dotnetSuggestionProvider,
+  services.addScoped(
+    nameOf<DomainService>().suggestionProvider,
     (container: DotNetService & DomainService) =>
       new DotNetSuggestionProvider(
         container.dotnetCli,
