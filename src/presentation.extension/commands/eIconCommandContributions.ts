@@ -1,8 +1,8 @@
 export enum IconCommandContributions {
-  ShowError = 'versionlens.onShowError',
-  ShowingProgress = 'versionlens.onShowingProgress',
-  ShowPrereleaseVersions = 'versionlens.onShowPrereleaseVersions',
-  HidePrereleaseVersions = 'versionlens.onHidePrereleaseVersions',
-  ShowVersionLenses = 'versionlens.onShowVersionLenses',
-  HideVersionLenses = 'versionlens.onHideVersionLenses',
+  ShowError = 'versionlens.icons.error',
+  ShowingProgress = 'versionlens.icons.showingProgress',
+  ShowPrereleaseVersions = 'versionlens.icons.showPrereleaseVersions',
+  HidePrereleaseVersions = 'versionlens.icons.hidePrereleaseVersions',
+  ShowVersionLenses = 'versionlens.icons.showVersionLenses',
+  HideVersionLenses = 'versionlens.icons.hideVersionLenses',
 }

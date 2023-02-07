@@ -86,7 +86,7 @@
   "contributes": {
     "commands": [
       {
-        "command": "versionlens.onShowError",
+        "command": "versionlens.icons.error",
         "title": "An error has occurred. See log for details.",
         "category": "VersionLens",
         "icon": {
@@ -95,7 +95,7 @@
         }
       },
       {
-        "command": "versionlens.onShowVersionLenses",
+        "command": "versionlens.icons.showVersionLenses",
         "title": "Show dependency versions",
         "category": "VersionLens",
         "icon": {
@@ -104,7 +104,7 @@
         }
       },
       {
-        "command": "versionlens.onHideVersionLenses",
+        "command": "versionlens.icons.hideVersionLenses",
         "title": "Hide dependency versions",
         "category": "VersionLens",
         "icon": {
@@ -113,7 +113,7 @@
         }
       },
       {
-        "command": "versionlens.onShowPrereleaseVersions",
+        "command": "versionlens.icons.showPrereleaseVersions",
         "title": "Show tagged dependency versions",
         "category": "VersionLens",
         "icon": {
@@ -122,7 +122,7 @@
         }
       },
       {
-        "command": "versionlens.onHidePrereleaseVersions",
+        "command": "versionlens.icons.hidePrereleaseVersions",
         "title": "Hide tagged dependency versions",
         "category": "VersionLens",
         "icon": {
@@ -131,7 +131,7 @@
         }
       },
       {
-        "command": "versionlens.onShowingProgress",
+        "command": "versionlens.icons.showingProgress",
         "title": "Analyzing dependencies...",
         "category": "VersionLens",
         "icon": {
@@ -143,51 +143,51 @@
     "menus": {
       "commandPalette": [
         {
-          "command": "versionlens.onShowPrereleaseVersions",
-          "when": "versionlens.enabled && versionlens.providerActive"
+          "command": "versionlens.icons.showPrereleaseVersions",
+          "when": "versionlens.show && versionlens.providerActive"
         },
         {
-          "command": "versionlens.onHidePrereleaseVersions",
-          "when": "versionlens.enabled && versionlens.providerActive"
+          "command": "versionlens.icons.hidePrereleaseVersions",
+          "when": "versionlens.show && versionlens.providerActive"
         },
         {
-          "command": "versionlens.onShowVersionLenses",
-          "when": "versionlens.enabled && versionlens.providerActive"
+          "command": "versionlens.icons.showVersionLenses",
+          "when": "versionlens.show && versionlens.providerActive"
         },
         {
-          "command": "versionlens.onHideVersionLenses",
-          "when": "versionlens.enabled && versionlens.providerActive"
+          "command": "versionlens.icons.hideVersionLenses",
+          "when": "versionlens.show && versionlens.providerActive"
         }
       ],
       "editor/title": [
         {
-          "command": "versionlens.onShowError",
+          "command": "versionlens.icons.error",
           "when": "versionlens.providerError && versionlens.providerActive && textCompareEditorVisible == false",
           "group": "navigation@1"
         },
         {
-          "command": "versionlens.onShowVersionLenses",
-          "when": "versionlens.enabled == false && versionlens.providerActive && versionlens.providerBusy == false && versionlens.providerError == false && textCompareEditorVisible == false",
+          "command": "versionlens.icons.showVersionLenses",
+          "when": "versionlens.show == false && versionlens.providerActive && versionlens.providerBusy == false && versionlens.providerError == false && textCompareEditorVisible == false",
           "group": "navigation@1"
         },
         {
-          "command": "versionlens.onHideVersionLenses",
-          "when": "versionlens.enabled && versionlens.providerActive && versionlens.providerBusy == false && versionlens.providerError == false  && textCompareEditorVisible == false",
+          "command": "versionlens.icons.hideVersionLenses",
+          "when": "versionlens.show && versionlens.providerActive && versionlens.providerBusy == false && versionlens.providerError == false  && textCompareEditorVisible == false",
           "group": "navigation@1"
         },
         {
-          "command": "versionlens.onShowingProgress",
+          "command": "versionlens.icons.showingProgress",
           "when": "versionlens.providerBusy && versionlens.providerActive && versionlens.providerError == false && textCompareEditorVisible == false",
           "group": "navigation@1"
         },
         {
-          "command": "versionlens.onShowPrereleaseVersions",
-          "when": "versionlens.prereleasesEnabled == false && versionlens.enabled && versionlens.providerActive && versionlens.providerSupportsPrereleases && textCompareEditorVisible == false",
+          "command": "versionlens.icons.showPrereleaseVersions",
+          "when": "versionlens.prereleasesEnabled == false && versionlens.show && versionlens.providerActive && versionlens.providerSupportsPrereleases && textCompareEditorVisible == false",
           "group": "navigation@2"
         },
         {
-          "command": "versionlens.onHidePrereleaseVersions",
-          "when": "versionlens.prereleasesEnabled && versionlens.enabled && versionlens.providerActive && versionlens.providerSupportsPrereleases && textCompareEditorVisible == false",
+          "command": "versionlens.icons.hidePrereleaseVersions",
+          "when": "versionlens.prereleasesEnabled && versionlens.show && versionlens.providerActive && versionlens.providerSupportsPrereleases && textCompareEditorVisible == false",
           "group": "navigation@2"
         }
       ]

@@ -7,7 +7,7 @@ import { StateContributions } from "./eStateContributions";
 export class VersionLensState {
 
   // states
-  enabled: ContextState<boolean>;
+  show: ContextState<boolean>;
 
   prereleasesEnabled: ContextState<boolean>;
 
@@ -29,8 +29,8 @@ export class VersionLensState {
 
   constructor(extension: VersionLensExtension, providerNames: string[]) {
 
-    this.enabled = new ContextState(
-      StateContributions.Enabled,
+    this.show = new ContextState(
+      StateContributions.Show,
       extension.suggestions.showOnStartup
     );
 

@@ -35,14 +35,14 @@ export class IconCommands {
   }
 
   onShowVersionLenses(resourceUri: VsCode.Uri) {
-    this.state.enabled.change(true)
+    this.state.show.change(true)
       .then(_ => {
         this.refreshActiveCodeLenses();
       });
   }
 
   onHideVersionLenses(resourceUri: VsCode.Uri) {
-    this.state.enabled.change(false)
+    this.state.show.change(false)
       .then(_ => {
         this.refreshActiveCodeLenses();
       });

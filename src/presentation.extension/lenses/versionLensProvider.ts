@@ -73,7 +73,7 @@ export class VersionLensProvider implements CodeLensProvider, IProvider {
     document: TextDocument,
     token: CancellationToken
   ): Promise<Array<CodeLens>> {
-    if (this.state.enabled.value === false) return null;
+    if (this.state.show.value === false) return null;
 
     // get the opened state
     const documentOpened = this.state.providerOpened.value;
