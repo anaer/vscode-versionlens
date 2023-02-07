@@ -8,10 +8,10 @@ import {
   SuggestionCommandHandlers,
   TextDocumentEvents,
   TextEditorEvents,
-  VersionLensExtension
+  VersionLensExtension,
+  VersionLensProvider
 } from "presentation.extension";
 import { ExtensionContext, window, workspace } from "vscode";
-import { registerVersionLensProviders } from ".";
 import { ExtensionService } from "./extensionService";
 
 export function addExtensionName(services: IServiceCollection, extensionName: string) {
@@ -113,11 +113,18 @@ export function addVersionLensProviders(services: IServiceCollection) {
   services.addSingleton(
     nameOf<ExtensionService>().versionLensProviders,
     (container: ApplicationService & DomainService & ExtensionService) =>
-      registerVersionLensProviders(
-        container.extension,
-        container.suggestionProviders,
-        container.subscriptions,
-        container.logger
+      container.suggestionProviders.map(
+        suggestionProvider => {
+          const instance = new VersionLensProvider(
+            container.extension,
+            suggestionProvider,
+            container.logger.child({ namespace: `${suggestionProvider.name} codelens` })
+          );
+
+          container.subscriptions.push(instance);
+
+          return instance;
+        }
       )
   )
 }

@@ -1,3 +1,4 @@
+import { IDispose } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import { PackageResponse, PackageSourceType } from 'domain/packages';
 import { IProvider, IProviderConfig } from 'domain/providers';
@@ -15,17 +16,18 @@ import {
   VersionLensFactory,
   VersionLensState
 } from 'presentation.extension';
+import * as VsCode from 'vscode';
 import {
   CancellationToken,
   CodeLens,
-  CodeLensProvider,
-  DocumentSelector,
   Event,
   EventEmitter,
+  languages,
   TextDocument
 } from 'vscode';
 
-export class VersionLensProvider implements CodeLensProvider, IProvider {
+export class VersionLensProvider
+  implements VsCode.CodeLensProvider, IProvider, IDispose {
 
   constructor(
     extension: VersionLensExtension,
@@ -36,8 +38,15 @@ export class VersionLensProvider implements CodeLensProvider, IProvider {
     this.suggestionProvider = suggestionProvider;
     this.logger = logger;
 
+    // register changed event before registering the codelens
     this.notifyCodeLensesChanged = new EventEmitter();
     this.onDidChangeCodeLenses = this.notifyCodeLensesChanged.event;
+
+    // register the codelens provider with vscode
+    this.disposable = languages.registerCodeLensProvider(
+      suggestionProvider.config.fileMatcher,
+      this
+    );
   }
 
   notifyCodeLensesChanged: EventEmitter<void>;
@@ -50,16 +59,14 @@ export class VersionLensProvider implements CodeLensProvider, IProvider {
 
   logger: ILogger;
 
+  disposable: VsCode.Disposable
+
   get config(): IProviderConfig {
     return this.suggestionProvider.config;
   }
 
   get state(): VersionLensState {
     return this.extension.state;
-  }
-
-  get documentSelector(): DocumentSelector {
-    return this.suggestionProvider.config.fileMatcher;
   }
 
   reloadCodeLenses() {
@@ -204,6 +211,12 @@ export class VersionLensProvider implements CodeLensProvider, IProvider {
       return CommandFactory.createDirectoryLinkCommand(codeLens);
 
     return CommandFactory.createSuggestedVersionCommand(codeLens)
+  }
+
+  dispose() {
+    this.disposable.dispose();
+    const providerName = this.suggestionProvider.name;
+    this.logger.debug(`disposed ${providerName} ${VersionLensProvider.name}`);
   }
 
 }

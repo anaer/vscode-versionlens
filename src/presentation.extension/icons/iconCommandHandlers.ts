@@ -42,42 +42,33 @@ export class IconCommandHandlers implements IDispose {
   // command disposables
   disposables: Array<VsCode.Disposable>
 
-  onShowError(resourceUri: VsCode.Uri) {
-    return Promise.all([
+  async onShowError(resourceUri: VsCode.Uri) {
+    await Promise.all([
       this.state.providerError.change(false),
       this.state.providerBusy.change(0)
     ])
-      .then(_ => {
-        this.outputChannel.show();
-      });
+
+    this.outputChannel.show();
   }
 
-  onShowVersionLenses(resourceUri: VsCode.Uri) {
-    this.state.show.change(true)
-      .then(_ => {
-        this.refreshActiveCodeLenses();
-      });
+  async onShowVersionLenses(resourceUri: VsCode.Uri) {
+    await this.state.show.change(true)
+    this.refreshActiveCodeLenses();
   }
 
-  onHideVersionLenses(resourceUri: VsCode.Uri) {
-    this.state.show.change(false)
-      .then(_ => {
-        this.refreshActiveCodeLenses();
-      });
+  async onHideVersionLenses(resourceUri: VsCode.Uri) {
+    await this.state.show.change(false)
+    this.refreshActiveCodeLenses();
   }
 
-  onShowPrereleaseVersions(resourceUri: VsCode.Uri) {
-    this.state.prereleasesEnabled.change(true)
-      .then(_ => {
-        this.refreshActiveCodeLenses();
-      });
+  async onShowPrereleaseVersions(resourceUri: VsCode.Uri) {
+    await this.state.prereleasesEnabled.change(true)
+    this.refreshActiveCodeLenses();
   }
 
-  onHidePrereleaseVersions(resourceUri: VsCode.Uri) {
-    this.state.prereleasesEnabled.change(false)
-      .then(_ => {
-        this.refreshActiveCodeLenses();
-      });
+  async onHidePrereleaseVersions(resourceUri: VsCode.Uri) {
+    await this.state.prereleasesEnabled.change(false)
+    this.refreshActiveCodeLenses();
   }
 
   onShowingProgress(resourceUri: VsCode.Uri) { }
@@ -91,11 +82,7 @@ export class IconCommandHandlers implements IDispose {
     )
     if (!providers) return false;
 
-    providers.forEach(
-      provider => {
-        provider.reloadCodeLenses()
-      }
-    );
+    providers.forEach(provider => provider.reloadCodeLenses());
 
     return true;
   }
