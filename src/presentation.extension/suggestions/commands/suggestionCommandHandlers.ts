@@ -41,7 +41,7 @@ export class SuggestionCommandHandlers implements IDispose {
       .then(done => (<any>codeLens).__replaced = true);
   }
 
-  onLinkCommand(codeLens: VersionLens) {
+  onFileLinkCommand(codeLens: VersionLens) {
 
     if (codeLens.package.source !== PackageSourceType.Directory) {
       this.logger.error(

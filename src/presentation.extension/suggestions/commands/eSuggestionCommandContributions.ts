@@ -1,4 +1,4 @@
 export enum SuggestionCommandContributions {
-  UpdateDependencyCommand = 'versionlens.onUpdateDependencyCommand',
-  LinkCommand = "versionlens.onLinkCommand"
+  UpdateDependencyCommand = 'versionlens.suggestions.updateDependency',
+  FileLinkCommand = "versionlens.suggestions.fileLinkDependency"
 }
