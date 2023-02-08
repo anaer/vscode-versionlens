@@ -16,7 +16,7 @@ This extension shows __version__ information when opening a package or project f
   - pnpm https://pnpm.io/
 - pub https://pub.dev/
 
-This project `active` but not sponsored or funded.
+This project is `active` but not sponsored or funded.
 
 [![BuyMeACoffee](https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png)](https://www.buymeacoffee.com/peterf)
 
