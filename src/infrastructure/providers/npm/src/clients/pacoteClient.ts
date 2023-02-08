@@ -60,8 +60,9 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
       // ensure user config is parsed by npm
       argv: ['', '', `--userconfig=${userConfigPath}`],
       // setup up a custom env for .env files
-      env: NpmUtils.getDotEnv(requestedPackage.path)
+      env: await NpmUtils.getDotEnv(requestedPackage.path)
     });
+
     await npmConfig.load();
 
     // flatten all the options

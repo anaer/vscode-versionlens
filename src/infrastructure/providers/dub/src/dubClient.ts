@@ -19,7 +19,6 @@ import {
   SuggestionStatus,
   TPackageSuggestion
 } from 'domain/suggestions';
-import fs from 'node:fs';
 import { DubConfig } from './dubConfig';
 
 export class DubClient implements IPackageClient<null> {
@@ -146,28 +145,4 @@ export function parseSuggestions(
   }
 
   return suggestions;
-}
-
-export function readDubSelections(filePath) {
-  return new Promise(function (resolve, reject) {
-    if (fs.existsSync(filePath) === false) {
-      reject(null);
-      return;
-    }
-
-    fs.readFile(filePath, "utf-8", (err, data) => {
-      if (err) {
-        reject(err)
-        return;
-      }
-
-      const selectionsJson = JSON.parse(data.toString());
-      if (selectionsJson.fileVersion != 1) {
-        reject(new Error(`Unknown dub.selections.json file version ${selectionsJson.fileVersion}`))
-        return;
-      }
-
-      resolve(selectionsJson);
-    });
-  });
 }

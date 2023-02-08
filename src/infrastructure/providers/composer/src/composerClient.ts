@@ -15,7 +15,6 @@ import {
   VersionHelpers
 } from 'domain/packages';
 import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
-import fs from 'node:fs';
 import { ComposerConfig } from './composerConfig';
 import { IPackagistApiItem } from './definitions/iPackagistApiItem';
 
@@ -130,27 +129,3 @@ export class ComposerClient implements IPackageClient<null> {
       });
   }
 }
-
-export function readComposerSelections(filePath) {
-
-  return new Promise(function (resolve, reject) {
-    if (fs.existsSync(filePath) === false) {
-      reject(null);
-      return;
-    }
-
-    fs.readFile(filePath, "utf-8", (err, data) => {
-      if (err) {
-        reject(err)
-        return;
-      }
-
-      const selectionsJson = JSON.parse(data.toString());
-
-      resolve(selectionsJson);
-    });
-
-  });
-
-}
-

@@ -6,9 +6,9 @@ import {
   PackageVersionType,
   VersionHelpers
 } from 'domain/packages';
+import { readFile } from 'domain/utils';
 import dotenv from 'dotenv';
 import findConfig from 'find-config';
-import fs from 'node:fs';
 
 export function npmReplaceVersion(packageInfo: PackageResponse, newVersion: string): string {
   if (packageInfo.source === PackageClientSourceType.Github) {
@@ -51,7 +51,7 @@ export function convertNpmErrorToResponse(error, source: ClientResponseSource): 
   }
 }
 
-export function getDotEnv(cwd: string): KeyStringDictionary {
+export async function getDotEnv(cwd: string): Promise<KeyStringDictionary> {
   // check for npmrc files
   const npmrcPath = findConfig('.npmrc', { cwd, dot: true });
   if (!npmrcPath) return {};
@@ -61,5 +61,5 @@ export function getDotEnv(cwd: string): KeyStringDictionary {
   if (!envPath) return {};
 
   // return the parsed env object
-  return dotenv.parse(fs.readFileSync(envPath, 'utf8'));
+  return dotenv.parse(await readFile(envPath));
 }
