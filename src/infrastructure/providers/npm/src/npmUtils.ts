@@ -8,7 +8,7 @@ import {
 } from 'domain/packages';
 import dotenv from 'dotenv';
 import findConfig from 'find-config';
-import fs from 'fs';
+import fs from 'node:fs';
 
 export function npmReplaceVersion(packageInfo: PackageResponse, newVersion: string): string {
   if (packageInfo.source === PackageClientSourceType.Github) {

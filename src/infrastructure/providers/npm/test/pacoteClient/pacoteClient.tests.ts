@@ -1,3 +1,4 @@
+import NpmCliConfig from '@npmcli/config';
 import assert from 'assert';
 import { CachingOptions, ICachingOptions } from 'domain/clients';
 import { ILogger } from 'domain/logging';
@@ -7,7 +8,7 @@ import {
   TPackageClientRequest
 } from 'domain/packages';
 import { SuggestionFlags } from 'domain/suggestions';
-import fs from 'fs';
+import fs from 'node:fs';
 import {
   GitHubOptions,
   IPacote,
@@ -15,7 +16,7 @@ import {
   PacoteClient
 } from 'infrastructure/providers/npm';
 import npa from 'npm-package-arg';
-import path from 'path';
+import path from 'node:path';
 import { LoggerStub } from 'test/unit/domain/logging';
 import { sourcePath } from 'test/unit/utils';
 import { anything, capture, instance, mock, when } from 'ts-mockito';
@@ -75,12 +76,11 @@ export const fetchPackageTests = {
       .thenResolve(Fixtures.packumentRegistryRange)
 
     const cut = new PacoteClient(
+      instance(pacoteMock),
+      NpmCliConfigStub,
       instance(configMock),
       instance(loggerMock)
     )
-
-    cut.pacote = instance(pacoteMock)
-    cut.NpmCliConfig = NpmCliConfigStub
 
     return cut.fetchPackage(testRequest, npaSpec)
       .then((actual) => {
@@ -122,12 +122,11 @@ export const fetchPackageTests = {
       .thenResolve(Fixtures.packumentRegistryVersion)
 
     const cut = new PacoteClient(
+      instance(pacoteMock),
+      NpmCliConfigStub,
       instance(configMock),
       instance(loggerMock)
     )
-
-    cut.pacote = instance(pacoteMock)
-    cut.NpmCliConfig = NpmCliConfigStub
 
     return cut.fetchPackage(testRequest, npaSpec)
       .then((actual) => {
@@ -168,12 +167,11 @@ export const fetchPackageTests = {
       .thenResolve(Fixtures.packumentCappedToLatestTaggedVersion)
 
     const cut = new PacoteClient(
+      instance(pacoteMock),
+      NpmCliConfigStub,
       instance(configMock),
       instance(loggerMock)
     )
-
-    cut.pacote = instance(pacoteMock)
-    cut.NpmCliConfig = NpmCliConfigStub
 
     return cut.fetchPackage(testRequest, npaSpec)
       .then((actual) => {
@@ -216,12 +214,11 @@ export const fetchPackageTests = {
       .thenResolve(Fixtures.packumentRegistryAlias)
 
     const cut = new PacoteClient(
+      instance(pacoteMock),
+      NpmCliConfigStub,
       instance(configMock),
       instance(loggerMock)
     )
-
-    cut.pacote = instance(pacoteMock)
-    cut.NpmCliConfig = NpmCliConfigStub
 
     return cut.fetchPackage(testRequest, npaSpec)
       .then((actual) => {
@@ -267,12 +264,11 @@ export const fetchPackageTests = {
       .thenResolve(Fixtures.packumentGit)
 
     const cut = new PacoteClient(
+      instance(pacoteMock),
+      NpmCliConfig,
       instance(configMock),
       instance(loggerMock)
     )
-
-    cut.pacote = instance(pacoteMock)
-    cut.NpmCliConfig = require("@npmcli/config")
 
     const npaSpec = npa.resolve(
       testPackageRes.name,

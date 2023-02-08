@@ -1,10 +1,13 @@
 import { ILoggerChannel, ILoggingOptions } from 'domain/logging';
 import { OutputChannel } from 'vscode';
+import * as Winston from 'winston';
 
-const { Transport: WinstonChannel } = require('winston');
+// workaround for the invalid index.ds.t export from winston
+const WinstonTransport = (<any>Winston).Transport;
+
 const MESSAGE = Symbol.for('message');
 
-export class OutputChannelTransport extends WinstonChannel implements ILoggerChannel {
+export class OutputChannelTransport extends WinstonTransport implements ILoggerChannel {
 
   constructor(outputChannel: OutputChannel, logging: ILoggingOptions) {
     super({ level: logging.level });

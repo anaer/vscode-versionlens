@@ -1,8 +1,10 @@
+import NpmCliConfig from '@npmcli/config';
 import { CachingOptions, HttpOptions } from "domain/clients";
 import { IServiceCollection } from "domain/di";
 import { DomainService } from "domain/services/domainService";
 import { nameOf } from "domain/utils";
 import { createJsonClient } from "infrastructure/http";
+import Pacote from 'pacote';
 import { GitHubClient } from '../clients/githubClient';
 import { NpmPackageClient } from '../clients/npmPackageClient';
 import { PacoteClient } from '../clients/pacoteClient';
@@ -10,7 +12,7 @@ import { NpmContributions } from '../definitions/eNpmContributions';
 import { NpmConfig } from '../npmConfig';
 import { NpmSuggestionProvider } from "../npmSuggestionProvider";
 import { GitHubOptions } from '../options/githubOptions';
-import { NpmService } from "./npmService";
+import { NpmService } from './npmService';
 
 export function addCachingOptions(services: IServiceCollection) {
   services.addSingleton(
@@ -92,6 +94,8 @@ export function addPacoteClient(services: IServiceCollection) {
     nameOf<NpmService>().pacoteClient,
     (container: NpmService & DomainService) =>
       new PacoteClient(
+        Pacote,
+        NpmCliConfig,
         container.npmConfig,
         container.logger.child({ namespace: 'npm pacote' })
       )

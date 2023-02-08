@@ -1,13 +1,12 @@
 import { ILogger, ILoggerChannel } from 'domain/logging';
-
-const { loggers, format, transports } = require('winston');
+import { loggers, format, transports } from 'winston';
 
 export function createWinstonLogger(
   loggerChannel: ILoggerChannel,
   defaultMeta: object
 ): ILogger {
 
-  const logTransports = [
+  const logTransports: any[] = [
     // capture errors in the console
     new transports.Console({ level: 'error' }),
 

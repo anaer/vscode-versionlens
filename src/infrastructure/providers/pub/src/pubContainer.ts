@@ -6,7 +6,7 @@ import {
   addPubClient,
   addPubConfig,
   addSuggestionProvider
-} from './services';
+} from './services/serviceUtils';
 
 export async function configureContainer(
   serviceProvider: IServiceProvider,

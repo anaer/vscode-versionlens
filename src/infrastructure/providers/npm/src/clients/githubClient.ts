@@ -67,7 +67,7 @@ export class GitHubClient {
       headers
     )
       .then(function (clientResponse: JsonClientResponse): TPackageClientResponse {
-        const { compareLoose } = require("semver");
+        const { compareLoose } = semver;
 
         // extract versions
         const tags = <[]>clientResponse.data;

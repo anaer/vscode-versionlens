@@ -3,7 +3,6 @@ import {
   addSuggestionProviders
 } from 'application/services';
 import { IServiceProvider } from 'domain/di';
-
 import {
   addCachingOptions,
   addHttpOptions,
@@ -28,7 +27,7 @@ import {
   addTextEditorEvents,
   addVersionLensExtension,
   addVersionLensProviders
-} from './services';
+} from './services/serviceUtils';
 
 export async function configureContainer(
   context: ExtensionContext

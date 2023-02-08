@@ -4,15 +4,14 @@ import { DomainService } from 'domain/services';
 import { nameOf } from 'domain/utils';
 import { ExtensionContext, workspace } from 'vscode';
 import { configureContainer } from './extensionContainer';
-import { ExtensionService } from './services';
+import { ExtensionService } from './services/extensionService';
+import { readFileSync } from 'node:fs';
 
 let serviceProvider: IServiceProvider;
 
 export async function activate(context: ExtensionContext): Promise<void> {
 
   serviceProvider = await configureContainer(context)
-
-  const { version } = require('../package.json');
 
   // log general start up info
   const domainService = nameOf<DomainService>();
@@ -27,6 +26,12 @@ export async function activate(context: ExtensionContext): Promise<void> {
     );
   }
 
+  const extensionPath = context.asAbsolutePath('');
+  const packageJsonPath = context.asAbsolutePath('package.json');
+  const packageJson = readFileSync(packageJsonPath, 'utf8')
+  const { version } = JSON.parse(packageJson);
+
+  logger.info('extension path: %s', extensionPath);
   logger.info('version: %s', version);
   logger.info('log level: %s', loggingOptions.level);
   logger.info('log path: %s', context.logPath);

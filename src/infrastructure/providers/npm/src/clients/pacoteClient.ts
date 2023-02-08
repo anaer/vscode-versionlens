@@ -10,7 +10,8 @@ import {
 } from 'domain/packages';
 import { createSuggestions } from 'domain/suggestions';
 import { homedir } from 'os';
-import { resolve } from 'path';
+import { resolve } from 'node:path';
+import semver from 'semver';
 import { NpaSpec, NpaTypes } from '../models/npaSpec';
 import { NpmConfig } from '../npmConfig';
 import * as NpmUtils from '../npmUtils';
@@ -25,12 +26,12 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
 
   NpmCliConfig: any;
 
-  constructor(config: NpmConfig, logger: ILogger) {
+  constructor(pacote: any, npmCliConfig: any, config: NpmConfig, logger: ILogger) {
     super(config.caching);
+    this.pacote = pacote;
+    this.NpmCliConfig = npmCliConfig;
     this.config = config;
     this.logger = logger;
-    this.pacote = require('pacote');
-    this.NpmCliConfig = require('@npmcli/config');
   }
 
   async fetchPackage(
@@ -73,7 +74,7 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
     return this.pacote.packument(npaSpec, npmOpts)
       .then(function (packumentResponse): TPackageClientResponse {
 
-        const { compareLoose } = require("semver");
+        const { compareLoose } = semver;
 
         const source: PackageClientSourceType = PackageClientSourceType.Registry;
 

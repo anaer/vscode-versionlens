@@ -8,7 +8,7 @@ import {
   SuggestionFlags,
   SuggestionStatus
 } from 'domain/suggestions';
-import { dirname } from 'path';
+import { dirname } from 'node:path';
 import {
   CommandFactory,
   VersionLens,

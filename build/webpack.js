@@ -14,15 +14,15 @@ module.exports = function (env, argv) {
   const test = env && env.test == 'true'
   const devMode = argv.mode == 'development'
 
-  const entry = test ?
+  const extension = test ?
     path.resolve(testPath, 'runner.ts') :
     path.resolve(sourcePath, './presentation.extension/activate.ts');
 
   const tsconfigFile = path.resolve(projectPath, 'tsconfig.json');
 
   const outputFile = test ?
-    'extension.test.js' :
-    'extension.bundle.js'
+    '[name].test.js' :
+    '[name].bundle.js'
 
   console.log("[info] " + tsconfigFile)
 
@@ -34,8 +34,10 @@ module.exports = function (env, argv) {
       __dirname: false
     },
 
-    entry,
-
+    entry: {
+      extension,
+    },
+  
     externalsType: 'commonjs',
     externals: generateExternals(),
 
@@ -47,11 +49,11 @@ module.exports = function (env, argv) {
             mangle: false
           }
         })
-      ],
+      ]
     },
 
     resolve: {
-      extensions:  ['.ts'],
+      extensions: ['.ts'],
       alias: generateAliases(),
       plugins: [
         new tsconfigPathsPlugin(
@@ -81,8 +83,9 @@ module.exports = function (env, argv) {
       clean: true,
       path: distPath,
       filename: outputFile,
-      libraryTarget: "commonjs2",
-      devtoolModuleFilenameTemplate: "../[resource-path]",
+      library: {
+        type: 'commonjs2',
+      },
     },
 
   }

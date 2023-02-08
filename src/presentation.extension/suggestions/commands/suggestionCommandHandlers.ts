@@ -1,7 +1,7 @@
 import { IDispose } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import { PackageClientSourceType } from 'domain/packages';
-import { dirname, resolve } from 'path';
+import { dirname, resolve } from 'node:path';
 import { CommandUtils, VersionLens } from 'presentation.extension';
 import * as VsCode from 'vscode';
 import { env, workspace, WorkspaceEdit } from 'vscode';
