@@ -11,7 +11,7 @@ import {
   VersionLensExtension,
   VersionLensProvider
 } from "presentation.extension";
-import { ExtensionContext, window, workspace } from "vscode";
+import { window, workspace } from "vscode";
 import { ExtensionService } from "./extensionService";
 
 export function addExtensionName(services: IServiceCollection, extensionName: string) {
@@ -48,40 +48,27 @@ export function addOutputChannel(services: IServiceCollection) {
   )
 }
 
-export function addSubscriptions(services: IServiceCollection, context: ExtensionContext) {
-  services.addSingleton(
-    nameOf<ExtensionService>().subscriptions,
-    context.subscriptions
-  )
-}
-
 export function addIconCommands(services: IServiceCollection) {
   services.addSingleton(
     nameOf<ExtensionService>().iconCommandHandlers,
-    (container: DomainService & ExtensionService) => {
-      const instance = new IconCommandHandlers(
+    (container: DomainService & ExtensionService) =>
+      new IconCommandHandlers(
         container.extension.state,
         container.outputChannel,
         container.versionLensProviders,
         container.logger.child({ namespace: 'icon commands' })
       )
-      container.subscriptions.push(instance);
-      return instance;
-    }
   )
 }
 
 export function addSuggestionCommands(services: IServiceCollection) {
   services.addSingleton(
     nameOf<ExtensionService>().suggestionCommandHandlers,
-    (container: DomainService & ExtensionService) => {
-      const instance = new SuggestionCommandHandlers(
+    (container: DomainService & ExtensionService) =>
+      new SuggestionCommandHandlers(
         container.extension.state,
         container.logger.child({ namespace: 'suggestion commands' })
       )
-      container.subscriptions.push(instance);
-      return instance;
-    }
   )
 }
 
@@ -114,17 +101,12 @@ export function addVersionLensProviders(services: IServiceCollection) {
     nameOf<ExtensionService>().versionLensProviders,
     (container: ApplicationService & DomainService & ExtensionService) =>
       container.suggestionProviders.map(
-        suggestionProvider => {
-          const instance = new VersionLensProvider(
+        suggestionProvider =>
+          new VersionLensProvider(
             container.extension,
             suggestionProvider,
             container.logger.child({ namespace: `${suggestionProvider.name} codelens` })
-          );
-
-          container.subscriptions.push(instance);
-
-          return instance;
-        }
+          )
       )
   )
 }

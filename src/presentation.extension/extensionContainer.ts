@@ -23,7 +23,6 @@ import {
   addExtensionName,
   addIconCommands,
   addOutputChannel,
-  addSubscriptions,
   addSuggestionCommands,
   addTextDocumentEvents,
   addTextEditorEvents,
@@ -62,8 +61,6 @@ export async function configureContainer(
   addVersionLensExtension(services);
 
   addOutputChannel(services);
-
-  addSubscriptions(services, context);
 
   addIconCommands(services);
 

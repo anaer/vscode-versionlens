@@ -6,7 +6,7 @@ import {
   VersionLensExtension,
   VersionLensProvider
 } from 'presentation.extension';
-import { Disposable, OutputChannel } from 'vscode';
+import { OutputChannel } from 'vscode';
 
 export interface ExtensionService {
 
@@ -15,8 +15,6 @@ export interface ExtensionService {
   extension: VersionLensExtension,
 
   outputChannel: OutputChannel,
-
-  subscriptions: Array<Disposable>,
 
   iconCommandHandlers: IconCommandHandlers,
 
