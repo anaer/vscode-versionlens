@@ -1,26 +1,24 @@
+import {
+  HttpClientRequestMethods,
+  HttpClientResponse,
+  IJsonHttpClient,
+  UrlHelpers
+} from 'domain/clients';
 import { ILogger } from 'domain/logging';
-import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
 import {
   ClientResponseFactory,
-  TPackageClientResponse,
-  PackageSourceType,
+  IPackageClient,
+  PackageClientSourceType,
   PackageVersionType,
   TPackageClientRequest,
-  VersionHelpers,
-  IPackageClient
+  TPackageClientResponse,
+  VersionHelpers
 } from 'domain/packages';
-
-import {
-  HttpClientResponse,
-  HttpClientRequestMethods,
-  UrlHelpers,
-  IJsonHttpClient,
-} from 'domain/clients';
-
-import { NuGetClientData } from '../definitions/nuget';
+import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
 import { DotNetVersionSpec } from '../definitions/dotnet';
-import { parseVersionSpec } from '../dotnetUtils';
+import { NuGetClientData } from '../definitions/nuget';
 import { DotNetConfig } from '../dotnetConfig';
+import { parseVersionSpec } from '../dotnetUtils';
 
 export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 
@@ -54,7 +52,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 
         this.logger.debug(
           "Caught exception from %s: %O",
-          PackageSourceType.Registry,
+          PackageClientSourceType.Registry,
           error
         );
 
@@ -70,7 +68,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
         const suggestion = SuggestionFactory.createFromHttpStatus(error.status);
         if (suggestion != null) {
           return ClientResponseFactory.create(
-            PackageSourceType.Registry,
+            PackageClientSourceType.Registry,
             error,
             [suggestion]
           )
@@ -103,7 +101,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 
         const { data } = httpResponse;
 
-        const source = PackageSourceType.Registry;
+        const source = PackageClientSourceType.Registry;
 
         const packageInfo = data;
 
@@ -121,7 +119,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
         // four segment is not supported
         if (dotnetSpec.spec && dotnetSpec.spec.hasFourSegments) {
           return ClientResponseFactory.create(
-            PackageSourceType.Registry,
+            PackageClientSourceType.Registry,
             httpResponse,
             [],
           )

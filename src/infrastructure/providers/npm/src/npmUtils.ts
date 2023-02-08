@@ -1,17 +1,17 @@
 import { ClientResponse, ClientResponseSource } from 'domain/clients';
+import { KeyStringDictionary } from 'domain/generics';
 import {
+  PackageClientSourceType,
   PackageResponse,
-  PackageSourceType,
   PackageVersionType,
   VersionHelpers
 } from 'domain/packages';
 import dotenv from 'dotenv';
-import fs from 'fs';
 import findConfig from 'find-config';
-import { KeyStringDictionary } from 'domain/generics';
+import fs from 'fs';
 
 export function npmReplaceVersion(packageInfo: PackageResponse, newVersion: string): string {
-  if (packageInfo.source === PackageSourceType.Github) {
+  if (packageInfo.source === PackageClientSourceType.Github) {
     return replaceGitVersion(packageInfo, newVersion);
   }
 

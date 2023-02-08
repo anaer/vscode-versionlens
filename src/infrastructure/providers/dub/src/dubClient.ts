@@ -7,9 +7,9 @@ import { ILogger } from 'domain/logging';
 import {
   ClientResponseFactory,
   IPackageClient,
-  PackageSourceType,
-  TPackageClientResponse,
+  PackageClientSourceType,
   TPackageClientRequest,
+  TPackageClientResponse,
   TSemverSpec,
   VersionHelpers
 } from 'domain/packages';
@@ -46,14 +46,14 @@ export class DubClient implements IPackageClient<null> {
 
         this.logger.debug(
           "Caught exception from %s: %O",
-          PackageSourceType.Registry,
+          PackageClientSourceType.Registry,
           error
         );
 
         const suggestion = SuggestionFactory.createFromHttpStatus(error.status);
         if (suggestion != null) {
           return ClientResponseFactory.create(
-            PackageSourceType.Registry,
+            PackageClientSourceType.Registry,
             error,
             [suggestion]
           )
@@ -104,7 +104,7 @@ export class DubClient implements IPackageClient<null> {
         );
 
         return {
-          source: PackageSourceType.Registry,
+          source: PackageClientSourceType.Registry,
           responseStatus,
           type: semverSpec.type,
           resolved,

@@ -3,10 +3,10 @@ import { ILogger } from 'domain/logging';
 import {
   ClientResponseFactory,
   IPackageClient,
-  PackageSourceType,
+  PackageClientSourceType,
   PackageVersionType,
-  TPackageClientResponse,
-  TPackageClientRequest
+  TPackageClientRequest,
+  TPackageClientResponse
 } from 'domain/packages';
 import { SuggestionFactory, TPackageSuggestion } from 'domain/suggestions';
 import npa from 'npm-package-arg';
@@ -41,7 +41,7 @@ export class NpmPackageClient implements IPackageClient<null> {
   }
 
   fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
-    let source: PackageSourceType;
+    let source: PackageClientSourceType;
     const requestedPackage = request.dependency.package;
 
     return new Promise<TPackageClientResponse>((resolve, reject) => {
@@ -63,7 +63,7 @@ export class NpmPackageClient implements IPackageClient<null> {
 
       // return if directory or file document
       if (npaSpec.type === NpaTypes.Directory || npaSpec.type === NpaTypes.File) {
-        source = PackageSourceType.Directory;
+        source = PackageClientSourceType.Directory;
         return resolve(
           PackageFactory.createDirectory(
             requestedPackage,
@@ -75,7 +75,7 @@ export class NpmPackageClient implements IPackageClient<null> {
 
       if (npaSpec.type === NpaTypes.Git) {
 
-        source = PackageSourceType.Git;
+        source = PackageClientSourceType.Git;
 
         if (!npaSpec.hosted) {
           // could not resolve
@@ -89,7 +89,7 @@ export class NpmPackageClient implements IPackageClient<null> {
         if (!npaSpec.gitCommittish && npaSpec.hosted.default !== 'shortcut') {
           return resolve(
             ClientResponseFactory.createFixed(
-              PackageSourceType.Git,
+              PackageClientSourceType.Git,
               ClientResponseFactory.createResponseStatus(ClientResponseSource.local, 0),
               PackageVersionType.Committish,
               'git repository'
@@ -98,12 +98,12 @@ export class NpmPackageClient implements IPackageClient<null> {
         }
 
         // resolve tags, committishes
-        source = PackageSourceType.Github;
+        source = PackageClientSourceType.Github;
         return resolve(this.githubClient.fetchGithub(npaSpec));
       }
 
       // otherwise return registry result
-      source = PackageSourceType.Registry;
+      source = PackageClientSourceType.Registry;
       return resolve(this.pacoteClient.fetchPackage(request, npaSpec));
 
     }).catch(response => {

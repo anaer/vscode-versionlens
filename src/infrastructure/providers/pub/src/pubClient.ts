@@ -1,22 +1,19 @@
-import { ILogger } from 'domain/logging';
-import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
-
-import {
-  TPackageClientRequest,
-  ClientResponseFactory,
-  TPackageClientResponse,
-  PackageSourceType,
-  VersionHelpers,
-  TSemverSpec,
-  IPackageClient,
-} from 'domain/packages';
-
 import {
   HttpClientRequestMethods,
   HttpClientResponse,
   IJsonHttpClient
 } from 'domain/clients';
-
+import { ILogger } from 'domain/logging';
+import {
+  ClientResponseFactory,
+  IPackageClient,
+  PackageClientSourceType,
+  TPackageClientRequest,
+  TPackageClientResponse,
+  TSemverSpec,
+  VersionHelpers
+} from 'domain/packages';
+import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
 import { PubConfig } from './pubConfig';
 
 export class PubClient implements IPackageClient<null> {
@@ -43,14 +40,14 @@ export class PubClient implements IPackageClient<null> {
 
         this.logger.debug(
           "Caught exception from %s: %O",
-          PackageSourceType.Registry,
+          PackageClientSourceType.Registry,
           error
         );
 
         const suggestion = SuggestionFactory.createFromHttpStatus(error.status);
         if (suggestion != null) {
           return ClientResponseFactory.create(
-            PackageSourceType.Registry,
+            PackageClientSourceType.Registry,
             error,
             [suggestion]
           )
@@ -99,7 +96,7 @@ export class PubClient implements IPackageClient<null> {
 
         // return PackageDocument
         return {
-          source: PackageSourceType.Registry,
+          source: PackageClientSourceType.Registry,
           responseStatus,
           type: semverSpec.type,
           resolved,

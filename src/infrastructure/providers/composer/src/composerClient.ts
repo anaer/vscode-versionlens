@@ -8,7 +8,7 @@ import { ILogger } from 'domain/logging';
 import {
   ClientResponseFactory,
   IPackageClient,
-  PackageSourceType,
+  PackageClientSourceType,
   TPackageClientRequest,
   TPackageClientResponse,
   TSemverSpec,
@@ -53,14 +53,14 @@ export class ComposerClient implements IPackageClient<null> {
 
         this.logger.debug(
           "Caught exception from %s: %O",
-          PackageSourceType.Registry,
+          PackageClientSourceType.Registry,
           error
         );
 
         const suggestion = SuggestionFactory.createFromHttpStatus(error.status);
         if (suggestion != null) {
           return ClientResponseFactory.create(
-            PackageSourceType.Registry,
+            PackageClientSourceType.Registry,
             error,
             [suggestion]
           )
@@ -121,7 +121,7 @@ export class ComposerClient implements IPackageClient<null> {
         );
 
         return {
-          source: PackageSourceType.Registry,
+          source: PackageClientSourceType.Registry,
           responseStatus,
           type: semverSpec.type,
           resolved,

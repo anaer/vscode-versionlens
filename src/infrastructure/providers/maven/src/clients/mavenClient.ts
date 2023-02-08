@@ -7,9 +7,9 @@ import { ILogger } from 'domain/logging';
 import {
   ClientResponseFactory,
   IPackageClient,
-  PackageSourceType,
-  TPackageClientResponse,
+  PackageClientSourceType,
   TPackageClientRequest,
+  TPackageClientResponse,
   TSemverSpec,
   VersionHelpers
 } from 'domain/packages';
@@ -49,14 +49,14 @@ export class MavenClient implements IPackageClient<MavenClientData> {
 
         this.logger.debug(
           "Caught exception from %s: %O",
-          PackageSourceType.Registry,
+          PackageClientSourceType.Registry,
           error
         );
 
         const suggestion = SuggestionFactory.createFromHttpStatus(error.status);
         if (suggestion != null) {
           return ClientResponseFactory.create(
-            PackageSourceType.Registry,
+            PackageClientSourceType.Registry,
             error,
             [suggestion]
           )
@@ -83,7 +83,7 @@ export class MavenClient implements IPackageClient<MavenClientData> {
       .then(function (httpResponse): TPackageClientResponse {
 
         const { data } = httpResponse;
-        const source = PackageSourceType.Registry;
+        const source = PackageClientSourceType.Registry;
         const versionRange = semverSpec.rawVersion;
         const requestedPackage = request.dependency.package;
 

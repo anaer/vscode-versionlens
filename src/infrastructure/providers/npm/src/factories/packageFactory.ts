@@ -1,20 +1,19 @@
 import {
   ClientResponseFactory,
-  PackageSourceType,
+  PackageClientSourceType,
   PackageVersionType,
-  TClientResponseStatus,
   TPackageClientResponse,
-  TPackageResource
+  TPackageResource,
+  TPackageResponseStatus
 } from 'domain/packages';
 import { SuggestionFlags, TPackageSuggestion } from 'domain/suggestions';
-
 import { NpaSpec } from '../models/npaSpec';
 
 export const fileDependencyRegex = /^file:(.*)$/;
 
 export function createDirectory(
   requested: TPackageResource,
-  responseStatus: TClientResponseStatus,
+  responseStatus: TPackageResponseStatus,
   npaSpec: NpaSpec
 ): TPackageClientResponse {
 
@@ -26,7 +25,7 @@ export function createDirectory(
     );
   }
 
-  const source = PackageSourceType.Directory;
+  const source = PackageClientSourceType.Directory;
   const type = PackageVersionType.Version;
 
   const resolved = {

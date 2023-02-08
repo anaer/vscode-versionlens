@@ -1,10 +1,10 @@
-import { CodeLens, Range, Uri } from 'vscode';
-import { TSuggestionReplaceFunction } from 'domain/suggestions';
 import {
+  PackageClientSourceType,
   PackageResponse,
-  PackageResponseError,
-  PackageSourceType
+  PackageResponseError
 } from 'domain/packages';
+import { TSuggestionReplaceFunction } from 'domain/suggestions';
+import { CodeLens, Range, Uri } from 'vscode';
 
 export class VersionLens extends CodeLens {
 
@@ -31,7 +31,7 @@ export class VersionLens extends CodeLens {
     this.replaceVersionFn = replaceVersionFn;
   }
 
-  hasPackageSource(source: PackageSourceType): boolean {
+  hasPackageSource(source: PackageClientSourceType): boolean {
     return this.package.source === source;
   }
 

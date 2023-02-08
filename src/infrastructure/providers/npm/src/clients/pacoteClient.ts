@@ -2,10 +2,10 @@ import { AbstractCachedRequest, ClientResponseSource } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
   ClientResponseFactory,
-  PackageSourceType,
+  PackageClientSourceType,
   PackageVersionType,
-  TPackageClientResponse,
   TPackageClientRequest,
+  TPackageClientResponse,
   VersionHelpers
 } from 'domain/packages';
 import { createSuggestions } from 'domain/suggestions';
@@ -75,7 +75,7 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
 
         const { compareLoose } = require("semver");
 
-        const source: PackageSourceType = PackageSourceType.Registry;
+        const source: PackageClientSourceType = PackageClientSourceType.Registry;
 
         const type: PackageVersionType = <any>npaSpec.type;
 

@@ -6,16 +6,16 @@ import {
   createPackageNameVersion,
   createPackageResource,
   IPackageClient,
+  PackageClientSourceType,
   PackageDependency,
   PackageResponse,
-  PackageSourceType,
   PackageVersionType,
   TPackageClientRequest,
   TPackageClientResponse,
   TPackageNameVersion,
   TPackageResource
 } from 'domain/packages';
-import { SuggestionProvider, IProviderConfig } from 'domain/providers';
+import { IProviderConfig, SuggestionProvider } from 'domain/providers';
 import { SuggestionFlags } from 'domain/suggestions';
 import { test } from 'mocha-ui-esm';
 import { anything as any, instance, mock, verify, when } from 'ts-mockito';
@@ -82,7 +82,7 @@ export const AbstractSuggestionProviderTests = {
       // response
       const testRespDoc: TPackageClientResponse = {
         type: PackageVersionType.Version,
-        source: PackageSourceType.Registry,
+        source: PackageClientSourceType.Registry,
         responseStatus: {
           status: 202,
           source: ClientResponseSource.local
@@ -160,7 +160,7 @@ export const AbstractSuggestionProviderTests = {
       // response
       const testRespDoc: TPackageClientResponse = {
         type: PackageVersionType.Version,
-        source: PackageSourceType.Registry,
+        source: PackageClientSourceType.Registry,
         responseStatus: {
           status: 401,
           source: ClientResponseSource.local,

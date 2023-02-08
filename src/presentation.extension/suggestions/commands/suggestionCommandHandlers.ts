@@ -1,6 +1,6 @@
 import { IDispose } from 'domain/generics';
 import { ILogger } from 'domain/logging';
-import { PackageSourceType } from 'domain/packages';
+import { PackageClientSourceType } from 'domain/packages';
 import { dirname, resolve } from 'path';
 import { CommandUtils, VersionLens } from 'presentation.extension';
 import * as VsCode from 'vscode';
@@ -57,7 +57,7 @@ export class SuggestionCommandHandlers implements IDispose {
    */
   async onFileLinkClicked(codeLens: VersionLens): Promise<void> {
 
-    if (codeLens.package.source !== PackageSourceType.Directory) {
+    if (codeLens.package.source !== PackageClientSourceType.Directory) {
       this.logger.error(
         "onLinkCommand can only open local directories.\nPackage: %o",
         codeLens.package

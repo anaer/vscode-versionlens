@@ -1,6 +1,6 @@
 import { TPackageSuggestion } from "domain/suggestions";
-import { TPackageClientRequest } from "../definitions/tPackageClientRequest";
-import { TPackageClientResponse } from "../definitions/tPackageClientResponse";
+import { TPackageClientRequest } from "../clients/tPackageClientRequest";
+import { TPackageClientResponse } from "../clients/tPackageClientResponse";
 import { PackageResponse } from "../models/packageResponse";
 
 export function createSuccess<TClientData>(

@@ -1,6 +1,6 @@
 import { ClientResponseSource } from 'domain/clients';
 
-export type TClientResponseStatus = {
+export type TPackageResponseStatus = {
 
   source: ClientResponseSource;
 
