@@ -5,60 +5,38 @@ export const UrlHelpersTests = {
 
   title: "UrlHelpers",
 
-  "getProtocolFromUrl": {
+  getProtocolFromUrl: {
 
-    "parses http and https protocols": () => {
-      const testUrls = [
-        'https://test.url.example/path',
-        'http://test.url.example/path'
-      ]
-
-      const expectedProtocols = [
-        UrlHelpers.RegistryProtocols.https,
-        UrlHelpers.RegistryProtocols.http
-      ]
-
-      testUrls.forEach((testUrl, testIndex) => {
+    "parses $2 protocols": [
+      ['http://test.url.example/path', UrlHelpers.RegistryProtocols.http],
+      ['https://test.url.example/path', UrlHelpers.RegistryProtocols.https],
+      (testUrl: string, expectedProtocol: string) => {
         const actual = UrlHelpers.getProtocolFromUrl(testUrl)
-        assert.equal(actual, expectedProtocols[testIndex], "Protocol did not match")
-      })
+        assert.equal(actual, expectedProtocol, "Protocol did not match")
+      }
+    ],
 
-    },
-
-    "parses file protocols": () => {
-      const testFolders = [
-        'd:\\some\\path',
-        '/d/some/path'
-      ]
-
-      testFolders.forEach((testFolder, testIndex) => {
+    "parses file protocols for $1": [
+      ['d:\\some\\path'],
+      ['/d/some/path'],
+      (testFolder: string) => {
         const actual = UrlHelpers.getProtocolFromUrl(testFolder)
         assert.equal(actual, UrlHelpers.RegistryProtocols.file, "Protocol did not match")
-      })
-
-    },
+      }
+    ],
 
   },
 
-  "ensureEndSlash": {
+  ensureEndSlash: {
 
-    "appends missing slashes": () => {
-      const testUrls = [
-        'https://test.url.example',
-        'https://test.url.example/'
-      ]
-
-      const expectedUrls = [
-        'https://test.url.example/',
-        'https://test.url.example/'
-      ]
-
-      testUrls.forEach((testUrl, testIndex) => {
+    "appends missing slashes for $1": [
+      ['https://test1.url.example', 'https://test1.url.example/'],
+      ['https://test2.url.example/', 'https://test2.url.example/'],
+      (testUrl: string, expectedUrl: string) => {
         const actual = UrlHelpers.ensureEndSlash(testUrl)
-        assert.equal(actual, expectedUrls[testIndex], "End slash did not match")
-      })
-
-    },
+        assert.equal(actual, expectedUrl, "End slash did not match")
+      },
+    ]
 
   },
 
