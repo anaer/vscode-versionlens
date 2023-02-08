@@ -1,25 +1,45 @@
 # 1.3.0
 
+  **All providers**
+
+  - Added a check to see if the `editor.codeLens` setting is set to `true`.
+    Will print a log message if it's disabled to assist troubleshooting.
+    > This extension will not work if codeLens is disabled.
+
   **npm**
 
-  - added `overrides` support by adding the ability to match child packages using a `.*` expression at the end of json paths in the `dependencyProperties` setting
+  - added `overrides` support by adding the ability to match child packages using a `.*` expression at the end of json paths in the `versionlens.npm.dependencyProperties` setting
 
-    **example**
+  **example**
 
-    ```js
-    "versionlens.npm.dependencyProperties": [
-      "overrides",
-      "overrides.*",
-      "pnpm.overrides",
-      "pnpm.overrides.*",
-    ]
-    ```
+  ```js
+  "versionlens.npm.dependencyProperties": [
+    "overrides",
+    "overrides.*",
+    "pnpm.overrides",
+    "pnpm.overrides.*",
+  ]
+  ```
 
-    > **NOTE**
-    >
-    > - This can be applied to all json file types
-    > - It doesn't verify if parent package names are valid or if their child dependencies are actually child dependencies.
-    A good package manager should pick up these types of issues upon install
+  ```js
+  {
+    "overrides": {
+      "semver": "5.3.0",
+      // "overrides.*" means that the children of "package-xyz" will be parsed
+      "package-xyz": {
+        "typescript": "4.9.5",
+        "semver": "0.1"
+      }
+    }
+  }
+  ```
+
+  > **NOTE**
+  >
+  > - This can be applied to all providers who have json file types.
+  > - The default **pnpm** `dependencyProperties` has been updated with this feature update.
+  > - It doesn't verify if parent package names are valid or if their child entries are actually child dependencies of the parent package.
+  A package manager should pick up these types of issues upon install anyway.
 
 # 1.2.2
 
