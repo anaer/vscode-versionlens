@@ -11,13 +11,11 @@ import {
   ServiceLifetime,
   TServiceResolver
 } from 'domain/di';
-import { KeyDictionary } from 'domain/generics';
-import { DomainService } from 'domain/services/domainService';
+import { KeyDictionary, AsyncFunction } from 'domain/generics';
+import { DomainService } from 'domain/services';
 import { nameOf } from 'domain/utils';
 import { AwilixServiceProvider } from './awilixServiceProvider';
 import { registerAsyncSingletons } from './awillixUtils';
-
-const AsyncFunction = async function () { }.constructor;
 
 export class AwilixServiceCollection implements IServiceCollection {
 

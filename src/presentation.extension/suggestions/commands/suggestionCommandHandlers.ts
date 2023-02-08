@@ -36,14 +36,18 @@ export class SuggestionCommandHandlers implements IDispose {
    * @param packageVersion 
    * @returns 
    */
-  onUpdateDependencyClicked(codeLens: VersionLens, packageVersion: string) {
-    if ((<any>codeLens).__replaced) return Promise.resolve();
+  async onUpdateDependencyClicked(
+    codeLens: VersionLens,
+    packageVersion: string
+  ): Promise<void> {
+    if ((<any>codeLens).__replaced) return;
 
     const edit = new WorkspaceEdit();
     edit.replace(codeLens.documentUrl, codeLens.replaceRange, packageVersion);
 
-    return workspace.applyEdit(edit)
-      .then(done => (<any>codeLens).__replaced = true);
+    await workspace.applyEdit(edit);
+
+    (<any>codeLens).__replaced = true;
   }
 
   /**
@@ -51,7 +55,7 @@ export class SuggestionCommandHandlers implements IDispose {
    * @param codeLens 
    * @returns 
    */
-  onFileLinkClicked(codeLens: VersionLens) {
+  async onFileLinkClicked(codeLens: VersionLens): Promise<void> {
 
     if (codeLens.package.source !== PackageSourceType.Directory) {
       this.logger.error(
@@ -66,7 +70,7 @@ export class SuggestionCommandHandlers implements IDispose {
       codeLens.package.resolved.version
     );
 
-    env.openExternal(<any>('file:///' + filePathToOpen));
+    await env.openExternal(<any>('file:///' + filePathToOpen));
   }
 
   dispose() {

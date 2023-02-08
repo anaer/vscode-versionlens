@@ -1,11 +1,11 @@
 // vscode references
 import * as VsCode from 'vscode';
-import { KeyDictionary } from 'domain/generics';
+import { KeyDictionary, TAsyncFunction } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 
 export function registerCommands(
   contributions: KeyDictionary<string>,
-  handlers: KeyDictionary<Function>,
+  handlers: KeyDictionary<TAsyncFunction<any>>,
   logger: ILogger
 ): Array<VsCode.Disposable> {
 
