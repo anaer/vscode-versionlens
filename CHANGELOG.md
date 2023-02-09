@@ -37,6 +37,11 @@
 
   Reported in [issue #287](https://gitlab.com/versionlens/vscode-versionlens/-/issues/287)
 
+ **dotnet** 
+ 
+ - Fixed an issue where sometimes unsupported four segment versions where 
+   showing a suggestion due to a "/g" regex that kept its state 
+   between calls and caused intermittent true/false values
 
 # 1.3.0
 
