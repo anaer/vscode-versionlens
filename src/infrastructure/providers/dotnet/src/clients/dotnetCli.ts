@@ -2,14 +2,9 @@ import { ILogger } from 'domain/logging';
 import { UrlHelpers, IProcessClient } from 'domain/clients';
 import { DotNetSource } from '../definitions/dotnet';
 import { DotNetConfig } from '../dotnetConfig';
+import { CrLf, Lf } from 'domain/utils';
 
 export class DotNetCli {
-
-  config: DotNetConfig;
-
-  processClient: IProcessClient;
-
-  logger: ILogger;
 
   constructor(config: DotNetConfig, client: IProcessClient, logger: ILogger) {
     this.config = config;
@@ -17,15 +12,20 @@ export class DotNetCli {
     this.logger = logger;
   }
 
+  config: DotNetConfig;
+
+  processClient: IProcessClient;
+
+  logger: ILogger;
+
   async fetchSources(cwd: string): Promise<Array<DotNetSource>> {
+    try {
+      const result = await this.processClient.request(
+        'dotnet',
+        ['nuget', 'list', 'source', '--format', 'short'],
+        cwd
+      );
 
-    const promisedCli = this.processClient.request(
-      'dotnet',
-      ['nuget', 'list', 'source', '--format', 'short'],
-      cwd
-    );
-
-    return await promisedCli.then(result => {
       const { data } = result;
 
       // reject when data contains "error"
@@ -37,22 +37,42 @@ export class DotNetCli {
       }
 
       // extract sources
-      const hasCrLf = data.indexOf(crLf) > 0;
-      const splitChar = hasCrLf ? crLf : '\n';
+      const hasCrLf = data.indexOf(CrLf) > 0;
+      const splitChar = hasCrLf ? CrLf : Lf;
       let lines = data.split(splitChar);
 
       // pop any blank entries
       if (lines[lines.length - 1] === '') lines.pop();
 
-      return parseSourcesArray(lines).filter(s => s.enabled);
-    }).then(sources => {
-      // combine the sources where feed take precedent
+      // parse the sources
+      const sources = parseSourcesArray(lines).filter(s => s.enabled);
+
+      // combine the sources where user feed settings takes precedent
       const feedSources = convertFeedsToSources(this.config.nuget.sources);
-      return [
+      const combinedSources = [
         ...feedSources,
         ...sources
-      ]
-    }).catch(error => {
+      ];
+
+      // log combinedSources for diagnostics
+      this.logger.debug(
+        "package sources found: %s",
+        combinedSources.map(x => x.url)
+      )
+
+      return combinedSources;
+
+    } catch (error) {
+      this.logger.error(
+        "failed to get package sources: %s",
+        error
+      )
+
+      this.logger.info(
+        "using fallback source: %s",
+        this.config.fallbackNugetSource
+      )
+
       // return the fallback source for dotnet clients < 5.5
       return [
         <DotNetSource>{
@@ -62,11 +82,10 @@ export class DotNetCli {
           url: this.config.fallbackNugetSource,
         }
       ]
-    })
+    }
   }
 }
 
-const crLf = '\r\n';
 function parseSourcesArray(lines: Array<string>): Array<DotNetSource> {
   return lines.map(function (line) {
     const enabled = line.substring(0, 1) === 'E';

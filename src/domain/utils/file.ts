@@ -1,6 +1,9 @@
 import fs from 'node:fs';
 import util from 'node:util';
 
+export const CrLf = '\r\n';
+export const Lf = '\n';
+
 const fsReadFile = util.promisify(fs.readFile);
 
 export function readFile(absFilePath: string): Promise<string> {
