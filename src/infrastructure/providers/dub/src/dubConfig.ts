@@ -38,4 +38,8 @@ export class DubConfig extends AbstractProviderConfig implements IProviderConfig
     return this.config.get(DubContributions.OnSaveChangesTask);
   }
 
+  get prereleaseTagFilter(): Array<string> {
+    return this.config.get(DubContributions.prereleaseTagFilter);
+  }
+
 }

@@ -3,7 +3,7 @@ export enum NpmContributions {
   Http = 'npm.http',
   Github = 'npm.github',
   DependencyProperties = 'npm.dependencyProperties',
-  DistTagFilter = 'npm.distTagFilter',
   FilePatterns = 'npm.files',
-  OnSaveChangesTask = 'npm.onSaveChanges'
+  OnSaveChangesTask = 'npm.onSaveChanges',
+  PrereleaseTagFilter = 'npm.prereleaseTagFilter',
 }

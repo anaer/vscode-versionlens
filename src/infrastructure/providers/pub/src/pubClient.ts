@@ -66,7 +66,7 @@ export class PubClient implements IPackageClient<null> {
     const headers = {};
 
     return this.jsonClient.request(HttpClientRequestMethods.get, url, query, headers)
-      .then(function (httpResponse): TPackageClientResponse {
+      .then((httpResponse): TPackageClientResponse => {
 
         const packageInfo = httpResponse.data;
 
@@ -85,7 +85,10 @@ export class PubClient implements IPackageClient<null> {
         const rawVersions = VersionHelpers.extractVersionsFromMap(packageInfo.versions);
 
         // seperate versions to releases and prereleases
-        const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(rawVersions)
+        const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(
+          rawVersions,
+          this.config.prereleaseTagFilter
+        );
 
         // analyse suggestions
         const suggestions = createSuggestions(

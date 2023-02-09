@@ -35,16 +35,16 @@ export class DotNetConfig extends AbstractProviderConfig implements IProviderCon
     return this.config.get(DotNetContributions.DependencyProperties);
   }
 
-  get tagFilter(): Array<string> {
-    return this.config.get(DotNetContributions.TagFilter);
-  }
-
   get fallbackNugetSource(): string {
     return 'https://api.nuget.org/v3/index.json';
   }
 
   get onSaveChangesTask(): string {
     return this.config.get(DotNetContributions.OnSaveChangesTask);
+  }
+
+  get prereleaseTagFilter(): Array<string> {
+    return this.config.get(DotNetContributions.PrereleaseTagFilter);
   }
 
 }

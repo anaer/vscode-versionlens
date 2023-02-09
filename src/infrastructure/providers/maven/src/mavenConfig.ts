@@ -30,16 +30,16 @@ export class MavenConfig extends AbstractProviderConfig implements IProviderConf
     return this.config.get(MavenContributions.DependencyProperties);
   }
 
-  get tagFilter(): Array<string> {
-    return this.config.get(MavenContributions.DependencyProperties);
-  }
-
   get apiUrl(): string {
     return UrlHelpers.ensureEndSlash(this.config.get(MavenContributions.ApiUrl));
   }
 
   get onSaveChangesTask(): string {
     return this.config.get(MavenContributions.OnSaveChangesTask);
+  }
+
+  get prereleaseTagFilter(): Array<string> {
+    return this.config.get(MavenContributions.prereleaseTagFilter);
   }
 
 }

@@ -79,7 +79,7 @@ export class ComposerClient implements IPackageClient<null> {
     const headers = {};
 
     return this.jsonClient.request(HttpClientRequestMethods.get, url, query, headers)
-      .then(function (httpResponse: JsonClientResponse): TPackageClientResponse {
+      .then((httpResponse: JsonClientResponse): TPackageClientResponse => {
         const requestPackage = request.dependency.package;
         const versionRange = semverSpec.rawVersion;
 
@@ -109,7 +109,8 @@ export class ComposerClient implements IPackageClient<null> {
 
         // seperate versions to releases and prereleases
         const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(
-          semverVersions
+          semverVersions,
+          this.config.prereleaseTagFilter
         );
 
         // analyse suggestions

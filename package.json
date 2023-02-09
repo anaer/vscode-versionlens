@@ -277,7 +277,7 @@
           ],
           "description": "Defines which properties in package.json should be parsed by this extension"
         },
-        "versionlens.npm.distTagFilter": {
+        "versionlens.npm.prereleaseTagFilter": {
           "type": "array",
           "items": {
             "type": "string"
@@ -285,7 +285,7 @@
           "uniqueItems": true,
           "minItems": 0,
           "default": [],
-          "description": "Define which common dist tags you want to see. i.e. [alpha, beta]. If you don't specify any dist tags then all the dist-tags for a package will be shown."
+          "description": "Defines a list of prerelease tags you only want to see. i.e. ['alpha', 'beta']. If you don't specify any prerelease tags then all the prerelease tags newer the the latest version are shown when the 'show prereleases' icon is activated."
         },
         "versionlens.pub.onSaveChanges": {
           "type": "string",
@@ -329,6 +329,16 @@
           "default": "https://pub.dev",
           "description": "Defines the pub api to use for package searching."
         },
+        "versionlens.pub.prereleaseTagFilter": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true,
+          "minItems": 0,
+          "default": [],
+          "description": "Defines a list of prerelease tags you only want to see. i.e. ['alpha', 'beta']. If you don't specify any prerelease tags then all the prerelease tags newer the the latest version are shown when the 'show prereleases' icon is activated."
+        },
         "versionlens.dotnet.onSaveChanges": {
           "type": "string",
           "default": null,
@@ -369,16 +379,6 @@
           ],
           "description": "Defines which project properties should be parsed by this extension"
         },
-        "versionlens.dotnet.tagFilter": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "uniqueItems": true,
-          "minItems": 0,
-          "default": [],
-          "description": "Define which common tagged versions you want to see. i.e. [alpha, beta]. If you don't specify any dist tags then all the dist-tags for a package will be shown."
-        },
         "versionlens.dotnet.nuget.sources": {
           "type": "array",
           "items": {
@@ -389,6 +389,16 @@
           },
           "default": [],
           "description": "Defines which nuget source to use for package searching. Has to be a v3 'service index' endpoint. e.g. https://api.nuget.org/v3/index.json. Defaults to the sources output by `dotnet nuget list source`"
+        },
+        "versionlens.dotnet.prereleaseTagFilter": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true,
+          "minItems": 0,
+          "default": [],
+          "description": "Defines a list of prerelease tags you only want to see. i.e. ['alpha', 'beta']. If you don't specify any prerelease tags then all the prerelease tags newer the the latest version are shown when the 'show prereleases' icon is activated."
         },
         "versionlens.dub.onSaveChanges": {
           "type": "string",
@@ -432,6 +442,16 @@
           ],
           "description": "Defines which properties in dub.json should be parsed by this extension"
         },
+        "versionlens.dub.prereleaseTagFilter": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true,
+          "minItems": 0,
+          "default": [],
+          "description": "Defines a list of prerelease tags you only want to see. i.e. ['alpha', 'beta']. If you don't specify any prerelease tags then all the prerelease tags newer the the latest version are shown when the 'show prereleases' icon is activated."
+        },
         "versionlens.composer.onSaveChanges": {
           "type": "string",
           "default": null,
@@ -474,6 +494,16 @@
           ],
           "description": "Defines which properties in composer.json should be parsed by this extension"
         },
+        "versionlens.composer.prereleaseTagFilter": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true,
+          "minItems": 0,
+          "default": [],
+          "description": "Defines a list of prerelease tags you only want to see. i.e. ['alpha', 'beta']. If you don't specify any prerelease tags then all the prerelease tags newer the the latest version are shown when the 'show prereleases' icon is activated."
+        },
         "versionlens.maven.onSaveChanges": {
           "type": "string",
           "default": null,
@@ -515,6 +545,16 @@
             "parent"
           ],
           "description": "Defines which properties in pom.xml should be parsed by this extension"
+        },
+        "versionlens.maven.prereleaseTagFilter": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true,
+          "minItems": 0,
+          "default": [],
+          "description": "Defines a list of prerelease tags you only want to see. i.e. ['alpha', 'beta']. If you don't specify any prerelease tags then all the prerelease tags newer the the latest version are shown when the 'show prereleases' icon is activated."
         },
         "versionlens.github.accessToken": {
           "type": [

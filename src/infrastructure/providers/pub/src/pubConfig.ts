@@ -38,4 +38,8 @@ export class PubConfig extends AbstractProviderConfig implements IProviderConfig
     return this.config.get(PubContributions.OnSaveChangesTask);
   }
 
+  get prereleaseTagFilter(): Array<string> {
+    return this.config.get(PubContributions.PrereleaseTagFilter);
+  }
+
 }

@@ -97,7 +97,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
       query,
       headers
     )
-      .then(function (httpResponse) {
+      .then((httpResponse) => {
 
         const { data } = httpResponse;
 
@@ -114,7 +114,10 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
         const rawVersions = VersionHelpers.filterSemverVersions(packageInfo.versions);
 
         // seperate versions to releases and prereleases
-        const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(rawVersions)
+        const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(
+          rawVersions,
+          this.config.prereleaseTagFilter
+        );
 
         // four segment is not supported
         if (dotnetSpec.spec && dotnetSpec.spec.hasFourSegments) {

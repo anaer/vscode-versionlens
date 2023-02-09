@@ -3,7 +3,7 @@ export enum DotNetContributions {
   Http = 'dotnet.http',
   Nuget = 'dotnet.nuget',
   DependencyProperties = 'dotnet.dependencyProperties',
-  TagFilter = 'dotnet.tagFilter',
   FilePatterns = 'dotnet.files',
-  OnSaveChangesTask = 'dotnet.onSaveChanges'
+  OnSaveChangesTask = 'dotnet.onSaveChanges',
+  PrereleaseTagFilter = 'dotnet.prereleaseTagFilter',
 }

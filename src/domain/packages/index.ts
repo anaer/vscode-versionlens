@@ -10,6 +10,7 @@ export * from './definitions/tPackageFileLocationDescriptor';
 export * from './definitions/tPackageNameVersion';
 export * from './definitions/tPackageResource';
 export * from "./definitions/tPackageResponseStatus";
+export * from './definitions/tPackageVersions';
 export * from './definitions/tSemverSpec';
 export * as ResponseFactory from './factories/packageResponseFactory';
 export * as VersionHelpers from './helpers/versionHelpers';

@@ -66,7 +66,7 @@ export class GitHubClient {
       query,
       headers
     )
-      .then(function (clientResponse: JsonClientResponse): TPackageClientResponse {
+      .then((clientResponse: JsonClientResponse): TPackageClientResponse => {
         const { compareLoose } = semver;
 
         // extract versions
@@ -91,7 +91,8 @@ export class GitHubClient {
 
         // seperate versions to releases and prereleases
         const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(
-          allVersions
+          allVersions,
+          this.config.prereleaseTagFilter
         );
 
         // analyse suggestions

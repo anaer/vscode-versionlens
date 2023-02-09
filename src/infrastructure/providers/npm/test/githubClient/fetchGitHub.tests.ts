@@ -32,6 +32,7 @@ export const fetchGithubTests = {
     loggerMock = mock(LoggerStub);
 
     when(configMock.github).thenReturn(instance(githubOptsMock))
+    when(configMock.prereleaseTagFilter).thenReturn([])
   },
 
   'returns a #semver:x.x.x. package': async () => {

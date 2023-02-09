@@ -73,7 +73,7 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
 
     // fetch the package from npm's pacote
     return this.pacote.packument(npaSpec, npmOpts)
-      .then(function (packumentResponse): TPackageClientResponse {
+      .then((packumentResponse): TPackageClientResponse => {
 
         const { compareLoose } = semver;
 
@@ -97,7 +97,8 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
 
         // seperate versions to releases and prereleases
         let { releases, prereleases } = VersionHelpers.splitReleasesFromArray(
-          rawVersions
+          rawVersions,
+          this.config.prereleaseTagFilter
         );
 
         // extract prereleases from dist tags

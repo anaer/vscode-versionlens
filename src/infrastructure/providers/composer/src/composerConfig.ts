@@ -30,6 +30,10 @@ export class ComposerConfig extends AbstractProviderConfig implements IProviderC
     return this.config.get(ComposerContributions.DependencyProperties);
   }
 
+  get prereleaseTagFilter(): Array<string> {
+    return this.config.get(ComposerContributions.PrereleaseTagFilter);
+  }
+
   get apiUrl(): string {
     return UrlHelpers.ensureEndSlash(this.config.get(ComposerContributions.ApiUrl));
   }

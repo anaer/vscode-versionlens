@@ -43,6 +43,7 @@ export const fetchPackageTests = {
 
     when(configMock.caching).thenReturn(instance(cachingOptsMock))
     when(configMock.github).thenReturn(instance(githubOptsMock))
+    when(configMock.prereleaseTagFilter).thenReturn([])
   },
 
   'returns a registry range package': async () => {

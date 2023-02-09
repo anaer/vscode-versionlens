@@ -10,29 +10,36 @@ const testVersions = [
   '12.0.0-next.1',
 ]
 
+const expectedReleases = [
+  '1.0.0',
+  '2.0.0',
+  '9.5.12',
+  '11.1.9',
+]
+
+const expectedPrereleases = [
+  '2.0.0-beta.1',
+  '12.0.0-next.1',
+]
+
 export const splitReleasesFromArrayTests = {
 
   title: VersionHelpers.splitReleasesFromArray.name,
 
   "returns empty when no matches found": () => {
-    const { releases, prereleases } = VersionHelpers.splitReleasesFromArray([]);
+    const { releases, prereleases } = VersionHelpers.splitReleasesFromArray([], []);
     assert.equal(releases.length, 0);
     assert.equal(prereleases.length, 0);
   },
 
   "returns mapped PackageNameVersion array": () => {
-    const expectedReleases = [
-      '1.0.0',
-      '2.0.0',
-      '9.5.12',
-      '11.1.9',
-    ]
-    const expectedPrereleases = [
-      '2.0.0-beta.1',
-      '12.0.0-next.1',
-    ]
-    const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(testVersions);
+    const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(
+      testVersions,
+      []
+    );
+
     assert.equal(releases.length, expectedReleases.length);
+    assert.equal(prereleases.length, expectedPrereleases.length);
 
     expectedReleases.forEach((expectedVersion, index) => {
       assert.equal(releases[index], expectedVersion);
@@ -41,6 +48,29 @@ export const splitReleasesFromArrayTests = {
     expectedPrereleases.forEach((expectedVersion, index) => {
       assert.equal(prereleases[index], expectedVersion);
     })
-  }
+  },
+
+  "filters prereleases": () => {
+
+    const expectedPrereleases = [
+      '2.0.0-beta.1'
+    ]
+
+    const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(
+      testVersions,
+      ["beta"]
+    );
+
+    assert.equal(releases.length, expectedReleases.length);
+    assert.equal(prereleases.length, expectedPrereleases.length);
+
+    expectedReleases.forEach((expectedVersion, index) => {
+      assert.equal(releases[index], expectedVersion);
+    });
+
+    expectedPrereleases.forEach((expectedVersion, index) => {
+      assert.equal(prereleases[index], expectedVersion);
+    });
+  },
 
 }

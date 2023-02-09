@@ -1,3 +1,43 @@
+# 1.4.0
+
+  **All providers**
+
+  Added ability to filter pre-release tags.
+
+  Some authors publish many different pre-releases that are newer than the latest release. This can create a long list of noise when wanting to view pre-releases.
+  
+  So this option is available to filter pre-release tags. `1.0.0-{pre-release-tag}.1`
+
+  Example: `["alpha", "beta"]`
+
+  The default is `[]` which shows all the newest tagged versions as it did in previous versions.
+
+  |Provider|Setting
+  |-|-
+  |**Composer**|`versionlens.composer.prereleaseTagFilter`
+  |**Dotnet**|`versionlens.dotnet.prereleaseTagFilter`
+  |**Dub**|`versionlens.dub.prereleaseTagFilter`
+  |**Npm**|`versionlens.npm.prereleaseTagFilter`
+  |**Maven**|`versionlens.maven.prereleaseTagFilter`
+  |**Pub**|`versionlens.pub.prereleaseTagFilter`
+
+  Related to [#315](https://gitlab.com/versionlens/vscode-versionlens/-/issues/315)
+
+  **npm, dotnet and maven**
+
+  Functionality for the following settings were removed many years ago but the setting was still present in the package.json causing confusion.
+
+  Use the `prereleaseTagFilter` setting instead (mentioned above).
+
+  | Unused settings removed
+  |-
+  |`versionlens.npm.distTagFilter`
+  |`versionlens.dotnet.tagFilter`
+  |`versionlens.maven.tagFilter`
+
+  Reported in [issue #287](https://gitlab.com/versionlens/vscode-versionlens/-/issues/287)
+
+
 # 1.3.0
 
   **All providers**

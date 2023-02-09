@@ -80,7 +80,7 @@ export class MavenClient implements IPackageClient<MavenClientData> {
       query,
       headers
     )
-      .then(function (httpResponse): TPackageClientResponse {
+      .then((httpResponse): TPackageClientResponse => {
 
         const { data } = httpResponse;
         const source = PackageClientSourceType.Registry;
@@ -100,7 +100,8 @@ export class MavenClient implements IPackageClient<MavenClientData> {
 
         // seperate versions to releases and prereleases
         const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(
-          semverVersions
+          semverVersions,
+          this.config.prereleaseTagFilter
         );
 
         const resolved = {

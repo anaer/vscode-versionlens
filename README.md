@@ -5,6 +5,10 @@
 [![Rating](https://vsmarketplacebadges.dev/rating/pflannery.vscode-versionlens.png?color=blue&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=pflannery.vscode-versionlens)
 [![The ISC license](https://img.shields.io/badge/license-ISC-orange.png?color=blue&style=flat-square)](http://opensource.org/licenses/ISC)
 
+This project is `active` but not sponsored or funded.
+
+[![BuyMeACoffee](https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png)](https://www.buymeacoffee.com/peterf)
+
 This extension shows __version__ information when opening a package or project for one of the following:
 
 - composer https://getcomposer.org/
@@ -16,9 +20,7 @@ This extension shows __version__ information when opening a package or project f
   - pnpm https://pnpm.io/
 - pub https://pub.dev/
 
-This project is `active` but not sponsored or funded.
-
-[![BuyMeACoffee](https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png)](https://www.buymeacoffee.com/peterf)
+Version lens abides to [semver rules](https://semver.org/) and uses the [Node Semver](https://github.com/npm/node-semver) package to compare and sort versions.
 
 ## Contents
 
