@@ -102,7 +102,7 @@ export function isFixedVersion(versionToCheck: string): boolean {
   return valid(versionToCheck) !== null && testRange.set[0][0].operator === "";
 }
 
-const isfourSegmentVersionRegex = /^(\d+\.)(\d+\.)(\d+\.)(\*|\d+)$/g;
+const isfourSegmentVersionRegex = /^(\d+\.)(\d+\.)(\d+\.)(\*|\d+)$/;
 export function isFourSegmentedVersion(versionToCheck: string): boolean {
   return isfourSegmentVersionRegex.test(versionToCheck);
 }
