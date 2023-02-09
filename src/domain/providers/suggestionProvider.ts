@@ -32,9 +32,13 @@ export class SuggestionProvider
    * Providers can return custom client data that will be sent with each fetchPackage request
    * @param packagePath 
    */
-  protected preFetchSuggestions?(packagePath: string): Promise<TClientData>;
+  protected preFetchSuggestions?(
+    projectPath: string,
+    packagePath: string
+  ): Promise<TClientData>;
 
   async fetchSuggestions(
+    projectPath: string,
     packagePath: string,
     dependencies: Array<PackageDependency>,
   ): Promise<Array<PackageResponse>> {
@@ -42,7 +46,7 @@ export class SuggestionProvider
     // get any client data if implemented
     let clientData: any = {};
     if (this.preFetchSuggestions) {
-      clientData = await this.preFetchSuggestions(packagePath);
+      clientData = await this.preFetchSuggestions(projectPath, packagePath);
     }
 
     // queue package fetch tasks

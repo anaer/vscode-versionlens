@@ -8,21 +8,24 @@ import {
   TPackageClientRequest
 } from 'domain/packages';
 import { SuggestionFlags } from 'domain/suggestions';
-import fs from 'node:fs';
+import { fileExists } from 'domain/utils';
 import {
   GitHubOptions,
   IPacote,
   NpmConfig,
   PacoteClient
 } from 'infrastructure/providers/npm';
-import npa from 'npm-package-arg';
 import path from 'node:path';
+import npa from 'npm-package-arg';
 import { LoggerStub } from 'test/unit/domain/logging';
-import { sourcePath } from 'test/unit/utils';
+import { createFile, fileDir, removeFile } from 'test/unit/utils';
 import { anything, capture, instance, mock, when } from 'ts-mockito';
+import { TNpmClientData } from '../../src/definitions/tNpmClientData';
 import Fixtures from './pacoteClient.fixtures';
 import { NpmCliConfigStub } from './stubs/npmCliConfigStub';
 import { PacoteStub } from './stubs/pacoteStub';
+
+const testDir = fileDir();
 
 let cachingOptsMock: ICachingOptions;
 let githubOptsMock: GitHubOptions;
@@ -56,9 +59,11 @@ export const fetchPackageTests = {
       'packagepath',
     );
 
+    const testClientData: TNpmClientData = { projectPath: testPackageRes.path };
+
     const testRequest: TPackageClientRequest<any> = {
       providerName: 'testnpmprovider',
-      clientData: {},
+      clientData: testClientData,
       dependency: new PackageDependency(
         testPackageRes,
         null,
@@ -102,9 +107,11 @@ export const fetchPackageTests = {
       'packagepath',
     );
 
+    const testClientData: TNpmClientData = { projectPath: testPackageRes.path };
+
     const testRequest: TPackageClientRequest<any> = {
       providerName: 'testnpmprovider',
-      clientData: {},
+      clientData: testClientData,
       dependency: new PackageDependency(
         testPackageRes,
         null,
@@ -147,9 +154,11 @@ export const fetchPackageTests = {
       'packagepath',
     );
 
+    const testClientData: TNpmClientData = { projectPath: testPackageRes.path };
+
     const testRequest: TPackageClientRequest<any> = {
       providerName: 'testnpmprovider',
-      clientData: {},
+      clientData: testClientData,
       dependency: new PackageDependency(
         testPackageRes,
         null,
@@ -194,9 +203,11 @@ export const fetchPackageTests = {
       'packagepath',
     );
 
+    const testClientData: TNpmClientData = { projectPath: testPackageRes.path };
+
     const testRequest: TPackageClientRequest<any> = {
       providerName: 'testnpmprovider',
-      clientData: {},
+      clientData: testClientData,
       dependency: new PackageDependency(
         testPackageRes,
         null,
@@ -232,8 +243,8 @@ export const fetchPackageTests = {
 
   'uses npmrc registry with dotenv file': async function () {
     const packagePath = path.join(
-      sourcePath,
-      'infrastructure/providers/npm/test/pacoteClient/npmrc-test'
+      testDir,
+      'npmrc-test'
     );
 
     const testPackageRes = createPackageResource(
@@ -244,9 +255,11 @@ export const fetchPackageTests = {
       packagePath,
     );
 
-    const testRequest: TPackageClientRequest<any> = {
+    const testClientData: TNpmClientData = { projectPath: packagePath };
+
+    const testRequest: TPackageClientRequest<TNpmClientData> = {
       providerName: 'testnpmprovider',
-      clientData: {},
+      clientData: testClientData,
       dependency: new PackageDependency(
         testPackageRes,
         null,
@@ -257,9 +270,13 @@ export const fetchPackageTests = {
 
     // write the npmrc file
     const npmrcPath = packagePath + '/.npmrc';
-    fs.writeFileSync(npmrcPath, Fixtures[".npmrc"])
-    fs.writeFileSync(`${packagePath}/.env`, Fixtures[".npmrc-env"])
-    assert.ok(fs.existsSync(testPackageRes.path), 'test .npmrc doesnt exist?')
+    const envPath = packagePath + '/.env';
+
+    await createFile(npmrcPath, Fixtures[".npmrc"])
+    await createFile(envPath, Fixtures[".npmrc-env"])
+
+    assert.ok(await fileExists(npmrcPath), 'test .npmrc doesnt exist?')
+    assert.ok(await fileExists(envPath), 'test .env doesnt exist?')
 
     when(pacoteMock.packument(anything(), anything()))
       .thenResolve(Fixtures.packumentGit)
@@ -277,19 +294,19 @@ export const fetchPackageTests = {
       testPackageRes.path
     )
 
-    return cut.fetchPackage(testRequest, npaSpec)
-      .then(_ => {
-        const expectedRegistryAuth = "//registry.npmjs.example/:_authToken";
+    await cut.fetchPackage(testRequest, npaSpec)
 
-        const [, actualOpts] = capture(pacoteMock.packument).first()
-        assert.equal(actualOpts.cwd, testPackageRes.path);
+    const expectedRegistryAuth = "//registry.npmjs.example/:_authToken";
 
-        const expectedPassword = "12345678";
-        assert.equal(actualOpts[expectedRegistryAuth], expectedPassword);
+    const [, actualOpts] = capture(pacoteMock.packument).first()
+    assert.equal(actualOpts.cwd, testPackageRes.path);
 
-        // delete the npmrc file
-        fs.unlinkSync(npmrcPath)
-      })
+    const expectedPassword = "12345678";
+    assert.equal(actualOpts[expectedRegistryAuth], expectedPassword);
+
+    // delete the temp files
+    await removeFile(npmrcPath);
+    await removeFile(envPath);
   }
 
 }

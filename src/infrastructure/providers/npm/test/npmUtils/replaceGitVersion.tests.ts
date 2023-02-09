@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { PackageClientSourceType, PackageResponse } from 'domain/packages';
-import * as NpmUtils from 'infrastructure/providers/npm';
+import { NpmUtils } from 'infrastructure/providers/npm';
 
 export const npmReplaceVersionTests = {
 

@@ -9,22 +9,15 @@ import {
   VersionHelpers
 } from 'domain/packages';
 import { createSuggestions } from 'domain/suggestions';
-import { homedir } from 'os';
 import { resolve } from 'node:path';
+import { homedir } from 'os';
 import semver from 'semver';
+import { TNpmClientData } from '../definitions/tNpmClientData';
 import { NpaSpec, NpaTypes } from '../models/npaSpec';
 import { NpmConfig } from '../npmConfig';
 import * as NpmUtils from '../npmUtils';
 
 export class PacoteClient extends AbstractCachedRequest<number, TPackageClientResponse> {
-
-  config: NpmConfig;
-
-  logger: ILogger;
-
-  pacote: any;
-
-  NpmCliConfig: any;
 
   constructor(pacote: any, npmCliConfig: any, config: NpmConfig, logger: ILogger) {
     super(config.caching);
@@ -34,8 +27,16 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
     this.logger = logger;
   }
 
+  config: NpmConfig;
+
+  logger: ILogger;
+
+  pacote: any;
+
+  NpmCliConfig: any;
+
   async fetchPackage(
-    request: TPackageClientRequest<null>,
+    request: TPackageClientRequest<TNpmClientData>,
     npaSpec: NpaSpec
   ): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;
@@ -50,17 +51,35 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
       return Promise.resolve(cachedResp.data);
     }
 
+    // package path takes precedence
+    const resolveDotFilePaths = [
+      requestedPackage.path,
+      request.clientData.projectPath
+    ];
+
+    // try to resolve the .npmrc file path
+    const npmRcFilePath = await NpmUtils.resolveDotFilePath(
+      ".npmrc",
+      resolveDotFilePaths
+    );
+
+    const hasNpmRcFile = npmRcFilePath.length > 0;
+
     // load the npm config
     const userConfigPath = resolve(homedir(), ".npmrc");
     const npmConfig = new this.NpmCliConfig({
       shorthands: {},
       definitions: {},
       npmPath: requestedPackage.path,
-      cwd: requestedPackage.path,
-      // ensure user config is parsed by npm
+      // use the npmrc path to make npm cli parse the npmrc file
+      // otherwise defaults to the package path
+      cwd: hasNpmRcFile ? npmRcFilePath : requestedPackage.path,
+      // ensures user config is parsed by npm
       argv: ['', '', `--userconfig=${userConfigPath}`],
-      // setup up a custom env for .env files
-      env: await NpmUtils.getDotEnv(requestedPackage.path)
+      // pass through .env data only if there is an .npmrc file
+      env: hasNpmRcFile
+        ? await NpmUtils.getDotEnv(resolveDotFilePaths)
+        : {}
     });
 
     await npmConfig.load();

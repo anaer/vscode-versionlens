@@ -1,16 +1,14 @@
 # 1.4.0
 
-  **All providers**
+## All providers
 
   Added ability to filter pre-release tags.
 
-  Some authors publish many different pre-releases that are newer than the latest release. This can create a long list of noise when wanting to view pre-releases.
+  Some authors publish many different pre-releases that are newer than the given version. This can sometimes create a long list of noise when wanting to view pre-releases.
   
-  So this option is available to filter pre-release tags. `1.0.0-{pre-release-tag}.1`
+  So this option is available to filter pre-release tags. 1.0.0-`{pre-release-tag}`.1
 
-  Example: `["alpha", "beta"]`
-
-  The default is `[]` which shows all the newest tagged versions as it did in previous versions.
+  The default is an empty array `[]` which will show all the newest pre-release versions (as it did in previous versions of `versionlens`).
 
   |Provider|Setting
   |-|-
@@ -21,9 +19,33 @@
   |**Maven**|`versionlens.maven.prereleaseTagFilter`
   |**Pub**|`versionlens.pub.prereleaseTagFilter`
 
+  Example: `["alpha", "beta"]` will only show alpha and beta pre-releases
+
   Related to [issue #315](https://gitlab.com/versionlens/vscode-versionlens/-/issues/315)
 
-  **npm, dotnet and maven**
+## Npm
+
+  Fixed an issue where `.npmrc` files were'nt being parsed by the `@npmcli/config`.
+
+  This occurred because `@npmcli/config` doesn't walk up directories to find `.npmrc` files. It only searches upwards for `package.json` files.
+
+  Version lens now
+
+  - checks if there is an `.npmrc` file at the currently open `package.json` path
+  - if it doesn't exist then it checks for an `.npmrc` at the workspace root path
+  - if no `.npmrc` files exist it will provide `@npmcli/config` the package path (as it did for previous versions of `versionlens`)
+
+## DotNet
+
+ - Fixed an issue where sometimes "non-semver"" four segment versions where 
+   showing a suggestion due to a "/g" regex that kept its state 
+   between calls and caused intermittent true/false values.
+
+ - Now writes the package sources list to the debug log for diagnostics
+
+   Related to [issue #310](https://gitlab.com/versionlens/vscode-versionlens/-/issues/310)
+
+## DotNet, Maven and Npm
 
   Functionality for the following settings were removed many years ago but the setting was still present in the package.json causing confusion.
 
@@ -37,25 +59,15 @@
 
   Reported in [issue #287](https://gitlab.com/versionlens/vscode-versionlens/-/issues/287)
 
- **dotnet**
- 
- - Fixed an issue where sometimes unsupported four segment versions where 
-   showing a suggestion due to a "/g" regex that kept its state 
-   between calls and caused intermittent true/false values
-
- - Added package sources list to the debug log for diagnostics
-
-   Related to [issue #310](https://gitlab.com/versionlens/vscode-versionlens/-/issues/310)
-
 # 1.3.0
 
-  **All providers**
+## All providers
 
   - Added a check to see if the `editor.codeLens` setting is set to `true`.
     Will print a log message if it's disabled to assist troubleshooting.
     > This extension will not work if codeLens is disabled.
 
-  **npm**
+## Npm
 
   - added `overrides` support by adding the ability to match child packages using a `.*` expression at the end of json paths in the `versionlens.npm.dependencyProperties` setting
 

@@ -6,11 +6,12 @@ import {
 import { SuggestionProvider } from 'domain/providers';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import { NpmPackageClient } from './clients/npmPackageClient';
+import { TNpmClientData } from './definitions/tNpmClientData';
 import { NpmConfig } from './npmConfig';
 import { npmReplaceVersion } from './npmUtils';
 
 export class NpmSuggestionProvider
-  extends SuggestionProvider<NpmPackageClient, null>
+  extends SuggestionProvider<NpmPackageClient, TNpmClientData>
   implements ISuggestionProvider {
 
   constructor(client: NpmPackageClient, logger: ILogger) {
@@ -41,12 +42,17 @@ export class NpmSuggestionProvider
     return packageDependencies;
   }
 
-  protected async preFetchSuggestions(packagePath: string): Promise<any> {
+  protected async preFetchSuggestions(
+    projectPath: string,
+    packagePath: string
+  ): Promise<TNpmClientData> {
     if (this.config.github.accessToken &&
       this.config.github.accessToken.length > 0) {
       // defrost github parameters
       this.config.github.defrost();
     }
+
+    return { projectPath }
   }
 
 }

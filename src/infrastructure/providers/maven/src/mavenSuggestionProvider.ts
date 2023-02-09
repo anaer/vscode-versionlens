@@ -42,7 +42,10 @@ export class MavenSuggestionProvider
     return packageDependencies;
   }
 
-  protected async preFetchSuggestions(packagePath: string): Promise<MavenClientData> {
+  protected async preFetchSuggestions(
+    projectPath: string,
+    packagePath: string
+  ): Promise<MavenClientData> {
     // gets source feeds from the project path
     const repos = await this.mvnCli.fetchRepositories(packagePath);
 
@@ -52,7 +55,7 @@ export class MavenSuggestionProvider
     );
 
     // return the client data
-    return { repositories } as MavenClientData;
+    return { repositories };
   }
 
 }

@@ -19,7 +19,6 @@ import {
 import { ExtensionContext } from 'vscode';
 import {
   addAppConfig,
-  addExtensionName,
   addIconCommands,
   addOutputChannel,
   addSuggestionCommands,
@@ -55,9 +54,7 @@ export async function configureContainer(
   addWinstonLogger(services, "extension");
 
   // extension
-  addExtensionName(services, VersionLensExtension.extensionName);
-
-  addVersionLensExtension(services);
+  addVersionLensExtension(services, context.asAbsolutePath(''));
 
   addOutputChannel(services);
 

@@ -6,9 +6,9 @@ import {
   PackageVersionType,
   VersionHelpers
 } from 'domain/packages';
-import { readFile } from 'domain/utils';
+import { fileExists, readFile } from 'domain/utils';
 import dotenv from 'dotenv';
-import findConfig from 'find-config';
+import { resolve } from 'node:path';
 
 export function npmReplaceVersion(packageInfo: PackageResponse, newVersion: string): string {
   if (packageInfo.source === PackageClientSourceType.Github) {
@@ -43,7 +43,10 @@ function replaceAliasVersion(packageInfo: PackageResponse, newVersion: string): 
   return `npm:${packageInfo.resolved.name}@${preservedLeadingVersion}`;
 }
 
-export function convertNpmErrorToResponse(error, source: ClientResponseSource): ClientResponse<number, string> {
+export function convertNpmErrorToResponse(
+  error,
+  source: ClientResponseSource
+): ClientResponse<number, string> {
   return {
     source,
     status: error.code,
@@ -51,14 +54,23 @@ export function convertNpmErrorToResponse(error, source: ClientResponseSource): 
   }
 }
 
-export async function getDotEnv(cwd: string): Promise<KeyStringDictionary> {
-  // check for npmrc files
-  const npmrcPath = findConfig('.npmrc', { cwd, dot: true });
-  if (!npmrcPath) return {};
+export async function resolveDotFilePath(
+  dotFileName: string,
+  cwds: Array<string>
+): Promise<string> {
+  for (const cwd of cwds) {
+    const checkPath = resolve(cwd, dotFileName);
+    const dotFileExists = await fileExists(checkPath);
+    if (dotFileExists) return checkPath;
+  }
 
-  // find the env file
-  const envPath = findConfig('.env', { cwd, dot: true });
-  if (!envPath) return {};
+  return "";
+}
+
+export async function getDotEnv(cwds: Array<string>): Promise<KeyStringDictionary> {
+  // try to resolve the .env file
+  const envPath = await resolveDotFilePath(".env", cwds);
+  if (envPath.length === 0) return {};
 
   // return the parsed env object
   return dotenv.parse(await readFile(envPath));

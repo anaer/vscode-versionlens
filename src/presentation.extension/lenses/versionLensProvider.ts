@@ -144,6 +144,7 @@ export class VersionLensProvider
       const startedAt = performance.now();
 
       suggestions = await this.suggestionProvider.fetchSuggestions(
+        this.extension.projectPath,
         packagePath,
         packageDeps
       );

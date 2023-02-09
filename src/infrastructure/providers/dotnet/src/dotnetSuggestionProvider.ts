@@ -57,7 +57,10 @@ export class DotNetSuggestionProvider
     return packageDependencies;
   }
 
-  protected async preFetchSuggestions(packagePath: string) {
+  protected async preFetchSuggestions(
+    projectPath: string,
+    packagePath: string
+  ): Promise<NuGetClientData> {
     // ensure latest nuget sources from settings
     this.config.nuget.defrost();
 
@@ -84,7 +87,7 @@ export class DotNetSuggestionProvider
       return null;
     }
 
-    return { serviceUrls } as NuGetClientData
+    return { serviceUrls };
   };
 
 }

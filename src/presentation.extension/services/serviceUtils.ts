@@ -14,13 +14,6 @@ import {
 import { window, workspace } from "vscode";
 import { ExtensionService } from "./extensionService";
 
-export function addExtensionName(services: IServiceCollection, extensionName: string) {
-  services.addSingleton(
-    nameOf<ExtensionService>().extensionName,
-    extensionName
-  )
-}
-
 export function addAppConfig(services: IServiceCollection, appName: string) {
   services.addSingleton(
     nameOf<DomainService>().appConfig,
@@ -28,12 +21,16 @@ export function addAppConfig(services: IServiceCollection, appName: string) {
   )
 }
 
-export function addVersionLensExtension(services: IServiceCollection) {
+export function addVersionLensExtension(
+  services: IServiceCollection,
+  projectPath: string
+) {
   services.addSingleton(
     nameOf<ExtensionService>().extension,
     (container: ApplicationService & DomainService & ExtensionService) =>
       new VersionLensExtension(
         container.appConfig,
+        projectPath,
         container.providerNames
       )
   )
@@ -43,8 +40,9 @@ export function addOutputChannel(services: IServiceCollection) {
   services.addSingleton(
     nameOf<ExtensionService>().outputChannel,
     // vscode output channel called "VersionLens"
-    (container: ExtensionService) =>
-      window.createOutputChannel(container.extensionName)
+    () => window.createOutputChannel(
+      VersionLensExtension.extensionName.toLowerCase()
+    )
   )
 }
 

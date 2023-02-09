@@ -5,6 +5,7 @@ import { nameOf, readJsonFile } from 'domain/utils';
 import { ExtensionContext, workspace } from 'vscode';
 import { configureContainer } from './extensionContainer';
 import { ExtensionService } from './services/extensionService';
+import { VersionLensExtension } from './versionLensExtension';
 
 let serviceProvider: IServiceProvider;
 
@@ -14,7 +15,12 @@ export async function activate(context: ExtensionContext): Promise<void> {
   // log general start up info
   const domainService = nameOf<DomainService>();
   const logger = serviceProvider.getService<ILogger>(domainService.logger);
-  const loggingOptions = serviceProvider.getService<ILoggingOptions>(domainService.loggingOptions);
+  const loggingOptions = serviceProvider.getService<ILoggingOptions>(
+    domainService.loggingOptions
+  );
+  const extension = serviceProvider.getService<VersionLensExtension>(
+    nameOf<ExtensionService>().extension
+  );
 
   // check editor.codeLens is enabled
   const codeLensEnabled = workspace.getConfiguration().get('editor.codeLens')
@@ -28,9 +34,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const packageJsonPath = context.asAbsolutePath('package.json');
   const { version } = await readJsonFile<any>(packageJsonPath);
 
-  logger.info('path: %s', extensionPath);
+  logger.info('extension path: %s', extensionPath);
   logger.info('version: %s', version);
   logger.info('log level: %s', loggingOptions.level);
+  logger.info('project path: %s', extension.projectPath); 
 
   const extensionService = nameOf<ExtensionService>();
 

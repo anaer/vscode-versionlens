@@ -14,6 +14,7 @@ export interface ISuggestionProvider extends IProvider {
   ): Array<PackageDependency>;
 
   fetchSuggestions(
+    projectPath: string,
     packagePath: string,
     packageDependencies: Array<PackageDependency>
   ): Promise<Array<PackageResponse>>;
