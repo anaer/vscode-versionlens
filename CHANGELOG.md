@@ -21,7 +21,7 @@
   |**Maven**|`versionlens.maven.prereleaseTagFilter`
   |**Pub**|`versionlens.pub.prereleaseTagFilter`
 
-  Related to [#315](https://gitlab.com/versionlens/vscode-versionlens/-/issues/315)
+  Related to [issue #315](https://gitlab.com/versionlens/vscode-versionlens/-/issues/315)
 
   **npm, dotnet and maven**
 
@@ -37,11 +37,15 @@
 
   Reported in [issue #287](https://gitlab.com/versionlens/vscode-versionlens/-/issues/287)
 
- **dotnet** 
+ **dotnet**
  
  - Fixed an issue where sometimes unsupported four segment versions where 
    showing a suggestion due to a "/g" regex that kept its state 
    between calls and caused intermittent true/false values
+
+ - Added package sources list to the debug log for diagnostics
+
+   Related to [issue #310](https://gitlab.com/versionlens/vscode-versionlens/-/issues/310)
 
 # 1.3.0
 
