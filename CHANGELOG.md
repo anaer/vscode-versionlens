@@ -6,9 +6,9 @@
 
   Some authors publish many different pre-releases that are newer than the given version. This can sometimes create a long list of noise when wanting to view pre-releases.
   
-  So this option is available to filter pre-release tags. 1.0.0-`{pre-release-tag}`.1
+  So this option is available to filter pre-release tags. `1.0.0-{pre-release-tag}.1`
 
-  The default is an empty array `[]` which will show all the newest pre-release versions (as it did in previous versions of `versionlens`).
+  The default is an empty array `[]` which will show all the newest pre-release versions (as it did in previous versions of `version lens`).
 
   |Provider|Setting
   |-|-
@@ -25,15 +25,15 @@
 
 ## Npm
 
-  Fixed an issue where `.npmrc` files were'nt being parsed by the `@npmcli/config`.
+  Fixed an issue where `.npmrc` files weren't being parsed by the `@npmcli/config`.
 
-  This occurred because `@npmcli/config` doesn't walk up directories to find `.npmrc` files. It only searches upwards for `package.json` files.
+  This occurred because `@npmcli/config` doesn't walk up directories to find `.npmrc` files because it only searches upwards for `package.json` files.
 
   Version lens now
 
   - checks if there is an `.npmrc` file at the currently open `package.json` path
   - if it doesn't exist then it checks for an `.npmrc` at the workspace root path
-  - if no `.npmrc` files exist it will provide `@npmcli/config` the package path (as it did for previous versions of `versionlens`)
+  - if no `.npmrc` files exist it will provide `@npmcli/config` the package path (as it did for previous versions of `version lens`)
 
 ## DotNet
 
@@ -47,7 +47,7 @@
 
 ## DotNet, Maven and Npm
 
-  Functionality for the following settings were removed many years ago but the setting was still present in the package.json causing confusion.
+  Functionality for the following settings were removed a long time ago but these settings were still present in `version lens` causing confusion.
 
   Use the `prereleaseTagFilter` setting instead (mentioned above).
 
