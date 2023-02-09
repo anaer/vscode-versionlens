@@ -1,19 +1,7 @@
 import { KeyStringDictionary } from 'domain/generics';
-
-import { HttpClientRequestMethods } from "./eHttpClientRequestMethods";
 import { JsonClientResponse } from './clientResponses';
+import { HttpClientRequestMethods } from "./eHttpClientRequestMethods";
 import { IHttpClient } from './iHttpClient';
-
-export interface TJsonClientRequestFn {
-
-  (
-    method: HttpClientRequestMethods,
-    url: string,
-    query: KeyStringDictionary,
-    headers: KeyStringDictionary,
-  ): Promise<JsonClientResponse>;
-
-}
 
 export interface IJsonHttpClient {
 
@@ -21,6 +9,11 @@ export interface IJsonHttpClient {
 
   clearCache: () => void;
 
-  request: TJsonClientRequestFn;
+  request: (
+    method: HttpClientRequestMethods,
+    url: string,
+    query: KeyStringDictionary,
+    headers: KeyStringDictionary,
+  ) => Promise<JsonClientResponse>;
 
 }

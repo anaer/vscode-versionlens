@@ -1,21 +1,20 @@
-import { ILogger } from 'domain/logging';
 import {
-  HttpClientResponse,
   HttpClientRequestMethods,
+  HttpClientResponse,
   IJsonHttpClient
 } from 'domain/clients';
-
-import { NugetServiceIndexResponse } from '../definitions/nuget';
+import { ILogger } from 'domain/logging';
 import { DotNetSource } from '../definitions/dotnet';
+import { NugetServiceIndexResponse } from '../definitions/nuget';
 
 export class NuGetResourceClient {
 
   logger: any;
 
-  client: IJsonHttpClient;
+  jsonClient: IJsonHttpClient;
 
   constructor(client: IJsonHttpClient, logger: ILogger) {
-    this.client = client;
+    this.jsonClient = client;
     this.logger = logger;
   }
 
@@ -25,36 +24,35 @@ export class NuGetResourceClient {
 
     this.logger.debug("Requesting PackageBaseAddressService from %s", source.url)
 
-    return await this.client.request(
-      HttpClientRequestMethods.get,
-      source.url,
-      query,
-      headers
-    )
-      .then((response: NugetServiceIndexResponse) => {
-        const packageBaseAddressServices = response.data.resources
-          .filter(res => res["@type"].indexOf('PackageBaseAddress') > -1);
+    try {
+      const response = await this.jsonClient.request(
+        HttpClientRequestMethods.get,
+        source.url,
+        query,
+        headers
+      ) as NugetServiceIndexResponse;
 
-        // just take one service for now
-        const foundPackageBaseAddressServices = packageBaseAddressServices[0]["@id"];
+      const packageBaseAddressServices = response.data.resources
+        .filter(res => res["@type"].indexOf('PackageBaseAddress') > -1);
 
-        this.logger.debug(
-          "Resolved PackageBaseAddressService endpoint: %O",
-          foundPackageBaseAddressServices
-        );
+      // just take one service for now
+      const foundPackageBaseAddressServices = packageBaseAddressServices[0]["@id"];
 
-        return foundPackageBaseAddressServices;
-      })
-      .catch((error: HttpClientResponse) => {
+      this.logger.debug(
+        "Resolved PackageBaseAddressService endpoint: %O",
+        foundPackageBaseAddressServices
+      );
 
-        this.logger.error(
-          "Could not resolve nuget service index. %O",
-          error
-        )
-
-        return "";
-      });
-
+      return foundPackageBaseAddressServices;
+    }
+    catch (error) {
+      const responseError = error as HttpClientResponse;
+      this.logger.error(
+        "Could not resolve nuget service index. %O",
+        responseError
+      )
+      return "";
+    }
   }
 
 }

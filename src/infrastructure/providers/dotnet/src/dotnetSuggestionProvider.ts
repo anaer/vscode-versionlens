@@ -70,11 +70,9 @@ export class DotNetSuggestionProvider
         s.protocol === UrlHelpers.RegistryProtocols.http
     );
 
-    // resolve each service url
+    // convert each fetch resource to a promise
     const promised = remoteSources.map(
-      async (remoteSource) => {
-        return await this.nugetResClient.fetchResource(remoteSource);
-      }
+      remoteSource => this.nugetResClient.fetchResource(remoteSource)
     );
 
     // filter service urls
