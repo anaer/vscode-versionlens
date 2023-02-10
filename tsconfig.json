@@ -10,7 +10,7 @@
     "module": "Node16",
     "moduleResolution": "Node16",
     "outDir": "./out/",
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": false,
     "lib": [
       "ES2019"

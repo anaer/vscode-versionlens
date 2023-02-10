@@ -1,8 +1,17 @@
+import { TPackageLocationDescriptor } from 'domain/packages';
 import * as JsonC from 'jsonc-parser';
 import {
-  TPackageLocationDescriptor,
-  TPackageVersionLocationDescriptor
-} from '../../index';
+  createPackageDescFromJsonNode,
+  createPathDescFromJsonNode,
+  createRepoDescFromJsonNode,
+  createVersionDescFromJsonNode
+} from './jsonPackageTypeFactory';
+
+const complexTypeHandlers = {
+  "version": createVersionDescFromJsonNode,
+  "path": createPathDescFromJsonNode,
+  "repository": createRepoDescFromJsonNode
+};
 
 export function extractPackageDependenciesFromJson(
   json: string,
@@ -46,65 +55,62 @@ function descendChildNodes(
   const noIncludePropName = includePropName.length === 0;
 
   for (const node of nodes) {
-    const [keyEntry, valueEntry] = node.children;
+    const [keyNode, valueNode] = node.children;
+    const isStringType = valueNode.type == "string";
 
-    if (valueEntry.type == "string" &&
-      (noIncludePropName || keyEntry.value === includePropName)) {
+    // parse string properties
+    if (isStringType && (noIncludePropName || keyNode.value === includePropName)) {
 
-      // create dependency location from the property
-      const dependencyLoc = createLocFromVersionProperty(
-        parentKeyNode,
-        keyEntry,
-        valueEntry
-      );
+      // create the package descriptor
+      const packageDesc = createPackageDescFromJsonNode(parentKeyNode || keyNode)
 
-      matchedDependencies.push(dependencyLoc);
+      // add the version type to the package desc
+      const versionDesc = createVersionDescFromJsonNode(parentKeyNode, valueNode);
+      packageDesc.types.push(versionDesc);
 
-    } else if (valueEntry.type == "object") {
-      // recurse child nodes
-      const children = descendChildNodes(
-        valueEntry.children,
-        keyEntry,
-        'version'
-      )
+      // add the package desc to the matched array
+      matchedDependencies.push(packageDesc);
 
-      matchedDependencies.push.apply(matchedDependencies, children);
+      continue;
     }
+
+    // parse complex properties
+    if (valueNode.type == "object") {
+
+      // create the package descriptor
+      const packageDesc = createPackageDescFromJsonNode(parentKeyNode || keyNode);
+
+      for (const typeName in complexTypeHandlers) {
+
+        const typeNode = JsonC.findNodeAtLocation(valueNode, [typeName]);
+
+        if (typeNode) {
+          // get the type desc
+          const handler = complexTypeHandlers[typeName];
+
+          // add the handled type to the package desc
+          const typeDesc = handler(
+            keyNode,
+            typeNode
+          );
+
+          // skip types that are't fully defined
+          if (!typeDesc) continue;
+
+          packageDesc.types.push(typeDesc);
+        }
+      }
+
+      // skip when no types were added
+      if (packageDesc.types.length === 0) continue;
+
+      // add the package desc to the matched array
+      matchedDependencies.push(packageDesc);
+    }
+
   }
 
   return matchedDependencies;
-}
-
-function createLocFromVersionProperty(
-  parentKeyNode: JsonC.Node,
-  keyNode: JsonC.Node,
-  valueNode: JsonC.Node
-): TPackageLocationDescriptor {
-
-  const node = parentKeyNode || keyNode;
-
-  const nameRange = {
-    start: node.offset,
-    end: node.offset,
-  };
-
-  // +1 and -1 to be inside quotes
-  const versionRange = {
-    start: valueNode.offset + 1,
-    end: valueNode.offset + valueNode.length - 1,
-  };
-
-  const versionDesc: TPackageVersionLocationDescriptor = {
-    type: "version",
-    version: valueNode.value,
-    versionRange
-  }
-
-  return {
-    name: node.value,
-    nameRange,
-    types: [versionDesc]
-  };
 }
 
 function findNodesAtLocation(

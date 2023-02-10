@@ -1,6 +1,8 @@
-import { 
-  TPackageLocationDescriptor, 
-  TPackageVersionLocationDescriptor 
+import {
+  TPackageGitLocationDescriptor,
+  TPackageLocationDescriptor,
+  TPackagePathLocationDescriptor,
+  TPackageVersionLocationDescriptor
 } from "domain/packages";
 
 export default {
@@ -16,8 +18,13 @@ export default {
           "version": "1.2.3"
         },
         "NameOverrides@1": "1.0.0",
+        "PathPackage1": {
+          "path": "some/path/project"
+        },
+        "GitPackage1": {
+          "repository": "git@github.com:munificent/kittens.git"
+        },
       },
-
       "scripts": {
         "script1": "run me",
       }
@@ -108,7 +115,39 @@ export default {
             },
           }
         ]
-      }
+      },
+      <TPackageLocationDescriptor>{
+        name: "PathPackage1",
+        nameRange: {
+          start: 161,
+          end: 161
+        },
+        types: [
+          <TPackagePathLocationDescriptor>{
+            type: "path",
+            path: "some/path/project",
+            pathRange: {
+              start: 185,
+              end: 202
+            },
+          }
+        ],
+      },
+      <TPackageLocationDescriptor>{
+        name: "GitPackage1",
+        nameRange: {
+          start: 205,
+          end: 205
+        },
+        types: [
+          <TPackageGitLocationDescriptor>{
+            type: "git",
+            gitUrl: "git@github.com:munificent/kittens.git",
+            gitRef: "",
+            gitPath: ""
+          }
+        ],
+      },
     ]
 
   },
