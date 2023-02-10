@@ -15,7 +15,10 @@ export function createWinstonLogger(
   ];
 
   const logFormat = format.combine(
-    format.timestamp({ format: loggerChannel.logging.timestampFormat }),
+    // vscode inserts it own timestamp with no formatting and can't be changed
+    // may need to reimplement this behind a flag once the app is standalone from vscode
+
+    // format.timestamp({ format: loggerChannel.logging.timestampFormat }),
     format.simple(),
     format.splat(),
     format.printf(loggerFormatter)
