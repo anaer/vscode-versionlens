@@ -59,43 +59,58 @@ function descendChildNodes(
 
   for (const pair of pairs) {
     const { key: keyNode, value: valueNode } = pair;
-    const isQuoteType = isNodeQuoted(valueNode);
-    const isStringType = valueNode.type === "PLAIN" || isQuoteType;
+    const isQuotedType = isNodeQuoted(valueNode);
+    const isStringType = valueNode.type === "PLAIN" || isQuotedType;
 
     // parse string properties
     if (isStringType && (noIncludePropName || keyNode.value === includePropName)) {
+
+      // create the package descriptor
       const packageDesc = createPackageDesc(keyNode);
+
+      // add the version type to the package desc
       const versionDesc = createVersionDesc(
         parentNode,
         valueNode,
-        isQuoteType
+        isQuotedType
       );
-
       packageDesc.types.push(versionDesc);
+
+      // add the package desc to the matched array
       matchedDependencies.push(packageDesc);
+
       continue;
     }
 
     // parse complex properties
     if (isMap(valueNode)) {
       const map = valueNode as YAMLMap;
+      const isQuotedType = isNodeQuoted(valueNode);
+
+      // create the package descriptor
       const packageDesc = createPackageDesc(keyNode);
 
       for (const typeName in complexTypeHandlers) {
         if (map.has(typeName)) {
           const pair = findPair(map.items, typeName);
+
+          // get the type desc
           const handler = complexTypeHandlers[typeName];
+
+          // add the handled type to the package desc
           const desc = handler(
             keyNode,
             pair.value,
-            isNodeQuoted(valueNode)
+            isQuotedType
           );
           packageDesc.types.push(desc);
         }
       }
 
+      // skip when no types were added
       if (packageDesc.types.length === 0) continue;
 
+      // add the package desc to the matched array
       matchedDependencies.push(packageDesc);
     }
 
