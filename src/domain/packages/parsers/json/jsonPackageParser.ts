@@ -2,7 +2,7 @@ import * as JsonC from 'jsonc-parser';
 import {
   TPackageLocationDescriptor,
   TPackageVersionLocationDescriptor
-} from '../index';
+} from '../../index';
 
 export function extractPackageDependenciesFromJson(
   json: string,
