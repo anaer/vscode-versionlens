@@ -1,6 +1,6 @@
-import { Document, Pair, ParsedNode, parseDocument, YAMLMap, isMap } from 'yaml';
+import { Document, isMap, Pair, ParsedNode, parseDocument, YAMLMap } from 'yaml';
 import { findPair } from 'yaml/util';
-import { TPackageLocationDescriptor } from '../../index';
+import { TPackageDescriptor } from '../../index';
 import {
   createGitDesc,
   createHostedDesc,
@@ -19,7 +19,7 @@ const complexTypeHandlers = {
 export function extractPackageDependenciesFromYaml(
   yaml: string,
   includePropNames: Array<string>
-): Array<TPackageLocationDescriptor> {
+): Array<TPackageDescriptor> {
 
   const yamlDoc = parseDocument(yaml)
   if (!yamlDoc || !yamlDoc.contents || yamlDoc.errors.length > 0) return [];
@@ -30,7 +30,7 @@ export function extractPackageDependenciesFromYaml(
 function extractDependenciesFromNodes(
   rootNode: Document.Parsed<ParsedNode>,
   includePropNames: string[]
-): TPackageLocationDescriptor[] {
+): TPackageDescriptor[] {
   const matchedDependencies = [];
 
   for (const incPropName of includePropNames) {
@@ -53,8 +53,8 @@ function descendChildNodes(
   pairs: Array<Pair<any, any>>,
   parentNode: Pair<any, any>,
   includePropName: string
-): Array<TPackageLocationDescriptor> {
-  const matchedDependencies: Array<TPackageLocationDescriptor> = [];
+): Array<TPackageDescriptor> {
+  const matchedDependencies: Array<TPackageDescriptor> = [];
   const noIncludePropName = includePropName.length === 0;
 
   for (const pair of pairs) {

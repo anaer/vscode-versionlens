@@ -1,7 +1,7 @@
 import {
+  TPackageDescriptor,
   TPackageGitLocationDescriptor,
   TPackageHostedLocationDescriptor,
-  TPackageLocationDescriptor,
   TPackagePathLocationDescriptor,
   TPackageVersionLocationDescriptor
 } from "domain/packages";
@@ -49,7 +49,7 @@ dependencies:
 `,
 
     expected: [
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "efts",
         nameRange: {
           start: 376,
@@ -66,7 +66,7 @@ dependencies:
           }
         ]
       },
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "http",
         nameRange: {
           start: 391,
@@ -83,7 +83,7 @@ dependencies:
           }
         ]
       },
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "transmogrify",
         nameRange: {
           start: 421,
@@ -100,7 +100,7 @@ dependencies:
           }
         ]
       },
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "test",
         nameRange: {
           start: 489,
@@ -117,7 +117,7 @@ dependencies:
           }
         ]
       },
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "collection",
         nameRange: {
           start: 515,
@@ -134,7 +134,7 @@ dependencies:
           }
         ]
       },
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "pathify",
         nameRange: {
           start: 538,
@@ -151,7 +151,7 @@ dependencies:
           }
         ]
       },
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "hostify",
         nameRange: {
           start: 576,
@@ -173,7 +173,7 @@ dependencies:
           }
         ]
       },
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "gitify1",
         nameRange: {
           start: 694,
@@ -188,7 +188,7 @@ dependencies:
           }
         ]
       },
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "gitify2",
         nameRange: {
           start: 753,
@@ -203,7 +203,7 @@ dependencies:
           }
         ]
       },
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "gitify3",
         nameRange: {
           start: 844,

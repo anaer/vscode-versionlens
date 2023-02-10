@@ -30,7 +30,7 @@ type TPackageTypeLocationDescriptor = TPackageVersionLocationDescriptor
   | TPackageHostedLocationDescriptor
   | TPackageGitLocationDescriptor
 
-export type TPackageLocationDescriptor = {
+export type TPackageDescriptor = {
 
   name: string,
 

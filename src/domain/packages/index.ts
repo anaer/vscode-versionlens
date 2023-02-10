@@ -16,6 +16,6 @@ export * as VersionHelpers from './helpers/versionHelpers';
 export * from './models/packageDependency';
 export * from './models/packageResponse';
 export * from "./packageUtils";
-export * from './parsers/definitions/tPackageFileLocationDescriptor';
+export * from './parsers/definitions/tPackageDescriptor';
 export * from "./parsers/json/jsonPackageParser";
 export * from "./parsers/yaml/yamlPackageParser";

@@ -1,6 +1,6 @@
 import {
+  TPackageDescriptor,
   TPackageGitLocationDescriptor,
-  TPackageLocationDescriptor,
   TPackagePathLocationDescriptor,
   TPackageVersionLocationDescriptor
 } from "domain/packages";
@@ -31,7 +31,7 @@ export default {
     },
 
     expected: [
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "Package1",
         nameRange: {
           start: 17,
@@ -48,7 +48,7 @@ export default {
           }
         ]
       },
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "Package2",
         nameRange: {
           start: 36,
@@ -65,7 +65,7 @@ export default {
           }
         ]
       },
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "Package3",
         nameRange: {
           start: 82,
@@ -82,7 +82,7 @@ export default {
           }
         ],
       },
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "ComplexPackage1",
         nameRange: {
           start: 97,
@@ -99,7 +99,7 @@ export default {
           }
         ],
       },
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "NameOverrides@1",
         nameRange: {
           end: 135,
@@ -116,7 +116,7 @@ export default {
           }
         ]
       },
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "PathPackage1",
         nameRange: {
           start: 161,
@@ -133,7 +133,7 @@ export default {
           }
         ],
       },
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "GitPackage1",
         nameRange: {
           start: 205,
@@ -165,7 +165,7 @@ export default {
       }
     },
     expected: [
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "childPackage1",
         nameRange: {
           start: 32,
@@ -182,7 +182,7 @@ export default {
           }
         ]
       },
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "childPackage2",
         nameRange: {
           start: 56,
@@ -199,7 +199,7 @@ export default {
           }
         ]
       },
-      <TPackageLocationDescriptor>{
+      <TPackageDescriptor>{
         name: "childPackage3",
         nameRange: {
           start: 99,

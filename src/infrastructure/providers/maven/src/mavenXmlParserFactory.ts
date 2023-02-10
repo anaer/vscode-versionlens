@@ -1,5 +1,5 @@
 import {
-  TPackageLocationDescriptor,
+  TPackageDescriptor,
   TPackageVersionLocationDescriptor
 } from 'domain/packages';
 import xmldoc from 'xmldoc';
@@ -8,7 +8,7 @@ import { MavenProjectProperty } from "./definitions/mavenProjectProperty";
 export function createDependenciesFromXml(
   xml: string,
   includePropertyNames: Array<string>
-): Array<TPackageLocationDescriptor> {
+): Array<TPackageDescriptor> {
   let document = null
 
   try {
@@ -33,7 +33,7 @@ function extractPackageDescriptorsFromNodes(
   properties: Array<MavenProjectProperty>,
   includePropertyNames: Array<string>
 ) {
-  const collector: Array<TPackageLocationDescriptor> = [];
+  const collector: Array<TPackageDescriptor> = [];
 
   xmlDoc.eachChild(group => {
 
@@ -61,7 +61,7 @@ function extractPackageDescriptorsFromNodes(
 function collectFromChildVersionTag(
   parentNode,
   properties: Array<MavenProjectProperty>,
-  collector: Array<TPackageLocationDescriptor>
+  collector: Array<TPackageDescriptor>
 ) {
   parentNode.eachChild(childNode => {
     let versionNode;

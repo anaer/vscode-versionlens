@@ -1,7 +1,7 @@
 import { Nullable } from 'domain/generics';
 import {
   TPackageDependencyRange,
-  TPackageLocationDescriptor,
+  TPackageDescriptor,
   TPackageVersionLocationDescriptor
 } from 'domain/packages';
 import xmldoc from 'xmldoc';
@@ -9,7 +9,7 @@ import xmldoc from 'xmldoc';
 export function createDependenciesFromXml(
   xml: string,
   includePropertyNames: Array<string>
-): Array<TPackageLocationDescriptor> {
+): Array<TPackageDescriptor> {
 
   let document = null
 
@@ -31,7 +31,7 @@ export function createDependenciesFromXml(
 function extractPackageLensDataFromNodes(
   topLevelNodes, xml: string,
   includePropertyNames: Array<string>
-): Array<TPackageLocationDescriptor> {
+): Array<TPackageDescriptor> {
   const collector = [];
 
   topLevelNodes.eachChild(
@@ -53,7 +53,7 @@ function extractPackageLensDataFromNodes(
   return collector;
 }
 
-function createFromAttribute(node, xml: string): TPackageLocationDescriptor {
+function createFromAttribute(node, xml: string): TPackageDescriptor {
   const nameRange = {
     start: node.startTagPosition,
     end: node.startTagPosition,

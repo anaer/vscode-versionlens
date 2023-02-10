@@ -1,14 +1,14 @@
 import {
+  TPackageDescriptor,
   TPackageGitLocationDescriptor,
   TPackageHostedLocationDescriptor,
-  TPackageLocationDescriptor,
   TPackagePathLocationDescriptor,
   TPackageVersionLocationDescriptor
 } from "domain/packages";
 import { YAMLMap } from 'yaml';
 import { findPair } from 'yaml/util';
 
-export function createPackageDesc(keyNode: any): TPackageLocationDescriptor {
+export function createPackageDesc(keyNode: any): TPackageDescriptor {
   const nameRange = {
     start: keyNode.range[0],
     end: keyNode.range[0],
