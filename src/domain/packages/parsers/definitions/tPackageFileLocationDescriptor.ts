@@ -1,4 +1,4 @@
-import { TPackageDependencyRange } from "./tPackageDependencyRange";
+import { TPackageDependencyRange } from "../../definitions/tPackageDependencyRange";
 
 export type TPackageTypeDescriptor = {
   type: string
