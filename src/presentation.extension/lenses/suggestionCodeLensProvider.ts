@@ -11,9 +11,9 @@ import {
 import { dirname } from 'node:path';
 import {
   CommandFactory,
-  VersionLens,
+  SuggestionCodeLens,
+  SuggestionCodeLensFactory,
   VersionLensExtension,
-  VersionLensFactory,
   VersionLensState
 } from 'presentation.extension';
 import * as VsCode from 'vscode';
@@ -26,7 +26,7 @@ import {
   TextDocument
 } from 'vscode';
 
-export class VersionLensProvider
+export class SuggestionCodeLensProvider
   implements VsCode.CodeLensProvider, IProvider, IDispose {
 
   constructor(
@@ -200,7 +200,7 @@ export class VersionLensProvider
     }
 
     // convert suggestions in to code lenses
-    return VersionLensFactory.createFromPackageResponses(
+    return SuggestionCodeLensFactory.createFromPackageResponses(
       document,
       suggestions,
       this.suggestionProvider.suggestionReplaceFn || defaultReplaceFn
@@ -208,7 +208,7 @@ export class VersionLensProvider
   }
 
   resolveCodeLens(codeLens: CodeLens, token: CancellationToken): CodeLens {
-    if (codeLens instanceof VersionLens) {
+    if (codeLens instanceof SuggestionCodeLens) {
       // evaluate the code lens
       const evaluated = this.evaluateCodeLens(codeLens);
 
@@ -217,7 +217,7 @@ export class VersionLensProvider
     }
   }
 
-  evaluateCodeLens(codeLens: VersionLens) {
+  evaluateCodeLens(codeLens: SuggestionCodeLens) {
     if (codeLens.hasPackageSource(PackageClientSourceType.Directory))
       return CommandFactory.createDirectoryLinkCommand(codeLens);
 
@@ -227,7 +227,7 @@ export class VersionLensProvider
   dispose() {
     this.disposable.dispose();
     const providerName = this.suggestionProvider.name;
-    this.logger.debug(`disposed ${providerName} ${VersionLensProvider.name}`);
+    this.logger.debug(`disposed ${providerName} ${SuggestionCodeLensProvider.name}`);
   }
 
 }

@@ -1,5 +1,5 @@
 import { ILogger } from 'domain/logging';
-import { TextDocumentUtils, VersionLensProvider } from 'presentation.extension';
+import { SuggestionCodeLensProvider, TextDocumentUtils } from 'presentation.extension';
 import { TextDocument, window, workspace } from 'vscode';
 import { executeOnSaveChanges } from '../commands/executeOnSaveChanges';
 import { VersionLensState } from '../state/versionLensState';
@@ -8,11 +8,11 @@ export class TextDocumentEvents {
 
   constructor(
     state: VersionLensState,
-    versionLensProviders: Array<VersionLensProvider>,
+    suggestionCodeLensProviders: Array<SuggestionCodeLensProvider>,
     logger: ILogger
   ) {
     this.state = state;
-    this.versionLensProviders = versionLensProviders;
+    this.suggestionCodeLensProviders = suggestionCodeLensProviders;
     this.logger = logger;
 
     // regsiter document events
@@ -25,14 +25,14 @@ export class TextDocumentEvents {
 
   state: VersionLensState;
 
-  versionLensProviders: Array<VersionLensProvider>;
+  suggestionCodeLensProviders: Array<SuggestionCodeLensProvider>;
 
   logger: ILogger;
 
   onDidOpenTextDocument(document: TextDocument) {
     const matchedProviders = TextDocumentUtils.getDocumentProviders(
       document,
-      this.versionLensProviders
+      this.suggestionCodeLensProviders
     )
 
     if (matchedProviders.length === 0) return;
@@ -67,7 +67,7 @@ export class TextDocumentEvents {
   onDidSaveTextDocument(document: TextDocument) {
     const providers = TextDocumentUtils.getDocumentProviders(
       document,
-      this.versionLensProviders
+      this.suggestionCodeLensProviders
     )
 
     if (providers.length === 0) return;

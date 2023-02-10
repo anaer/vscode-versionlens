@@ -6,7 +6,7 @@ import {
 import { TSuggestionReplaceFunction } from 'domain/suggestions';
 import { CodeLens, Range, Uri } from 'vscode';
 
-export class VersionLens extends CodeLens {
+export class SuggestionCodeLens extends CodeLens {
 
   replaceRange: Range;
 

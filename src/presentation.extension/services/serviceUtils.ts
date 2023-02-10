@@ -5,11 +5,11 @@ import { DomainService } from "domain/services";
 import { nameOf } from "domain/utils";
 import {
   IconCommandHandlers,
+  SuggestionCodeLensProvider,
   SuggestionCommandHandlers,
   TextDocumentEvents,
   TextEditorEvents,
-  VersionLensExtension,
-  VersionLensProvider
+  VersionLensExtension
 } from "presentation.extension";
 import { window, workspace } from "vscode";
 import { ExtensionService } from "./extensionService";
@@ -102,7 +102,7 @@ export function addVersionLensProviders(services: IServiceCollection) {
     (container: ApplicationService & DomainService & ExtensionService) =>
       container.suggestionProviders.map(
         suggestionProvider =>
-          new VersionLensProvider(
+          new SuggestionCodeLensProvider(
             container.extension,
             suggestionProvider,
             container.logger.child({ namespace: `${suggestionProvider.name} codelens` })

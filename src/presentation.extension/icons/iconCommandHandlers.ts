@@ -5,7 +5,7 @@ import { ILogger } from 'domain/logging';
 import {
   CommandUtils,
   IconCommandContributions,
-  VersionLensProvider
+  SuggestionCodeLensProvider
 } from 'presentation.extension';
 import * as VsCode from 'vscode';
 import { VersionLensState } from '../state/versionLensState';
@@ -15,7 +15,7 @@ export class IconCommandHandlers implements IDispose {
   constructor(
     state: VersionLensState,
     outputChannel: VsCode.OutputChannel,
-    versionLensProviders: Array<VersionLensProvider>,
+    versionLensProviders: Array<SuggestionCodeLensProvider>,
     logger: ILogger
   ) {
     this.state = state;
@@ -35,7 +35,7 @@ export class IconCommandHandlers implements IDispose {
 
   outputChannel: VsCode.OutputChannel;
 
-  versionLensProviders: Array<VersionLensProvider>;
+  versionLensProviders: Array<SuggestionCodeLensProvider>;
 
   logger: ILogger;
 

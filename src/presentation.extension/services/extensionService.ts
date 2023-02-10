@@ -1,10 +1,10 @@
 import {
   IconCommandHandlers,
+  SuggestionCodeLensProvider,
   SuggestionCommandHandlers,
   TextDocumentEvents,
   TextEditorEvents,
-  VersionLensExtension,
-  VersionLensProvider
+  VersionLensExtension
 } from 'presentation.extension';
 import { OutputChannel } from 'vscode';
 
@@ -24,6 +24,6 @@ export interface ExtensionService {
 
   textDocumentEvents: TextDocumentEvents,
 
-  versionLensProviders: Array<VersionLensProvider>
+  versionLensProviders: Array<SuggestionCodeLensProvider>
 
 }

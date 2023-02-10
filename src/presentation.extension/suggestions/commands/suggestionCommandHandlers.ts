@@ -2,7 +2,7 @@ import { IDispose } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import { PackageClientSourceType } from 'domain/packages';
 import { dirname, resolve } from 'node:path';
-import { CommandUtils, VersionLens } from 'presentation.extension';
+import { CommandUtils, SuggestionCodeLens } from 'presentation.extension';
 import * as VsCode from 'vscode';
 import { env, workspace, WorkspaceEdit } from 'vscode';
 import { VersionLensState } from '../../state/versionLensState';
@@ -37,7 +37,7 @@ export class SuggestionCommandHandlers implements IDispose {
    * @returns 
    */
   async onUpdateDependencyClicked(
-    codeLens: VersionLens,
+    codeLens: SuggestionCodeLens,
     packageVersion: string
   ): Promise<void> {
     if ((<any>codeLens).__replaced) return;
@@ -55,7 +55,7 @@ export class SuggestionCommandHandlers implements IDispose {
    * @param codeLens 
    * @returns 
    */
-  async onFileLinkClicked(codeLens: VersionLens): Promise<void> {
+  async onFileLinkClicked(codeLens: SuggestionCodeLens): Promise<void> {
 
     if (codeLens.package.source !== PackageClientSourceType.Directory) {
       this.logger.error(

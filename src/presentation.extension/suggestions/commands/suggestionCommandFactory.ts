@@ -2,9 +2,9 @@ import { SuggestionFlags } from 'domain/suggestions';
 import fs from 'node:fs';
 import path from 'node:path';
 import {
+  SuggestionCodeLens,
   SuggestionCommandContributions,
-  SuggestionIndicators,
-  VersionLens
+  SuggestionIndicators
 } from 'presentation.extension';
 
 export function createErrorCommand(errorMsg, codeLens) {
@@ -31,7 +31,7 @@ export function createDirectoryLinkCommand(codeLens) {
   return codeLens.setCommand(title, cmd, [codeLens]);
 }
 
-export function createSuggestedVersionCommand(codeLens: VersionLens) {
+export function createSuggestedVersionCommand(codeLens: SuggestionCodeLens) {
   const { name, version, flags } = codeLens.package.suggestion;
   const isStatus = (flags & SuggestionFlags.status);
   const isTag = (flags & SuggestionFlags.tag);
