@@ -2,12 +2,6 @@ import { Document, Pair, ParsedNode, parseDocument, YAMLMap } from 'yaml';
 import { createPackageResource, TPackageFileLocationDescriptor } from '../index';
 import { PackageDependency } from '../models/packageDependency';
 
-export type YamlPath = Array<string | number>;
-
-type YamlOptions = {
-  hasCrLf: boolean
-}
-
 export function extractPackageDependenciesFromYaml(
   packagePath: string,
   yaml: string,
@@ -17,11 +11,7 @@ export function extractPackageDependenciesFromYaml(
   const yamlDoc = parseDocument(yaml)
   if (!yamlDoc || !yamlDoc.contents || yamlDoc.errors.length > 0) return [];
 
-  const opts: YamlOptions = {
-    hasCrLf: yaml.indexOf('\r\n') > 0
-  };
-
-  const dependencies = extractDependenciesFromNodes(yamlDoc, includePropNames, opts);
+  const dependencies = extractDependenciesFromNodes(yamlDoc, includePropNames);
 
   return dependencies.map(descriptor => new PackageDependency(
     createPackageResource(
@@ -36,8 +26,7 @@ export function extractPackageDependenciesFromYaml(
 
 function extractDependenciesFromNodes(
   rootNode: Document.Parsed<ParsedNode>,
-  includePropNames: string[],
-  opts: YamlOptions
+  includePropNames: string[]
 ): TPackageFileLocationDescriptor[] {
   const matchedDependencies = [];
 
