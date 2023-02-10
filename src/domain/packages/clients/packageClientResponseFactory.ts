@@ -1,9 +1,9 @@
 import { ClientResponseSource } from 'domain/clients';
 import { SuggestionFactory, TPackageSuggestion } from 'domain/suggestions';
 import { PackageVersionType } from "../definitions/ePackageVersionType";
-import { TPackageResponseStatus } from "../definitions/tPackageResponseStatus";
 import { PackageClientSourceType } from "./ePackageClientSourceType";
 import { TPackageClientResponse } from "./tPackageClientResponse";
+import { TPackageResponseStatus } from "./tPackageResponseStatus";
 
 export function create(
   source: PackageClientSourceType,
