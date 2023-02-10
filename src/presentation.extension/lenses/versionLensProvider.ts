@@ -91,6 +91,16 @@ export class VersionLensProvider
     // package path
     const packagePath = dirname(document.uri.fsPath);
 
+    // get the project path from workspace path otherwise the current file
+    const projectPath = this.extension.isWorkspaceMode
+      ? this.extension.projectPath
+      : dirname(packagePath);
+
+    this.logger.info(
+      "Project path is %s",
+      projectPath
+    );
+
     // clear any errors
     this.state.providerError.value = false;
 
@@ -144,7 +154,7 @@ export class VersionLensProvider
       const startedAt = performance.now();
 
       suggestions = await this.suggestionProvider.fetchSuggestions(
-        this.extension.projectPath,
+        projectPath,
         packagePath,
         packageDeps
       );

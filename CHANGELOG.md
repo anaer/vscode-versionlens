@@ -1,6 +1,7 @@
 # 1.4.1
 
   - Fixed incorrect project path during extension activation
+  - Fixed version lens failing to load when opening a package file in vscode with no workspace open
   - Fixed lower case output channel name back to the proper case "VersionLens"
 
 # 1.4.0

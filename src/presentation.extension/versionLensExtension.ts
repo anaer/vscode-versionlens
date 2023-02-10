@@ -26,4 +26,11 @@ export class VersionLensExtension {
 
   state: VersionLensState;
 
+  /**
+   * Checks if vscode is in workspace mode
+   */
+  get isWorkspaceMode() {
+    return this.projectPath.length > 0;
+  }
+
 }

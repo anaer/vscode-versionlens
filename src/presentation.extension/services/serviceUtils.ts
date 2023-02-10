@@ -22,7 +22,9 @@ export function addAppConfig(services: IServiceCollection, appName: string) {
 }
 
 export function addVersionLensExtension(services: IServiceCollection) {
-  const projectPath = workspace.workspaceFolders[0].uri.fsPath;
+  const projectPath = workspace.workspaceFolders && workspace.workspaceFolders.length > 0
+    ? workspace.workspaceFolders[0].uri.fsPath
+    : "";
 
   services.addSingleton(
     nameOf<ExtensionService>().extension,

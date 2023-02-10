@@ -35,9 +35,9 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const { version } = await readJsonFile<any>(packageJsonPath);
 
   logger.info('extension path: %s', extensionPath);
+  logger.info('workspace mode: %s', extension.isWorkspaceMode);
   logger.info('version: %s', version);
   logger.info('log level: %s', loggingOptions.level);
-  logger.info('project path: %s', extension.projectPath); 
 
   const extensionService = nameOf<ExtensionService>();
 
