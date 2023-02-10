@@ -1,37 +1,29 @@
-import { Document, parseCST } from 'yaml';
-import { TPackageFileLocationDescriptor } from '../index';
+import { Document, Pair, ParsedNode, parseDocument, YAMLMap } from 'yaml';
+import { createPackageResource, TPackageFileLocationDescriptor } from '../index';
 import { PackageDependency } from '../models/packageDependency';
-import { createPackageResource } from '../packageUtils';
+
+export type YamlPath = Array<string | number>;
 
 type YamlOptions = {
-  hasCrLf: boolean,
-  filterPropertyNames: Array<string>,
+  hasCrLf: boolean
 }
 
 export function extractPackageDependenciesFromYaml(
   packagePath: string,
   yaml: string,
-  filterPropertyNames: Array<string>
+  includePropNames: Array<string>
 ): Array<PackageDependency> {
-  // verbose parsing to handle CRLF scenarios
-  const cst = parseCST(yaml)
 
-  // create and parse the document
-  const yamlDoc = new Document({ keepCstNodes: true }).parse(cst[0])
+  const yamlDoc = parseDocument(yaml)
   if (!yamlDoc || !yamlDoc.contents || yamlDoc.errors.length > 0) return [];
 
-  const opts = {
-    hasCrLf: yaml.indexOf('\r\n') > 0,
-    filterPropertyNames,
-    yaml,
+  const opts: YamlOptions = {
+    hasCrLf: yaml.indexOf('\r\n') > 0
   };
 
-  const packageDescriptors = extractDependenciesFromNodes(
-    yamlDoc.contents.items,
-    opts
-  );
+  const dependencies = extractDependenciesFromNodes(yamlDoc, includePropNames, opts);
 
-  return packageDescriptors.map(descriptor => new PackageDependency(
+  return dependencies.map(descriptor => new PackageDependency(
     createPackageResource(
       descriptor.name,
       descriptor.version,
@@ -42,144 +34,103 @@ export function extractPackageDependenciesFromYaml(
   ));
 }
 
-export function extractDependenciesFromNodes(
-  topLevelNodes,
+function extractDependenciesFromNodes(
+  rootNode: Document.Parsed<ParsedNode>,
+  includePropNames: string[],
   opts: YamlOptions
 ): TPackageFileLocationDescriptor[] {
-  const collector = [];
+  const matchedDependencies = [];
 
-  topLevelNodes.forEach(
-    function (pair) {
-      if (opts.filterPropertyNames.includes(pair.key.value) === false) return;
-      if (pair.value === null) return;
-      collectDependencyNodes(pair.value.items, opts, collector);
-    }
-  )
+  for (const incPropName of includePropNames) {
+    const segments = incPropName.split(".");
 
-  return collector
-}
+    const node = rootNode.getIn(segments) as YAMLMap;
+    if (!node) continue;
 
-function collectDependencyNodes(
-  nodes,
-  opts: YamlOptions,
-  collector: Array<TPackageFileLocationDescriptor>
-) {
-  nodes.forEach(
-    function (pair) {
-      // node may be in the form "no_version_dep:", which we will indicate as the latest
-      if (!pair.value || (pair.value.type === 'PLAIN' && !pair.value.value)) {
-        const keyRange = getRangeFromCstNode(pair.key.cstNode, opts);
-        pair.value = {
-          range: [
-            keyRange.end + 2,
-            keyRange.end + 2,
-          ],
-          value: '',
-          type: null
-        }
-      }
+    const children = node instanceof Array
+      ? descendChildNodes(node, null, "")
+      : descendChildNodes(node.items, null, "");
 
-      if (pair.value.type === 'MAP') {
-        createDependencyLensFromMapType(
-          pair.value.items,
-          pair.key,
-          opts,
-          collector
-        );
-      } else if (typeof pair.value.value === 'string') {
-        const dependencyLens = createDependencyLensFromPlainType(pair, opts);
-        collector.push(dependencyLens);
-      }
-    }
-  )
-}
-
-export function createDependencyLensFromMapType(
-  nodes,
-  parentKey,
-  opts: YamlOptions,
-  collector: Array<TPackageFileLocationDescriptor>
-) {
-  nodes.forEach(
-    function (pair) {
-      // ignore empty entries
-      if (!pair.value) return;
-
-      if (pair.key.value === "version") {
-        const keyRange = getRangeFromCstNode(parentKey.cstNode, opts);
-        const nameRange = createRange(
-          keyRange.start,
-          keyRange.start,
-          null
-        );
-        const valueRange = getRangeFromCstNode(pair.value.cstNode, opts);
-        const versionRange = createRange(
-          valueRange.start,
-          valueRange.end,
-          pair.value.type
-        );
-
-        collector.push({
-          name: parentKey.value,
-          version: pair.value.value,
-          nameRange,
-          versionRange
-        });
-      }
-    }
-  )
-
-}
-
-export function createDependencyLensFromPlainType(
-  pair,
-  opts: YamlOptions
-): TPackageFileLocationDescriptor {
-  const keyRange = getRangeFromCstNode(pair.key.cstNode, opts);
-  const nameRange = createRange(
-    keyRange.start,
-    keyRange.start,
-    null
-  );
-
-  let valueRange
-  if (pair.value.cstNode) {
-    valueRange = getRangeFromCstNode(pair.value.cstNode, opts);
-  } else {
-    // handle blank values
-    const start = pair.value.range[0];
-    valueRange = { start, end: start }
+    matchedDependencies.push.apply(matchedDependencies, children);
   }
 
-  const versionRange = createRange(
-    valueRange.start,
-    valueRange.end,
-    pair.value.type
-  );
+  return matchedDependencies
+}
+
+function descendChildNodes(
+  nodes: Array<Pair>,
+  parentNode: Pair,
+  includePropName: string
+): Array<TPackageFileLocationDescriptor> {
+  const matchedDependencies: Array<TPackageFileLocationDescriptor> = [];
+  const noIncludePropName = includePropName.length === 0;
+
+  for (const node of <any>nodes) {
+    const { key, value } = node as Pair<any, any>;
+
+    const isQuoteType = value.type === "QUOTE_SINGLE"
+      || value.type === "QUOTE_DOUBLE";
+
+    const isStringType = value.type === "PLAIN" || isQuoteType;
+
+    if (isStringType && (noIncludePropName || key.value === includePropName)) {
+
+      const dependencyLoc = createDependencyLocFromProperty(
+        parentNode,
+        key,
+        value,
+        isQuoteType
+      );
+
+      matchedDependencies.push(dependencyLoc);
+    } else if (value.items) {
+
+      // recurse child nodes
+      const children = descendChildNodes(
+        value.items,
+        key,
+        'version'
+      );
+
+      matchedDependencies.push.apply(matchedDependencies, children);
+    }
+  }
+
+  return matchedDependencies;
+}
+
+function createDependencyLocFromProperty(
+  parentKeyNode: any,
+  keyNode: any,
+  valueNode: any,
+  isQuoteType: boolean
+): TPackageFileLocationDescriptor {
+
+  const isComplexVersion = !!parentKeyNode;
+
+  const node = parentKeyNode || keyNode;
+
+  const nameRange = {
+    start: node.range[0],
+    end: node.range[0],
+  };
+
+  const versionRange = {
+    start: valueNode.range[0],
+    end: isComplexVersion
+      ? valueNode.range[2] - 1
+      : valueNode.range[1],
+  };
+
+  if (isQuoteType) {
+    versionRange.start++;
+    versionRange.end--;
+  }
 
   return {
-    name: pair.key.value,
-    version: pair.value.value,
+    name: node.value,
+    version: valueNode.value || "",
     nameRange,
     versionRange
-  };
-}
-
-function createRange(start, end, valueType: string) {
-  // +1 and -1 to be inside quotes
-  const quoted = valueType === "QUOTE_SINGLE" || valueType === "QUOTE_DOUBLE";
-  return {
-    start: start + (quoted ? 1 : 0),
-    end: end - (quoted ? 1 : 0),
-  };
-}
-
-function getRangeFromCstNode(cstNode, opts: YamlOptions) {
-  const crLfLineOffset = opts.hasCrLf ?
-    cstNode.rangeAsLinePos.start.line : 0;
-
-  const start = cstNode.range.start + crLfLineOffset;
-  const end = cstNode.range.end + crLfLineOffset;
-
-  return { start, end };
+  } as any;
 }

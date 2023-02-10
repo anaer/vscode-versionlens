@@ -18,9 +18,11 @@ environment:
   sdk: '>=2.0.0 <3.0.0'
 dependencies:
   efts: ^2.0.4
-  http: # black with comments
+  http: # blank with comments
   transmogrify:
     version: ^0.4.0 # complex version with comments
+  test: '>=0.5.0 <0.12.0'
+  collection: "^1.1.0"
 `,
 
     expected: [
@@ -67,6 +69,36 @@ dependencies:
           path: "testPath",
           name: "transmogrify",
           version: "^0.4.0"
+        }
+      },
+      <PackageDependency>{
+        nameRange: {
+          start: 489,
+          end: 489
+        },
+        versionRange: {
+          start: 496,
+          end: 511
+        },
+        package: {
+          path: "testPath",
+          name: "test",
+          version: ">=0.5.0 <0.12.0"
+        }
+      },
+      <PackageDependency>{
+        nameRange: {
+          start: 515,
+          end: 515
+        },
+        versionRange: {
+          start: 528,
+          end: 534
+        },
+        package: {
+          path: "testPath",
+          name: "collection",
+          version: "^1.1.0"
         }
       }
     ]

@@ -80,7 +80,7 @@
     "semver": "7.3.8",
     "winston": "3.7.1",
     "xmldoc": "1.2.0",
-    "yaml": "1.10.2"
+    "yaml": "2.2.1"
   },
   "contributes": {
     "commands": [
