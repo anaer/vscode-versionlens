@@ -3,11 +3,11 @@ import { SuggestionFactory, TPackageSuggestion } from 'domain/suggestions';
 import { PackageVersionType } from "../definitions/ePackageVersionType";
 import { PackageClientSourceType } from "./ePackageClientSourceType";
 import { TPackageClientResponse } from "./tPackageClientResponse";
-import { TPackageResponseStatus } from "./tPackageResponseStatus";
+import { TPackageClientResponseStatus } from "./tPackageClientResponseStatus";
 
 export function create(
   source: PackageClientSourceType,
-  responseStatus: TPackageResponseStatus,
+  responseStatus: TPackageClientResponseStatus,
   suggestions: Array<TPackageSuggestion>
 ): TPackageClientResponse {
 
@@ -22,7 +22,7 @@ export function create(
 }
 
 export function createInvalidVersion(
-  responseStatus: TPackageResponseStatus,
+  responseStatus: TPackageClientResponseStatus,
   type: PackageVersionType
 ): TPackageClientResponse {
   const source: PackageClientSourceType = PackageClientSourceType.Registry;
@@ -43,7 +43,7 @@ export function createInvalidVersion(
 export function createNoMatch(
   source: PackageClientSourceType,
   type: PackageVersionType,
-  responseStatus: TPackageResponseStatus,
+  responseStatus: TPackageClientResponseStatus,
   latestVersion?: string
 ): TPackageClientResponse {
 
@@ -63,7 +63,7 @@ export function createNoMatch(
 
 export function createFixed(
   source: PackageClientSourceType,
-  responseStatus: TPackageResponseStatus,
+  responseStatus: TPackageClientResponseStatus,
   type: PackageVersionType,
   fixedVersion: string
 ): TPackageClientResponse {
@@ -81,7 +81,7 @@ export function createFixed(
   };
 }
 
-export function createResponseStatus(source: ClientResponseSource, status: number): TPackageResponseStatus {
+export function createResponseStatus(source: ClientResponseSource, status: number): TPackageClientResponseStatus {
   return {
     source,
     status

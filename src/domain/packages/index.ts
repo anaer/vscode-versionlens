@@ -3,7 +3,7 @@ export * from './clients/iPackageClient';
 export * as ClientResponseFactory from './clients/packageClientResponseFactory';
 export * from "./clients/tPackageClientRequest";
 export * from './clients/tPackageClientResponse';
-export * from "./clients/tPackageResponseStatus";
+export * from "./clients/tPackageClientResponseStatus";
 export * from './definitions/ePackageResponseError';
 export * from './definitions/ePackageVersionType';
 export * from './definitions/tPackageDependencyRange';

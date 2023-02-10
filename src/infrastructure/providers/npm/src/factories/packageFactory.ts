@@ -3,8 +3,8 @@ import {
   PackageClientSourceType,
   PackageVersionType,
   TPackageClientResponse,
-  TPackageResource,
-  TPackageResponseStatus
+  TPackageClientResponseStatus,
+  TPackageResource
 } from 'domain/packages';
 import { SuggestionFlags, TPackageSuggestion } from 'domain/suggestions';
 import { NpaSpec } from '../models/npaSpec';
@@ -13,7 +13,7 @@ export const fileDependencyRegex = /^file:(.*)$/;
 
 export function createDirectory(
   requested: TPackageResource,
-  responseStatus: TPackageResponseStatus,
+  responseStatus: TPackageClientResponseStatus,
   npaSpec: NpaSpec
 ): TPackageClientResponse {
 
