@@ -8,14 +8,14 @@ export function extractPackageDependenciesFromJson(
   includePropNames: Array<string>
 ): Array<PackageDependency> {
   const jsonErrors = [];
-  const jsonTree = JsonC.parseTree(json, jsonErrors);
-  if (!jsonTree || jsonTree.children.length === 0 || jsonErrors.length > 0) {
+  const rootNode = JsonC.parseTree(json, jsonErrors);
+  if (!rootNode || rootNode.children.length === 0 || jsonErrors.length > 0) {
     return [];
   }
 
-  const packageDescriptors = extractFromNodes(jsonTree, includePropNames);
+  const dependencies = extractDependenciesFromNodes(rootNode, includePropNames);
 
-  return packageDescriptors.map(descriptor => new PackageDependency(
+  return dependencies.map(descriptor => new PackageDependency(
     createPackageResource(
       descriptor.name,
       descriptor.version,
@@ -26,69 +26,86 @@ export function extractPackageDependenciesFromJson(
   ));
 }
 
-export function extractFromNodes(
-  jsonTree: JsonC.Node,
+function extractDependenciesFromNodes(
+  rootNode: JsonC.Node,
   includePropNames: string[]
 ): TPackageFileLocationDescriptor[] {
-  const collector = [];
+  const matchedDependencies: Array<TPackageFileLocationDescriptor> = [];
 
-  for (const property of includePropNames) {
-    const node = findNodesAtLocation(jsonTree, property);
+  for (const incPropName of includePropNames) {
+    const node = findNodesAtLocation(rootNode, incPropName);
     if (!node) continue;
 
-    if (node instanceof Array) {
-      collectDependencyNodes(node, null, '', collector);
-    } else {
-      collectDependencyNodes(node.children, null, '', collector);
-    }
+    const children = node instanceof Array
+      ? descendChildNodes(node, null, "")
+      : descendChildNodes(node.children, null, "");
 
+    matchedDependencies.push.apply(matchedDependencies, children);
   }
 
-  return collector
+  return matchedDependencies
 }
 
-function collectDependencyNodes(
+function descendChildNodes(
   nodes: Array<JsonC.Node>,
-  parentKey: JsonC.Node,
-  filterName: string,
-  collector = []
-) {
-  nodes.forEach(
-    function (node) {
-      const [keyEntry, valueEntry] = node.children;
+  parentKeyNode: JsonC.Node,
+  includePropName: string
+): Array<TPackageFileLocationDescriptor> {
+  const matchedDependencies: Array<TPackageFileLocationDescriptor> = [];
+  const noIncludePropName = includePropName.length === 0;
 
-      if (valueEntry.type == "string" &&
-        (filterName.length === 0 || keyEntry.value === filterName)) {
-        const dependencyLens = createFromProperty(
-          parentKey || keyEntry, valueEntry
-        );
-        collector.push(dependencyLens);
-      } else if (valueEntry.type == "object") {
-        collectDependencyNodes(
-          valueEntry.children,
-          keyEntry,
-          'version',
-          collector
-        )
-      }
+  for (const node of nodes) {
+    const [keyEntry, valueEntry] = node.children;
+
+    if (valueEntry.type == "string" &&
+      (noIncludePropName || keyEntry.value === includePropName)) {
+
+      // create dependency location from the property
+      const dependencyLoc = createDependencyLocFromProperty(
+        parentKeyNode,
+        keyEntry,
+        valueEntry
+      );
+
+      matchedDependencies.push(dependencyLoc);
+
+    } else if (valueEntry.type == "object") {
+
+      // recurse child nodes
+      const children = descendChildNodes(
+        valueEntry.children,
+        keyEntry,
+        'version'
+      )
+
+      matchedDependencies.push.apply(matchedDependencies, children);
     }
-  )
+  }
+
+  return matchedDependencies;
 }
 
-function createFromProperty(keyEntry, valueEntry): TPackageFileLocationDescriptor {
+function createDependencyLocFromProperty(
+  parentKeyNode: JsonC.Node,
+  keyNode: JsonC.Node,
+  valueNode: JsonC.Node
+): TPackageFileLocationDescriptor {
+
+  const node = parentKeyNode || keyNode;
+
   const nameRange = {
-    start: keyEntry.offset,
-    end: keyEntry.offset,
-  }
+    start: node.offset,
+    end: node.offset,
+  };
 
   // +1 and -1 to be inside quotes
   const versionRange = {
-    start: valueEntry.offset + 1,
-    end: valueEntry.offset + valueEntry.length - 1,
-  }
+    start: valueNode.offset + 1,
+    end: valueNode.offset + valueNode.length - 1,
+  };
 
   // handle override dependency selectors in the name
-  let name = keyEntry.value;
+  let name = node.value;
   const atIndex = name.indexOf('@');
   if (atIndex > 0) {
     name = name.slice(0, atIndex);
@@ -96,7 +113,7 @@ function createFromProperty(keyEntry, valueEntry): TPackageFileLocationDescripto
 
   return {
     name,
-    version: valueEntry.value,
+    version: valueNode.value,
     nameRange,
     versionRange
   };
@@ -106,7 +123,7 @@ function findNodesAtLocation(
   jsonTree: JsonC.Node,
   expression: string
 ): JsonC.Node | Array<JsonC.Node> {
-  const pathSegments = expression.split(".");
+  const pathSegments: Array<JsonC.Segment> = expression.split(".");
 
   // if the path doesn't end with * then process a standard path
   if (pathSegments[pathSegments.length - 1] !== "*") {
