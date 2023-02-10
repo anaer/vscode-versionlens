@@ -1,13 +1,13 @@
 import { Document, Pair, ParsedNode, parseDocument, YAMLMap, isMap } from 'yaml';
 import { findPair } from 'yaml/util';
-import { TPackageLocationDescriptor } from '../index';
+import { TPackageLocationDescriptor } from '../../index';
 import {
   createGitDesc,
   createHostedDesc,
   createPackageDesc,
   createPathDesc,
   createVersionDesc
-} from './yaml/yamlPackageTypeFactory';
+} from './yamlPackageTypeFactory';
 
 const complexTypeHandlers = {
   "version": createVersionDesc,

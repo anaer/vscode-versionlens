@@ -18,4 +18,4 @@ export * from './models/packageDependency';
 export * from './models/packageResponse';
 export * from "./packageUtils";
 export * from "./parsers/jsonPackageParser";
-export * from "./parsers/yamlPackageParser";
+export * from "./parsers/yaml/yamlPackageParser";
