@@ -36,18 +36,17 @@ export function createVersionDesc(
       : valueNode.range[1],
   };
 
+  // +1 and -1 to be inside quotes
   if (isQuoteType) {
     versionRange.start++;
     versionRange.end--;
   }
 
-  const versionDesc: TPackageVersionLocationDescriptor = {
+  return {
     type: "version",
     version: valueNode.value || "",
     versionRange
   }
-
-  return versionDesc;
 }
 
 export function createPathDesc(
@@ -82,29 +81,27 @@ export function createHostedDesc(
 ): TPackageHostedLocationDescriptor {
 
   const map = valueNode as YAMLMap;
-  const hasName = map.has("name");
-  const hasUrl = map.has("url");
-
   let hostName = "";
   let hostUrl = "";
 
-  if (hasName) {
+  // skip incomplete hosted entries
+  if (map.has("url") === false) return;
+
+  // extract the host url
+  const namePair = findPair(map.items, "url");
+  hostUrl = (<any>namePair.value).value;
+
+  // extract alias package name
+  if (map.has("name")) {
     const namePair = findPair(map.items, "name");
     hostName = (<any>namePair.value).value;
   }
 
-  if (hasUrl) {
-    const namePair = findPair(map.items, "url");
-    hostUrl = (<any>namePair.value).value;
-  }
-
-  const hostedDesc: TPackageHostedLocationDescriptor = {
+  return {
     type: "hosted",
     hostName,
     hostUrl
   }
-
-  return hostedDesc;
 }
 
 export function createGitDesc(
@@ -117,8 +114,8 @@ export function createGitDesc(
   let gitRef = "";
   let gitPath = "";
 
+  // extract url from direct strings
   const isStringType = valueNode.type === "PLAIN" || isQuoteType;
-
   if (isStringType) {
     gitUrl = valueNode.value;
     return {
@@ -130,21 +127,22 @@ export function createGitDesc(
   }
 
   const map = valueNode as YAMLMap;
-  const hasUrl = map.has("url");
-  const hasRef = map.has("ref");
-  const hasPath = map.has("path");
 
-  if (hasUrl) {
-    const namePair = findPair(map.items, "url");
-    gitUrl = (<any>namePair.value).value;
-  }
+  // skip incomplete git entries
+  if (map.has("url") === false) return;
 
-  if (hasRef) {
+  // extract the git url
+  const namePair = findPair(map.items, "url");
+  gitUrl = (<any>namePair.value).value;
+
+  // extract refs
+  if (map.has("ref")) {
     const namePair = findPair(map.items, "ref");
     gitRef = (<any>namePair.value).value;
   }
 
-  if (hasPath) {
+  // extract paths
+  if (map.has("path")) {
     const namePair = findPair(map.items, "path");
     gitPath = (<any>namePair.value).value;
   }

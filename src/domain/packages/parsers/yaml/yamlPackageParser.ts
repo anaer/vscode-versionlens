@@ -97,6 +97,9 @@ function descendChildNodes(
           // get the type desc
           const handler = complexTypeHandlers[typeName];
 
+          // skip types that are't fully defined
+          if(!handler) continue;
+
           // add the handled type to the package desc
           const desc = handler(
             keyNode,
