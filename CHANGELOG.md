@@ -1,3 +1,8 @@
+# 1.4.1
+
+  - Fixed incorrect project path during extension activation
+  - Fixed lower case output channel name back to the proper case "VersionLens"
+
 # 1.4.0
 
 ## All providers

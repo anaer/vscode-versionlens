@@ -54,7 +54,7 @@ export async function configureContainer(
   addWinstonLogger(services, "extension");
 
   // extension
-  addVersionLensExtension(services, context.asAbsolutePath(''));
+  addVersionLensExtension(services);
 
   addOutputChannel(services);
 

@@ -21,10 +21,9 @@ export function addAppConfig(services: IServiceCollection, appName: string) {
   )
 }
 
-export function addVersionLensExtension(
-  services: IServiceCollection,
-  projectPath: string
-) {
+export function addVersionLensExtension(services: IServiceCollection) {
+  const projectPath = workspace.workspaceFolders[0].uri.fsPath;
+
   services.addSingleton(
     nameOf<ExtensionService>().extension,
     (container: ApplicationService & DomainService & ExtensionService) =>
@@ -41,7 +40,7 @@ export function addOutputChannel(services: IServiceCollection) {
     nameOf<ExtensionService>().outputChannel,
     // vscode output channel called "VersionLens"
     () => window.createOutputChannel(
-      VersionLensExtension.extensionName.toLowerCase()
+      VersionLensExtension.extensionName
     )
   )
 }
