@@ -1,7 +1,9 @@
 import { ILogger } from 'domain/logging';
 import {
+  createPackageResource,
   extractPackageDependenciesFromJson,
-  PackageDependency
+  PackageDependency,
+  TPackageVersionLocationDescriptor
 } from 'domain/packages';
 import { SuggestionProvider } from 'domain/providers';
 import {
@@ -34,11 +36,27 @@ export class DubSuggestionProvider
     packagePath: string,
     packageText: string
   ): Array<PackageDependency> {
-    const packageDependencies = extractPackageDependenciesFromJson(
-      packagePath,
+    const packageLocations = extractPackageDependenciesFromJson(
       packageText,
       this.config.dependencyProperties
     );
+
+    const packageDependencies = packageLocations
+      .filter(x => x.types[0].type === "version")
+      .map(
+        loc => {
+          const versionType = loc.types[0] as TPackageVersionLocationDescriptor
+          return new PackageDependency(
+            createPackageResource(
+              loc.name,
+              versionType.version,
+              packagePath
+            ),
+            loc.nameRange,
+            versionType.versionRange
+          )
+        }
+      );
 
     return packageDependencies;
   }

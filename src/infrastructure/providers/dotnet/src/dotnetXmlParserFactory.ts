@@ -1,17 +1,15 @@
 import { Nullable } from 'domain/generics';
 import {
-  createPackageResource,
-  PackageDependency,
   TPackageDependencyRange,
-  TPackageFileLocationDescriptor
+  TPackageLocationDescriptor,
+  TPackageVersionLocationDescriptor
 } from 'domain/packages';
 import xmldoc from 'xmldoc';
 
 export function createDependenciesFromXml(
-  packagePath: string,
   xml: string,
   includePropertyNames: Array<string>
-): Array<PackageDependency> {
+): Array<TPackageLocationDescriptor> {
 
   let document = null
 
@@ -23,27 +21,17 @@ export function createDependenciesFromXml(
 
   if (!document) return [];
 
-  const packageDescriptors = extractPackageLensDataFromNodes(
+  return extractPackageLensDataFromNodes(
     document,
     xml,
     includePropertyNames
   );
-
-  return packageDescriptors.map(descriptor => new PackageDependency(
-    createPackageResource(
-      descriptor.name,
-      descriptor.version,
-      packagePath
-    ),
-    descriptor.nameRange,
-    descriptor.versionRange
-  ));
 }
 
 function extractPackageLensDataFromNodes(
   topLevelNodes, xml: string,
   includePropertyNames: Array<string>
-) {
+): Array<TPackageLocationDescriptor> {
   const collector = [];
 
   topLevelNodes.eachChild(
@@ -65,7 +53,7 @@ function extractPackageLensDataFromNodes(
   return collector;
 }
 
-function createFromAttribute(node, xml: string): TPackageFileLocationDescriptor {
+function createFromAttribute(node, xml: string): TPackageLocationDescriptor {
   const nameRange = {
     start: node.startTagPosition,
     end: node.startTagPosition,
@@ -78,11 +66,16 @@ function createFromAttribute(node, xml: string): TPackageFileLocationDescriptor 
   const name = node.attr.Include || node.attr.Update || node.attr.Name;
   const version = node.attr.Version;
 
+  const versionDesc: TPackageVersionLocationDescriptor = {
+    type: "version",
+    version,
+    versionRange
+  }
+
   return {
     name,
-    version,
     nameRange,
-    versionRange
+    types: [versionDesc]
   };
 }
 

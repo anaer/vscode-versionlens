@@ -1,7 +1,9 @@
 import { ILogger } from 'domain/logging';
 import {
+  createPackageResource,
   extractPackageDependenciesFromJson,
-  PackageDependency
+  PackageDependency,
+  TPackageVersionLocationDescriptor
 } from 'domain/packages';
 import { SuggestionProvider } from 'domain/providers';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
@@ -33,11 +35,35 @@ export class NpmSuggestionProvider
     packagePath: string,
     packageText: string
   ): Array<PackageDependency> {
-    const packageDependencies = extractPackageDependenciesFromJson(
-      packagePath,
+
+    const packageLocations = extractPackageDependenciesFromJson(
       packageText,
       this.config.dependencyProperties
     );
+
+    const packageDependencies = packageLocations
+      .filter(x => x.types[0].type === "version")
+      .map(
+        loc => {
+          // handle pnpm override dependency selectors in the name
+          let name = loc.name;
+          const atIndex = name.indexOf('@');
+          if (atIndex > 0) {
+            name = name.slice(0, atIndex);
+          }
+
+          const versionType = loc.types[0] as TPackageVersionLocationDescriptor
+          return new PackageDependency(
+            createPackageResource(
+              name,
+              versionType.version,
+              packagePath
+            ),
+            loc.nameRange,
+            versionType.versionRange
+          )
+        }
+      );
 
     return packageDependencies;
   }

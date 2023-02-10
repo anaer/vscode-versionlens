@@ -1,6 +1,10 @@
 import { UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
-import { PackageDependency } from 'domain/packages';
+import {
+  createPackageResource,
+  PackageDependency,
+  TPackageVersionLocationDescriptor
+} from 'domain/packages';
 import { SuggestionProvider } from 'domain/providers';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import { MavenClient } from './clients/mavenClient';
@@ -33,11 +37,28 @@ export class MavenSuggestionProvider
     packagePath: string,
     packageText: string
   ): Array<PackageDependency> {
-    const packageDependencies = MavenXmlFactory.createDependenciesFromXml(
-      packagePath,
+    const packageLocations = MavenXmlFactory.createDependenciesFromXml(
+
       packageText,
       this.config.dependencyProperties
     );
+
+    const packageDependencies = packageLocations
+      .filter(x => x.types[0].type === "version")
+      .map(
+        loc => {
+          const versionType = loc.types[0] as TPackageVersionLocationDescriptor
+          return new PackageDependency(
+            createPackageResource(
+              loc.name,
+              versionType.version,
+              packagePath
+            ),
+            loc.nameRange,
+            versionType.versionRange
+          )
+        }
+      );
 
     return packageDependencies;
   }

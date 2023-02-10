@@ -10,7 +10,6 @@ export const extractPackageDependenciesFromJsonTests = {
   "returns empty when no matches found": () => {
     const includeNames = []
     const results = extractPackageDependenciesFromJson(
-      "testPath",
       "",
       includeNames
     );
@@ -20,7 +19,6 @@ export const extractPackageDependenciesFromJsonTests = {
   "returns empty when no dependency entry names match": () => {
     const includeNames = ["non-dependencies"]
     const results = extractPackageDependenciesFromJson(
-      "testPath",
       JSON.stringify(Fixtures.extractDependencyEntries.test),
       includeNames
     );
@@ -30,7 +28,6 @@ export const extractPackageDependenciesFromJsonTests = {
   "extracts dependency entries from json": () => {
     const includeNames = ["dependencies"]
     const results = extractPackageDependenciesFromJson(
-      "testPath",
       JSON.stringify(Fixtures.extractDependencyEntries.test),
       includeNames
     );
@@ -40,7 +37,6 @@ export const extractPackageDependenciesFromJsonTests = {
   "matches json expression paths": () => {
     const includeNames = ["overrides.*"]
     const results = extractPackageDependenciesFromJson(
-      "testPath",
       JSON.stringify(Fixtures.matchesPathExpressions.test),
       includeNames
     );

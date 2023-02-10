@@ -1,36 +1,27 @@
 import * as JsonC from 'jsonc-parser';
-import { createPackageResource, TPackageFileLocationDescriptor } from '../index';
-import { PackageDependency } from '../models/packageDependency';
+import {
+  TPackageLocationDescriptor,
+  TPackageVersionLocationDescriptor
+} from '../index';
 
 export function extractPackageDependenciesFromJson(
-  packagePath: string,
   json: string,
   includePropNames: Array<string>
-): Array<PackageDependency> {
+): Array<TPackageLocationDescriptor> {
   const jsonErrors = [];
   const rootNode = JsonC.parseTree(json, jsonErrors);
   if (!rootNode || rootNode.children.length === 0 || jsonErrors.length > 0) {
     return [];
   }
 
-  const dependencies = extractDependenciesFromNodes(rootNode, includePropNames);
-
-  return dependencies.map(descriptor => new PackageDependency(
-    createPackageResource(
-      descriptor.name,
-      descriptor.version,
-      packagePath
-    ),
-    descriptor.nameRange,
-    descriptor.versionRange
-  ));
+  return extractDependenciesFromNodes(rootNode, includePropNames);
 }
 
 function extractDependenciesFromNodes(
   rootNode: JsonC.Node,
   includePropNames: string[]
-): TPackageFileLocationDescriptor[] {
-  const matchedDependencies: Array<TPackageFileLocationDescriptor> = [];
+): Array<TPackageLocationDescriptor> {
+  const matchedDependencies: Array<TPackageLocationDescriptor> = [];
 
   for (const incPropName of includePropNames) {
     const node = findNodesAtLocation(rootNode, incPropName);
@@ -50,8 +41,8 @@ function descendChildNodes(
   nodes: Array<JsonC.Node>,
   parentKeyNode: JsonC.Node,
   includePropName: string
-): Array<TPackageFileLocationDescriptor> {
-  const matchedDependencies: Array<TPackageFileLocationDescriptor> = [];
+): Array<TPackageLocationDescriptor> {
+  const matchedDependencies: Array<TPackageLocationDescriptor> = [];
   const noIncludePropName = includePropName.length === 0;
 
   for (const node of nodes) {
@@ -61,7 +52,7 @@ function descendChildNodes(
       (noIncludePropName || keyEntry.value === includePropName)) {
 
       // create dependency location from the property
-      const dependencyLoc = createDependencyLocFromProperty(
+      const dependencyLoc = createLocFromVersionProperty(
         parentKeyNode,
         keyEntry,
         valueEntry
@@ -70,7 +61,6 @@ function descendChildNodes(
       matchedDependencies.push(dependencyLoc);
 
     } else if (valueEntry.type == "object") {
-
       // recurse child nodes
       const children = descendChildNodes(
         valueEntry.children,
@@ -85,11 +75,11 @@ function descendChildNodes(
   return matchedDependencies;
 }
 
-function createDependencyLocFromProperty(
+function createLocFromVersionProperty(
   parentKeyNode: JsonC.Node,
   keyNode: JsonC.Node,
   valueNode: JsonC.Node
-): TPackageFileLocationDescriptor {
+): TPackageLocationDescriptor {
 
   const node = parentKeyNode || keyNode;
 
@@ -104,18 +94,16 @@ function createDependencyLocFromProperty(
     end: valueNode.offset + valueNode.length - 1,
   };
 
-  // handle override dependency selectors in the name
-  let name = node.value;
-  const atIndex = name.indexOf('@');
-  if (atIndex > 0) {
-    name = name.slice(0, atIndex);
+  const versionDesc: TPackageVersionLocationDescriptor = {
+    type: "version",
+    version: valueNode.value,
+    versionRange
   }
 
   return {
-    name,
-    version: valueNode.value,
+    name: node.value,
     nameRange,
-    versionRange
+    types: [versionDesc]
   };
 }
 

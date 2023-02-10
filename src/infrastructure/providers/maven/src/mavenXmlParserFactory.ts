@@ -1,16 +1,14 @@
 import {
-  createPackageResource,
-  PackageDependency,
-  TPackageFileLocationDescriptor
+  TPackageLocationDescriptor,
+  TPackageVersionLocationDescriptor
 } from 'domain/packages';
 import xmldoc from 'xmldoc';
 import { MavenProjectProperty } from "./definitions/mavenProjectProperty";
 
 export function createDependenciesFromXml(
-  packagePath: string,
   xml: string,
   includePropertyNames: Array<string>
-): Array<PackageDependency> {
+): Array<TPackageLocationDescriptor> {
   let document = null
 
   try {
@@ -23,21 +21,11 @@ export function createDependenciesFromXml(
 
   const properties = extractPropertiesFromDocument(document);
 
-  const packageDescriptors = extractPackageDescriptorsFromNodes(
+  return extractPackageDescriptorsFromNodes(
     document,
     properties,
     includePropertyNames
   );
-
-  return packageDescriptors.map(descriptor => new PackageDependency(
-    createPackageResource(
-      descriptor.name,
-      descriptor.version,
-      packagePath
-    ),
-    descriptor.nameRange,
-    descriptor.versionRange
-  ));
 }
 
 function extractPackageDescriptorsFromNodes(
@@ -45,7 +33,7 @@ function extractPackageDescriptorsFromNodes(
   properties: Array<MavenProjectProperty>,
   includePropertyNames: Array<string>
 ) {
-  const collector: Array<TPackageFileLocationDescriptor> = [];
+  const collector: Array<TPackageLocationDescriptor> = [];
 
   xmlDoc.eachChild(group => {
 
@@ -73,7 +61,7 @@ function extractPackageDescriptorsFromNodes(
 function collectFromChildVersionTag(
   parentNode,
   properties: Array<MavenProjectProperty>,
-  collector: Array<TPackageFileLocationDescriptor>
+  collector: Array<TPackageLocationDescriptor>
 ) {
   parentNode.eachChild(childNode => {
     let versionNode;
@@ -110,11 +98,16 @@ function collectFromChildVersionTag(
     const name = group + ":" + artifact;
     const version = versionNode.val;
 
+    const versionDesc: TPackageVersionLocationDescriptor = {
+      type: "version",
+      version,
+      versionRange
+    }
+
     collector.push({
       name,
-      version,
       nameRange,
-      versionRange
+      types: [versionDesc]
     });
   });
 }

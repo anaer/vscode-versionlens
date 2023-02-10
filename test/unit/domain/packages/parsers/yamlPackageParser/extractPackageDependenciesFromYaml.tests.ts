@@ -10,7 +10,6 @@ export const extractPackageDependenciesFromYamlTests = {
   "returns empty when no matches found": () => {
     const includeNames = []
     const results = extractPackageDependenciesFromYaml(
-      "testPath",
       "",
       includeNames
     );
@@ -20,7 +19,6 @@ export const extractPackageDependenciesFromYamlTests = {
   "returns empty when no dependency entry names match": () => {
     const includeNames = ["non-dependencies"]
     const results = extractPackageDependenciesFromYaml(
-      "testPath",
       Fixtures.extractDependencyEntries.test,
       includeNames
     );
@@ -30,7 +28,6 @@ export const extractPackageDependenciesFromYamlTests = {
   "extracts dependency entries from yaml": () => {
     const includeNames = ["dependencies"]
     const results = extractPackageDependenciesFromYaml(
-      "testPath",
       Fixtures.extractDependencyEntries.test,
       includeNames
     );

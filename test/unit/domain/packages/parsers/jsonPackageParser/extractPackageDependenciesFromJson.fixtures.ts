@@ -1,4 +1,7 @@
-import { PackageDependency } from "domain/packages";
+import { 
+  TPackageLocationDescriptor, 
+  TPackageVersionLocationDescriptor 
+} from "domain/packages";
 
 export default {
 
@@ -21,80 +24,90 @@ export default {
     },
 
     expected: [
-      <PackageDependency>{
+      <TPackageLocationDescriptor>{
+        name: "Package1",
         nameRange: {
           start: 17,
           end: 17
         },
-        versionRange: {
-          start: 29,
-          end: 34
-        },
-        package: {
-          path: "testPath",
-          name: "Package1",
-          version: "1.0.0"
-        }
+        types: [
+          <TPackageVersionLocationDescriptor>{
+            type: "version",
+            version: "1.0.0",
+            versionRange: {
+              start: 29,
+              end: 34
+            },
+          }
+        ]
       },
-      <PackageDependency>{
+      <TPackageLocationDescriptor>{
+        name: "Package2",
         nameRange: {
           start: 36,
           end: 36
         },
-        versionRange: {
-          start: 48,
-          end: 80
-        },
-        package: {
-          path: "testPath",
-          name: "Package2",
-          version: "github:repo/project#semver:1.2.3"
-        }
+        types: [
+          <TPackageVersionLocationDescriptor>{
+            type: "version",
+            version: "github:repo/project#semver:1.2.3",
+            versionRange: {
+              start: 48,
+              end: 80
+            },
+          }
+        ]
       },
-      <PackageDependency>{
+      <TPackageLocationDescriptor>{
+        name: "Package3",
         nameRange: {
           start: 82,
           end: 82
         },
-        versionRange: {
-          start: 94,
-          end: 95
-        },
-        package: {
-          path: "testPath",
-          name: "Package3",
-          version: "*"
-        }
+        types: [
+          <TPackageVersionLocationDescriptor>{
+            type: "version",
+            version: "*",
+            versionRange: {
+              start: 94,
+              end: 95
+            },
+          }
+        ],
       },
-      <PackageDependency>{
+      <TPackageLocationDescriptor>{
+        name: "ComplexPackage1",
         nameRange: {
           start: 97,
           end: 97
         },
-        versionRange: {
-          start: 127,
-          end: 132
-        },
-        package: {
-          path: "testPath",
-          name: "ComplexPackage1",
-          version: "1.2.3"
-        }
+        types: [
+          <TPackageVersionLocationDescriptor>{
+            type: "version",
+            version: "1.2.3",
+            versionRange: {
+              start: 127,
+              end: 132
+            },
+          }
+        ],
       },
-      <PackageDependency>{
+      <TPackageLocationDescriptor>{
+        name: "NameOverrides@1",
         nameRange: {
           end: 135,
           start: 135
         },
-        package: {
-          path: "testPath",
-          name: "NameOverrides",
-          version: "1.0.0"
-        },
-        versionRange: {
-          end: 159,
-          start: 154
-        }
+        types: [
+          <TPackageVersionLocationDescriptor>{
+            type: "version",
+            version: "1.0.0",
+            versionRange: {
+              end: 159,
+              start: 154
+            },
+          }
+        ]
       }
     ]
 
@@ -113,50 +126,56 @@ export default {
       }
     },
     expected: [
-      <PackageDependency>{
+      <TPackageLocationDescriptor>{
+        name: "childPackage1",
         nameRange: {
           start: 32,
           end: 32
         },
-        versionRange: {
-          start: 49,
-          end: 54
-        },
-        package: {
-          path: "testPath",
-          name: "childPackage1",
-          version: "2.0.0"
-        }
+        types: [
+          <TPackageVersionLocationDescriptor>{
+            type: "version",
+            version: "2.0.0",
+            versionRange: {
+              start: 49,
+              end: 54
+            },
+          }
+        ]
       },
-      <PackageDependency>{
+      <TPackageLocationDescriptor>{
+        name: "childPackage2",
         nameRange: {
           start: 56,
           end: 56
         },
-        versionRange: {
-          start: 73,
-          end: 78
-        },
-        package: {
-          path: "testPath",
-          name: "childPackage2",
-          version: "3.0.0"
-        }
+        types: [
+          <TPackageVersionLocationDescriptor>{
+            type: "version",
+            version: "3.0.0",
+            versionRange: {
+              start: 73,
+              end: 78
+            },
+          }
+        ]
       },
-      <PackageDependency>{
+      <TPackageLocationDescriptor>{
+        name: "childPackage3",
         nameRange: {
           start: 99,
           end: 99
         },
-        versionRange: {
-          start: 116,
-          end: 121
-        },
-        package: {
-          path: "testPath",
-          name: "childPackage3",
-          version: "4.0.0"
-        }
+        types: [
+          <TPackageVersionLocationDescriptor>{
+            type: "version",
+            version: "4.0.0",
+            versionRange: {
+              start: 116,
+              end: 121
+            },
+          }
+        ]
       },
     ]
   }

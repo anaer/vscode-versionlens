@@ -1,4 +1,10 @@
-import { PackageDependency } from "domain/packages";
+import {
+  TPackageGitLocationDescriptor,
+  TPackageHostedLocationDescriptor,
+  TPackageLocationDescriptor,
+  TPackagePathLocationDescriptor,
+  TPackageVersionLocationDescriptor
+} from "domain/packages";
 
 export default {
 
@@ -23,83 +29,194 @@ dependencies:
     version: ^0.4.0 # complex version with comments
   test: '>=0.5.0 <0.12.0'
   collection: "^1.1.0"
+  pathify:
+    path: ./some/test/path
+  hostify:
+    version: 1.0.0
+    hosted:
+      name: testHostPackageAlias
+      url: https://some-package-server.com
+  gitify1: 
+    git: git@github.com:munificent/kittens.git
+  gitify2: 
+    git: 
+      url: git@github.com:munificent/dogs.git
+      ref: some-branch
+  gitify3: 
+    git: 
+      url: git@github.com:munificent/birds.git
+      path: path/to/birds
 `,
 
     expected: [
-      <PackageDependency>{
+      <TPackageLocationDescriptor>{
+        name: "efts",
         nameRange: {
           start: 376,
           end: 376
         },
-        versionRange: {
-          start: 382,
-          end: 388
-        },
-        package: {
-          path: "testPath",
-          name: "efts",
-          version: "^2.0.4"
-        }
+        types: [
+          <TPackageVersionLocationDescriptor>{
+            type: "version",
+            version: "^2.0.4",
+            versionRange: {
+              start: 382,
+              end: 388
+            },
+          }
+        ]
       },
-      <PackageDependency>{
+      <TPackageLocationDescriptor>{
+        name: "http",
         nameRange: {
           start: 391,
           end: 391
         },
-        versionRange: {
-          start: 397,
-          end: 397
-        },
-        package: {
-          path: "testPath",
-          name: "http",
-          version: ""
-        }
+        types: [
+          <TPackageVersionLocationDescriptor>{
+            type: "version",
+            version: "",
+            versionRange: {
+              start: 397,
+              end: 397
+            },
+          }
+        ]
       },
-      <PackageDependency>{
+      <TPackageLocationDescriptor>{
+        name: "transmogrify",
         nameRange: {
           start: 421,
           end: 421
         },
-        versionRange: {
-          start: 448,
-          end: 486
-        },
-        package: {
-          path: "testPath",
-          name: "transmogrify",
-          version: "^0.4.0"
-        }
+        types: [
+          <TPackageVersionLocationDescriptor>{
+            type: "version",
+            version: "^0.4.0",
+            versionRange: {
+              start: 448,
+              end: 486
+            },
+          }
+        ]
       },
-      <PackageDependency>{
+      <TPackageLocationDescriptor>{
+        name: "test",
         nameRange: {
           start: 489,
           end: 489
         },
-        versionRange: {
-          start: 496,
-          end: 511
-        },
-        package: {
-          path: "testPath",
-          name: "test",
-          version: ">=0.5.0 <0.12.0"
-        }
+        types: [
+          <TPackageVersionLocationDescriptor>{
+            type: "version",
+            version: ">=0.5.0 <0.12.0",
+            versionRange: {
+              start: 496,
+              end: 511
+            },
+          }
+        ]
       },
-      <PackageDependency>{
+      <TPackageLocationDescriptor>{
+        name: "collection",
         nameRange: {
           start: 515,
           end: 515
         },
-        versionRange: {
-          start: 528,
-          end: 534
+        types: [
+          <TPackageVersionLocationDescriptor>{
+            type: "version",
+            version: "^1.1.0",
+            versionRange: {
+              start: 528,
+              end: 534
+            },
+          }
+        ]
+      },
+      <TPackageLocationDescriptor>{
+        name: "pathify",
+        nameRange: {
+          start: 538,
+          end: 538
         },
-        package: {
-          path: "testPath",
-          name: "collection",
-          version: "^1.1.0"
-        }
+        types: [
+          <TPackagePathLocationDescriptor>{
+            type: "path",
+            path: "./some/test/path",
+            pathRange: {
+              start: 557,
+              end: 573
+            },
+          }
+        ]
+      },
+      <TPackageLocationDescriptor>{
+        name: "hostify",
+        nameRange: {
+          start: 576,
+          end: 576
+        },
+        types: [
+          <TPackageVersionLocationDescriptor>{
+            type: "version",
+            version: "1.0.0",
+            versionRange: {
+              start: 598,
+              end: 603
+            },
+          },
+          <TPackageHostedLocationDescriptor>{
+            type: "hosted",
+            hostName: "testHostPackageAlias",
+            hostUrl: "https://some-package-server.com",
+          }
+        ]
+      },
+      <TPackageLocationDescriptor>{
+        name: "gitify1",
+        nameRange: {
+          start: 694,
+          end: 694
+        },
+        types: [
+          <TPackageGitLocationDescriptor>{
+            type: "git",
+            gitUrl: "git@github.com:munificent/kittens.git",
+            gitRef: "",
+            gitPath: "",
+          }
+        ]
+      },
+      <TPackageLocationDescriptor>{
+        name: "gitify2",
+        nameRange: {
+          start: 753,
+          end: 753
+        },
+        types: [
+          <TPackageGitLocationDescriptor>{
+            type: "git",
+            gitUrl: "git@github.com:munificent/dogs.git",
+            gitRef: "some-branch",
+            gitPath: "",
+          }
+        ]
+      },
+      <TPackageLocationDescriptor>{
+        name: "gitify3",
+        nameRange: {
+          start: 844,
+          end: 844
+        },
+        types: [
+          <TPackageGitLocationDescriptor>{
+            type: "git",
+            gitUrl: "git@github.com:munificent/birds.git",
+            gitPath: "path/to/birds",
+            gitRef: "",
+          }
+        ]
       }
     ]
 

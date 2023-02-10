@@ -1,4 +1,7 @@
-import { PackageDependency } from "domain/packages"
+import {
+  TPackageLocationDescriptor,
+  TPackageVersionLocationDescriptor
+} from "domain/packages"
 
 export default {
 
@@ -16,65 +19,73 @@ export default {
     `,
 
     expected: [
-      <PackageDependency>{
+      <TPackageLocationDescriptor>{
+        name: 'Microsoft.Build.CentralPackageVersions',
         nameRange: {
           end: 13,
           start: 13
         },
-        package: {
-          path: "testPath",
-          name: 'Microsoft.Build.CentralPackageVersions',
-          version: '2.1.3'
-        },
-        versionRange: {
-          end: 78,
-          start: 73
-        }
+        types: [
+          <TPackageVersionLocationDescriptor>{
+            type: "version",
+            version: "2.1.3",
+            versionRange: {
+              end: 78,
+              start: 73
+            },
+          }
+        ]
       },
-      <PackageDependency>{
+      <TPackageLocationDescriptor>{
+        name: 'Microsoft.Extensions.DependencyInjection.Abstractions',
         nameRange: {
           end: 103,
           start: 103
         },
-        package: {
-          path: "testPath",
-          name: 'Microsoft.Extensions.DependencyInjection.Abstractions',
-          version: '2.0.0'
-        },
-        versionRange: {
-          end: 199,
-          start: 194
-        }
+        types: [
+          <TPackageVersionLocationDescriptor>{
+            type: "version",
+            version: "2.0.0",
+            versionRange: {
+              end: 199,
+              start: 194
+            },
+          }
+        ]
       },
-      <PackageDependency>{
+      <TPackageLocationDescriptor>{
+        name: 'Microsoft.Extensions.Logging.Abstractions',
         nameRange: {
           end: 210,
           start: 210
         },
-        package: {
-          path: "testPath",
-          name: 'Microsoft.Extensions.Logging.Abstractions',
-          version: '2.0.1'
-        },
-        versionRange: {
-          end: 294,
-          start: 289
-        }
+        types: [
+          <TPackageVersionLocationDescriptor>{
+            type: "version",
+            version: "2.0.1",
+            versionRange: {
+              end: 294,
+              start: 289
+            },
+          }
+        ]
       },
-      <PackageDependency>{
+      <TPackageLocationDescriptor>{
+        name: "System.Text.Json",
         nameRange: {
           start: 305,
           end: 305
         },
-        package: {
-          path: "testPath",
-          name: "System.Text.Json",
-          version: "4.7.2"
-        },
-        versionRange: {
-          "end": 362,
-          "start": 357
-        }
+        types: [
+          <TPackageVersionLocationDescriptor>{
+            type: "version",
+            version: "4.7.2",
+            versionRange: {
+              "end": 362,
+              "start": 357
+            },
+          }
+        ]
       }
     ]
   }

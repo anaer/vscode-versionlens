@@ -1,7 +1,9 @@
 import { ILogger } from 'domain/logging';
 import {
+  createPackageResource,
   extractPackageDependenciesFromYaml,
-  PackageDependency
+  PackageDependency,
+  TPackageVersionLocationDescriptor
 } from 'domain/packages';
 import { SuggestionProvider } from 'domain/providers';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
@@ -31,10 +33,26 @@ export class PubSuggestionProvider
     packagePath: string,
     packageText: string
   ): Array<PackageDependency> {
-    const packageDependencies = extractPackageDependenciesFromYaml(
-      packagePath,
+    const packageLocations = extractPackageDependenciesFromYaml(
       packageText,
       this.config.dependencyProperties
+    );
+
+    const packageDependencies = packageLocations
+    .filter(x => x.types[0].type === "version")
+    .map(
+      loc => {
+        const versionType = loc.types[0] as TPackageVersionLocationDescriptor
+        return new PackageDependency(
+          createPackageResource(
+            loc.name,
+            versionType.version,
+            packagePath
+          ),
+          loc.nameRange,
+          versionType.versionRange
+        )
+      }
     );
 
     return packageDependencies;
