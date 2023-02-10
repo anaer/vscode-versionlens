@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { VersionHelpers } from 'domain/packages';
+import { VersionUtils } from 'domain/packages';
 
 const testVersions = [
   '1.0.0',
@@ -14,14 +14,14 @@ const testVersions = [
 
 export const removeFourSegmentVersionsFromArrayTests = {
 
-  title: VersionHelpers.removeFourSegmentVersionsFromArray.name,
+  title: VersionUtils.removeFourSegmentVersionsFromArray.name,
 
   "returns versions when no matches found": () => {
     const expected = [
       '1.0.0',
       '2.0.0',
     ]
-    const results = VersionHelpers.removeFourSegmentVersionsFromArray(expected);
+    const results = VersionUtils.removeFourSegmentVersionsFromArray(expected);
     assert.equal(results.length, expected.length);
     expected.forEach((expectedVersion, index) => {
       assert.equal(results[index], expectedVersion);
@@ -37,7 +37,7 @@ export const removeFourSegmentVersionsFromArrayTests = {
       '11.1.9',
       '12.0.0-next.1',
     ]
-    const results = VersionHelpers.removeFourSegmentVersionsFromArray(testVersions);
+    const results = VersionUtils.removeFourSegmentVersionsFromArray(testVersions);
     assert.equal(results.length, expected.length);
     expected.forEach((expectedVersion, index) => {
       assert.equal(results[index], expectedVersion);

@@ -1,2 +1,2 @@
-export * as VersionHelperTests from './versionHelpers/all.tests'
+export * as VersionUtilsTests from './versionUtils/all.tests'
 export * as PackageParserTests from './parsers/all.tests'

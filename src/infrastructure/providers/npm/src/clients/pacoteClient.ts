@@ -6,7 +6,7 @@ import {
   PackageVersionType,
   TPackageClientRequest,
   TPackageClientResponse,
-  VersionHelpers
+  VersionUtils
 } from 'domain/packages';
 import { createSuggestions } from 'domain/suggestions';
 import { resolve } from 'node:path';
@@ -115,7 +115,7 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
         const rawVersions = Object.keys(packumentResponse.versions || {}).sort(compareLoose);
 
         // seperate versions to releases and prereleases
-        let { releases, prereleases } = VersionHelpers.splitReleasesFromArray(
+        let { releases, prereleases } = VersionUtils.splitReleasesFromArray(
           rawVersions,
           this.config.prereleaseTagFilter
         );
@@ -127,7 +127,7 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
         // extract releases
         if (latestTaggedVersion) {
           // cap the releases to the latest tagged version
-          releases = VersionHelpers.lteFromArray(
+          releases = VersionUtils.lteFromArray(
             releases,
             latestTaggedVersion
           );

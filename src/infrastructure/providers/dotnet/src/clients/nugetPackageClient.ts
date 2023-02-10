@@ -12,7 +12,7 @@ import {
   PackageVersionType,
   TPackageClientRequest,
   TPackageClientResponse,
-  VersionHelpers
+  VersionUtils
 } from 'domain/packages';
 import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
 import { NuGetClientData } from '../definitions/nuget';
@@ -117,10 +117,10 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
     }
 
     // sanitize to semver only versions
-    const rawVersions = VersionHelpers.filterSemverVersions(packageInfo.versions);
+    const rawVersions = VersionUtils.filterSemverVersions(packageInfo.versions);
 
     // seperate versions to releases and prereleases
-    const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(
+    const { releases, prereleases } = VersionUtils.splitReleasesFromArray(
       rawVersions,
       this.config.prereleaseTagFilter
     );

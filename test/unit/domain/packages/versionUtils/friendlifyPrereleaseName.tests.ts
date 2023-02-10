@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { VersionHelpers } from 'domain/packages';
+import { VersionUtils } from 'domain/packages';
 
 const testPrereleases = [
   '4.1.0-beta.1',
@@ -9,10 +9,10 @@ const testPrereleases = [
 
 export const friendlifyPrereleaseNameTests = {
 
-  title: VersionHelpers.friendlifyPrereleaseName.name,
+  title: VersionUtils.friendlifyPrereleaseName.name,
 
   "returns null name when no matches found": () => {
-    const result = VersionHelpers.friendlifyPrereleaseName('2.5.0-tag.1');
+    const result = VersionUtils.friendlifyPrereleaseName('2.5.0-tag.1');
     assert.equal(result, null);
   },
 
@@ -23,7 +23,7 @@ export const friendlifyPrereleaseNameTests = {
       'release',
     ]
     expected.forEach((expectedValue, index) => {
-      const actual = VersionHelpers.friendlifyPrereleaseName(testPrereleases[index])
+      const actual = VersionUtils.friendlifyPrereleaseName(testPrereleases[index])
       assert.equal(actual, expectedValue);
     })
   },

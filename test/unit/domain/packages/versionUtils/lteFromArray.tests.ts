@@ -1,12 +1,12 @@
 import assert from 'assert';
-import { VersionHelpers } from 'domain/packages';
+import { VersionUtils } from 'domain/packages';
 
 export const lteFromArrayTests = {
 
-  title: VersionHelpers.lteFromArray.name,
+  title: VersionUtils.lteFromArray.name,
 
   "returns empty when versions is empty": () => {
-    const results = VersionHelpers.lteFromArray([], '1.2.3');
+    const results = VersionUtils.lteFromArray([], '1.2.3');
     assert.equal(results.length, 0);
   },
 
@@ -30,7 +30,7 @@ export const lteFromArrayTests = {
       '0.8.19',
     ]
 
-    const results = VersionHelpers.lteFromArray(testReleases, testVersion);
+    const results = VersionUtils.lteFromArray(testReleases, testVersion);
     assert.deepEqual(results, expected);
   },
 

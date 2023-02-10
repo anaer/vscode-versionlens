@@ -11,7 +11,7 @@ import {
   TPackageClientRequest,
   TPackageClientResponse,
   TSemverSpec,
-  VersionHelpers
+  VersionUtils
 } from 'domain/packages';
 import {
   createSuggestions,
@@ -37,7 +37,7 @@ export class DubClient implements IPackageClient<null> {
 
   fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;
-    const semverSpec = VersionHelpers.parseSemver(requestedPackage.version);
+    const semverSpec = VersionUtils.parseSemver(requestedPackage.version);
     const url = `${this.config.apiUrl}${encodeURIComponent(requestedPackage.name)}/info`;
 
     return this.createRemotePackageDocument(url, request, semverSpec)
@@ -90,10 +90,10 @@ export class DubClient implements IPackageClient<null> {
           status: httpResponse.status,
         };
 
-        const rawVersions = VersionHelpers.extractVersionsFromMap(packageInfo.versions);
+        const rawVersions = VersionUtils.extractVersionsFromMap(packageInfo.versions);
 
         // seperate versions to releases and prereleases
-        const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(
+        const { releases, prereleases } = VersionUtils.splitReleasesFromArray(
           rawVersions,
           this.config.prereleaseTagFilter
         );

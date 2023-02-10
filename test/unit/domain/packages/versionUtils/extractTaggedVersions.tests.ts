@@ -1,6 +1,6 @@
 import assert from 'assert';
 
-import { VersionHelpers } from 'domain/packages';
+import { VersionUtils } from 'domain/packages';
 
 const testVersions = [
   "2.0.0-preview.1",
@@ -16,10 +16,10 @@ const testVersions = [
 
 export const extractTaggedVersionsTests = {
 
-  title: VersionHelpers.extractTaggedVersions.name,
+  title: VersionUtils.extractTaggedVersions.name,
 
   "returns empty when no matches found": () => {
-    const results = VersionHelpers.extractTaggedVersions([]);
+    const results = VersionUtils.extractTaggedVersions([]);
     assert.equal(results.length, 0);
   },
 
@@ -33,7 +33,7 @@ export const extractTaggedVersionsTests = {
       '2.2.0-preview.5',
     ]
 
-    const results = VersionHelpers.extractTaggedVersions(testVersions);
+    const results = VersionUtils.extractTaggedVersions(testVersions);
     assert.equal(results.length, expected.length);
     expected.forEach((expectedValue, index) => {
       assert.equal(results[index].name, expectedValue.substr(6, 7));

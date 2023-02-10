@@ -1,9 +1,9 @@
 import assert from 'assert';
-import { VersionHelpers } from 'domain/packages';
+import { VersionUtils } from 'domain/packages';
 
 export const isFourSegmentedVersionTests = {
 
-  title: VersionHelpers.isFourSegmentedVersion.name,
+  title: VersionUtils.isFourSegmentedVersion.name,
 
   "returns false for semver versions $1": [
     '~1.2.3',
@@ -12,7 +12,7 @@ export const isFourSegmentedVersionTests = {
     '>=1.2',
     '*',
     (testVersion) => {
-      const actual1 = VersionHelpers.isFourSegmentedVersion(testVersion)
+      const actual1 = VersionUtils.isFourSegmentedVersion(testVersion)
       assert.equal(actual1, false);
     }
   ],
@@ -22,7 +22,7 @@ export const isFourSegmentedVersionTests = {
     '1.0.1.1',
     '1.0.0.10',
     (testVersion) => {
-      const actual1 = VersionHelpers.isFourSegmentedVersion(testVersion)
+      const actual1 = VersionUtils.isFourSegmentedVersion(testVersion)
       assert.ok(actual1);
     }
   ],

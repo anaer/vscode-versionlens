@@ -2,7 +2,7 @@ import {
   TPackageDependencyRange,
   TPackageNameVersion,
   TPackageResource
-} from "./index";
+} from "../index";
 
 export function createDependencyRange(
   start: number,

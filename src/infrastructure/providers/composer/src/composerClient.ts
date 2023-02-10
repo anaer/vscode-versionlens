@@ -12,7 +12,7 @@ import {
   TPackageClientRequest,
   TPackageClientResponse,
   TSemverSpec,
-  VersionHelpers
+  VersionUtils
 } from 'domain/packages';
 import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
 import { ComposerConfig } from './composerConfig';
@@ -44,7 +44,7 @@ export class ComposerClient implements IPackageClient<null> {
     request: TPackageClientRequest<TClientData>
   ): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;
-    const semverSpec = VersionHelpers.parseSemver(requestedPackage.version);
+    const semverSpec = VersionUtils.parseSemver(requestedPackage.version);
     const url = `${this.config.apiUrl}${requestedPackage.name}.json`;
 
     return this.createRemotePackageDocument(url, request, semverSpec)
@@ -105,10 +105,10 @@ export class ComposerClient implements IPackageClient<null> {
         }
 
         // extract semver versions only
-        const semverVersions = VersionHelpers.filterSemverVersions(rawVersions);
+        const semverVersions = VersionUtils.filterSemverVersions(rawVersions);
 
         // seperate versions to releases and prereleases
-        const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(
+        const { releases, prereleases } = VersionUtils.splitReleasesFromArray(
           semverVersions,
           this.config.prereleaseTagFilter
         );

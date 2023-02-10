@@ -1,9 +1,9 @@
 import assert from 'assert';
-import { VersionHelpers } from 'domain/packages';
+import { VersionUtils } from 'domain/packages';
 
 export const isFixedVersionTests = {
 
-  title: VersionHelpers.isFixedVersion.name,
+  title: VersionUtils.isFixedVersion.name,
 
   "returns false when not fixed": () => {
     const testVersions = [
@@ -15,7 +15,7 @@ export const isFixedVersionTests = {
     ]
 
     testVersions.forEach(testVersion => {
-      const actual = VersionHelpers.isFixedVersion(testVersion)
+      const actual = VersionUtils.isFixedVersion(testVersion)
       assert.equal(actual, false);
     })
   },
@@ -26,7 +26,7 @@ export const isFixedVersionTests = {
       '4.5.6-beta',
     ]
     testVersions.forEach(testVersion => {
-      const actual = VersionHelpers.isFixedVersion(testVersion)
+      const actual = VersionUtils.isFixedVersion(testVersion)
       assert.equal(actual, true);
     })
   },

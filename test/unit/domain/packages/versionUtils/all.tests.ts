@@ -1,4 +1,4 @@
-export const title = "Version Helpers";
+export const title = "Version Utils";
 
 export * from './extractTaggedVersions.tests';
 export * from './filterPrereleasesGtMinRange.tests';

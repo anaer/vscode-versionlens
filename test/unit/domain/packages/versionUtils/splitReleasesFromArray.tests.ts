@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { VersionHelpers } from 'domain/packages';
+import { VersionUtils } from 'domain/packages';
 
 const testVersions = [
   '1.0.0',
@@ -24,16 +24,16 @@ const expectedPrereleases = [
 
 export const splitReleasesFromArrayTests = {
 
-  title: VersionHelpers.splitReleasesFromArray.name,
+  title: VersionUtils.splitReleasesFromArray.name,
 
   "returns empty when no matches found": () => {
-    const { releases, prereleases } = VersionHelpers.splitReleasesFromArray([], []);
+    const { releases, prereleases } = VersionUtils.splitReleasesFromArray([], []);
     assert.equal(releases.length, 0);
     assert.equal(prereleases.length, 0);
   },
 
   "returns mapped PackageNameVersion array": () => {
-    const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(
+    const { releases, prereleases } = VersionUtils.splitReleasesFromArray(
       testVersions,
       []
     );
@@ -56,7 +56,7 @@ export const splitReleasesFromArrayTests = {
       '2.0.0-beta.1'
     ]
 
-    const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(
+    const { releases, prereleases } = VersionUtils.splitReleasesFromArray(
       testVersions,
       ["beta"]
     );

@@ -11,7 +11,7 @@ import {
   TPackageClientRequest,
   TPackageClientResponse,
   TSemverSpec,
-  VersionHelpers
+  VersionUtils
 } from 'domain/packages';
 import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
 import xmldoc from 'xmldoc';
@@ -36,7 +36,7 @@ export class MavenClient implements IPackageClient<MavenClientData> {
     request: TPackageClientRequest<MavenClientData>
   ): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;
-    const semverSpec = VersionHelpers.parseSemver(requestedPackage.version);
+    const semverSpec = VersionUtils.parseSemver(requestedPackage.version);
 
     const { repositories } = request.clientData;
     const url = repositories[0].url
@@ -96,10 +96,10 @@ export class MavenClient implements IPackageClient<MavenClientData> {
         const rawVersions = getVersionsFromPackageXml(data);
 
         // extract semver versions only
-        const semverVersions = VersionHelpers.filterSemverVersions(rawVersions);
+        const semverVersions = VersionUtils.filterSemverVersions(rawVersions);
 
         // seperate versions to releases and prereleases
-        const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(
+        const { releases, prereleases } = VersionUtils.splitReleasesFromArray(
           semverVersions,
           this.config.prereleaseTagFilter
         );

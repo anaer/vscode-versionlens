@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { VersionHelpers } from 'domain/packages';
+import { VersionUtils } from 'domain/packages';
 
 const testPrereleases = [
   '2.0.0-preview1.12141.1',
@@ -20,10 +20,10 @@ const testPrereleases = [
 
 export const filterPrereleasesGtMinRangeTests = {
 
-  title: VersionHelpers.filterPrereleasesGtMinRange.name,
+  title: VersionUtils.filterPrereleasesGtMinRange.name,
 
   "returns empty when no matches found": () => {
-    const results = VersionHelpers.filterPrereleasesGtMinRange('*', []);
+    const results = VersionUtils.filterPrereleasesGtMinRange('*', []);
     assert.equal(Object.keys(results).length, 0);
   },
 
@@ -34,7 +34,7 @@ export const filterPrereleasesGtMinRangeTests = {
     ]
 
     tests.forEach(testVersion => {
-      const results = VersionHelpers.filterPrereleasesGtMinRange(testVersion, testPrereleases);
+      const results = VersionUtils.filterPrereleasesGtMinRange(testVersion, testPrereleases);
       assert.deepEqual(results.length, 0, testVersion);
     });
   },
@@ -46,7 +46,7 @@ export const filterPrereleasesGtMinRangeTests = {
       '2.5.0-tag.3',
       '2.1.0-beta3',
     ]
-    const results = VersionHelpers.filterPrereleasesGtMinRange('2.*', testPrereleases);
+    const results = VersionUtils.filterPrereleasesGtMinRange('2.*', testPrereleases);
     assert.equal(results.length, expected.length);
     expected.forEach((expectedValue, index) => {
       assert.equal(results[index], expectedValue);
@@ -66,7 +66,7 @@ export const filterPrereleasesGtMinRangeTests = {
     ]
 
     tests.forEach(testVersion => {
-      const results = VersionHelpers.filterPrereleasesGtMinRange(testVersion, testPrereleases);
+      const results = VersionUtils.filterPrereleasesGtMinRange(testVersion, testPrereleases);
       assert.deepEqual(results.length, 0, testVersion);
     });
   },
@@ -87,7 +87,7 @@ export const filterPrereleasesGtMinRangeTests = {
     ]
 
     tests.forEach(testVersion => {
-      const results = VersionHelpers.filterPrereleasesGtMinRange(testVersion, testPrereleases);
+      const results = VersionUtils.filterPrereleasesGtMinRange(testVersion, testPrereleases);
       assert.deepEqual(results, expected);
     });
   },

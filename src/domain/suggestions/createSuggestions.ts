@@ -1,4 +1,4 @@
-import { VersionHelpers } from 'domain/packages';
+import { VersionUtils } from 'domain/packages';
 import semver from 'semver';
 import { SuggestionFlags, SuggestionStatus, TPackageSuggestion } from './index';
 import {
@@ -23,14 +23,14 @@ export function createSuggestions(
   let satisfiesVersion = maxSatisfying(
     releases,
     versionRange,
-    VersionHelpers.loosePrereleases
+    VersionUtils.loosePrereleases
   );
   if (!satisfiesVersion && versionRange.indexOf('-') > -1) {
     // lookup prereleases
     satisfiesVersion = maxSatisfying(
       prereleases,
       versionRange,
-      VersionHelpers.loosePrereleases
+      VersionUtils.loosePrereleases
     );
   }
 
@@ -61,7 +61,7 @@ export function createSuggestions(
       // suggest latestVersion
       createLatest(latestVersion),
     );
-  else if (satisfiesVersion && VersionHelpers.isFixedVersion(versionRange))
+  else if (satisfiesVersion && VersionUtils.isFixedVersion(versionRange))
     suggestions.push(
       // fixed
       createFixedStatus(versionRange),
@@ -83,13 +83,13 @@ export function createSuggestions(
     );
 
   // roll up prereleases
-  const maxSatisfyingPrereleases = VersionHelpers.filterPrereleasesGtMinRange(
+  const maxSatisfyingPrereleases = VersionUtils.filterPrereleasesGtMinRange(
     versionRange,
     prereleases
   ).sort(compareLoose);
 
   // group prereleases (latest first)
-  const taggedVersions = VersionHelpers.extractTaggedVersions(maxSatisfyingPrereleases);
+  const taggedVersions = VersionUtils.extractTaggedVersions(maxSatisfyingPrereleases);
   for (let index = taggedVersions.length - 1; index > -1; index--) {
     const pvn = taggedVersions[index];
     if (pvn.name === 'latest') break;

@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { ClientResponseSource } from 'domain/clients';
 import { PackageDependency, TPackageClientRequest } from 'domain/packages';
-import { createPackageResource } from 'domain/packages/packageUtils';
+import { createPackageResource } from 'domain/packages/utils/packageUtils';
 import { SuggestionFlags } from 'domain/suggestions';
 import {
   GitHubClient,

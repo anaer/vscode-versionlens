@@ -4,7 +4,7 @@ import {
   PackageClientSourceType,
   PackageResponse,
   PackageVersionType,
-  VersionHelpers
+  VersionUtils
 } from 'domain/packages';
 import { fileExists, readFile } from 'domain/utils';
 import dotenv from 'dotenv';
@@ -20,7 +20,7 @@ export function npmReplaceVersion(packageInfo: PackageResponse, newVersion: stri
   }
 
   // fallback to default
-  return VersionHelpers.formatWithExistingLeading(
+  return VersionUtils.formatWithExistingLeading(
     packageInfo.requested.version,
     newVersion
   );
@@ -35,7 +35,7 @@ function replaceGitVersion(packageInfo: PackageResponse, newVersion: string): st
 
 function replaceAliasVersion(packageInfo: PackageResponse, newVersion: string): string {
   // preserve the leading symbol from the existing version
-  const preservedLeadingVersion = VersionHelpers.formatWithExistingLeading(
+  const preservedLeadingVersion = VersionUtils.formatWithExistingLeading(
     packageInfo.requested.version,
     newVersion
   );

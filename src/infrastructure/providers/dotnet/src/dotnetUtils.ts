@@ -1,4 +1,4 @@
-import { PackageVersionType, VersionHelpers } from 'domain/packages';
+import { PackageVersionType, VersionUtils } from 'domain/packages';
 import semver from 'semver';
 import { DotNetVersionSpec } from './definitions/dotnet';
 import { NugetVersionSpec } from './definitions/nuget';
@@ -44,8 +44,8 @@ export function parseVersionSpec(rawVersion: string): DotNetVersionSpec {
     // convert spec to semver
     const { valid, validRange } = semver;
     version = convertVersionSpecToString(spec);
-    isValidVersion = valid(version, VersionHelpers.loosePrereleases);
-    isValidRange = !isValidVersion && validRange(version, VersionHelpers.loosePrereleases) !== null;
+    isValidVersion = valid(version, VersionUtils.loosePrereleases);
+    isValidRange = !isValidVersion && validRange(version, VersionUtils.loosePrereleases) !== null;
   }
 
   const type: PackageVersionType = isValidVersion ?
@@ -101,7 +101,7 @@ export function buildVersionSpec(value): NugetVersionSpec {
     versionSpec.isMinInclusive = true;
   else if (first === '(')
     versionSpec.isMinInclusive = false;
-  else if (VersionHelpers.isFourSegmentedVersion(formattedValue))
+  else if (VersionUtils.isFourSegmentedVersion(formattedValue))
     return { hasFourSegments: true }
   else
     return null;

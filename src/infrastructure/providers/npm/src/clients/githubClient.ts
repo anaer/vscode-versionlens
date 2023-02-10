@@ -9,7 +9,7 @@ import {
   PackageClientSourceType,
   PackageVersionType,
   TPackageClientResponse,
-  VersionHelpers
+  VersionUtils
 } from 'domain/packages';
 import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
 import semver from 'semver';
@@ -43,7 +43,7 @@ export class GitHubClient {
       return this.fetchTags(npaSpec);
     }
 
-    if (validRange(npaSpec.gitCommittish, VersionHelpers.loosePrereleases)) {
+    if (validRange(npaSpec.gitCommittish, VersionUtils.loosePrereleases)) {
       // we have a #x.x.x
       npaSpec.gitRange = npaSpec.gitCommittish;
       return this.fetchTags(npaSpec);
@@ -74,7 +74,7 @@ export class GitHubClient {
 
         const rawVersions = tags.map((tag: any) => tag.name);
 
-        const allVersions = VersionHelpers.filterSemverVersions(rawVersions).sort(compareLoose);
+        const allVersions = VersionUtils.filterSemverVersions(rawVersions).sort(compareLoose);
 
         const source: PackageClientSourceType = PackageClientSourceType.Github;
 
@@ -90,7 +90,7 @@ export class GitHubClient {
         };
 
         // seperate versions to releases and prereleases
-        const { releases, prereleases } = VersionHelpers.splitReleasesFromArray(
+        const { releases, prereleases } = VersionUtils.splitReleasesFromArray(
           allVersions,
           this.config.prereleaseTagFilter
         );
