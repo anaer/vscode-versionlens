@@ -1,5 +1,5 @@
 import {
-  TPackageDescriptor,
+  PackageDescriptor,
   TPackageVersionDescriptor
 } from "domain/packages"
 
@@ -19,7 +19,7 @@ export default {
     `,
 
     expected: [
-      <TPackageDescriptor>{
+      <PackageDescriptor>{
         name: 'Microsoft.Build.CentralPackageVersions',
         nameRange: {
           end: 13,
@@ -36,7 +36,7 @@ export default {
           }
         ]
       },
-      <TPackageDescriptor>{
+      <PackageDescriptor>{
         name: 'Microsoft.Extensions.DependencyInjection.Abstractions',
         nameRange: {
           end: 103,
@@ -53,7 +53,7 @@ export default {
           }
         ]
       },
-      <TPackageDescriptor>{
+      <PackageDescriptor>{
         name: 'Microsoft.Extensions.Logging.Abstractions',
         nameRange: {
           end: 210,
@@ -70,7 +70,7 @@ export default {
           }
         ]
       },
-      <TPackageDescriptor>{
+      <PackageDescriptor>{
         name: "System.Text.Json",
         nameRange: {
           start: 305,

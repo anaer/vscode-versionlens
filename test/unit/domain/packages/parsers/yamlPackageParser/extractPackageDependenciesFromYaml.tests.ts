@@ -25,13 +25,39 @@ export const extractPackageDependenciesFromYamlTests = {
     assert.equal(results.length, 0);
   },
 
-  "extracts dependency entries from yaml": () => {
+  "extracts general dependencies from yaml": () => {
     const includeNames = ["dependencies"]
     const results = extractPackageDependenciesFromYaml(
       Fixtures.extractDependencyEntries.test,
       includeNames
     );
     assert.deepEqual(results, Fixtures.extractDependencyEntries.expected);
-  }
+  },
 
+  "extracts path type dependencies from yaml": () => {
+    const includeNames = ["dependencies"]
+    const results = extractPackageDependenciesFromYaml(
+      Fixtures.extractPathDependencies.test,
+      includeNames
+    );
+    assert.deepEqual(results, Fixtures.extractPathDependencies.expected);
+  },
+
+  "extracts git type dependencies from yaml": () => {
+    const includeNames = ["dependencies"]
+    const results = extractPackageDependenciesFromYaml(
+      Fixtures.extractGitDepencdencies.test,
+      includeNames
+    );
+    assert.deepEqual(results, Fixtures.extractGitDepencdencies.expected);
+  },
+
+  "extracts hosted type dependencies from yaml": () => {
+    const includeNames = ["dependencies"]
+    const results = extractPackageDependenciesFromYaml(
+      Fixtures.extractHostedDependencies.test,
+      includeNames
+    );
+    assert.deepEqual(results, Fixtures.extractHostedDependencies.expected);
+  }
 }

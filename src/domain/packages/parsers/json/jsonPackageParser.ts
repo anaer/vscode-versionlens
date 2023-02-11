@@ -1,4 +1,4 @@
-import { TPackageDescriptor } from 'domain/packages';
+import { PackageDescriptor } from 'domain/packages';
 import * as JsonC from 'jsonc-parser';
 import {
   createPackageDescFromJsonNode,
@@ -16,7 +16,7 @@ const complexTypeHandlers = {
 export function extractPackageDependenciesFromJson(
   json: string,
   includePropNames: Array<string>
-): Array<TPackageDescriptor> {
+): Array<PackageDescriptor> {
   const jsonErrors = [];
   const rootNode = JsonC.parseTree(json, jsonErrors);
   if (!rootNode || rootNode.children.length === 0 || jsonErrors.length > 0) {
@@ -29,8 +29,8 @@ export function extractPackageDependenciesFromJson(
 function extractDependenciesFromNodes(
   rootNode: JsonC.Node,
   includePropNames: string[]
-): Array<TPackageDescriptor> {
-  const matchedDependencies: Array<TPackageDescriptor> = [];
+): Array<PackageDescriptor> {
+  const matchedDependencies: Array<PackageDescriptor> = [];
 
   for (const incPropName of includePropNames) {
     const node = findNodesAtLocation(rootNode, incPropName);
@@ -50,8 +50,8 @@ function descendChildNodes(
   nodes: Array<JsonC.Node>,
   parentKeyNode: JsonC.Node,
   includePropName: string
-): Array<TPackageDescriptor> {
-  const matchedDependencies: Array<TPackageDescriptor> = [];
+): Array<PackageDescriptor> {
+  const matchedDependencies: Array<PackageDescriptor> = [];
   const noIncludePropName = includePropName.length === 0;
 
   for (const node of nodes) {

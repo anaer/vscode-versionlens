@@ -1,5 +1,5 @@
 import {
-  TPackageDescriptor,
+  PackageDescriptor,
   TPackageGitDescriptor,
   TPackageHostedDescriptor,
   TPackagePathDescriptor,
@@ -8,7 +8,7 @@ import {
 
 export default {
 
-  "extractDependencyEntries": {
+  extractDependencyEntries: {
 
     "test": `
 name: newtify
@@ -29,27 +29,10 @@ dependencies:
     version: ^0.4.0 # complex version with comments
   test: '>=0.5.0 <0.12.0'
   collection: "^1.1.0"
-  pathify:
-    path: ./some/test/path
-  hostify:
-    version: 1.0.0
-    hosted:
-      name: testHostPackageAlias
-      url: https://some-package-server.com
-  gitify1: 
-    git: git@github.com:munificent/kittens.git
-  gitify2: 
-    git: 
-      url: git@github.com:munificent/dogs.git
-      ref: some-branch
-  gitify3: 
-    git: 
-      url: git@github.com:munificent/birds.git
-      path: path/to/birds
 `,
 
     expected: [
-      <TPackageDescriptor>{
+      <PackageDescriptor>{
         name: "efts",
         nameRange: {
           start: 376,
@@ -66,7 +49,7 @@ dependencies:
           }
         ]
       },
-      <TPackageDescriptor>{
+      <PackageDescriptor>{
         name: "http",
         nameRange: {
           start: 391,
@@ -83,7 +66,7 @@ dependencies:
           }
         ]
       },
-      <TPackageDescriptor>{
+      <PackageDescriptor>{
         name: "transmogrify",
         nameRange: {
           start: 421,
@@ -95,12 +78,12 @@ dependencies:
             version: "^0.4.0",
             versionRange: {
               start: 448,
-              end: 486
+              end: 454
             },
           }
         ]
       },
-      <TPackageDescriptor>{
+      <PackageDescriptor>{
         name: "test",
         nameRange: {
           start: 489,
@@ -117,7 +100,7 @@ dependencies:
           }
         ]
       },
-      <TPackageDescriptor>{
+      <PackageDescriptor>{
         name: "collection",
         nameRange: {
           start: 515,
@@ -133,51 +116,80 @@ dependencies:
             },
           }
         ]
-      },
-      <TPackageDescriptor>{
-        name: "pathify",
+      }
+    ]
+
+  },
+
+  extractPathDependencies: {
+
+    test: `
+dependencies:
+  pathify1:
+    path: ./some/test/path1
+  pathify2:
+    path: ./some/test/path2 # test comment
+    `,
+    expected: [
+      <PackageDescriptor>{
+        name: "pathify1",
         nameRange: {
-          start: 538,
-          end: 538
+          start: 17,
+          end: 17
         },
         types: [
           <TPackagePathDescriptor>{
             type: "path",
-            path: "./some/test/path",
+            path: "./some/test/path1",
             pathRange: {
-              start: 557,
-              end: 573
+              start: 37,
+              end: 54
             },
           }
         ]
       },
-      <TPackageDescriptor>{
-        name: "hostify",
+      <PackageDescriptor>{
+        name: "pathify2",
         nameRange: {
-          start: 576,
-          end: 576
+          start: 57,
+          end: 57
         },
         types: [
-          <TPackageVersionDescriptor>{
-            type: "version",
-            version: "1.0.0",
-            versionRange: {
-              start: 598,
-              end: 603
+          <TPackagePathDescriptor>{
+            type: "path",
+            path: "./some/test/path2",
+            pathRange: {
+              start: 77,
+              end: 94
             },
-          },
-          <TPackageHostedDescriptor>{
-            type: "hosted",
-            hostName: "testHostPackageAlias",
-            hostUrl: "https://some-package-server.com",
           }
         ]
-      },
-      <TPackageDescriptor>{
+      }
+    ]
+  },
+
+  extractGitDepencdencies: {
+    test: `
+dependencies:
+  gitify1: 
+    git: git@github.com:munificent/kittens.git
+  gitify2: 
+    git: 
+      url: git@github.com:munificent/dogs.git
+      ref: some-branch
+  gitify3: 
+    git: 
+      url: git@github.com:munificent/birds.git
+      path: path/to/birds
+  gitify4: 
+    git: git@github.com:munificent/foxes.git # test comment
+    `  ,
+    expected: [
+      <PackageDescriptor>{
         name: "gitify1",
         nameRange: {
-          start: 694,
-          end: 694
+          start: 17,
+          end: 17
         },
         types: [
           <TPackageGitDescriptor>{
@@ -188,11 +200,11 @@ dependencies:
           }
         ]
       },
-      <TPackageDescriptor>{
+      <PackageDescriptor>{
         name: "gitify2",
         nameRange: {
-          start: 753,
-          end: 753
+          start: 76,
+          end: 76
         },
         types: [
           <TPackageGitDescriptor>{
@@ -203,11 +215,11 @@ dependencies:
           }
         ]
       },
-      <TPackageDescriptor>{
+      <PackageDescriptor>{
         name: "gitify3",
         nameRange: {
-          start: 844,
-          end: 844
+          start: 167,
+          end: 167
         },
         types: [
           <TPackageGitDescriptor>{
@@ -217,9 +229,112 @@ dependencies:
             gitRef: "",
           }
         ]
+      },
+      <PackageDescriptor>{
+        name: "gitify4",
+        nameRange: {
+          start: 262,
+          end: 262
+        },
+        types: [
+          <TPackageGitDescriptor>{
+            type: "git",
+            gitUrl: "git@github.com:munificent/foxes.git",
+            gitPath: "",
+            gitRef: "",
+          }
+        ]
       }
+    ]
+  },
+
+  extractHostedDependencies: {
+
+    test: `
+dependencies:
+  hostify1:
+    version: 1.0.0
+    hosted:  https://some-package-server.com
+  hostify2:
+    version: 2.0.0 # comments
+    hosted:  https://some-package-server.com
+  hostify3:
+    version: 3.0.0
+    hosted:
+      name: testHostPackageAlias
+      url: https://some-package-server.com
+`,
+    expected: [
+      <PackageDescriptor>{
+        name: "hostify1",
+        nameRange: {
+          start: 17,
+          end: 17
+        },
+        types: [
+          <TPackageVersionDescriptor>{
+            type: "version",
+            version: "1.0.0",
+            versionRange: {
+              start: 40,
+              end: 45
+            },
+          },
+          <TPackageHostedDescriptor>{
+            type: "hosted",
+            hostPackageName: "",
+            hostUrl: "https://some-package-server.com",
+          }
+        ]
+      },
+      <PackageDescriptor>{
+        name: "hostify2",
+        nameRange: {
+          start: 93,
+          end: 93
+        },
+        types: [
+          <TPackageVersionDescriptor>{
+            type: "version",
+            version: "2.0.0",
+            versionRange: {
+              start: 116,
+              end: 121
+            },
+          },
+          <TPackageHostedDescriptor>{
+            type: "hosted",
+            hostPackageName: "",
+            hostUrl: "https://some-package-server.com",
+          }
+        ]
+      },
+      <PackageDescriptor>{
+        name: "hostify3",
+        nameRange: {
+          start: 180,
+          end: 180
+        },
+        types: [
+          <TPackageVersionDescriptor>{
+            type: "version",
+            version: "3.0.0",
+            versionRange: {
+              start: 203,
+              end: 208
+            },
+          },
+          <TPackageHostedDescriptor>{
+            type: "hosted",
+            hostPackageName: "testHostPackageAlias",
+            hostUrl: "https://some-package-server.com",
+          }
+        ]
+      },
     ]
 
   }
+
+
 
 }

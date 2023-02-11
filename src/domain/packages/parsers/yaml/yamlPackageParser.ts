@@ -1,6 +1,6 @@
 import { Document, isMap, Pair, ParsedNode, parseDocument, YAMLMap } from 'yaml';
 import { findPair } from 'yaml/util';
-import { TPackageDescriptor } from '../../index';
+import { PackageDescriptor } from '../../index';
 import {
   createGitDesc,
   createHostedDesc,
@@ -19,7 +19,7 @@ const complexTypeHandlers = {
 export function extractPackageDependenciesFromYaml(
   yaml: string,
   includePropNames: Array<string>
-): Array<TPackageDescriptor> {
+): Array<PackageDescriptor> {
 
   const yamlDoc = parseDocument(yaml)
   if (!yamlDoc || !yamlDoc.contents || yamlDoc.errors.length > 0) return [];
@@ -30,7 +30,7 @@ export function extractPackageDependenciesFromYaml(
 function extractDependenciesFromNodes(
   rootNode: Document.Parsed<ParsedNode>,
   includePropNames: string[]
-): TPackageDescriptor[] {
+): PackageDescriptor[] {
   const matchedDependencies = [];
 
   for (const incPropName of includePropNames) {
@@ -40,8 +40,8 @@ function extractDependenciesFromNodes(
     if (!node) continue;
 
     const children = node instanceof Array
-      ? descendChildNodes(node, null, "")
-      : descendChildNodes(node.items, null, "");
+      ? descendChildNodes(node, "")
+      : descendChildNodes(node.items, "");
 
     matchedDependencies.push.apply(matchedDependencies, children);
   }
@@ -51,10 +51,9 @@ function extractDependenciesFromNodes(
 
 function descendChildNodes(
   pairs: Array<Pair<any, any>>,
-  parentNode: Pair<any, any>,
   includePropName: string
-): Array<TPackageDescriptor> {
-  const matchedDependencies: Array<TPackageDescriptor> = [];
+): Array<PackageDescriptor> {
+  const matchedDependencies: Array<PackageDescriptor> = [];
   const noIncludePropName = includePropName.length === 0;
 
   for (const pair of pairs) {
@@ -70,7 +69,6 @@ function descendChildNodes(
 
       // add the version type to the package desc
       const versionDesc = createVersionDesc(
-        parentNode,
         valueNode,
         isQuotedType
       );
@@ -99,7 +97,6 @@ function descendChildNodes(
 
           // add the handled type to the package desc
           const typeDesc = handler(
-            keyNode,
             pair.value,
             isQuotedType
           );

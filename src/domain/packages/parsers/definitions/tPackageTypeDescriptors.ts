@@ -15,7 +15,7 @@ export type TPackagePathDescriptor = TPackageType & {
 }
 
 export type TPackageHostedDescriptor = TPackageType & {
-  hostName: string
+  hostPackageName: string
   hostUrl: string
 }
 

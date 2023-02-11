@@ -1,22 +1,24 @@
 import {
-  TPackageDescriptor,
+  PackageDescriptor,
   TPackageGitDescriptor,
   TPackagePathDescriptor,
   TPackageVersionDescriptor
 } from "domain/packages";
 import * as JsonC from 'jsonc-parser';
 
-export function createPackageDescFromJsonNode(keyNode: JsonC.Node): TPackageDescriptor {
+export function createPackageDescFromJsonNode(keyNode: JsonC.Node): PackageDescriptor {
   const nameRange = {
     start: keyNode.offset,
     end: keyNode.offset,
   };
 
-  return {
-    name: keyNode.value,
+  return new PackageDescriptor(
+    // name
+    keyNode.value,
     nameRange,
-    types: []
-  };
+    // types
+    []
+  );
 }
 
 export function createVersionDescFromJsonNode(

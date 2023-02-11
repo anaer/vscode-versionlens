@@ -1,16 +1,18 @@
 import { TPackageDependencyRange } from "../definitions/tPackageDependencyRange";
-import { TPackageResource } from "../index";
+import { PackageDescriptor, TPackageResource, TPackageTypeDescriptor } from "../index";
 
 export class PackageDependency {
 
   constructor(
     packageRes: TPackageResource,
     nameRange: TPackageDependencyRange,
-    versionRange: TPackageDependencyRange
+    versionRange: TPackageDependencyRange,
+    packageDesc?: PackageDescriptor
   ) {
     this.package = packageRes;
     this.nameRange = nameRange;
     this.versionRange = versionRange;
+    this.packageDesc = packageDesc;
   }
 
   nameRange: TPackageDependencyRange;
@@ -18,6 +20,8 @@ export class PackageDependency {
   versionRange: TPackageDependencyRange;
 
   package: TPackageResource;
+
+  packageDesc: PackageDescriptor;
 
   packageEquals(other: PackageDependency) {
     return other.package.name === this.package.name
