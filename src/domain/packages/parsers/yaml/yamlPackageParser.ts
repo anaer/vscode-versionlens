@@ -40,8 +40,8 @@ function extractDependenciesFromNodes(
     if (!node) continue;
 
     const children = node instanceof Array
-      ? descendChildNodes(node, "")
-      : descendChildNodes(node.items, "");
+      ? descendChildNodes(node)
+      : descendChildNodes(node.items);
 
     matchedDependencies.push.apply(matchedDependencies, children);
   }
@@ -49,12 +49,8 @@ function extractDependenciesFromNodes(
   return matchedDependencies
 }
 
-function descendChildNodes(
-  pairs: Array<Pair<any, any>>,
-  includePropName: string
-): Array<PackageDescriptor> {
+function descendChildNodes(pairs: Array<Pair<any, any>>): Array<PackageDescriptor> {
   const matchedDependencies: Array<PackageDescriptor> = [];
-  const noIncludePropName = includePropName.length === 0;
 
   for (const pair of pairs) {
     const { key: keyNode, value: valueNode } = pair;
@@ -62,7 +58,7 @@ function descendChildNodes(
     const isStringType = valueNode.type === "PLAIN" || isQuotedType;
 
     // parse string properties
-    if (isStringType && (noIncludePropName || keyNode.value === includePropName)) {
+    if (isStringType) {
 
       // create the package descriptor
       const packageDesc = createPackageDesc(keyNode);

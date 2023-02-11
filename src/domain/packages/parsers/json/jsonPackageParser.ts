@@ -37,8 +37,8 @@ function extractDependenciesFromNodes(
     if (!node) continue;
 
     const children = node instanceof Array
-      ? descendChildNodes(node, null, "")
-      : descendChildNodes(node.children, null, "");
+      ? descendChildNodes(node, null)
+      : descendChildNodes(node.children, null);
 
     matchedDependencies.push.apply(matchedDependencies, children);
   }
@@ -48,24 +48,21 @@ function extractDependenciesFromNodes(
 
 function descendChildNodes(
   nodes: Array<JsonC.Node>,
-  parentKeyNode: JsonC.Node,
-  includePropName: string
+  parentKeyNode: JsonC.Node
 ): Array<PackageDescriptor> {
   const matchedDependencies: Array<PackageDescriptor> = [];
-  const noIncludePropName = includePropName.length === 0;
 
   for (const node of nodes) {
     const [keyNode, valueNode] = node.children;
-    const isStringType = valueNode.type == "string";
 
     // parse string properties
-    if (isStringType && (noIncludePropName || keyNode.value === includePropName)) {
+    if (valueNode.type == "string") {
 
       // create the package descriptor
-      const packageDesc = createPackageDescFromJsonNode(parentKeyNode || keyNode)
+      const packageDesc = createPackageDescFromJsonNode(keyNode)
 
       // add the version type to the package desc
-      const versionDesc = createVersionDescFromJsonNode(parentKeyNode, valueNode);
+      const versionDesc = createVersionDescFromJsonNode(valueNode);
       packageDesc.types.push(versionDesc);
 
       // add the package desc to the matched array
@@ -78,7 +75,7 @@ function descendChildNodes(
     if (valueNode.type == "object") {
 
       // create the package descriptor
-      const packageDesc = createPackageDescFromJsonNode(parentKeyNode || keyNode);
+      const packageDesc = createPackageDescFromJsonNode(keyNode);
 
       for (const typeName in complexTypeHandlers) {
 
@@ -89,10 +86,7 @@ function descendChildNodes(
           const handler = complexTypeHandlers[typeName];
 
           // add the handled type to the package desc
-          const typeDesc = handler(
-            keyNode,
-            typeNode
-          );
+          const typeDesc = handler(typeNode);
 
           // skip types that are't fully defined
           if (!typeDesc) continue;

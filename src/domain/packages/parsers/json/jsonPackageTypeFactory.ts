@@ -6,7 +6,9 @@ import {
 } from "domain/packages";
 import * as JsonC from 'jsonc-parser';
 
-export function createPackageDescFromJsonNode(keyNode: JsonC.Node): PackageDescriptor {
+export function createPackageDescFromJsonNode(
+  keyNode: JsonC.Node
+): PackageDescriptor {
   const nameRange = {
     start: keyNode.offset,
     end: keyNode.offset,
@@ -22,7 +24,6 @@ export function createPackageDescFromJsonNode(keyNode: JsonC.Node): PackageDescr
 }
 
 export function createVersionDescFromJsonNode(
-  parentKeyNode: any,
   valueNode: any
 ): TPackageVersionDescriptor {
 
@@ -40,7 +41,6 @@ export function createVersionDescFromJsonNode(
 }
 
 export function createPathDescFromJsonNode(
-  parentKeyNode: any,
   valueNode: any
 ): TPackagePathDescriptor {
 
@@ -58,7 +58,6 @@ export function createPathDescFromJsonNode(
 }
 
 export function createRepoDescFromJsonNode(
-  parentKeyNode: any,
   valueNode: any
 ): TPackageGitDescriptor {
 
