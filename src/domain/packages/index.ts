@@ -14,7 +14,7 @@ export * from './definitions/tSemverSpec';
 export * as ResponseFactory from './factories/packageResponseFactory';
 export * from './models/packageDependency';
 export * from './models/packageResponse';
-export * from './parsers/definitions/tPackageDescriptor';
+export * from './parsers/definitions/packageDescriptor';
 export * from './parsers/definitions/tPackageTypeDescriptors';
 export * from "./parsers/json/jsonPackageParser";
 export * from "./parsers/yaml/yamlPackageParser";
