@@ -1,9 +1,9 @@
 import {
   TPackageDescriptor,
-  TPackageGitLocationDescriptor,
-  TPackageHostedLocationDescriptor,
-  TPackagePathLocationDescriptor,
-  TPackageVersionLocationDescriptor
+  TPackageGitDescriptor,
+  TPackageHostedDescriptor,
+  TPackagePathDescriptor,
+  TPackageVersionDescriptor
 } from "domain/packages";
 import { YAMLMap } from 'yaml';
 import { findPair } from 'yaml/util';
@@ -25,7 +25,7 @@ export function createVersionDesc(
   parentKeyNode: any,
   valueNode: any,
   isQuoteType: boolean
-): TPackageVersionLocationDescriptor {
+): TPackageVersionDescriptor {
 
   const isComplexNode = !!parentKeyNode;
 
@@ -53,7 +53,7 @@ export function createPathDesc(
   parentKeyNode: any,
   valueNode: any,
   isQuoteType: boolean
-): TPackagePathLocationDescriptor {
+): TPackagePathDescriptor {
 
   const pathRange = {
     start: valueNode.range[0],
@@ -65,7 +65,7 @@ export function createPathDesc(
     pathRange.end--;
   }
 
-  const pathDesc: TPackagePathLocationDescriptor = {
+  const pathDesc: TPackagePathDescriptor = {
     type: "path",
     path: valueNode.value,
     pathRange
@@ -78,7 +78,7 @@ export function createHostedDesc(
   parentKeyNode: any,
   valueNode: any,
   isQuoteType: boolean
-): TPackageHostedLocationDescriptor {
+): TPackageHostedDescriptor {
 
   const map = valueNode as YAMLMap;
   let hostName = "";
@@ -108,7 +108,7 @@ export function createGitDesc(
   parentKeyNode: any,
   valueNode: any,
   isQuoteType: boolean
-): TPackageGitLocationDescriptor {
+): TPackageGitDescriptor {
 
   let gitUrl = "";
   let gitRef = "";

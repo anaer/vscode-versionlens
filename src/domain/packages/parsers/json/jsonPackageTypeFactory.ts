@@ -1,8 +1,8 @@
 import {
   TPackageDescriptor,
-  TPackageGitLocationDescriptor,
-  TPackagePathLocationDescriptor,
-  TPackageVersionLocationDescriptor
+  TPackageGitDescriptor,
+  TPackagePathDescriptor,
+  TPackageVersionDescriptor
 } from "domain/packages";
 import * as JsonC from 'jsonc-parser';
 
@@ -22,7 +22,7 @@ export function createPackageDescFromJsonNode(keyNode: JsonC.Node): TPackageDesc
 export function createVersionDescFromJsonNode(
   parentKeyNode: any,
   valueNode: any
-): TPackageVersionLocationDescriptor {
+): TPackageVersionDescriptor {
 
   // +1 and -1 to be inside quotes
   const versionRange = {
@@ -40,7 +40,7 @@ export function createVersionDescFromJsonNode(
 export function createPathDescFromJsonNode(
   parentKeyNode: any,
   valueNode: any
-): TPackagePathLocationDescriptor {
+): TPackagePathDescriptor {
 
   // +1 and -1 to be inside quotes
   const pathRange = {
@@ -58,7 +58,7 @@ export function createPathDescFromJsonNode(
 export function createRepoDescFromJsonNode(
   parentKeyNode: any,
   valueNode: any
-): TPackageGitLocationDescriptor {
+): TPackageGitDescriptor {
 
   return {
     type: "git",

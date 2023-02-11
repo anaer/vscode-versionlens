@@ -1,6 +1,6 @@
 import {
   TPackageDescriptor,
-  TPackageVersionLocationDescriptor
+  TPackageVersionDescriptor
 } from 'domain/packages';
 import xmldoc from 'xmldoc';
 import { MavenProjectProperty } from "./definitions/mavenProjectProperty";
@@ -98,7 +98,7 @@ function collectFromChildVersionTag(
     const name = group + ":" + artifact;
     const version = versionNode.val;
 
-    const versionDesc: TPackageVersionLocationDescriptor = {
+    const versionDesc: TPackageVersionDescriptor = {
       type: "version",
       version,
       versionRange

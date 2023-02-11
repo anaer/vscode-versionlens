@@ -1,9 +1,9 @@
 import {
   TPackageDescriptor,
-  TPackageGitLocationDescriptor,
-  TPackageHostedLocationDescriptor,
-  TPackagePathLocationDescriptor,
-  TPackageVersionLocationDescriptor
+  TPackageGitDescriptor,
+  TPackageHostedDescriptor,
+  TPackagePathDescriptor,
+  TPackageVersionDescriptor
 } from "domain/packages";
 
 export default {
@@ -56,7 +56,7 @@ dependencies:
           end: 376
         },
         types: [
-          <TPackageVersionLocationDescriptor>{
+          <TPackageVersionDescriptor>{
             type: "version",
             version: "^2.0.4",
             versionRange: {
@@ -73,7 +73,7 @@ dependencies:
           end: 391
         },
         types: [
-          <TPackageVersionLocationDescriptor>{
+          <TPackageVersionDescriptor>{
             type: "version",
             version: "",
             versionRange: {
@@ -90,7 +90,7 @@ dependencies:
           end: 421
         },
         types: [
-          <TPackageVersionLocationDescriptor>{
+          <TPackageVersionDescriptor>{
             type: "version",
             version: "^0.4.0",
             versionRange: {
@@ -107,7 +107,7 @@ dependencies:
           end: 489
         },
         types: [
-          <TPackageVersionLocationDescriptor>{
+          <TPackageVersionDescriptor>{
             type: "version",
             version: ">=0.5.0 <0.12.0",
             versionRange: {
@@ -124,7 +124,7 @@ dependencies:
           end: 515
         },
         types: [
-          <TPackageVersionLocationDescriptor>{
+          <TPackageVersionDescriptor>{
             type: "version",
             version: "^1.1.0",
             versionRange: {
@@ -141,7 +141,7 @@ dependencies:
           end: 538
         },
         types: [
-          <TPackagePathLocationDescriptor>{
+          <TPackagePathDescriptor>{
             type: "path",
             path: "./some/test/path",
             pathRange: {
@@ -158,7 +158,7 @@ dependencies:
           end: 576
         },
         types: [
-          <TPackageVersionLocationDescriptor>{
+          <TPackageVersionDescriptor>{
             type: "version",
             version: "1.0.0",
             versionRange: {
@@ -166,7 +166,7 @@ dependencies:
               end: 603
             },
           },
-          <TPackageHostedLocationDescriptor>{
+          <TPackageHostedDescriptor>{
             type: "hosted",
             hostName: "testHostPackageAlias",
             hostUrl: "https://some-package-server.com",
@@ -180,7 +180,7 @@ dependencies:
           end: 694
         },
         types: [
-          <TPackageGitLocationDescriptor>{
+          <TPackageGitDescriptor>{
             type: "git",
             gitUrl: "git@github.com:munificent/kittens.git",
             gitRef: "",
@@ -195,7 +195,7 @@ dependencies:
           end: 753
         },
         types: [
-          <TPackageGitLocationDescriptor>{
+          <TPackageGitDescriptor>{
             type: "git",
             gitUrl: "git@github.com:munificent/dogs.git",
             gitRef: "some-branch",
@@ -210,7 +210,7 @@ dependencies:
           end: 844
         },
         types: [
-          <TPackageGitLocationDescriptor>{
+          <TPackageGitDescriptor>{
             type: "git",
             gitUrl: "git@github.com:munificent/birds.git",
             gitPath: "path/to/birds",

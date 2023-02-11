@@ -1,6 +1,6 @@
 import {
   TPackageDescriptor,
-  TPackageVersionLocationDescriptor
+  TPackageVersionDescriptor
 } from "domain/packages"
 
 export default {
@@ -26,7 +26,7 @@ export default {
           start: 13
         },
         types: [
-          <TPackageVersionLocationDescriptor>{
+          <TPackageVersionDescriptor>{
             type: "version",
             version: "2.1.3",
             versionRange: {
@@ -43,7 +43,7 @@ export default {
           start: 103
         },
         types: [
-          <TPackageVersionLocationDescriptor>{
+          <TPackageVersionDescriptor>{
             type: "version",
             version: "2.0.0",
             versionRange: {
@@ -60,7 +60,7 @@ export default {
           start: 210
         },
         types: [
-          <TPackageVersionLocationDescriptor>{
+          <TPackageVersionDescriptor>{
             type: "version",
             version: "2.0.1",
             versionRange: {
@@ -77,7 +77,7 @@ export default {
           end: 305
         },
         types: [
-          <TPackageVersionLocationDescriptor>{
+          <TPackageVersionDescriptor>{
             type: "version",
             version: "4.7.2",
             versionRange: {

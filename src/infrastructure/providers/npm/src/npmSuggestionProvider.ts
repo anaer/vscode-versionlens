@@ -3,7 +3,7 @@ import {
   createPackageResource,
   extractPackageDependenciesFromJson,
   PackageDependency,
-  TPackageVersionLocationDescriptor
+  TPackageVersionDescriptor
 } from 'domain/packages';
 import { SuggestionProvider } from 'domain/providers';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
@@ -52,7 +52,7 @@ export class NpmSuggestionProvider
             name = name.slice(0, atIndex);
           }
 
-          const versionType = loc.types[0] as TPackageVersionLocationDescriptor
+          const versionType = loc.types[0] as TPackageVersionDescriptor
           return new PackageDependency(
             createPackageResource(
               name,

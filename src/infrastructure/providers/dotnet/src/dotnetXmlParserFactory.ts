@@ -2,7 +2,7 @@ import { Nullable } from 'domain/generics';
 import {
   TPackageDependencyRange,
   TPackageDescriptor,
-  TPackageVersionLocationDescriptor
+  TPackageVersionDescriptor
 } from 'domain/packages';
 import xmldoc from 'xmldoc';
 
@@ -66,7 +66,7 @@ function createFromAttribute(node, xml: string): TPackageDescriptor {
   const name = node.attr.Include || node.attr.Update || node.attr.Name;
   const version = node.attr.Version;
 
-  const versionDesc: TPackageVersionLocationDescriptor = {
+  const versionDesc: TPackageVersionDescriptor = {
     type: "version",
     version,
     versionRange

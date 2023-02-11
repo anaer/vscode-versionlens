@@ -1,5 +1,5 @@
 import { TPackageDependencyRange } from "../../definitions/tPackageDependencyRange";
-import { TPackageTypeLocationDescriptor } from "./tPackageTypeDescriptors";
+import { TPackageTypeDescriptor } from "./tPackageTypeDescriptors";
 
 export type TPackageDescriptor = {
 
@@ -7,6 +7,6 @@ export type TPackageDescriptor = {
 
   nameRange: TPackageDependencyRange;
 
-  types: Array<TPackageTypeLocationDescriptor>;
+  types: Array<TPackageTypeDescriptor>;
 
 }

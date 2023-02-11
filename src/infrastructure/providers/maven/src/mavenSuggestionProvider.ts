@@ -3,7 +3,7 @@ import { ILogger } from 'domain/logging';
 import {
   createPackageResource,
   PackageDependency,
-  TPackageVersionLocationDescriptor
+  TPackageVersionDescriptor
 } from 'domain/packages';
 import { SuggestionProvider } from 'domain/providers';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
@@ -47,7 +47,7 @@ export class MavenSuggestionProvider
       .filter(x => x.types[0].type === "version")
       .map(
         loc => {
-          const versionType = loc.types[0] as TPackageVersionLocationDescriptor
+          const versionType = loc.types[0] as TPackageVersionDescriptor
           return new PackageDependency(
             createPackageResource(
               loc.name,

@@ -1,31 +1,31 @@
 import { TPackageDependencyRange } from "../../definitions/tPackageDependencyRange";
 
-export type TPackageTypeDescriptor = {
+export type TPackageType = {
   type: string
 }
 
-export type TPackageVersionLocationDescriptor = TPackageTypeDescriptor & {
+export type TPackageVersionDescriptor = TPackageType & {
   version: string,
   versionRange: TPackageDependencyRange;
 }
 
-export type TPackagePathLocationDescriptor = TPackageTypeDescriptor & {
+export type TPackagePathDescriptor = TPackageType & {
   path: string
   pathRange: TPackageDependencyRange;
 }
 
-export type TPackageHostedLocationDescriptor = TPackageTypeDescriptor & {
+export type TPackageHostedDescriptor = TPackageType & {
   hostName: string
   hostUrl: string
 }
 
-export type TPackageGitLocationDescriptor = TPackageTypeDescriptor & {
+export type TPackageGitDescriptor = TPackageType & {
   gitUrl: string
   gitRef: string
   gitPath: string
 }
 
-export type TPackageTypeLocationDescriptor = TPackageVersionLocationDescriptor
-  | TPackagePathLocationDescriptor
-  | TPackageHostedLocationDescriptor
-  | TPackageGitLocationDescriptor
+export type TPackageTypeDescriptor = TPackageVersionDescriptor
+  | TPackagePathDescriptor
+  | TPackageHostedDescriptor
+  | TPackageGitDescriptor

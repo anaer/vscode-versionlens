@@ -3,7 +3,7 @@ import {
   createPackageResource,
   extractPackageDependenciesFromJson,
   PackageDependency,
-  TPackageVersionLocationDescriptor
+  TPackageVersionDescriptor
 } from 'domain/packages';
 import { SuggestionProvider } from 'domain/providers';
 import {
@@ -45,7 +45,7 @@ export class DubSuggestionProvider
       .filter(x => x.types[0].type === "version")
       .map(
         loc => {
-          const versionType = loc.types[0] as TPackageVersionLocationDescriptor
+          const versionType = loc.types[0] as TPackageVersionDescriptor
           return new PackageDependency(
             createPackageResource(
               loc.name,

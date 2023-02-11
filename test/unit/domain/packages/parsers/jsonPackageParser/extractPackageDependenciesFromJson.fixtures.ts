@@ -1,8 +1,8 @@
 import {
   TPackageDescriptor,
-  TPackageGitLocationDescriptor,
-  TPackagePathLocationDescriptor,
-  TPackageVersionLocationDescriptor
+  TPackageGitDescriptor,
+  TPackagePathDescriptor,
+  TPackageVersionDescriptor
 } from "domain/packages";
 
 export default {
@@ -38,7 +38,7 @@ export default {
           end: 17
         },
         types: [
-          <TPackageVersionLocationDescriptor>{
+          <TPackageVersionDescriptor>{
             type: "version",
             version: "1.0.0",
             versionRange: {
@@ -55,7 +55,7 @@ export default {
           end: 36
         },
         types: [
-          <TPackageVersionLocationDescriptor>{
+          <TPackageVersionDescriptor>{
             type: "version",
             version: "github:repo/project#semver:1.2.3",
             versionRange: {
@@ -72,7 +72,7 @@ export default {
           end: 82
         },
         types: [
-          <TPackageVersionLocationDescriptor>{
+          <TPackageVersionDescriptor>{
             type: "version",
             version: "*",
             versionRange: {
@@ -89,7 +89,7 @@ export default {
           end: 97
         },
         types: [
-          <TPackageVersionLocationDescriptor>{
+          <TPackageVersionDescriptor>{
             type: "version",
             version: "1.2.3",
             versionRange: {
@@ -106,7 +106,7 @@ export default {
           start: 135
         },
         types: [
-          <TPackageVersionLocationDescriptor>{
+          <TPackageVersionDescriptor>{
             type: "version",
             version: "1.0.0",
             versionRange: {
@@ -123,7 +123,7 @@ export default {
           end: 161
         },
         types: [
-          <TPackagePathLocationDescriptor>{
+          <TPackagePathDescriptor>{
             type: "path",
             path: "some/path/project",
             pathRange: {
@@ -140,7 +140,7 @@ export default {
           end: 205
         },
         types: [
-          <TPackageGitLocationDescriptor>{
+          <TPackageGitDescriptor>{
             type: "git",
             gitUrl: "git@github.com:munificent/kittens.git",
             gitRef: "",
@@ -172,7 +172,7 @@ export default {
           end: 32
         },
         types: [
-          <TPackageVersionLocationDescriptor>{
+          <TPackageVersionDescriptor>{
             type: "version",
             version: "2.0.0",
             versionRange: {
@@ -189,7 +189,7 @@ export default {
           end: 56
         },
         types: [
-          <TPackageVersionLocationDescriptor>{
+          <TPackageVersionDescriptor>{
             type: "version",
             version: "3.0.0",
             versionRange: {
@@ -206,7 +206,7 @@ export default {
           end: 99
         },
         types: [
-          <TPackageVersionLocationDescriptor>{
+          <TPackageVersionDescriptor>{
             type: "version",
             version: "4.0.0",
             versionRange: {
