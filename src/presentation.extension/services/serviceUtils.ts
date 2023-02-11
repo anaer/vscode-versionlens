@@ -41,10 +41,7 @@ export function addOutputChannel(services: IServiceCollection) {
   services.addSingleton(
     nameOf<ExtensionService>().outputChannel,
     // vscode output channel called "VersionLens"
-    () => window.createOutputChannel(
-      VersionLensExtension.extensionName,
-      { log: true }
-    )
+    () => window.createOutputChannel(VersionLensExtension.extensionName)
   )
 }
 

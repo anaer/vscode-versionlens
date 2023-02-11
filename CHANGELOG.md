@@ -1,7 +1,3 @@
-# 1.5.0
-
-  - Added log colouring to the output channel and fixed log file icon being disabled.
-
 # 1.4.1
 
   - Fixed incorrect project path during extension activation
