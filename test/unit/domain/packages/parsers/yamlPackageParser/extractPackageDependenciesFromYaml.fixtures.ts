@@ -1,8 +1,10 @@
+import { KeyDictionary } from "domain/generics";
 import {
   PackageDescriptor,
   TPackageGitDescriptor,
   TPackageHostedDescriptor,
   TPackagePathDescriptor,
+  TPackageTypeDescriptor,
   TPackageVersionDescriptor
 } from "domain/packages";
 
@@ -38,8 +40,9 @@ dependencies:
           start: 376,
           end: 376
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "^2.0.4",
             versionRange: {
@@ -47,7 +50,7 @@ dependencies:
               end: 388
             },
           }
-        ]
+        }
       },
       <PackageDescriptor>{
         name: "http",
@@ -55,8 +58,9 @@ dependencies:
           start: 391,
           end: 391
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "",
             versionRange: {
@@ -64,7 +68,7 @@ dependencies:
               end: 397
             },
           }
-        ]
+        }
       },
       <PackageDescriptor>{
         name: "transmogrify",
@@ -72,8 +76,9 @@ dependencies:
           start: 421,
           end: 421
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "^0.4.0",
             versionRange: {
@@ -81,7 +86,7 @@ dependencies:
               end: 454
             },
           }
-        ]
+        }
       },
       <PackageDescriptor>{
         name: "test",
@@ -89,8 +94,9 @@ dependencies:
           start: 489,
           end: 489
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: ">=0.5.0 <0.12.0",
             versionRange: {
@@ -98,7 +104,7 @@ dependencies:
               end: 511
             },
           }
-        ]
+        }
       },
       <PackageDescriptor>{
         name: "collection",
@@ -106,8 +112,9 @@ dependencies:
           start: 515,
           end: 515
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "^1.1.0",
             versionRange: {
@@ -115,7 +122,7 @@ dependencies:
               end: 534
             },
           }
-        ]
+        }
       }
     ]
 
@@ -137,8 +144,9 @@ dependencies:
           start: 17,
           end: 17
         },
-        types: [
-          <TPackagePathDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          path: <TPackagePathDescriptor>{
             type: "path",
             path: "./some/test/path1",
             pathRange: {
@@ -146,7 +154,7 @@ dependencies:
               end: 54
             },
           }
-        ]
+        }
       },
       <PackageDescriptor>{
         name: "pathify2",
@@ -154,8 +162,9 @@ dependencies:
           start: 57,
           end: 57
         },
-        types: [
-          <TPackagePathDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          path: <TPackagePathDescriptor>{
             type: "path",
             path: "./some/test/path2",
             pathRange: {
@@ -163,7 +172,7 @@ dependencies:
               end: 94
             },
           }
-        ]
+        }
       }
     ]
   },
@@ -191,14 +200,15 @@ dependencies:
           start: 17,
           end: 17
         },
-        types: [
-          <TPackageGitDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          git: <TPackageGitDescriptor>{
             type: "git",
             gitUrl: "git@github.com:munificent/kittens.git",
             gitRef: "",
             gitPath: "",
           }
-        ]
+        }
       },
       <PackageDescriptor>{
         name: "gitify2",
@@ -206,14 +216,15 @@ dependencies:
           start: 76,
           end: 76
         },
-        types: [
-          <TPackageGitDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          git: <TPackageGitDescriptor>{
             type: "git",
             gitUrl: "git@github.com:munificent/dogs.git",
             gitRef: "some-branch",
             gitPath: "",
           }
-        ]
+        }
       },
       <PackageDescriptor>{
         name: "gitify3",
@@ -221,14 +232,15 @@ dependencies:
           start: 167,
           end: 167
         },
-        types: [
-          <TPackageGitDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          git: <TPackageGitDescriptor>{
             type: "git",
             gitUrl: "git@github.com:munificent/birds.git",
             gitPath: "path/to/birds",
             gitRef: "",
           }
-        ]
+        }
       },
       <PackageDescriptor>{
         name: "gitify4",
@@ -236,14 +248,15 @@ dependencies:
           start: 262,
           end: 262
         },
-        types: [
-          <TPackageGitDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          git: <TPackageGitDescriptor>{
             type: "git",
             gitUrl: "git@github.com:munificent/foxes.git",
             gitPath: "",
             gitRef: "",
           }
-        ]
+        }
       }
     ]
   },
@@ -271,8 +284,9 @@ dependencies:
           start: 17,
           end: 17
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 2,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "1.0.0",
             versionRange: {
@@ -280,12 +294,12 @@ dependencies:
               end: 45
             },
           },
-          <TPackageHostedDescriptor>{
+          hosted: <TPackageHostedDescriptor>{
             type: "hosted",
             hostPackageName: "",
             hostUrl: "https://some-package-server.com",
           }
-        ]
+        }
       },
       <PackageDescriptor>{
         name: "hostify2",
@@ -293,8 +307,9 @@ dependencies:
           start: 93,
           end: 93
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 2,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "2.0.0",
             versionRange: {
@@ -302,12 +317,12 @@ dependencies:
               end: 121
             },
           },
-          <TPackageHostedDescriptor>{
+          hosted: <TPackageHostedDescriptor>{
             type: "hosted",
             hostPackageName: "",
             hostUrl: "https://some-package-server.com",
           }
-        ]
+        }
       },
       <PackageDescriptor>{
         name: "hostify3",
@@ -315,8 +330,9 @@ dependencies:
           start: 180,
           end: 180
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 2,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "3.0.0",
             versionRange: {
@@ -324,12 +340,12 @@ dependencies:
               end: 208
             },
           },
-          <TPackageHostedDescriptor>{
+          hosted: <TPackageHostedDescriptor>{
             type: "hosted",
             hostPackageName: "testHostPackageAlias",
             hostUrl: "https://some-package-server.com",
           }
-        ]
+        }
       },
     ]
 

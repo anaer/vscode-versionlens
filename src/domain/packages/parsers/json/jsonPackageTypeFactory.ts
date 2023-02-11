@@ -14,13 +14,7 @@ export function createPackageDescFromJsonNode(
     end: keyNode.offset,
   };
 
-  return new PackageDescriptor(
-    // name
-    keyNode.value,
-    nameRange,
-    // types
-    []
-  );
+  return new PackageDescriptor(keyNode.value, nameRange);
 }
 
 export function createVersionDescFromJsonNode(

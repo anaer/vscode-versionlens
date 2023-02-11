@@ -36,23 +36,23 @@ export class ComposerSuggestionProvider
     packagePath: string,
     packageText: string
   ): Array<PackageDependency> {
-    const packageLocations = extractPackageDependenciesFromJson(
+    const packageDescriptors = extractPackageDependenciesFromJson(
       packageText,
       this.config.dependencyProperties
     );
 
-    const packageDependencies = packageLocations
-      .filter(x => x.types[0].type === "version")
+    const packageDependencies = packageDescriptors
+      .filter(x => x.hasType("version"))
       .map(
-        loc => {
-          const versionType = loc.types[0] as TPackageVersionDescriptor
+        desc => {
+          const versionType = desc.getType("version") as TPackageVersionDescriptor
           return new PackageDependency(
             createPackageResource(
-              loc.name,
+              desc.name,
               versionType.version,
               packagePath
             ),
-            loc.nameRange,
+            desc.nameRange,
             versionType.versionRange
           )
         }

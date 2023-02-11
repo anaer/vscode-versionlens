@@ -42,10 +42,10 @@ export class DubSuggestionProvider
     );
 
     const packageDependencies = packageLocations
-      .filter(x => x.types[0].type === "version")
+      .filter(x => x.hasType("version"))
       .map(
         loc => {
-          const versionType = loc.types[0] as TPackageVersionDescriptor
+          const versionType = loc.getType("version") as TPackageVersionDescriptor
           return new PackageDependency(
             createPackageResource(
               loc.name,

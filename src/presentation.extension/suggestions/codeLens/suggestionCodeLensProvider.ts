@@ -142,7 +142,7 @@ export class SuggestionCodeLensProvider
       );
     }
 
-    // store the recently fetched dependencies
+    // store the recently parsed dependencies
     this.state.setRecentParsedPackages(
       this.suggestionProvider.name,
       document.uri.path,

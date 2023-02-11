@@ -1,7 +1,9 @@
+import { KeyDictionary } from "domain/generics";
 import {
   PackageDescriptor,
   TPackageGitDescriptor,
   TPackagePathDescriptor,
+  TPackageTypeDescriptor,
   TPackageVersionDescriptor
 } from "domain/packages";
 
@@ -37,8 +39,9 @@ export default {
           start: 17,
           end: 17
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "1.0.0",
             versionRange: {
@@ -46,7 +49,7 @@ export default {
               end: 34
             },
           }
-        ]
+        }
       },
       <PackageDescriptor>{
         name: "Package2",
@@ -54,8 +57,9 @@ export default {
           start: 36,
           end: 36
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "github:repo/project#semver:1.2.3",
             versionRange: {
@@ -63,7 +67,7 @@ export default {
               end: 80
             },
           }
-        ]
+        }
       },
       <PackageDescriptor>{
         name: "Package3",
@@ -71,8 +75,9 @@ export default {
           start: 82,
           end: 82
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "*",
             versionRange: {
@@ -80,7 +85,7 @@ export default {
               end: 95
             },
           }
-        ],
+        },
       },
       <PackageDescriptor>{
         name: "ComplexPackage1",
@@ -88,8 +93,9 @@ export default {
           start: 97,
           end: 97
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "1.2.3",
             versionRange: {
@@ -97,7 +103,7 @@ export default {
               end: 132
             },
           }
-        ],
+        },
       },
       <PackageDescriptor>{
         name: "NameOverrides@1",
@@ -105,8 +111,9 @@ export default {
           end: 135,
           start: 135
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "1.0.0",
             versionRange: {
@@ -114,7 +121,7 @@ export default {
               start: 154
             },
           }
-        ]
+        }
       },
       <PackageDescriptor>{
         name: "PathPackage1",
@@ -122,8 +129,9 @@ export default {
           start: 161,
           end: 161
         },
-        types: [
-          <TPackagePathDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          path: <TPackagePathDescriptor>{
             type: "path",
             path: "some/path/project",
             pathRange: {
@@ -131,7 +139,7 @@ export default {
               end: 202
             },
           }
-        ],
+        },
       },
       <PackageDescriptor>{
         name: "GitPackage1",
@@ -139,14 +147,15 @@ export default {
           start: 205,
           end: 205
         },
-        types: [
-          <TPackageGitDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          git: <TPackageGitDescriptor>{
             type: "git",
             gitUrl: "git@github.com:munificent/kittens.git",
             gitRef: "",
             gitPath: ""
           }
-        ],
+        },
       },
     ]
 
@@ -171,8 +180,9 @@ export default {
           start: 32,
           end: 32
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "2.0.0",
             versionRange: {
@@ -180,7 +190,7 @@ export default {
               end: 54
             },
           }
-        ]
+        }
       },
       <PackageDescriptor>{
         name: "childPackage2",
@@ -188,8 +198,9 @@ export default {
           start: 56,
           end: 56
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "3.0.0",
             versionRange: {
@@ -197,7 +208,7 @@ export default {
               end: 78
             },
           }
-        ]
+        }
       },
       <PackageDescriptor>{
         name: "childPackage3",
@@ -205,8 +216,9 @@ export default {
           start: 99,
           end: 99
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "4.0.0",
             versionRange: {
@@ -214,7 +226,7 @@ export default {
               end: 121
             },
           }
-        ]
+        }
       },
     ]
   }

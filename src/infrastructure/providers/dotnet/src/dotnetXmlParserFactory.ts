@@ -72,12 +72,10 @@ function createFromAttribute(node, xml: string): PackageDescriptor {
     versionRange
   }
 
-  const types = [versionDesc];
-  return new PackageDescriptor(
-    name,
-    nameRange,
-    types
-  )
+  const packageDesc = new PackageDescriptor(name, nameRange);
+  packageDesc.addType(versionDesc);
+
+  return packageDesc;
 }
 
 function getAttributeRange(

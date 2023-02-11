@@ -42,24 +42,24 @@ export class NpmSuggestionProvider
     );
 
     const packageDependencies = packageLocations
-      .filter(x => x.types[0].type === "version")
+      .filter(x => x.hasType("version"))
       .map(
-        loc => {
+        desc => {
           // handle pnpm override dependency selectors in the name
-          let name = loc.name;
+          let name = desc.name;
           const atIndex = name.indexOf('@');
           if (atIndex > 0) {
             name = name.slice(0, atIndex);
           }
 
-          const versionType = loc.types[0] as TPackageVersionDescriptor
+          const versionType = desc.getType("version") as TPackageVersionDescriptor
           return new PackageDependency(
             createPackageResource(
               name,
               versionType.version,
               packagePath
             ),
-            loc.nameRange,
+            desc.nameRange,
             versionType.versionRange
           )
         }

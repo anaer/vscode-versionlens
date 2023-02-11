@@ -37,8 +37,8 @@ function extractDependenciesFromNodes(
     if (!node) continue;
 
     const children = node instanceof Array
-      ? descendChildNodes(node, null)
-      : descendChildNodes(node.children, null);
+      ? descendChildNodes(node)
+      : descendChildNodes(node.children);
 
     matchedDependencies.push.apply(matchedDependencies, children);
   }
@@ -46,10 +46,7 @@ function extractDependenciesFromNodes(
   return matchedDependencies
 }
 
-function descendChildNodes(
-  nodes: Array<JsonC.Node>,
-  parentKeyNode: JsonC.Node
-): Array<PackageDescriptor> {
+function descendChildNodes(nodes: Array<JsonC.Node>): Array<PackageDescriptor> {
   const matchedDependencies: Array<PackageDescriptor> = [];
 
   for (const node of nodes) {
@@ -63,7 +60,7 @@ function descendChildNodes(
 
       // add the version type to the package desc
       const versionDesc = createVersionDescFromJsonNode(valueNode);
-      packageDesc.types.push(versionDesc);
+      packageDesc.addType(versionDesc);
 
       // add the package desc to the matched array
       matchedDependencies.push(packageDesc);
@@ -91,12 +88,12 @@ function descendChildNodes(
           // skip types that are't fully defined
           if (!typeDesc) continue;
 
-          packageDesc.types.push(typeDesc);
+          packageDesc.addType(typeDesc);
         }
       }
 
       // skip when no types were added
-      if (packageDesc.types.length === 0) continue;
+      if (packageDesc.typeCount === 0) continue;
 
       // add the package desc to the matched array
       matchedDependencies.push(packageDesc);

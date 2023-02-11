@@ -1,5 +1,7 @@
+import { KeyDictionary } from "domain/generics"
 import {
   PackageDescriptor,
+  TPackageTypeDescriptor,
   TPackageVersionDescriptor
 } from "domain/packages"
 
@@ -25,8 +27,9 @@ export default {
           end: 13,
           start: 13
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "2.1.3",
             versionRange: {
@@ -34,7 +37,7 @@ export default {
               start: 73
             },
           }
-        ]
+        }
       },
       <PackageDescriptor>{
         name: 'Microsoft.Extensions.DependencyInjection.Abstractions',
@@ -42,8 +45,9 @@ export default {
           end: 103,
           start: 103
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "2.0.0",
             versionRange: {
@@ -51,7 +55,7 @@ export default {
               start: 194
             },
           }
-        ]
+        }
       },
       <PackageDescriptor>{
         name: 'Microsoft.Extensions.Logging.Abstractions',
@@ -59,8 +63,9 @@ export default {
           end: 210,
           start: 210
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "2.0.1",
             versionRange: {
@@ -68,7 +73,7 @@ export default {
               start: 289
             },
           }
-        ]
+        }
       },
       <PackageDescriptor>{
         name: "System.Text.Json",
@@ -76,8 +81,9 @@ export default {
           start: 305,
           end: 305
         },
-        types: [
-          <TPackageVersionDescriptor>{
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
             type: "version",
             version: "4.7.2",
             versionRange: {
@@ -85,7 +91,7 @@ export default {
               "start": 357
             },
           }
-        ]
+        }
       }
     ]
   }

@@ -92,7 +92,7 @@ function collectFromChildVersionTag(
     let match = /\$\{(.*)\}/ig.exec(artifact);
     if (match) {
       let property = properties.filter(property => property.name === match[1]);
-      artifact = artifact.replace(/\$\{.*\}/ig, property[0].val)
+      artifact = artifact.replace(/\$\{.*\}/ig, property[0].val);
     }
 
     const name = group + ":" + artifact;
@@ -102,17 +102,14 @@ function collectFromChildVersionTag(
       type: "version",
       version,
       versionRange
-    }
+    };
 
-    const types = [versionDesc];
+    const packageDesc = new PackageDescriptor(name, nameRange);
+    packageDesc.addType(versionDesc);
 
-    collector.push(
-      new PackageDescriptor(
-        name,
-        nameRange,
-        types
-      )
-    );
+    collector.push(packageDesc);
+
+    return packageDesc;
   });
 }
 

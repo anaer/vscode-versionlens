@@ -2,18 +2,18 @@ import { Document, isMap, Pair, ParsedNode, parseDocument, YAMLMap } from 'yaml'
 import { findPair } from 'yaml/util';
 import { PackageDescriptor } from '../../index';
 import {
-  createGitDesc,
-  createHostedDesc,
-  createPackageDesc,
-  createPathDesc,
-  createVersionDesc
+  createGitDescFromYamlNode,
+  createHostedDescFromYamlNode,
+  createPackageDescFromYamlNode,
+  createPathDescFromYamlNode,
+  createVersionDescFromYamlNode
 } from './yamlPackageTypeFactory';
 
 const complexTypeHandlers = {
-  "version": createVersionDesc,
-  "path": createPathDesc,
-  "hosted": createHostedDesc,
-  "git": createGitDesc
+  "version": createVersionDescFromYamlNode,
+  "path": createPathDescFromYamlNode,
+  "hosted": createHostedDescFromYamlNode,
+  "git": createGitDescFromYamlNode
 };
 
 export function extractPackageDependenciesFromYaml(
@@ -61,14 +61,15 @@ function descendChildNodes(pairs: Array<Pair<any, any>>): Array<PackageDescripto
     if (isStringType) {
 
       // create the package descriptor
-      const packageDesc = createPackageDesc(keyNode);
+      const packageDesc = createPackageDescFromYamlNode(keyNode);
 
       // add the version type to the package desc
-      const versionDesc = createVersionDesc(
+      const versionDesc = createVersionDescFromYamlNode(
         valueNode,
         isQuotedType
       );
-      packageDesc.types.push(versionDesc);
+
+      packageDesc.addType(versionDesc);
 
       // add the package desc to the matched array
       matchedDependencies.push(packageDesc);
@@ -82,7 +83,7 @@ function descendChildNodes(pairs: Array<Pair<any, any>>): Array<PackageDescripto
       const isQuotedType = isNodeQuoted(valueNode);
 
       // create the package descriptor
-      const packageDesc = createPackageDesc(keyNode);
+      const packageDesc = createPackageDescFromYamlNode(keyNode);
 
       for (const typeName in complexTypeHandlers) {
         if (map.has(typeName)) {
@@ -100,12 +101,12 @@ function descendChildNodes(pairs: Array<Pair<any, any>>): Array<PackageDescripto
           // skip types that are't fully defined
           if (!typeDesc) continue;
 
-          packageDesc.types.push(typeDesc);
+          packageDesc.addType(typeDesc);
         }
       }
 
       // skip when no types were added
-      if (packageDesc.types.length === 0) continue;
+      if (packageDesc.typeCount === 0) continue;
 
       // add the package desc to the matched array
       matchedDependencies.push(packageDesc);

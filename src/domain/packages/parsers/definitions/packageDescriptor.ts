@@ -1,36 +1,35 @@
+import { KeyDictionary } from "domain/generics";
 import { TPackageDependencyRange } from "../../definitions/tPackageDependencyRange";
 import { TPackageTypeDescriptor } from "./tPackageTypeDescriptors";
 
 export class PackageDescriptor {
 
-  constructor(
-    name: string,
-    nameRange: TPackageDependencyRange,
-    types: Array<TPackageTypeDescriptor>
-  ) {
+  constructor(name: string, nameRange: TPackageDependencyRange) {
     this.name = name;
     this.nameRange = nameRange;
-    this.types = types;
+    this.types = {};
+    this.typeCount = 0;
   }
 
   name: string;
 
   nameRange: TPackageDependencyRange;
 
-  types: Array<TPackageTypeDescriptor>;
+  types: KeyDictionary<TPackageTypeDescriptor>;
 
-  hasType(depType: string): boolean {
-    const filtered = this.types.filter(x => x.type === depType);
-    return filtered.length > 0
-      ? true
-      : false;
+  typeCount: number;
+
+  addType(desc: TPackageTypeDescriptor) {
+    this.types[desc.type] = desc;
+    this.typeCount++;
   }
 
-  getType(depType: string): TPackageTypeDescriptor | null {
-    const filtered = this.types.filter(x => x.type === depType);
-    return filtered.length > 0
-      ? filtered[0]
-      : null
+  hasType(descType: string): boolean {
+    return Reflect.has(this.types, descType);
+  }
+
+  getType(descType: string): TPackageTypeDescriptor | undefined {
+    return this.types[descType];
   }
 
 }

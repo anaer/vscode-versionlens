@@ -8,27 +8,19 @@ import {
 import { YAMLMap } from 'yaml';
 import { findPair } from 'yaml/util';
 
-export function createPackageDesc(keyNode: any): PackageDescriptor {
+export function createPackageDescFromYamlNode(keyNode: any): PackageDescriptor {
   const nameRange = {
     start: keyNode.range[0],
     end: keyNode.range[0],
   };
 
-  return new PackageDescriptor(
-    // name
-    keyNode.value,
-    nameRange,
-    // types
-    []
-  );
+  return new PackageDescriptor(keyNode.value, nameRange,);
 }
 
-export function createVersionDesc(
+export function createVersionDescFromYamlNode(
   valueNode: any,
   isQuoteType: boolean
 ): TPackageVersionDescriptor {
-
-  // const isComplexNode = !!parentKeyNode;
 
   const versionRange = {
     start: valueNode.range[0],
@@ -51,7 +43,7 @@ export function createVersionDesc(
   }
 }
 
-export function createPathDesc(
+export function createPathDescFromYamlNode(
   valueNode: any,
   isQuoteType: boolean
 ): TPackagePathDescriptor {
@@ -75,7 +67,7 @@ export function createPathDesc(
   return pathDesc;
 }
 
-export function createHostedDesc(
+export function createHostedDescFromYamlNode(
   valueNode: any,
   isQuoteType: boolean
 ): TPackageHostedDescriptor {
@@ -113,7 +105,7 @@ export function createHostedDesc(
   }
 }
 
-export function createGitDesc(
+export function createGitDescFromYamlNode(
   valueNode: any,
   isQuoteType: boolean
 ): TPackageGitDescriptor {
