@@ -1,3 +1,14 @@
+# 1.5.0
+
+## Pub (dart)
+
+  - added basic `hosted`, `path` and `git` suggestions to pubspec files
+
+  > **NOTE** hosted authorization isn't implemented yet
+
+  Thanks to [ekasetiawans](https://gitlab.com/ekasetiawans) for providing 
+  an example [merge request](https://gitlab.com/versionlens/vscode-versionlens/-/merge_requests/269) hosted solution
+
 # 1.4.1
 
   - Fixed incorrect project path during extension activation

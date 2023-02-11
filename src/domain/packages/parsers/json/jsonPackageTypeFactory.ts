@@ -5,6 +5,7 @@ import {
   TPackageVersionDescriptor
 } from "domain/packages";
 import * as JsonC from 'jsonc-parser';
+import { PackageDescriptorType } from "../definitions/ePackageDescriptorType";
 
 export function createPackageDescFromJsonNode(
   keyNode: JsonC.Node
@@ -28,7 +29,7 @@ export function createVersionDescFromJsonNode(
   };
 
   return {
-    type: "version",
+    type: PackageDescriptorType.version,
     version: valueNode.value,
     versionRange
   }
@@ -45,7 +46,7 @@ export function createPathDescFromJsonNode(
   };
 
   return {
-    type: "path",
+    type: PackageDescriptorType.path,
     path: valueNode.value,
     pathRange: pathRange
   }
@@ -56,7 +57,7 @@ export function createRepoDescFromJsonNode(
 ): TPackageGitDescriptor {
 
   return {
-    type: "git",
+    type: PackageDescriptorType.git,
     gitUrl: valueNode.value,
     gitPath: "",
     gitRef: ""

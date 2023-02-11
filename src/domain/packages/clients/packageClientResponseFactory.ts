@@ -1,5 +1,10 @@
 import { ClientResponseSource } from 'domain/clients';
-import { SuggestionFactory, TPackageSuggestion } from 'domain/suggestions';
+import {
+  SuggestionFactory,
+  SuggestionFlags,
+  TPackageSuggestion
+} from 'domain/suggestions';
+import { ClientResponseFactory } from '..';
 import { PackageVersionType } from "../definitions/ePackageVersionType";
 import { PackageClientSourceType } from "./ePackageClientSourceType";
 import { TPackageClientResponse } from "./tPackageClientResponse";
@@ -81,7 +86,54 @@ export function createFixed(
   };
 }
 
-export function createResponseStatus(source: ClientResponseSource, status: number): TPackageClientResponseStatus {
+export function createDirectory(
+  packageName: string,
+  path: string
+): TPackageClientResponse {
+
+  const source = PackageClientSourceType.Directory;
+  const type = PackageVersionType.Version;
+
+  const resolved = {
+    name: packageName,
+    version: path,
+  };
+
+  const suggestions: Array<TPackageSuggestion> = [
+    {
+      name: 'file://',
+      version: resolved.version,
+      flags: SuggestionFlags.release
+    },
+  ];
+
+  const responseStatus = ClientResponseFactory.createResponseStatus(
+    ClientResponseSource.local,
+    200
+  );
+
+  return {
+    source,
+    type,
+    responseStatus,
+    resolved,
+    suggestions
+  };
+}
+
+export function createGit(): TPackageClientResponse {
+  return createFixed(
+    PackageClientSourceType.Git,
+    ClientResponseFactory.createResponseStatus(ClientResponseSource.local, 0),
+    PackageVersionType.Committish,
+    'git repository'
+  );
+}
+
+export function createResponseStatus(
+  source: ClientResponseSource,
+  status: number
+): TPackageClientResponseStatus {
   return {
     source,
     status

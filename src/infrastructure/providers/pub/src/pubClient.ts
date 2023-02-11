@@ -8,8 +8,12 @@ import {
   ClientResponseFactory,
   IPackageClient,
   PackageClientSourceType,
+  PackageDescriptorType,
   TPackageClientRequest,
   TPackageClientResponse,
+  TPackageGitDescriptor,
+  TPackageHostedDescriptor,
+  TPackagePathDescriptor,
   TSemverSpec,
   VersionUtils
 } from 'domain/packages';
@@ -32,8 +36,37 @@ export class PubClient implements IPackageClient<null> {
 
   async fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;
+
+    // return a directory response if this a path type
+    const pathDesc = request.dependency.packageDesc.getType<TPackagePathDescriptor>(
+      PackageDescriptorType.path
+    );
+    if (pathDesc) {
+      return ClientResponseFactory.createDirectory(
+        requestedPackage.name,
+        pathDesc.path
+      );
+    }
+
+    // return a git response if this a git type
+    const gitDesc = request.dependency.packageDesc.getType<TPackageGitDescriptor>(
+      PackageDescriptorType.git
+    );
+    if (gitDesc) {
+      return ClientResponseFactory.createGit();
+    }
+
+    // parse the version
     const semverSpec = VersionUtils.parseSemver(requestedPackage.version);
-    const url = `${this.config.apiUrl}api/documentation/${requestedPackage.name}`;
+
+    // use the hosted entry if it exists
+    const hosted = request.dependency.packageDesc.getType<TPackageHostedDescriptor>(
+      PackageDescriptorType.hosted
+    );
+
+    const url = hosted
+      ? `${hosted.hostUrl}/api/documentation/${requestedPackage.name}`
+      : `${this.config.apiUrl}/api/documentation/${requestedPackage.name}`;
 
     try {
       return await this.createRemotePackageDocument(

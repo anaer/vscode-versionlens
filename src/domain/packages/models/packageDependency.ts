@@ -1,5 +1,5 @@
 import { TPackageDependencyRange } from "../definitions/tPackageDependencyRange";
-import { PackageDescriptor, TPackageResource, TPackageTypeDescriptor } from "../index";
+import { PackageDescriptor, TPackageResource } from "..";
 
 export class PackageDependency {
 

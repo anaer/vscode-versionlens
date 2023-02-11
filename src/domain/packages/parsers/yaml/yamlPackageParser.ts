@@ -1,37 +1,31 @@
+import { KeyDictionary } from 'domain/generics';
 import { Document, isMap, Pair, ParsedNode, parseDocument, YAMLMap } from 'yaml';
 import { findPair } from 'yaml/util';
 import { PackageDescriptor } from '../../index';
+import { TPackageTypeHandler } from '../definitions/tPackageTypeHandler';
+import { TYamlPackageParserOptions } from '../definitions/tYamlPackageParserOptions';
 import {
-  createGitDescFromYamlNode,
-  createHostedDescFromYamlNode,
   createPackageDescFromYamlNode,
-  createPathDescFromYamlNode,
   createVersionDescFromYamlNode
 } from './yamlPackageTypeFactory';
 
-const complexTypeHandlers = {
-  "version": createVersionDescFromYamlNode,
-  "path": createPathDescFromYamlNode,
-  "hosted": createHostedDescFromYamlNode,
-  "git": createGitDescFromYamlNode
-};
-
 export function extractPackageDependenciesFromYaml(
   yaml: string,
-  includePropNames: Array<string>
+  options: TYamlPackageParserOptions
 ): Array<PackageDescriptor> {
 
   const yamlDoc = parseDocument(yaml)
   if (!yamlDoc || !yamlDoc.contents || yamlDoc.errors.length > 0) return [];
 
-  return extractDependenciesFromNodes(yamlDoc, includePropNames);
+  return extractDependenciesFromNodes(yamlDoc, options);
 }
 
 function extractDependenciesFromNodes(
   rootNode: Document.Parsed<ParsedNode>,
-  includePropNames: string[]
+  options: TYamlPackageParserOptions
 ): PackageDescriptor[] {
   const matchedDependencies = [];
+  const { includePropNames, complexTypeHandlers } = options;
 
   for (const incPropName of includePropNames) {
     const segments = incPropName.split(".");
@@ -40,8 +34,8 @@ function extractDependenciesFromNodes(
     if (!node) continue;
 
     const children = node instanceof Array
-      ? descendChildNodes(node)
-      : descendChildNodes(node.items);
+      ? descendChildNodes(node, complexTypeHandlers)
+      : descendChildNodes(node.items, complexTypeHandlers);
 
     matchedDependencies.push.apply(matchedDependencies, children);
   }
@@ -49,7 +43,10 @@ function extractDependenciesFromNodes(
   return matchedDependencies
 }
 
-function descendChildNodes(pairs: Array<Pair<any, any>>): Array<PackageDescriptor> {
+function descendChildNodes(
+  pairs: Array<Pair<any, any>>,
+  complexTypeHandlers: KeyDictionary<TPackageTypeHandler>
+): Array<PackageDescriptor> {
   const matchedDependencies: Array<PackageDescriptor> = [];
 
   for (const pair of pairs) {

@@ -28,8 +28,8 @@ export class PackageDescriptor {
     return Reflect.has(this.types, descType);
   }
 
-  getType(descType: string): TPackageTypeDescriptor | undefined {
-    return this.types[descType];
+  getType<T extends TPackageTypeDescriptor>(descType: string): T {
+    return this.types[descType] as T;
   }
 
 }

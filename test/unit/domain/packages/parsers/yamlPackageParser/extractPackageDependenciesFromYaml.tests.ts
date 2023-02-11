@@ -1,63 +1,119 @@
 import assert from 'assert';
-import { extractPackageDependenciesFromYaml } from 'domain/packages';
+import {
+  extractPackageDependenciesFromYaml,
+  TYamlPackageParserOptions
+} from 'domain/packages';
+import {
+  createGitDescFromYamlNode,
+  createHostedDescFromYamlNode,
+  createPathDescFromYamlNode,
+  createVersionDescFromYamlNode
+} from 'domain/packages/parsers/yaml/yamlPackageTypeFactory';
 import { test } from 'mocha-ui-esm';
 import Fixtures from './extractPackageDependenciesFromYaml.fixtures';
+
+const complexTypeHandlers = {
+  "version": createVersionDescFromYamlNode,
+  "path": createPathDescFromYamlNode,
+  "hosted": createHostedDescFromYamlNode,
+  "git": createGitDescFromYamlNode
+}
 
 export const extractPackageDependenciesFromYamlTests = {
 
   [test.title]: extractPackageDependenciesFromYaml.name,
 
   "returns empty when no matches found": () => {
-    const includeNames = []
+    const includeNames = [];
+
+    const testOptions: TYamlPackageParserOptions = {
+      includePropNames: includeNames,
+      complexTypeHandlers
+    };
+
     const results = extractPackageDependenciesFromYaml(
       "",
-      includeNames
+      testOptions
     );
     assert.equal(results.length, 0);
   },
 
   "returns empty when no dependency entry names match": () => {
-    const includeNames = ["non-dependencies"]
+    const includeNames = ["non-dependencies"];
+
+    const testOptions: TYamlPackageParserOptions = {
+      includePropNames: includeNames,
+      complexTypeHandlers
+    };
+
     const results = extractPackageDependenciesFromYaml(
       Fixtures.extractDependencyEntries.test,
-      includeNames
+      testOptions
     );
+
     assert.equal(results.length, 0);
   },
 
   "extracts general dependencies from yaml": () => {
-    const includeNames = ["dependencies"]
+    const includeNames = ["dependencies"];
+
+    const testOptions: TYamlPackageParserOptions = {
+      includePropNames: includeNames,
+      complexTypeHandlers
+    };
+
     const results = extractPackageDependenciesFromYaml(
       Fixtures.extractDependencyEntries.test,
-      includeNames
+      testOptions
     );
+
     assert.deepEqual(results, Fixtures.extractDependencyEntries.expected);
   },
 
   "extracts path type dependencies from yaml": () => {
-    const includeNames = ["dependencies"]
+    const includeNames = ["dependencies"];
+
+    const testOptions: TYamlPackageParserOptions = {
+      includePropNames: includeNames,
+      complexTypeHandlers
+    };
+
     const results = extractPackageDependenciesFromYaml(
       Fixtures.extractPathDependencies.test,
-      includeNames
+      testOptions
     );
+
     assert.deepEqual(results, Fixtures.extractPathDependencies.expected);
   },
 
   "extracts git type dependencies from yaml": () => {
-    const includeNames = ["dependencies"]
+    const includeNames = ["dependencies"];
+
+    const testOptions: TYamlPackageParserOptions = {
+      includePropNames: includeNames,
+      complexTypeHandlers
+    };
+
     const results = extractPackageDependenciesFromYaml(
       Fixtures.extractGitDepencdencies.test,
-      includeNames
+      testOptions
     );
     assert.deepEqual(results, Fixtures.extractGitDepencdencies.expected);
   },
 
   "extracts hosted type dependencies from yaml": () => {
-    const includeNames = ["dependencies"]
+    const includeNames = ["dependencies"];
+
+    const testOptions: TYamlPackageParserOptions = {
+      includePropNames: includeNames,
+      complexTypeHandlers
+    };
+
     const results = extractPackageDependenciesFromYaml(
       Fixtures.extractHostedDependencies.test,
-      includeNames
+      testOptions
     );
+
     assert.deepEqual(results, Fixtures.extractHostedDependencies.expected);
   }
 }
