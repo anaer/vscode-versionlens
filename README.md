@@ -5,7 +5,7 @@
 [![Rating](https://vsmarketplacebadges.dev/rating/pflannery.vscode-versionlens.png?color=blue&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=pflannery.vscode-versionlens)
 [![The ISC license](https://img.shields.io/badge/license-ISC-orange.png?color=blue&style=flat-square)](http://opensource.org/licenses/ISC)
 
-This project is `active` but not sponsored or funded.
+This project is `active`, not sponsored and not funded.
 
 [![BuyMeACoffee](https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png)](https://www.buymeacoffee.com/peterf)
 
