@@ -1,61 +1,55 @@
+import { IProcessClient, UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
-import { UrlHelpers, IProcessClient } from 'domain/clients';
-
-import { MavenConfig } from '../mavenConfig';
 import { MavenRepository } from '../definitions/mavenRepository';
+import { MavenConfig } from '../mavenConfig';
 import * as MavenXmlFactory from '../mavenXmlParserFactory';
 
 export class MvnCli {
 
-  config: MavenConfig;
-
-  client: IProcessClient;
-
-  logger: ILogger;
-
-  constructor(config: MavenConfig, client: IProcessClient, logger: ILogger) {
-    this.client = client;
+  constructor(config: MavenConfig, processClient: IProcessClient, logger: ILogger) {
+    this.processClient = processClient;
     this.config = config;
     this.logger = logger;
   }
 
-  fetchRepositories(cwd: string): Promise<Array<MavenRepository>> {
-    const promisedCli = this.client.request(
-      'mvn ',
-      ['help:effective-settings'],
-      cwd
-    );
+  config: MavenConfig;
 
-    return promisedCli.then(result => {
+  processClient: IProcessClient;
+
+  logger: ILogger;
+
+  async fetchRepositories(cwd: string): Promise<Array<MavenRepository>> {
+    let repos: Array<string>;
+
+    try {
+      const result = await this.processClient.request(
+        'mvn ',
+        ['help:effective-settings'],
+        cwd
+      );
+
       const { data } = result;
-      // check we have some data
       if (data.length === 0) return [];
 
-      return MavenXmlFactory.extractReposUrlsFromXml(data);
-    }).catch(error => {
-      return [];
-    }).then((repos: Array<string>) => {
+      repos = MavenXmlFactory.extractReposUrlsFromXml(data);
 
-      if (repos.length === 0) {
-        // this.config.getDefaultRepository()
-        repos.push("https://repo.maven.apache.org/maven2/")
-      }
+    } catch (err) {
+      repos = [];
+    }
 
-      return repos;
+    if (repos.length === 0) {
+      // this.config.getDefaultRepository()
+      repos.push("https://repo.maven.apache.org/maven2/");
+    }
 
-    }).then((repos: Array<string>) => {
-
-      // parse urls to Array<MavenRepository.
-      return repos.map(url => {
-        const protocol = UrlHelpers.getProtocolFromUrl(url);
-        return {
-          url,
-          protocol,
-        }
-      });
-
+    // parse urls to Array<MavenRepository>
+    return repos.map(url => {
+      const protocol = UrlHelpers.getProtocolFromUrl(url);
+      return {
+        url,
+        protocol,
+      };
     });
-
   }
 
 }
