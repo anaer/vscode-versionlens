@@ -1,7 +1,7 @@
 import { KeyDictionary } from "domain/generics";
-import { TPackageTypeHandler } from "./tPackageTypeHandler";
+import { TYamlPackageTypeHandler } from "./tYamlPackageTypeHandler";
 
 export type TYamlPackageParserOptions = {
   includePropNames: Array<string>,
-  complexTypeHandlers: KeyDictionary<TPackageTypeHandler>;
+  complexTypeHandlers: KeyDictionary<TYamlPackageTypeHandler>;
 }

@@ -1,6 +1,6 @@
 import { TPackageTypeDescriptor } from "./tPackageTypeDescriptors";
 
-export type TPackageTypeHandler = (
+export type TYamlPackageTypeHandler = (
   valueNode: any,
   isQuoteType: boolean
 ) => TPackageTypeDescriptor;

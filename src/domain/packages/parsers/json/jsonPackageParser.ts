@@ -17,11 +17,14 @@ export function extractPackageDependenciesFromJson(
   json: string,
   includePropNames: Array<string>
 ): Array<PackageDescriptor> {
-  const jsonErrors = [];
+  const jsonErrors: Array<JsonC.ParseError> = [];
   const rootNode = JsonC.parseTree(json, jsonErrors);
-  if (!rootNode || rootNode.children.length === 0 || jsonErrors.length > 0) {
-    return [];
-  }
+
+  const hasErrors = jsonErrors.length > 0;
+  if (!rootNode || hasErrors) return [];
+
+  const hasChildren = rootNode.children && rootNode.children.length > 0;
+  if (hasChildren === false) return [];
 
   return extractDependenciesFromNodes(rootNode, includePropNames);
 }

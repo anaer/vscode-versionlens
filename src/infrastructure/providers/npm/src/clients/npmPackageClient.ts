@@ -53,7 +53,7 @@ export class NpmPackageClient implements IPackageClient<null> {
           requestedPackage.name,
           requestedPackage.version,
           requestedPackage.path
-        );
+        ) as NpaSpec;
       }
       catch (error) {
         return reject(
