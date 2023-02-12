@@ -23,96 +23,99 @@ import { DubConfig } from './dubConfig';
 
 export class DubClient implements IPackageClient<null> {
 
-  config: DubConfig;
-
-  jsonClient: IJsonHttpClient;
-
-  logger: ILogger;
-
   constructor(config: DubConfig, client: IJsonHttpClient, logger: ILogger) {
     this.config = config;
     this.jsonClient = client;
     this.logger = logger;
   }
 
-  fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
+  config: DubConfig;
+
+  jsonClient: IJsonHttpClient;
+
+  logger: ILogger;
+
+  async fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;
     const semverSpec = VersionUtils.parseSemver(requestedPackage.version);
     const url = `${this.config.apiUrl}${encodeURIComponent(requestedPackage.name)}/info`;
 
-    return this.createRemotePackageDocument(url, request, semverSpec)
-      .catch((error: HttpClientResponse) => {
+    try {
+      return await this.createRemotePackageDocument(url, request, semverSpec);
+    } catch (error) {
+      const errorResponse = error as HttpClientResponse;
 
-        this.logger.debug(
-          "Caught exception from %s: %O",
+      this.logger.debug(
+        "Caught exception from %s: %O",
+        PackageClientSourceType.Registry,
+        errorResponse
+      );
+
+      const suggestion = SuggestionFactory.createFromHttpStatus(errorResponse.status);
+      if (suggestion != null) {
+        return ClientResponseFactory.create(
           PackageClientSourceType.Registry,
-          error
+          errorResponse,
+          [suggestion]
         );
+      }
 
-        const suggestion = SuggestionFactory.createFromHttpStatus(error.status);
-        if (suggestion != null) {
-          return ClientResponseFactory.create(
-            PackageClientSourceType.Registry,
-            error,
-            [suggestion]
-          )
-        }
-        return Promise.reject(error);
-      });
+      throw errorResponse;
+    }
   }
 
-  createRemotePackageDocument(
+  async createRemotePackageDocument(
     url: string,
     request: TPackageClientRequest<null>,
     semverSpec: TSemverSpec
   ): Promise<TPackageClientResponse> {
-
     const requestedPackage = request.dependency.package;
-
-    const query = {
-      minimize: 'true',
-    }
-
+    const query = { minimize: 'true' }
     const headers = {};
 
-    return this.jsonClient.request(HttpClientRequestMethods.get, url, query, headers)
-      .then((httpResponse): TPackageClientResponse => {
-        const packageInfo = httpResponse.data;
-        const versionRange = semverSpec.rawVersion;
+    // fetch package from api
+    const httpResponse = await this.jsonClient.request(
+      HttpClientRequestMethods.get,
+      url,
+      query,
+      headers
+    );
 
-        const resolved = {
-          name: requestedPackage.name,
-          version: versionRange,
-        };
+    const packageInfo = httpResponse.data;
+    const versionRange = semverSpec.rawVersion;
 
-        const responseStatus = {
-          source: httpResponse.source,
-          status: httpResponse.status,
-        };
+    const resolved = {
+      name: requestedPackage.name,
+      version: versionRange,
+    };
 
-        const rawVersions = VersionUtils.extractVersionsFromMap(packageInfo.versions);
+    const responseStatus = {
+      source: httpResponse.source,
+      status: httpResponse.status,
+    };
 
-        // seperate versions to releases and prereleases
-        const { releases, prereleases } = VersionUtils.splitReleasesFromArray(
-          rawVersions,
-          this.config.prereleaseTagFilter
-        );
+    const rawVersions = VersionUtils.extractVersionsFromMap(packageInfo.versions);
 
-        // analyse suggestions
-        const suggestions = parseSuggestions(
-          versionRange,
-          releases,
-          prereleases
-        );
+    // seperate versions to releases and prereleases
+    const { releases, prereleases } = VersionUtils.splitReleasesFromArray(
+      rawVersions,
+      this.config.prereleaseTagFilter
+    );
 
-        return {
-          source: PackageClientSourceType.Registry,
-          responseStatus,
-          type: semverSpec.type,
-          resolved,
-          suggestions,
-        };
-      });
+    // analyse suggestions
+    const suggestions = parseSuggestions(
+      versionRange,
+      releases,
+      prereleases
+    );
+
+    return {
+      source: PackageClientSourceType.Registry,
+      responseStatus,
+      type: semverSpec.type,
+      resolved,
+      suggestions,
+    };
   }
 
 }
