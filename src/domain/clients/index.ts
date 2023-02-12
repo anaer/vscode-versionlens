@@ -19,4 +19,4 @@ export * from './options/httpOptions';
 export * from './requests/abstractCachedRequest';
 export * from './requests/jsonHttpClient';
 
-export * as UrlHelpers from './helpers/urlHelpers';
+export * as UrlHelpers from './utils/urlUtils';
