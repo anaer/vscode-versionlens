@@ -20,19 +20,19 @@ import { MavenConfig } from '../mavenConfig';
 
 export class MavenClient implements IPackageClient<MavenClientData> {
 
-  config: MavenConfig;
-
-  httpClient: IHttpClient;
-
-  logger: ILogger;
-
   constructor(config: MavenConfig, httpClient: IHttpClient, logger: ILogger) {
     this.config = config;
     this.httpClient = httpClient;
     this.logger = logger;
   }
 
-  fetchPackage(
+  config: MavenConfig;
+
+  httpClient: IHttpClient;
+
+  logger: ILogger;
+
+  async fetchPackage(
     request: TPackageClientRequest<MavenClientData>
   ): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;
@@ -44,86 +44,87 @@ export class MavenClient implements IPackageClient<MavenClientData> {
     let search = group.replace(/\./g, "/") + "/" + artifact
     const queryUrl = `${url}${search}/maven-metadata.xml`;
 
-    return this.createRemotePackageDocument(queryUrl, request, semverSpec)
-      .catch((error: HttpClientResponse) => {
+    try {
+      return await this.createRemotePackageDocument(queryUrl, request, semverSpec);
+    } catch (error) {
+      const errorResponse = error as HttpClientResponse;
 
-        this.logger.debug(
-          "Caught exception from %s: %O",
+      this.logger.debug(
+        "Caught exception from %s: %O",
+        PackageClientSourceType.Registry,
+        errorResponse
+      );
+
+      const suggestion = SuggestionFactory.createFromHttpStatus(errorResponse.status);
+      if (suggestion != null) {
+        return ClientResponseFactory.create(
           PackageClientSourceType.Registry,
-          error
-        );
+          errorResponse,
+          [suggestion]
+        )
+      }
 
-        const suggestion = SuggestionFactory.createFromHttpStatus(error.status);
-        if (suggestion != null) {
-          return ClientResponseFactory.create(
-            PackageClientSourceType.Registry,
-            error,
-            [suggestion]
-          )
-        }
-        return Promise.reject(error);
-      });
+      throw errorResponse;
+    }
   }
 
-  createRemotePackageDocument(
+  async createRemotePackageDocument(
     url: string,
     request: TPackageClientRequest<MavenClientData>,
     semverSpec: TSemverSpec
   ): Promise<TPackageClientResponse> {
-
     const query = {};
     const headers = {};
 
-    return this.httpClient.request(
+    // fetch package from api
+    const httpResponse = await this.httpClient.request(
       HttpClientRequestMethods.get,
       url,
       query,
       headers
-    )
-      .then((httpResponse): TPackageClientResponse => {
+    );
 
-        const { data } = httpResponse;
-        const source = PackageClientSourceType.Registry;
-        const versionRange = semverSpec.rawVersion;
-        const requestedPackage = request.dependency.package;
+    const { data } = httpResponse;
+    const source = PackageClientSourceType.Registry;
+    const versionRange = semverSpec.rawVersion;
+    const requestedPackage = request.dependency.package;
 
-        const responseStatus = {
-          source: httpResponse.source,
-          status: httpResponse.status,
-        };
+    const responseStatus = {
+      source: httpResponse.source,
+      status: httpResponse.status,
+    };
 
-        // extract versions form xml
-        const rawVersions = getVersionsFromPackageXml(data);
+    // extract versions form xml
+    const rawVersions = getVersionsFromPackageXml(data);
 
-        // extract semver versions only
-        const semverVersions = VersionUtils.filterSemverVersions(rawVersions);
+    // extract semver versions only
+    const semverVersions = VersionUtils.filterSemverVersions(rawVersions);
 
-        // seperate versions to releases and prereleases
-        const { releases, prereleases } = VersionUtils.splitReleasesFromArray(
-          semverVersions,
-          this.config.prereleaseTagFilter
-        );
+    // seperate versions to releases and prereleases
+    const { releases, prereleases } = VersionUtils.splitReleasesFromArray(
+      semverVersions,
+      this.config.prereleaseTagFilter
+    );
 
-        const resolved = {
-          name: requestedPackage.name,
-          version: versionRange,
-        };
+    const resolved = {
+      name: requestedPackage.name,
+      version: versionRange,
+    };
 
-        // analyse suggestions
-        const suggestions = createSuggestions(
-          versionRange,
-          releases,
-          prereleases
-        );
+    // analyse suggestions
+    const suggestions = createSuggestions(
+      versionRange,
+      releases,
+      prereleases
+    );
 
-        return {
-          source,
-          responseStatus,
-          type: semverSpec.type,
-          resolved,
-          suggestions,
-        };
-      });
+    return {
+      source,
+      responseStatus,
+      type: semverSpec.type,
+      resolved,
+      suggestions,
+    };
   }
 
 }
