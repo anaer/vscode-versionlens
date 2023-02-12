@@ -1,3 +1,4 @@
+import { Undefinable } from 'domain/generics';
 import { IFrozenOptions, IOptions } from '.';
 
 export abstract class Options implements IOptions {
@@ -11,7 +12,7 @@ export abstract class Options implements IOptions {
     this.section = (section.length > 0) ? section + '.' : '';
   }
 
-  get<T>(key: string): T {
+  get<T>(key: string): Undefinable<T> {
     return this.config.get(`${this.section}${key}`);
   }
 

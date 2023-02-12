@@ -1,6 +1,7 @@
+import { Nullable, Undefinable } from 'domain/generics';
 import { IConfig } from './definitions/iConfig';
-import { TConfigSectionResolver } from './definitions/tConfigResolver';
 import { IFrozenOptions } from './definitions/iOptions';
+import { TConfigSectionResolver } from './definitions/tConfigResolver';
 
 /**
  * Configuration container.
@@ -20,7 +21,7 @@ export class Config implements IFrozenOptions {
   /**
    * Cached configuration
    */
-  protected frozen: IConfig;
+  protected frozen: Nullable<IConfig>;
 
   /**
    * The section key fetched from the configuration source data
@@ -38,7 +39,7 @@ export class Config implements IFrozenOptions {
     return this.resolver(this.section);
   }
 
-  get<T>(key: string): T {
+  get<T>(key: string): Undefinable<T> {
     if (this.frozen === null) {
       this.frozen = this.raw;
     }

@@ -1,4 +1,4 @@
-import { Nullable } from 'domain/generics';
+import { Nullable, Undefinable } from 'domain/generics';
 import { IFrozenOptions, Options, IOptionsWithDefaults } from '.';
 
 export class OptionsWithFallback extends Options
@@ -11,15 +11,15 @@ export class OptionsWithFallback extends Options
     this.fallbackSection = fallbackSection;
   }
 
-  get<T>(key: string): T {
+  get<T>(key: string): Undefinable<T> {
     // attempt to get the section value
-    const sectionValue: T = this.config.get(`${this.section}${key}`);
+    const sectionValue: Undefinable<T> = this.config.get(`${this.section}${key}`);
 
     // return section value
     if (sectionValue !== null && sectionValue !== undefined) return sectionValue;
 
     // attempt to get fallback section value
-    let fallbackSectionValue: T;
+    let fallbackSectionValue: Undefinable<T>;
     if (this.fallbackSection !== null) {
       fallbackSectionValue = this.config.get(`${this.fallbackSection}.${key}`);
     }
@@ -30,7 +30,7 @@ export class OptionsWithFallback extends Options
 
   getOrDefault<T>(key: string, defaultValue: T): T {
     // attempt to get the section value
-    const value: T = this.get(key);
+    const value: Undefinable<T> = this.get(key);
 
     // return key value
     if (value !== null && value !== undefined) return value;
