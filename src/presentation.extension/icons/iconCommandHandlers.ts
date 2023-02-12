@@ -75,6 +75,8 @@ export class IconCommandHandlers implements IDispose {
 
   refreshActiveCodeLenses() {
     const { window } = VsCode;
+    if (!window.activeTextEditor) return;
+
     const fileName = window.activeTextEditor.document.fileName;
     const providers = getProvidersByFileName(
       fileName,

@@ -2,13 +2,14 @@ import { commands } from 'vscode';
 
 export class ContextState<T> {
 
-  private key: string;
-  private _value: T;
-
   constructor(key: string, defaultValue: T) {
     this.key = key;
     this.change(defaultValue);
   }
+
+  private key: string;
+
+  private _value!: T;
 
   get value(): T {
     return this._value;

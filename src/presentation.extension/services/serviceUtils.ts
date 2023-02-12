@@ -76,7 +76,8 @@ export function addTextEditorEvents(services: IServiceCollection) {
       new TextEditorEvents(
         container.extension.state,
         container.suggestionProviders,
-        container.loggerChannel
+        container.loggerChannel,
+        container.logger
       )
   )
 }

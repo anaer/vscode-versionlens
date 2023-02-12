@@ -1,23 +1,29 @@
-import { ILoggerChannel } from 'domain/logging';
+import { IDispose, Undefinable } from 'domain/generics';
+import { ILogger, ILoggerChannel } from 'domain/logging';
 import { ProviderSupport } from 'domain/providers';
 import { ISuggestionProvider } from 'domain/suggestions';
-import { TextEditor, window } from 'vscode';
+import { Disposable, TextEditor, window } from 'vscode';
 import { VersionLensState } from '../state/versionLensState';
 import { getDocumentProviders } from './textDocumentUtils';
 
-export class TextEditorEvents {
+export class TextEditorEvents implements IDispose {
 
   constructor(
     state: VersionLensState,
     suggestionProviders: Array<ISuggestionProvider>,
-    loggerChannel: ILoggerChannel
+    loggerChannel: ILoggerChannel,
+    logger: ILogger
   ) {
     this.state = state;
     this.suggestionProviders = suggestionProviders;
     this.loggerChannel = loggerChannel;
+    this.logger = logger;
 
     // register editor events
-    window.onDidChangeActiveTextEditor(this.onDidChangeActiveTextEditor, this);
+    this.disposable = window.onDidChangeActiveTextEditor(
+      this.onDidChangeActiveTextEditor,
+      this
+    );
 
     // ensure we fire after the extension is loaded
     this.onDidChangeActiveTextEditor(window.activeTextEditor);
@@ -29,7 +35,11 @@ export class TextEditorEvents {
 
   loggerChannel: ILoggerChannel;
 
-  onDidChangeActiveTextEditor(textEditor: TextEditor) {
+  logger: ILogger;
+
+  disposable: Disposable;
+
+  onDidChangeActiveTextEditor(textEditor: Undefinable<TextEditor>) {
     // maintain versionLens.providerActive state
     // each time the active editor changes
     if (!textEditor) {
@@ -60,6 +70,11 @@ export class TextEditorEvents {
 
     this.state.providerSupportsPrereleases.value = providerSupportsPrereleases;
     this.state.providerActive.value = true;
+  }
+
+  dispose() {
+    this.disposable.dispose();
+    this.logger.debug(`disposed ${TextEditorEvents.name}`);
   }
 
 }

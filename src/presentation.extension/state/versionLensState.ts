@@ -11,8 +11,6 @@ export class VersionLensState {
 
   prereleasesEnabled: ContextState<boolean>;
 
-  installedStatusesEnabled: ContextState<boolean>;
-
   providerActive: ContextState<boolean>;
 
   providerBusy: ContextState<number>;

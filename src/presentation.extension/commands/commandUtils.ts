@@ -1,7 +1,7 @@
 // vscode references
-import * as VsCode from 'vscode';
 import { KeyDictionary, TAsyncFunction } from 'domain/generics';
 import { ILogger } from 'domain/logging';
+import * as VsCode from 'vscode';
 
 export function registerCommands(
   contributions: KeyDictionary<string>,
@@ -10,7 +10,7 @@ export function registerCommands(
 ): Array<VsCode.Disposable> {
 
   const { commands } = VsCode;
-  const disposables = [];
+  const disposables: Array<VsCode.Disposable> = [];
 
   // loop enum keys
   Object.keys(contributions)
@@ -20,11 +20,9 @@ export function registerCommands(
       const command = contributions[enumKey];
       const handler = handlers[`on${enumKey}`];
       if (!handler) {
-        // todo roll up errors to a semantic factory
         const msg = `Could not find %s handler on %s class`;
-        logger.error(msg, command, handler.name)
-        // just return here?
-        throw new Error(`Could not find ${command} handler on ${handler.name} class`)
+        logger.error(msg, command, `on${enumKey}`)
+        throw new Error(`Could not find ${command} handler 'on${enumKey}'`)
       }
 
       // collect disposables

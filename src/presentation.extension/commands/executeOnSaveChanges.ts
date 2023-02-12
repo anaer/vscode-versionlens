@@ -4,12 +4,12 @@ import { IProvider } from "domain/providers";
 import { VersionLensState } from "presentation.extension";
 import { commands } from "vscode";
 
-export function executeOnSaveChanges(
+export async function executeOnSaveChanges(
   provider: IProvider,
   packagePath: string,
   state: VersionLensState,
   logger: ILogger
-): Thenable<unknown> {
+): Promise<void> {
   // get the original and recent parsed packages
   const original = state.getOriginalParsedPackages(
     provider.config.providerName,
@@ -47,19 +47,16 @@ export function executeOnSaveChanges(
     );
 
     // run the custom task for the provider
-    return commands.executeCommand(
+    const exitCode = await commands.executeCommand(
       "workbench.action.tasks.runTask",
       provider.config.onSaveChangesTask
-    ).then(exitCode => {
+    )
 
-      logger.info(
-        'Task "%s"for "%s.onSaveChanges" exited with %s',
-        provider.config.providerName,
-        provider.config.onSaveChangesTask,
-        exitCode
-      );
-
-      return exitCode;
-    });
+    logger.info(
+      'Task "%s"for "%s.onSaveChanges" exited with %s',
+      provider.config.providerName,
+      provider.config.onSaveChangesTask,
+      exitCode
+    );
   }
 }
