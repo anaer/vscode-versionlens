@@ -1,8 +1,7 @@
 import {
   HttpClientRequestMethods,
   HttpClientResponse,
-  IJsonHttpClient,
-  JsonClientResponse
+  IJsonHttpClient
 } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
@@ -40,36 +39,38 @@ export class ComposerClient implements IPackageClient<null> {
     this.jsonClient.clearCache();
   }
 
-  fetchPackage<TClientData>(
+  async fetchPackage<TClientData>(
     request: TPackageClientRequest<TClientData>
   ): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;
     const semverSpec = VersionUtils.parseSemver(requestedPackage.version);
     const url = `${this.config.apiUrl}${requestedPackage.name}.json`;
 
-    return this.createRemotePackageDocument(url, request, semverSpec)
-      .catch((error: HttpClientResponse) => {
+    try {
+      return await this.createRemotePackageDocument(url, request, semverSpec)
+    } catch (error) {
+      const errorResponse = error as HttpClientResponse;
 
-        this.logger.debug(
-          "Caught exception from %s: %O",
+      this.logger.debug(
+        "Caught exception from %s: %O",
+        PackageClientSourceType.Registry,
+        errorResponse
+      );
+
+      const suggestion = SuggestionFactory.createFromHttpStatus(errorResponse.status);
+      if (suggestion != null) {
+        return ClientResponseFactory.create(
           PackageClientSourceType.Registry,
-          error
-        );
+          errorResponse,
+          [suggestion]
+        )
+      }
 
-        const suggestion = SuggestionFactory.createFromHttpStatus(error.status);
-        if (suggestion != null) {
-          return ClientResponseFactory.create(
-            PackageClientSourceType.Registry,
-            error,
-            [suggestion]
-          )
-        }
-
-        return Promise.reject(error);
-      });
+      throw errorResponse;
+    }
   }
 
-  createRemotePackageDocument<TClientData>(
+  async createRemotePackageDocument<TClientData>(
     url: string,
     request: TPackageClientRequest<TClientData>,
     semverSpec: TSemverSpec
@@ -78,55 +79,60 @@ export class ComposerClient implements IPackageClient<null> {
     const query = {};
     const headers = {};
 
-    return this.jsonClient.request(HttpClientRequestMethods.get, url, query, headers)
-      .then((httpResponse: JsonClientResponse): TPackageClientResponse => {
-        const requestPackage = request.dependency.package;
-        const versionRange = semverSpec.rawVersion;
+    // fetch package from api
+    const httpResponse = await this.jsonClient.request(
+      HttpClientRequestMethods.get,
+      url,
+      query,
+      headers
+    );
 
-        const resolved = {
-          name: requestPackage.name,
-          version: versionRange,
-        };
+    const requestPackage = request.dependency.package;
+    const versionRange = semverSpec.rawVersion;
 
-        const responseStatus = {
-          source: httpResponse.source,
-          status: httpResponse.status,
-        };
+    const resolved = {
+      name: requestPackage.name,
+      version: versionRange,
+    };
 
-        const responseVersions: IPackagistApiItem[] = httpResponse.data.packages[requestPackage.name];
+    const responseStatus = {
+      source: httpResponse.source,
+      status: httpResponse.status,
+    };
 
-        let rawVersions: string[] = [];
-        if (url.indexOf('/p2/') !== -1) {
-          rawVersions = responseVersions
-            .reverse()
-            .map((p: IPackagistApiItem) => p.version);
-        } else {
-          rawVersions = Object.keys(responseVersions);
-        }
+    const responseVersions: IPackagistApiItem[] = httpResponse.data.packages[requestPackage.name];
 
-        // extract semver versions only
-        const semverVersions = VersionUtils.filterSemverVersions(rawVersions);
+    let rawVersions: string[] = [];
+    if (url.indexOf('/p2/') !== -1) {
+      rawVersions = responseVersions
+        .reverse()
+        .map((p: IPackagistApiItem) => p.version);
+    } else {
+      rawVersions = Object.keys(responseVersions);
+    }
 
-        // seperate versions to releases and prereleases
-        const { releases, prereleases } = VersionUtils.splitReleasesFromArray(
-          semverVersions,
-          this.config.prereleaseTagFilter
-        );
+    // extract semver versions only
+    const semverVersions = VersionUtils.filterSemverVersions(rawVersions);
 
-        // analyse suggestions
-        const suggestions = createSuggestions(
-          versionRange,
-          releases,
-          prereleases
-        );
+    // seperate versions to releases and prereleases
+    const { releases, prereleases } = VersionUtils.splitReleasesFromArray(
+      semverVersions,
+      this.config.prereleaseTagFilter
+    );
 
-        return {
-          source: PackageClientSourceType.Registry,
-          responseStatus,
-          type: semverSpec.type,
-          resolved,
-          suggestions,
-        };
-      });
+    // analyse suggestions
+    const suggestions = createSuggestions(
+      versionRange,
+      releases,
+      prereleases
+    );
+
+    return {
+      source: PackageClientSourceType.Registry,
+      responseStatus,
+      type: semverSpec.type,
+      resolved,
+      suggestions,
+    };
   }
 }
