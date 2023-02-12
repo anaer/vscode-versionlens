@@ -1,6 +1,10 @@
 import { ILogger } from 'domain/logging';
 import {
+  createGitDescFromYamlNode,
+  createHostedDescFromYamlNode,
   createPackageResource,
+  createPathDescFromYamlNode,
+  createVersionDescFromYamlNode,
   extractPackageDependenciesFromYaml,
   PackageDependency,
   PackageDescriptorType,
@@ -9,12 +13,6 @@ import {
   TPackageVersionDescriptor,
   TYamlPackageParserOptions
 } from 'domain/packages';
-import {
-  createGitDescFromYamlNode,
-  createHostedDescFromYamlNode,
-  createPathDescFromYamlNode,
-  createVersionDescFromYamlNode
-} from 'domain/packages/parsers/yaml/yamlPackageTypeFactory';
 import { SuggestionProvider } from 'domain/providers';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import { PubClient } from './pubClient';
@@ -54,7 +52,7 @@ export class PubSuggestionProvider
     const options: TYamlPackageParserOptions = {
       includePropNames: this.config.dependencyProperties,
       complexTypeHandlers
-    }
+    };
 
     const packageDescriptors = extractPackageDependenciesFromYaml(
       packageText,

@@ -1,8 +1,15 @@
+import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
   createPackageResource,
+  createPathDescFromJsonNode,
+  createRepoDescFromJsonNode,
+  createVersionDescFromJsonNode,
   extractPackageDependenciesFromJson,
   PackageDependency,
+  PackageDescriptorType,
+  TJsonPackageParserOptions,
+  TJsonPackageTypeHandler,
   TPackageVersionDescriptor
 } from 'domain/packages';
 import { SuggestionProvider } from 'domain/providers';
@@ -13,6 +20,12 @@ import {
 } from 'domain/suggestions';
 import { DubClient } from './dubClient';
 import { DubConfig } from './dubConfig';
+
+const complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler> = {
+  "version": createVersionDescFromJsonNode,
+  "path": createPathDescFromJsonNode,
+  "repository": createRepoDescFromJsonNode
+};
 
 export class DubSuggestionProvider
   extends SuggestionProvider<DubClient, null>
@@ -36,27 +49,43 @@ export class DubSuggestionProvider
     packagePath: string,
     packageText: string
   ): Array<PackageDependency> {
-    const packageLocations = extractPackageDependenciesFromJson(
+
+    const options: TJsonPackageParserOptions = {
+      includePropNames: this.config.dependencyProperties,
+      complexTypeHandlers
+    };
+
+    const packageDescriptors = extractPackageDependenciesFromJson(
       packageText,
-      this.config.dependencyProperties
+      options
     );
 
-    const packageDependencies = packageLocations
-      .filter(x => x.hasType("version"))
-      .map(
-        loc => {
-          const versionType = loc.getType("version") as TPackageVersionDescriptor
-          return new PackageDependency(
+    const packageDependencies = [];
+
+    for (const packageDesc of packageDescriptors) {
+
+      // map the version descriptor to a package dependency
+      if (packageDesc.hasType(PackageDescriptorType.version)) {
+        const versionType = packageDesc.getType<TPackageVersionDescriptor>(
+          PackageDescriptorType.version
+        );
+
+        packageDependencies.push(
+          new PackageDependency(
             createPackageResource(
-              loc.name,
+              packageDesc.name,
               versionType.version,
               packagePath
             ),
-            loc.nameRange,
+            packageDesc.nameRange,
             versionType.versionRange
           )
-        }
-      );
+        );
+
+        continue;
+      }
+
+    }
 
     return packageDependencies;
   }

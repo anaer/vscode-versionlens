@@ -1,8 +1,12 @@
+import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
   createPackageResource,
+  createVersionDescFromJsonNode,
   extractPackageDependenciesFromJson,
   PackageDependency,
+  TJsonPackageParserOptions,
+  TJsonPackageTypeHandler,
   TPackageVersionDescriptor
 } from 'domain/packages';
 import { SuggestionProvider } from 'domain/providers';
@@ -13,6 +17,10 @@ import {
 } from 'domain/suggestions';
 import { ComposerClient } from './composerClient';
 import { ComposerConfig } from './composerConfig';
+
+const complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler> = {
+  "version": createVersionDescFromJsonNode
+};
 
 export class ComposerSuggestionProvider
   extends SuggestionProvider<ComposerClient, any>
@@ -36,9 +44,15 @@ export class ComposerSuggestionProvider
     packagePath: string,
     packageText: string
   ): Array<PackageDependency> {
+
+    const options: TJsonPackageParserOptions = {
+      includePropNames: this.config.dependencyProperties,
+      complexTypeHandlers
+    };
+
     const packageDescriptors = extractPackageDependenciesFromJson(
       packageText,
-      this.config.dependencyProperties
+      options
     );
 
     const packageDependencies = packageDescriptors

@@ -1,23 +1,16 @@
 import { KeyDictionary, Undefinable } from 'domain/generics';
 import { PackageDescriptor } from 'domain/packages';
 import * as JsonC from 'jsonc-parser';
+import { TJsonPackageParserOptions } from '../definitions/tJsonPackageParserOptions';
 import { TJsonPackageTypeHandler } from '../definitions/tJsonPackageTypeHandler';
 import {
   createPackageDescFromJsonNode,
-  createPathDescFromJsonNode,
-  createRepoDescFromJsonNode,
   createVersionDescFromJsonNode
 } from './jsonPackageTypeFactory';
 
-const complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler> = {
-  "version": createVersionDescFromJsonNode,
-  "path": createPathDescFromJsonNode,
-  "repository": createRepoDescFromJsonNode
-};
-
 export function extractPackageDependenciesFromJson(
   json: string,
-  includePropNames: Array<string>
+  options: TJsonPackageParserOptions
 ): Array<PackageDescriptor> {
   const jsonErrors: Array<JsonC.ParseError> = [];
   const rootNode = JsonC.parseTree(json, jsonErrors);
@@ -28,28 +21,29 @@ export function extractPackageDependenciesFromJson(
   const hasChildren = rootNode.children && rootNode.children.length > 0;
   if (hasChildren === false) return [];
 
-  return extractDependenciesFromNodes(rootNode, includePropNames);
+  return extractDependenciesFromNodes(rootNode, options);
 }
 
 function extractDependenciesFromNodes(
   rootNode: JsonC.Node,
-  includePropNames: string[]
+  options: TJsonPackageParserOptions
 ): Array<PackageDescriptor> {
   const matchedDependencies: Array<PackageDescriptor> = [];
+  const { includePropNames, complexTypeHandlers } = options;
 
   for (const incPropName of includePropNames) {
     const node = findNodesAtLocation(rootNode, incPropName);
     if (!node) continue;
 
     if (node instanceof Array) {
-      const matched = descendChildNodes(node);
+      const matched = descendChildNodes(node, complexTypeHandlers);
       matchedDependencies.push.apply(matchedDependencies, matched);
       continue;
     }
 
     const hasChildren = node.children && node.children.length > 0;
     if (hasChildren) {
-      const matched = descendChildNodes(node.children);
+      const matched = descendChildNodes(node.children, complexTypeHandlers);
       matchedDependencies.push.apply(matchedDependencies, matched);
       continue;
     }
@@ -58,7 +52,10 @@ function extractDependenciesFromNodes(
   return matchedDependencies
 }
 
-function descendChildNodes(nodes: Array<JsonC.Node>): Array<PackageDescriptor> {
+function descendChildNodes(
+  nodes: Array<JsonC.Node>,
+  complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler>
+): Array<PackageDescriptor> {
   const matchedDependencies: Array<PackageDescriptor> = [];
 
   for (const node of nodes) {
@@ -136,10 +133,10 @@ function findNodesAtLocation(
     segmentsWithoutStar
   );
 
-  if (!nodeUntilDotStar) return undefined;
+  if (!nodeUntilDotStar) return;
 
   if (!nodeUntilDotStar.children || nodeUntilDotStar.children.length === 0) {
-    return undefined;
+    return;
   }
 
   // filter the childrens children where the value type is "object"

@@ -1,8 +1,13 @@
+import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
   createPackageResource,
+  createVersionDescFromJsonNode,
   extractPackageDependenciesFromJson,
   PackageDependency,
+  PackageDescriptorType,
+  TJsonPackageParserOptions,
+  TJsonPackageTypeHandler,
   TPackageVersionDescriptor
 } from 'domain/packages';
 import { SuggestionProvider } from 'domain/providers';
@@ -11,6 +16,10 @@ import { NpmPackageClient } from './clients/npmPackageClient';
 import { TNpmClientData } from './definitions/tNpmClientData';
 import { NpmConfig } from './npmConfig';
 import { npmReplaceVersion } from './npmUtils';
+
+const complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler> = {
+  "version": createVersionDescFromJsonNode
+};
 
 export class NpmSuggestionProvider
   extends SuggestionProvider<NpmPackageClient, TNpmClientData>
@@ -36,34 +45,49 @@ export class NpmSuggestionProvider
     packageText: string
   ): Array<PackageDependency> {
 
-    const packageLocations = extractPackageDependenciesFromJson(
+    const options: TJsonPackageParserOptions = {
+      includePropNames: this.config.dependencyProperties,
+      complexTypeHandlers
+    };
+
+    const packageDescriptors = extractPackageDependenciesFromJson(
       packageText,
-      this.config.dependencyProperties
+      options
     );
 
-    const packageDependencies = packageLocations
-      .filter(x => x.hasType("version"))
-      .map(
-        desc => {
-          // handle pnpm override dependency selectors in the name
-          let name = desc.name;
-          const atIndex = name.indexOf('@');
-          if (atIndex > 0) {
-            name = name.slice(0, atIndex);
-          }
+    const packageDependencies = [];
 
-          const versionType = desc.getType("version") as TPackageVersionDescriptor
-          return new PackageDependency(
+    for (const packageDesc of packageDescriptors) {
+
+      // handle any pnpm override dependency selectors in the name
+      let name = packageDesc.name;
+      const atIndex = name.indexOf('@');
+      if (atIndex > 0) {
+        name = name.slice(0, atIndex);
+      }
+
+      // map the version descriptor to a package dependency
+      if (packageDesc.hasType(PackageDescriptorType.version)) {
+        const versionType = packageDesc.getType<TPackageVersionDescriptor>(
+          PackageDescriptorType.version
+        );
+
+        packageDependencies.push(
+          new PackageDependency(
             createPackageResource(
               name,
               versionType.version,
               packagePath
             ),
-            desc.nameRange,
+            packageDesc.nameRange,
             versionType.versionRange
           )
-        }
-      );
+        );
+
+        continue;
+      }
+
+    }
 
     return packageDependencies;
   }
