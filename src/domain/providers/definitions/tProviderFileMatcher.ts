@@ -1,5 +1,5 @@
 export type TProviderFileMatcher = {
-  language?: string;
-  scheme?: string;
-  pattern?: string;
+  language: string;
+  scheme: string;
+  pattern: string;
 }
