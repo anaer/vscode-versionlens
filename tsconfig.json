@@ -13,7 +13,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": false,
     "lib": [
-      "ES2019"
+      "ES2022"
     ],
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,

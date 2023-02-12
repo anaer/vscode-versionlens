@@ -2,6 +2,7 @@ import { IServiceProvider } from 'domain/di';
 import { ILogger, ILoggingOptions } from 'domain/logging';
 import { DomainService } from 'domain/services';
 import { nameOf, readJsonFile } from 'domain/utils';
+import { join } from 'node:path';
 import { ExtensionContext, workspace } from 'vscode';
 import { configureContainer } from './extensionContainer';
 import { ExtensionService } from './services/extensionService';
@@ -30,14 +31,16 @@ export async function activate(context: ExtensionContext): Promise<void> {
     );
   }
 
-  const extensionPath = context.asAbsolutePath('');
-  const packageJsonPath = context.asAbsolutePath('package.json');
+  const extensionPath = context.asAbsolutePath("");
+  const packageJsonPath = context.asAbsolutePath("package.json");
   const { version } = await readJsonFile<any>(packageJsonPath);
 
-  logger.info('extension path: %s', extensionPath);
-  logger.info('workspace mode: %s', extension.isWorkspaceMode);
-  logger.info('version: %s', version);
-  logger.info('log level: %s', loggingOptions.level);
+  const logPath = join(context.logUri.fsPath, "..");
+  logger.info("extension path: %s", extensionPath);
+  logger.info("workspace mode: %s", extension.isWorkspaceMode);
+  logger.info("version: %s", version);
+  logger.info("log level: %s", loggingOptions.level);
+  logger.info("log folder: %s", logPath);
 
   const extensionService = nameOf<ExtensionService>();
 
