@@ -2,10 +2,12 @@ import assert from 'assert';
 import {
   CachingOptions,
   ClientResponseSource,
-  ICachingOptions
+  ICachingOptions,
+  ProcessClientResponse
 } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import { PromiseSpawnClient } from 'infrastructure/process';
+import { test } from 'mocha-ui-esm';
 import { LoggerStub } from 'test/unit/domain/logging';
 import { anything, instance, mock, when } from 'ts-mockito';
 import { ProcessSpawnStub } from './processSpawnStub';
@@ -16,7 +18,7 @@ let loggerMock: ILogger;
 
 export const ProcessClientRequestTests = {
 
-  title: "PromiseSpawnProcessClient",
+  [test.title]: PromiseSpawnClient.name,
 
   beforeEach: () => {
     cachingMock = mock(CachingOptions)
@@ -24,17 +26,17 @@ export const ProcessClientRequestTests = {
     psMock = mock(ProcessSpawnStub)
   },
 
-  "requestJson": {
+  request: {
 
     "returns <ProcessClientResponse> when error occurs": async () => {
 
-      when(cachingMock.duration).thenReturn(30000)
+      when(cachingMock.duration).thenReturn(30000);
 
       when(psMock.promiseSpawn(anything(), anything(), anything()))
         .thenReject(<any>{
           code: "ENOENT",
           message: "spawn missing ENOENT"
-        })
+        });
 
       const rut = new PromiseSpawnClient(
         instance(psMock).promiseSpawn,
@@ -42,14 +44,19 @@ export const ProcessClientRequestTests = {
         instance(loggerMock)
       );
 
-      return await rut.request(
-        'missing',
-        ['--ooppss'],
-        '/'
-      ).catch(response => {
-        assert.equal(response.status, "ENOENT")
-        assert.equal(response.data, "spawn missing ENOENT")
-      })
+      try {
+        await rut.request(
+          'missing',
+          ['--ooppss'],
+          '/'
+        );
+      }
+      catch (error) {
+        const response = error as ProcessClientResponse;
+        assert.equal(response.status, "ENOENT");
+        assert.equal(response.data, "spawn missing ENOENT");
+        assert.equal(response.rejected, true);
+      }
 
     },
 
@@ -66,38 +73,37 @@ export const ProcessClientRequestTests = {
         status: testResponse.status,
         data: testResponse.data,
         rejected: false
-      }
+      };
 
       when(psMock.promiseSpawn(anything(), anything(), anything()))
         .thenResolve(<any>{
           code: 0,
           stdout: testResponse.data
-        })
+        });
 
-      when(cachingMock.duration).thenReturn(30000)
+      when(cachingMock.duration).thenReturn(30000);
 
       const rut = new PromiseSpawnClient(
         instance(psMock).promiseSpawn,
         instance(cachingMock),
         instance(loggerMock)
-      )
+      );
 
-      await rut.request(
+      const firstResponse = await rut.request(
         'echo',
         ['123'],
         'd:\\'
-      ).then(response => {
-        assert.deepEqual(response, testResponse)
-      })
+      );
 
-      await rut.request(
+      assert.deepEqual(firstResponse, testResponse);
+
+      const cachedResponse = await rut.request(
         'echo',
         ['123'],
         'd:\\'
-      ).then(response => {
-        assert.deepEqual(response, expectedCacheData)
-      })
+      );
 
+      assert.deepEqual(cachedResponse, expectedCacheData);
     },
 
     "doesn't cache when duration is 0": async () => {
@@ -113,35 +119,33 @@ export const ProcessClientRequestTests = {
         .thenResolve(<any>{
           code: 0,
           stdout: testResponse.data
-        })
+        });
 
-      when(cachingMock.duration).thenReturn(0)
+      when(cachingMock.duration).thenReturn(0);
 
       const rut = new PromiseSpawnClient(
         instance(psMock).promiseSpawn,
         instance(cachingMock),
         instance(loggerMock)
-      )
+      );
 
-      await rut.request(
+      const firstResponse = await rut.request(
         'echo',
         ['123'],
         'd:\\'
-      ).then(response => {
-        assert.deepEqual(response, testResponse)
-      })
+      );
 
-      await rut.request(
+      assert.deepEqual(firstResponse, testResponse);
+
+      const cachedResponse = await rut.request(
         'echo',
         ['123'],
         'd:\\'
-      ).then(response => {
-        assert.deepEqual(response, testResponse)
+      );
 
-        const cachedData = rut.cache.get(testKey);
-        assert.equal(cachedData, undefined);
-      })
-
+      assert.deepEqual(cachedResponse, testResponse);
+      const cachedData = rut.cache.get(testKey);
+      assert.equal(cachedData, undefined);
     },
 
   },
