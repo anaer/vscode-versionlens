@@ -31,7 +31,7 @@ export class RequestLightClient extends AbstractCachedRequest<number, string>
     this.cache.clear();
   };
 
-  request(
+  async request(
     method: HttpClientRequestMethods,
     baseUrl: string,
     query: KeyStringDictionary = {},
@@ -41,36 +41,44 @@ export class RequestLightClient extends AbstractCachedRequest<number, string>
     const url = UrlHelpers.createUrl(baseUrl, query);
     const cacheKey = method + '_' + url;
 
+    // try to get from cache
     if (this.cache.cachingOpts.duration > 0 &&
       this.cache.hasExpired(cacheKey) === false) {
       const cachedResp = this.cache.get(cacheKey);
-      if (cachedResp.rejected) return Promise.reject(cachedResp);
-      return Promise.resolve(cachedResp);
+      if (cachedResp.rejected) throw cachedResp;
+      return cachedResp;
     }
 
-    return this.xhr({
-      url,
-      type: method,
-      headers,
-      strictSSL: this.options.http.strictSSL
-    })
-      .then((response: IXhrResponse) => {
-        return this.createCachedResponse(
-          cacheKey,
-          response.status,
-          response.responseText,
-          false
-        );
-      })
-      .catch((response: IXhrResponse) => {
-        const result = this.createCachedResponse(
-          cacheKey,
-          response.status,
-          response.responseText,
-          true
-        );
-        return Promise.reject<HttpClientResponse>(result);
+    try {
+      // make the request
+      const response = await this.xhr({
+        url,
+        type: method,
+        headers,
+        strictSSL: this.options.http.strictSSL
       });
+
+      // cache the response
+      return this.createCachedResponse(
+        cacheKey,
+        response.status,
+        response.responseText,
+        false
+      );
+
+    } catch (error) {
+      const errorResponse = error as IXhrResponse;
+
+      // cache the error response
+      const result = this.createCachedResponse(
+        cacheKey,
+        errorResponse.status,
+        errorResponse.responseText,
+        true
+      );
+
+      throw result;
+    }
   }
 
 }
