@@ -9,6 +9,10 @@
   Thanks to [ekasetiawans](https://gitlab.com/ekasetiawans) for providing 
   an example [merge request](https://gitlab.com/versionlens/vscode-versionlens/-/merge_requests/269) hosted solution
 
+## DotNet
+
+  - Fixed an issue where converting nuget ranges (1.0.*) weren't resolving pre-releases due to a typo in the code
+
 # 1.4.1
 
   - Fixed incorrect project path during extension activation

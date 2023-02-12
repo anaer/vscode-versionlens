@@ -60,8 +60,8 @@ export const parseVersionSpecTests = {
   ],
 
   'converts nuget floating range "$1" to semver range "$2"': [
-    ["1.*", ">=1.0.0 <2.0.0-0"],
-    ["1.0.*", ">=1.0.0 <1.1.0-0"],
+    ["1.*", ">=1.0.0-0 <2.0.0-0"],
+    ["1.0.*", ">=1.0.0-0 <1.1.0-0"],
     function (testDotNetSpec: string, expectedSemver: string) {
       this.test.title = this.test.title.replace("$1", testDotNetSpec);
       this.test.title = this.test.title.replace("$2", expectedSemver);
