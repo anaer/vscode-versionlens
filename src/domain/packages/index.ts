@@ -18,6 +18,7 @@ export * from './parsers/definitions/ePackageDescriptorType';
 export * from './parsers/definitions/packageDescriptor';
 export * from './parsers/definitions/tPackageTypeDescriptors';
 export * from './parsers/definitions/tYamlPackageParserOptions';
+export * from './parsers/definitions/tYamlPackageTypeHandler';
 export * from "./parsers/json/jsonPackageParser";
 export * from "./parsers/yaml/yamlPackageParser";
 export * from "./utils/packageUtils";

@@ -2,7 +2,7 @@ import { KeyDictionary } from 'domain/generics';
 import { Document, isMap, Pair, ParsedNode, parseDocument, YAMLMap } from 'yaml';
 import { findPair } from 'yaml/util';
 import { PackageDescriptor } from '../../index';
-import { TPackageTypeHandler } from '../definitions/tPackageTypeHandler';
+import { TYamlPackageTypeHandler } from '../definitions/tYamlPackageTypeHandler';
 import { TYamlPackageParserOptions } from '../definitions/tYamlPackageParserOptions';
 import {
   createPackageDescFromYamlNode,
@@ -24,7 +24,7 @@ function extractDependenciesFromNodes(
   rootNode: Document.Parsed<ParsedNode>,
   options: TYamlPackageParserOptions
 ): PackageDescriptor[] {
-  const matchedDependencies = [];
+  const matchedDependencies: Array<PackageDescriptor> = [];
   const { includePropNames, complexTypeHandlers } = options;
 
   for (const incPropName of includePropNames) {
@@ -45,7 +45,7 @@ function extractDependenciesFromNodes(
 
 function descendChildNodes(
   pairs: Array<Pair<any, any>>,
-  complexTypeHandlers: KeyDictionary<TPackageTypeHandler>
+  complexTypeHandlers: KeyDictionary<TYamlPackageTypeHandler>
 ): Array<PackageDescriptor> {
   const matchedDependencies: Array<PackageDescriptor> = [];
 
@@ -85,6 +85,7 @@ function descendChildNodes(
       for (const typeName in complexTypeHandlers) {
         if (map.has(typeName)) {
           const pair = findPair(map.items, typeName);
+          if (!pair) continue;
 
           // get the type desc
           const handler = complexTypeHandlers[typeName];

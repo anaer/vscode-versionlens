@@ -1,3 +1,4 @@
+import { Undefinable } from "domain/generics";
 import {
   PackageDescriptor,
   TPackageGitDescriptor,
@@ -68,7 +69,7 @@ export function createPathDescFromYamlNode(
 export function createHostedDescFromYamlNode(
   valueNode: any,
   isQuoteType: boolean
-): TPackageHostedDescriptor {
+): Undefinable<TPackageHostedDescriptor> {
 
   const map = valueNode as YAMLMap;
 
@@ -87,12 +88,15 @@ export function createHostedDescFromYamlNode(
 
   // extract the host url
   const namePair = findPair(map.items, "url");
+  if (!namePair) return;
+
   const hostUrl = (<any>namePair.value).value;
 
   // extract alias package name
   let hostPackageName = "";
   if (map.has("name")) {
     const namePair = findPair(map.items, "name");
+    if (!namePair) return;
     hostPackageName = (<any>namePair.value).value;
   }
 
@@ -106,7 +110,7 @@ export function createHostedDescFromYamlNode(
 export function createGitDescFromYamlNode(
   valueNode: any,
   isQuoteType: boolean
-): TPackageGitDescriptor {
+): Undefinable<TPackageGitDescriptor> {
 
   let gitUrl = "";
   let gitRef = "";
@@ -131,17 +135,20 @@ export function createGitDescFromYamlNode(
 
   // extract the git url
   const namePair = findPair(map.items, "url");
+  if (!namePair) return;
   gitUrl = (<any>namePair.value).value;
 
   // extract refs
   if (map.has("ref")) {
     const namePair = findPair(map.items, "ref");
+    if (!namePair) return;
     gitRef = (<any>namePair.value).value;
   }
 
   // extract paths
   if (map.has("path")) {
     const namePair = findPair(map.items, "path");
+    if (!namePair) return;
     gitPath = (<any>namePair.value).value;
   }
 

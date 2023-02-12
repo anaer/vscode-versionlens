@@ -1,7 +1,9 @@
 import assert from 'assert';
+import { KeyDictionary } from 'domain/generics';
 import {
   extractPackageDependenciesFromYaml,
-  TYamlPackageParserOptions
+  TYamlPackageParserOptions,
+  TYamlPackageTypeHandler
 } from 'domain/packages';
 import {
   createGitDescFromYamlNode,
@@ -12,7 +14,7 @@ import {
 import { test } from 'mocha-ui-esm';
 import Fixtures from './extractPackageDependenciesFromYaml.fixtures';
 
-const complexTypeHandlers = {
+const complexTypeHandlers = <KeyDictionary<TYamlPackageTypeHandler>>{
   "version": createVersionDescFromYamlNode,
   "path": createPathDescFromYamlNode,
   "hosted": createHostedDescFromYamlNode,

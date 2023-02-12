@@ -1,5 +1,7 @@
+import { KeyDictionary, Undefinable } from 'domain/generics';
 import { PackageDescriptor } from 'domain/packages';
 import * as JsonC from 'jsonc-parser';
+import { TJsonPackageTypeHandler } from '../definitions/tJsonPackageTypeHandler';
 import {
   createPackageDescFromJsonNode,
   createPathDescFromJsonNode,
@@ -7,7 +9,7 @@ import {
   createVersionDescFromJsonNode
 } from './jsonPackageTypeFactory';
 
-const complexTypeHandlers = {
+const complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler> = {
   "version": createVersionDescFromJsonNode,
   "path": createPathDescFromJsonNode,
   "repository": createRepoDescFromJsonNode
@@ -39,11 +41,18 @@ function extractDependenciesFromNodes(
     const node = findNodesAtLocation(rootNode, incPropName);
     if (!node) continue;
 
-    const children = node instanceof Array
-      ? descendChildNodes(node)
-      : descendChildNodes(node.children);
+    if (node instanceof Array) {
+      const matched = descendChildNodes(node);
+      matchedDependencies.push.apply(matchedDependencies, matched);
+      continue;
+    }
 
-    matchedDependencies.push.apply(matchedDependencies, children);
+    const hasChildren = node.children && node.children.length > 0;
+    if (hasChildren) {
+      const matched = descendChildNodes(node.children);
+      matchedDependencies.push.apply(matchedDependencies, matched);
+      continue;
+    }
   }
 
   return matchedDependencies
@@ -53,6 +62,8 @@ function descendChildNodes(nodes: Array<JsonC.Node>): Array<PackageDescriptor> {
   const matchedDependencies: Array<PackageDescriptor> = [];
 
   for (const node of nodes) {
+    if (!node.children || node.children.length === 0) continue;
+
     const [keyNode, valueNode] = node.children;
 
     // parse string properties
@@ -110,7 +121,7 @@ function descendChildNodes(nodes: Array<JsonC.Node>): Array<PackageDescriptor> {
 function findNodesAtLocation(
   jsonTree: JsonC.Node,
   expression: string
-): JsonC.Node | Array<JsonC.Node> {
+): Undefinable<JsonC.Node | Array<JsonC.Node>> {
   const pathSegments: Array<JsonC.Segment> = expression.split(".");
 
   // if the path doesn't end with * then process a standard path
@@ -125,16 +136,17 @@ function findNodesAtLocation(
     segmentsWithoutStar
   );
 
-  if (!nodeUntilDotStar) return null;
+  if (!nodeUntilDotStar) return undefined;
 
   if (!nodeUntilDotStar.children || nodeUntilDotStar.children.length === 0) {
-    return null;
+    return undefined;
   }
 
   // filter the childrens children where the value type is "object"
+  // @ts-ignore
   return nodeUntilDotStar.children
     .filter(x => x.children && x.children.length === 2)
     .flat()
-    .filter(x => x.children[1].type === "object")
-    .flatMap(x => x.children[1].children);
+    .filter(x => x.children && x.children[1].type === "object")
+    .flatMap(x => x.children && x.children[1].children);
 }
