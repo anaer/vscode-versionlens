@@ -91,11 +91,11 @@ export class SuggestionProvider
           'Fetched %s@%s from %s (%s ms)',
           requestedPackage.name,
           requestedPackage.version,
-          response.responseStatus.source,
+          response.responseStatus?.source,
           Math.floor(completedAt - startedAt)
         );
 
-        if (response.responseStatus.rejected) {
+        if (response.responseStatus?.rejected) {
           client.logger.error(
             "%s@%s was rejected with the status code %s",
             requestedPackage.name,
@@ -110,7 +110,7 @@ export class SuggestionProvider
           response
         );
       })
-      .catch(function (error: PackageResponse) {
+      .catch((error: PackageResponse) => {
 
         client.logger.error(
           `%s caught an exception.\n Package: %j\n Error: %j`,

@@ -1,3 +1,4 @@
+import { Nullable } from 'domain/generics';
 import { VersionUtils } from 'domain/packages';
 import semver from 'semver';
 import { SuggestionFlags, SuggestionStatus, TPackageSuggestion } from './index';
@@ -14,7 +15,7 @@ export function createSuggestions(
   versionRange: string,
   releases: string[],
   prereleases: string[],
-  suggestedLatestVersion: string = null
+  suggestedLatestVersion: Nullable<string> = null
 ): Array<TPackageSuggestion> {
   const { maxSatisfying, compareLoose } = semver;
   const suggestions: Array<TPackageSuggestion> = [];

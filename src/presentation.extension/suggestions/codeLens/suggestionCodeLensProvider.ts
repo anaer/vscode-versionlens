@@ -80,7 +80,7 @@ export class SuggestionCodeLensProvider
     document: TextDocument,
     token: CancellationToken
   ): Promise<Array<CodeLens>> {
-    if (this.state.show.value === false) return null;
+    if (this.state.show.value === false) return [];
 
     // get the opened state
     const documentOpened = this.state.providerOpened.value;
@@ -180,7 +180,7 @@ export class SuggestionCodeLensProvider
         this.suggestionProvider.name,
         document.uri.fsPath
       );
-      return null;
+      return [];
     }
 
     this.logger.info(
@@ -193,8 +193,11 @@ export class SuggestionCodeLensProvider
       suggestions = suggestions.filter(
         function (response) {
           const { suggestion } = response;
-          return (suggestion.flags & SuggestionFlags.prerelease) === 0 ||
-            suggestion.name.includes(SuggestionStatus.LatestIsPrerelease);
+          return suggestion
+            && (
+              (suggestion.flags & SuggestionFlags.prerelease) === 0
+              || suggestion.name.includes(SuggestionStatus.LatestIsPrerelease)
+            );
         }
       )
     }
@@ -215,6 +218,8 @@ export class SuggestionCodeLensProvider
       // update the progress
       return evaluated;
     }
+
+    return codeLens;
   }
 
   evaluateCodeLens(codeLens: SuggestionCodeLens) {

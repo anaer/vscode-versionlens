@@ -12,13 +12,13 @@ export class SuggestionsOptions {
   get showOnStartup(): boolean {
     return this.config.get<boolean>(
       SuggestionContributions.ShowOnStartup
-    );
+    ) || false;
   }
 
   get showPrereleasesOnStartup(): boolean {
     return this.config.get<boolean>(
       SuggestionContributions.ShowPrereleasesOnStartup
-    );
+    ) || false;
   }
 
 }

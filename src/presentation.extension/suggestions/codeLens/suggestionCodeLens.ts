@@ -27,7 +27,7 @@ export class SuggestionCodeLens extends CodeLens {
     this.replaceRange = replaceRange || commandRange;
     this.package = packageResponse;
     this.documentUrl = documentUrl;
-    this.command = null;
+    this.command = undefined;
     this.replaceVersionFn = replaceVersionFn;
   }
 
@@ -39,7 +39,7 @@ export class SuggestionCodeLens extends CodeLens {
     return this.package.error == error;
   }
 
-  setCommand(title: string, command, args) {
+  setCommand(title: string, command: string, args?: Array<any>) {
     this.command = {
       title,
       command,

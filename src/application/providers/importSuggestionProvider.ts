@@ -6,44 +6,46 @@ import { ISuggestionProvider } from "domain/suggestions";
 import { nameOf } from "domain/utils";
 import { AwilixServiceCollection } from "infrastructure/di";
 
-export function importSuggestionProvider(
+export async function importSuggestionProvider(
   serviceProvider: IServiceProvider,
   providerName: string,
   logger: ILogger
-): Promise<ISuggestionProvider | void> {
+): Promise<ISuggestionProvider> {
 
-  return import(`infrastructure/providers/${providerName}/index`)
-    .then(
-      async function (module: IProviderModule) {
-        logger.debug('Activating container scope for %s', providerName);
+  try {
+    const module: IProviderModule = await import(`infrastructure/providers/${providerName}/index`);
 
-        // register the provider
-        const childServiceProvider = await module.configureContainer(
-          serviceProvider,
-          new AwilixServiceCollection()
-        );
+    logger.debug('Activating container scope for %s', providerName);
 
-        const suggestionProvider = childServiceProvider.getService<ISuggestionProvider>(
-          nameOf<DomainService>().suggestionProvider
-        );
+    // register the provider
+    const childServiceProvider = await module.configureContainer(
+      serviceProvider,
+      new AwilixServiceCollection()
+    );
 
-        logger.debug(
-          "Registered provider for %s:\t file pattern: %s\t caching: %s seconds\t strict ssl: %s",
-          providerName,
-          suggestionProvider.config.fileMatcher.pattern,
-          suggestionProvider.config.caching.duration / 1000,
-          suggestionProvider.config.http.strictSSL,
-        );
+    const suggestionProvider = childServiceProvider.getService<ISuggestionProvider>(
+      nameOf<DomainService>().suggestionProvider
+    );
 
-        return suggestionProvider;
-      }
-    )
-    .catch(error => {
-      logger.error(
-        'Could not register provider %s. Reason: %O',
-        providerName,
-        error,
-      );
-    });
+    logger.debug(
+      "Registered provider for %s:\t file pattern: %s\t caching: %s seconds\t strict ssl: %s",
+      providerName,
+      suggestionProvider.config.fileMatcher.pattern,
+      suggestionProvider.config.caching.duration / 1000,
+      suggestionProvider.config.http.strictSSL,
+    );
+
+    return suggestionProvider;
+
+  } catch (error) {
+
+    logger.error(
+      'Could not register provider %s. Reason: %O',
+      providerName,
+      error,
+    );
+
+    throw error;
+  }
 
 }

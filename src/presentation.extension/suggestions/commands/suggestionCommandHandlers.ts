@@ -1,7 +1,6 @@
 import { IDispose } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import { PackageClientSourceType } from 'domain/packages';
-import { dirname, resolve } from 'node:path';
 import { CommandUtils, SuggestionCodeLens } from 'presentation.extension';
 import * as VsCode from 'vscode';
 import { env, workspace, WorkspaceEdit } from 'vscode';
@@ -55,8 +54,7 @@ export class SuggestionCommandHandlers implements IDispose {
    * @param codeLens 
    * @returns 
    */
-  async onFileLinkClicked(codeLens: SuggestionCodeLens): Promise<void> {
-
+  async onFileLinkClicked(codeLens: SuggestionCodeLens, filePath: string): Promise<void> {
     if (codeLens.package.source !== PackageClientSourceType.Directory) {
       this.logger.error(
         "onLinkCommand can only open local directories.\nPackage: %o",
@@ -65,12 +63,7 @@ export class SuggestionCommandHandlers implements IDispose {
       return;
     }
 
-    const filePathToOpen = resolve(
-      dirname(codeLens.documentUrl.fsPath),
-      codeLens.package.resolved.version
-    );
-
-    await env.openExternal(<any>('file:///' + filePathToOpen));
+    await env.openExternal(<any>('file:///' + filePath));
   }
 
   dispose() {

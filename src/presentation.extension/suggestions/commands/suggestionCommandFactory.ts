@@ -1,37 +1,44 @@
 import { SuggestionFlags } from 'domain/suggestions';
 import fs from 'node:fs';
-import path from 'node:path';
+import { resolve, dirname } from 'node:path';
 import {
   SuggestionCodeLens,
   SuggestionCommandContributions,
   SuggestionIndicators
 } from 'presentation.extension';
 
-export function createErrorCommand(errorMsg, codeLens) {
-  return codeLens.setCommand(`${errorMsg}`);
+export function createTagCommand(tag: string, codeLens: SuggestionCodeLens) {
+  return codeLens.setCommand(tag, "");
 }
 
-export function createTagCommand(tag, codeLens) {
-  return codeLens.setCommand(tag);
+export function createInvalidCommand(codeLens: SuggestionCodeLens) {
+  return codeLens.setCommand("Invalid entry", "");
 }
 
-export function createDirectoryLinkCommand(codeLens) {
-  let title;
-  let cmd = SuggestionCommandContributions.FileLinkClicked;
-  const filePath = path.resolve(
-    path.dirname(codeLens.documentUrl.fsPath),
-    codeLens.package.suggestion.version
+export function createDirectoryLinkCommand(codeLens: SuggestionCodeLens) {
+  let title: string;
+  let cmd = SuggestionCommandContributions.FileLinkClicked as string;
+
+  const path = codeLens.package.resolved?.version;
+  if (!path) return createInvalidCommand(codeLens);
+
+  const filePath = resolve(
+    dirname(codeLens.documentUrl.fsPath),
+    path
   );
+
   const fileExists = fs.existsSync(filePath);
   if (fileExists === false)
-    title = (cmd = null) || 'Specified resource does not exist';
+    title = (cmd = "") || 'Specified resource does not exist';
   else
     title = `${SuggestionIndicators.OpenNewWindow} ${codeLens.package.requested.version}`;
 
-  return codeLens.setCommand(title, cmd, [codeLens]);
+  return codeLens.setCommand(title, cmd, [codeLens, filePath]);
 }
 
 export function createSuggestedVersionCommand(codeLens: SuggestionCodeLens) {
+  if (!codeLens.package.suggestion) return createInvalidCommand(codeLens);
+
   const { name, version, flags } = codeLens.package.suggestion;
   const isStatus = (flags & SuggestionFlags.status);
   const isTag = (flags & SuggestionFlags.tag);

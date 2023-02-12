@@ -1,3 +1,4 @@
+import { Nullable } from 'domain/generics';
 import {
   SuggestionFactory,
   SuggestionFlags,
@@ -5,7 +6,7 @@ import {
   TPackageSuggestion
 } from 'domain/suggestions';
 
-export function createFromHttpStatus(status: number | string): TPackageSuggestion {
+export function createFromHttpStatus(status: number | string): Nullable<TPackageSuggestion> {
 
   if (status == 400)
     return SuggestionFactory.createBadRequest();
