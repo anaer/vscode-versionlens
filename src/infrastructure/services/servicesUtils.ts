@@ -12,6 +12,7 @@ export function addWinstonChannelLogger(services: IServiceCollection) {
         outputChannel,
         loggingOptions
       ),
+    false,
     ServiceInjectionMode.classic
   );
 }

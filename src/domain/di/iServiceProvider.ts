@@ -1,6 +1,6 @@
-import { IDispose } from "domain/generics";
+import { IDisposable } from "domain/generics";
 
-export interface IServiceProvider extends IDispose {
+export interface IServiceProvider extends IDisposable {
 
   name: string;
 

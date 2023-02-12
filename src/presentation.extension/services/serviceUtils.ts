@@ -1,6 +1,7 @@
 import { ApplicationService } from "application/services";
 import { Config } from "domain/configuration";
 import { IServiceCollection } from "domain/di";
+import { DisposableArray } from "domain/generics";
 import { DomainService } from "domain/services";
 import { nameOf } from "domain/utils";
 import {
@@ -54,7 +55,8 @@ export function addIconCommands(services: IServiceCollection) {
         container.outputChannel,
         container.versionLensProviders,
         container.logger.child({ namespace: 'icon commands' })
-      )
+      ),
+    true
   )
 }
 
@@ -65,7 +67,8 @@ export function addSuggestionCommands(services: IServiceCollection) {
       new SuggestionCommandHandlers(
         container.extension.state,
         container.logger.child({ namespace: 'suggestion commands' })
-      )
+      ),
+    true
   )
 }
 
@@ -78,7 +81,8 @@ export function addTextEditorEvents(services: IServiceCollection) {
         container.suggestionProviders,
         container.loggerChannel,
         container.logger
-      )
+      ),
+    true
   )
 }
 
@@ -98,13 +102,15 @@ export function addVersionLensProviders(services: IServiceCollection) {
   services.addSingleton(
     nameOf<ExtensionService>().versionLensProviders,
     (container: ApplicationService & DomainService & ExtensionService) =>
-      container.suggestionProviders.map(
-        suggestionProvider =>
-          new SuggestionCodeLensProvider(
+      new DisposableArray(
+        container.suggestionProviders.map(
+          suggestionProvider => new SuggestionCodeLensProvider(
             container.extension,
             suggestionProvider,
             container.logger.child({ namespace: `${suggestionProvider.name} codelens` })
           )
-      )
+        )
+      ),
+    true
   )
 }

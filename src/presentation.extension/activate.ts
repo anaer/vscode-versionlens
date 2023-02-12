@@ -50,6 +50,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
   serviceProvider.getService(extensionService.textEditorEvents);
 }
 
-export function deactivate() {
-  serviceProvider.dispose();
+export async function deactivate() {
+  await serviceProvider.dispose();
 }

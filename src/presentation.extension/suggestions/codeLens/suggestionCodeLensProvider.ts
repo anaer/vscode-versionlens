@@ -1,4 +1,4 @@
-import { IDispose } from 'domain/generics';
+import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import { PackageClientSourceType, PackageResponse } from 'domain/packages';
 import { IProvider, IProviderConfig } from 'domain/providers';
@@ -27,7 +27,7 @@ import {
 } from 'vscode';
 
 export class SuggestionCodeLensProvider
-  implements VsCode.CodeLensProvider, IProvider, IDispose {
+  implements VsCode.CodeLensProvider, IProvider, IDisposable {
 
   constructor(
     extension: VersionLensExtension,
@@ -229,7 +229,7 @@ export class SuggestionCodeLensProvider
     return CommandFactory.createSuggestedVersionCommand(codeLens)
   }
 
-  dispose() {
+  async dispose() {
     this.disposable.dispose();
     const providerName = this.suggestionProvider.name;
     this.logger.debug(`disposed ${providerName} ${SuggestionCodeLensProvider.name}`);

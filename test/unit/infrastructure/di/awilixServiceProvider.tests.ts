@@ -1,6 +1,7 @@
 import assert from 'assert';
 import { asFunction, asValue, createContainer } from 'awilix';
-import { AwilixServiceProvider } from 'infrastructure/di';
+import { TServiceResolver } from 'domain/di';
+import { AwilixServiceCollection, AwilixServiceProvider } from 'infrastructure/di';
 import { test } from 'mocha-ui-esm';
 
 export const AwilixServiceProviderTests = {
@@ -34,14 +35,14 @@ export const AwilixServiceProviderTests = {
       const testServices = {
         [fnServiceName]: asFunction(() => { testFn: 123 }),
         [valServiceName]: asValue({ testVal: 123 })
-      }
+      };
 
       testContainer.register(testServices);
 
       const actual = new AwilixServiceProvider(
         testName,
         testContainer
-      )
+      );
 
       assert.equal(
         actual.getService(fnServiceName),
@@ -57,5 +58,26 @@ export const AwilixServiceProviderTests = {
 
   },
 
+  dispose: {
+
+    "disposes services": async () => {
+      let testDisposeCalled = 0;
+
+      const services = new AwilixServiceCollection();
+      const testService = { dispose: () => testDisposeCalled++ };
+      const testServiceResolver: TServiceResolver<any> = () => testService;
+
+      services.addSingleton("test", testServiceResolver, true)
+
+      const testProvider = await services.build();
+
+      testProvider.getService("test");
+
+      await testProvider.dispose();
+
+      assert.equal(testDisposeCalled, 1);
+    }
+
+  }
 
 };

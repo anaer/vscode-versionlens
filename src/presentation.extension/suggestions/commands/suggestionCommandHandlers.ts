@@ -1,4 +1,4 @@
-import { IDispose } from 'domain/generics';
+import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import { PackageClientSourceType } from 'domain/packages';
 import { CommandUtils, SuggestionCodeLens } from 'presentation.extension';
@@ -9,7 +9,7 @@ import {
   SuggestionCommandContributions
 } from './eSuggestionCommandContributions';
 
-export class SuggestionCommandHandlers implements IDispose {
+export class SuggestionCommandHandlers implements IDisposable {
 
   constructor(state: VersionLensState, logger: ILogger) {
     this.state = state;
@@ -66,7 +66,7 @@ export class SuggestionCommandHandlers implements IDispose {
     await env.openExternal(<any>('file:///' + filePath));
   }
 
-  dispose() {
+  async dispose() {
     this.disposables.forEach(x => x.dispose());
     this.logger.debug(`disposed ${SuggestionCommandHandlers.name}`);
   }

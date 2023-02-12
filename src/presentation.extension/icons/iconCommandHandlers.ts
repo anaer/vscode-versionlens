@@ -1,6 +1,6 @@
 // vscode references
 import { getProvidersByFileName } from 'application/providers';
-import { IDispose } from 'domain/generics/iDispose';
+import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
   CommandUtils,
@@ -10,7 +10,7 @@ import {
 import * as VsCode from 'vscode';
 import { VersionLensState } from '../state/versionLensState';
 
-export class IconCommandHandlers implements IDispose {
+export class IconCommandHandlers implements IDisposable {
 
   constructor(
     state: VersionLensState,
@@ -89,7 +89,7 @@ export class IconCommandHandlers implements IDispose {
     return true;
   }
 
-  dispose() {
+  async dispose() {
     this.disposables.forEach(x => x.dispose());
     this.logger.debug(`disposed ${IconCommandHandlers.name}`);
   }

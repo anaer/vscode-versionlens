@@ -26,12 +26,14 @@ export interface IServiceCollection {
   addSingleton: <T>(
     name: string,
     descriptor: TServiceResolver<T>,
+    isDisposable?: boolean,
     injectionMode?: ServiceInjectionMode
   ) => IServiceCollection;
 
   addScoped: <T>(
     name: string,
     descriptor: TServiceResolver<T>,
+    isDisposable?: boolean,
     injectionMode?: ServiceInjectionMode
   ) => IServiceCollection;
 

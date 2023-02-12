@@ -11,7 +11,7 @@ import {
   ServiceLifetime,
   TServiceResolver
 } from 'domain/di';
-import { KeyDictionary, AsyncFunction } from 'domain/generics';
+import { AsyncFunction, IDisposable, KeyDictionary } from 'domain/generics';
 import { DomainService } from 'domain/services';
 import { nameOf } from 'domain/utils';
 import { AwilixServiceProvider } from './awilixServiceProvider';
@@ -26,18 +26,20 @@ export class AwilixServiceCollection implements IServiceCollection {
   addSingleton<T>(
     name: string,
     resolver: TServiceResolver<T>,
+    isDisposable: boolean = false,
     injectionMode: ServiceInjectionMode = ServiceInjectionMode.proxy
   ): IServiceCollection {
-    this.add(name, resolver, ServiceLifetime.singleton, injectionMode);
+    this.add(name, resolver, ServiceLifetime.singleton, isDisposable, injectionMode);
     return this;
   }
 
   addScoped<T>(
     name: string,
     resolver: TServiceResolver<T>,
+    isDisposable: boolean = false,
     injectionMode: ServiceInjectionMode = ServiceInjectionMode.proxy
   ): IServiceCollection {
-    this.add(name, resolver, ServiceLifetime.scoped, injectionMode);
+    this.add(name, resolver, ServiceLifetime.scoped, isDisposable, injectionMode);
     return this;
   }
 
@@ -62,14 +64,24 @@ export class AwilixServiceCollection implements IServiceCollection {
     name: string,
     resolver: TServiceResolver<T>,
     lifetime: ServiceLifetime,
+    isDisposable: boolean,
     injectionMode: ServiceInjectionMode
   ): IServiceCollection {
     let awilixResolver: any;
 
     if (resolver instanceof AsyncFunction) {
       this.asyncSingletons[name] = resolver;
-    } else if (resolver instanceof Function) {
-      awilixResolver = asFunction(resolver)[injectionMode]()[lifetime]();
+      return this;
+    }
+
+    if (resolver instanceof Function) {
+      awilixResolver = asFunction(resolver)[lifetime]()[injectionMode]();
+      if (isDisposable) {
+        awilixResolver = awilixResolver.disposer(
+          (service: IDisposable) => service.dispose()
+        );
+      }
+
     } else {
       awilixResolver = asValue(resolver);
     }
@@ -88,7 +100,8 @@ export class AwilixServiceCollection implements IServiceCollection {
     const serviceProvider = new AwilixServiceProvider(name, container);
     this.addSingleton(
       nameOf<DomainService>().serviceProvider,
-      serviceProvider
+      serviceProvider,
+      true
     );
 
     // register sync

@@ -1,4 +1,4 @@
 export * from './async';
 export * from './collections';
-export * from './iDispose';
+export * from './disposable';
 export * from './nullable';

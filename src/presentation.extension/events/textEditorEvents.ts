@@ -1,4 +1,4 @@
-import { IDispose, Undefinable } from 'domain/generics';
+import { IDisposable, Undefinable } from 'domain/generics';
 import { ILogger, ILoggerChannel } from 'domain/logging';
 import { ProviderSupport } from 'domain/providers';
 import { ISuggestionProvider } from 'domain/suggestions';
@@ -6,7 +6,7 @@ import { Disposable, TextEditor, window } from 'vscode';
 import { VersionLensState } from '../state/versionLensState';
 import { getDocumentProviders } from './textDocumentUtils';
 
-export class TextEditorEvents implements IDispose {
+export class TextEditorEvents implements IDisposable {
 
   constructor(
     state: VersionLensState,
@@ -72,7 +72,7 @@ export class TextEditorEvents implements IDispose {
     this.state.providerActive.value = true;
   }
 
-  dispose() {
+  async dispose() {
     this.disposable.dispose();
     this.logger.debug(`disposed ${TextEditorEvents.name}`);
   }
