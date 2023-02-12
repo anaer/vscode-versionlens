@@ -1,8 +1,4 @@
-import {
-  HttpClientRequestMethods,
-  IJsonHttpClient,
-  JsonClientResponse
-} from 'domain/clients';
+import { HttpClientRequestMethods, IJsonHttpClient } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
   ClientResponseFactory,
@@ -23,17 +19,17 @@ const defaultHeaders = {
 
 export class GitHubClient {
 
+  constructor(config: NpmConfig, jsonClient: IJsonHttpClient, logger: ILogger) {
+    this.config = config;
+    this.jsonClient = jsonClient;
+    this.logger = logger;
+  }
+
   config: NpmConfig;
 
   logger: ILogger;
 
   jsonClient: IJsonHttpClient;
-
-  constructor(config: NpmConfig, client: IJsonHttpClient, logger: ILogger) {
-    this.config = config;
-    this.jsonClient = client;
-    this.logger = logger;
-  }
 
   fetchGithub(npaSpec: NpaSpec): Promise<TPackageClientResponse> {
     const { validRange } = semver;
@@ -53,151 +49,144 @@ export class GitHubClient {
     return this.fetchCommits(npaSpec);
   }
 
-  fetchTags(npaSpec: NpaSpec): Promise<TPackageClientResponse> {
+  async fetchTags(npaSpec: NpaSpec): Promise<TPackageClientResponse> {
     // todo pass in auth
     const { user, project } = npaSpec.hosted;
     const tagsRepoUrl = `https://api.github.com/repos/${user}/${project}/tags`;
     const query = {};
     const headers = this.getHeaders();
 
-    return this.jsonClient.request(
+    const clientResponse = await this.jsonClient.request(
       HttpClientRequestMethods.get,
       tagsRepoUrl,
       query,
       headers
-    )
-      .then((clientResponse: JsonClientResponse): TPackageClientResponse => {
-        const { compareLoose } = semver;
+    );
 
-        // extract versions
-        const tags = <[]>clientResponse.data;
+    const { compareLoose } = semver;
 
-        const rawVersions = tags.map((tag: any) => tag.name);
+    // extract versions
+    const tags = clientResponse.data as [];
 
-        const allVersions = VersionUtils.filterSemverVersions(rawVersions).sort(compareLoose);
+    const rawVersions = tags.map((tag: any) => tag.name);
 
-        const source: PackageClientSourceType = PackageClientSourceType.Github;
+    const allVersions = VersionUtils.filterSemverVersions(rawVersions).sort(compareLoose);
 
-        const type: PackageVersionType = npaSpec.gitRange ?
-          PackageVersionType.Range :
-          PackageVersionType.Version;
+    const source: PackageClientSourceType = PackageClientSourceType.Github;
 
-        const versionRange = npaSpec.gitRange;
+    const type: PackageVersionType = npaSpec.gitRange
+      ? PackageVersionType.Range
+      : PackageVersionType.Version;
 
-        const resolved = {
-          name: project,
-          version: versionRange,
-        };
+    const versionRange = npaSpec.gitRange;
 
-        // seperate versions to releases and prereleases
-        const { releases, prereleases } = VersionUtils.splitReleasesFromArray(
-          allVersions,
-          this.config.prereleaseTagFilter
-        );
+    const resolved = {
+      name: project,
+      version: versionRange,
+    };
 
-        // analyse suggestions
-        const suggestions = createSuggestions(
-          versionRange,
-          releases,
-          prereleases
-        );
+    // seperate versions to releases and prereleases
+    const { releases, prereleases } = VersionUtils.splitReleasesFromArray(
+      allVersions,
+      this.config.prereleaseTagFilter
+    );
 
-        return {
-          source,
-          responseStatus: {
-            source: clientResponse.source,
-            status: clientResponse.status
-          },
-          type,
-          resolved,
-          suggestions
-        };
+    // analyse suggestions
+    const suggestions = createSuggestions(
+      versionRange,
+      releases,
+      prereleases
+    );
 
-      });
-
+    return {
+      source,
+      responseStatus: {
+        source: clientResponse.source,
+        status: clientResponse.status
+      },
+      type,
+      resolved,
+      suggestions
+    };
   }
 
-  fetchCommits(npaSpec: NpaSpec): Promise<TPackageClientResponse> {
+  async fetchCommits(npaSpec: NpaSpec): Promise<TPackageClientResponse> {
     // todo pass in auth
     const { user, project } = npaSpec.hosted;
     const commitsRepoUrl = `https://api.github.com/repos/${user}/${project}/commits`;
     const query = {};
     const headers = this.getHeaders();
 
-    return this.jsonClient.request(
+    const clientResponse = await this.jsonClient.request(
       HttpClientRequestMethods.get,
       commitsRepoUrl,
       query,
       headers
-    )
-      .then((clientResponse: JsonClientResponse): TPackageClientResponse => {
+    );
 
-        const commitInfos = <[]>clientResponse.data
+    const commitInfos = <[]>clientResponse.data
 
-        const commits = commitInfos.map((commit: any) => commit.sha);
+    const commits = commitInfos.map((commit: any) => commit.sha);
 
-        const source: PackageClientSourceType = PackageClientSourceType.Github;
+    const source: PackageClientSourceType = PackageClientSourceType.Github;
 
-        const type = PackageVersionType.Committish;
+    const type = PackageVersionType.Committish;
 
-        const versionRange = npaSpec.gitCommittish;
+    const versionRange = npaSpec.gitCommittish;
 
-        if (commits.length === 0) {
-          // no commits found
-          return ClientResponseFactory.create(
-            PackageClientSourceType.Github,
-            clientResponse,
-            [SuggestionFactory.createNotFound()]
-          )
-        }
+    if (commits.length === 0) {
+      // no commits found
+      return ClientResponseFactory.create(
+        PackageClientSourceType.Github,
+        clientResponse,
+        [SuggestionFactory.createNotFound()]
+      )
+    }
 
-        const commitIndex = commits.findIndex(
-          commit => commit.indexOf(versionRange) > -1
-        );
+    const commitIndex = commits.findIndex(
+      commit => commit.indexOf(versionRange) > -1
+    );
 
-        const latestCommit = commits[commits.length - 1].substr(0, 8);
+    const latestCommit = commits[commits.length - 1].substr(0, 8);
 
-        const noMatch = commitIndex === -1;
+    const noMatch = commitIndex === -1;
 
-        const isLatest = versionRange === latestCommit;
+    const isLatest = versionRange === latestCommit;
 
-        const resolved = {
-          name: project,
-          version: versionRange,
-        };
+    const resolved = {
+      name: project,
+      version: versionRange,
+    };
 
-        const suggestions = [];
+    const suggestions = [];
 
-        if (noMatch) {
-          suggestions.push(
-            SuggestionFactory.createNoMatch(),
-            SuggestionFactory.createLatest(latestCommit)
-          );
-        } else if (isLatest) {
-          suggestions.push(
-            SuggestionFactory.createMatchesLatest(versionRange)
-          );
-        } else if (commitIndex > 0) {
-          suggestions.push(
-            SuggestionFactory.createFixedStatus(versionRange),
-            SuggestionFactory.createLatest(latestCommit)
-          );
-        }
+    if (noMatch) {
+      suggestions.push(
+        SuggestionFactory.createNoMatch(),
+        SuggestionFactory.createLatest(latestCommit)
+      );
+    } else if (isLatest) {
+      suggestions.push(
+        SuggestionFactory.createMatchesLatest(versionRange)
+      );
+    } else if (commitIndex > 0) {
+      suggestions.push(
+        SuggestionFactory.createFixedStatus(versionRange),
+        SuggestionFactory.createLatest(latestCommit)
+      );
+    }
 
-        return {
-          source,
-          responseStatus: {
-            source: clientResponse.source,
-            status: clientResponse.status
-          },
-          type,
-          resolved,
-          suggestions,
-          gitSpec: npaSpec.saveSpec
-        };
-
-      });
-
+    return {
+      source,
+      responseStatus: {
+        source: clientResponse.source,
+        status: clientResponse.status
+      },
+      type,
+      resolved,
+      suggestions,
+      gitSpec: npaSpec.saveSpec
+    };
   }
 
   getHeaders() {
