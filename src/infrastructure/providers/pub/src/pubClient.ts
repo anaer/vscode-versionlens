@@ -93,7 +93,7 @@ export class PubClient implements IPackageClient<null> {
         );
       }
 
-      return Promise.reject(errorResponse);
+      throw errorResponse;
     }
   }
 
