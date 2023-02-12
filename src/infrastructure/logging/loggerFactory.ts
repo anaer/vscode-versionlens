@@ -1,5 +1,6 @@
 import { ILogger, ILoggerChannel } from 'domain/logging';
 import { loggers, format, transports } from 'winston';
+import { TransformableInfo } from 'logform';
 
 export function createWinstonLogger(
   loggerChannel: ILoggerChannel,
@@ -31,6 +32,6 @@ export function createWinstonLogger(
   );
 }
 
-function loggerFormatter(entry) {
+function loggerFormatter(entry: TransformableInfo) {
   return `[${entry.timestamp}] [${entry.namespace}] [${entry.level}] ${entry.message}`
 }

@@ -23,7 +23,7 @@ export class OutputChannelTransport extends WinstonTransport implements ILoggerC
     return this.outputChannel.name;
   }
 
-  log(entry, callback) {
+  log(entry: any, callback: () => void) {
 
     setImmediate(() => {
       this.emit('logged', entry)

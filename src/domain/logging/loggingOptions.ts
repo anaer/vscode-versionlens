@@ -14,7 +14,7 @@ export class LoggingOptions extends Options implements ILoggingOptions {
   get level(): LogLevelTypes {
     return super.get<LogLevelTypes>(
       LoggingContributions.LoggingLevel
-    );
+    ) || LogLevelTypes.Error;
   }
 
   get timestampFormat(): string { return 'YYYY-MM-DD HH:mm:ss' }
