@@ -19,15 +19,22 @@ runner.suite.emit('modules', UnitTests);
 
 SourceMaps.install();
 
-export function run(testRoot, onComplete) {
-
-  runner.run(function (failures) {
-    if (failures)
-      onComplete(null, failures);
-    else
-      onComplete(null, 0);
+export function run(): Promise<void> {
+  return new Promise((success, failed) => {
+    try {
+      runner.run(
+        failures => {
+          if (failures)
+            failed(new Error(`${failures} tests failed.`));
+          else
+            success();
+        }
+      );
+    } catch (err) {
+      console.error(err);
+      failed(err);
+    }
   });
-
 }
 
 if (process.env.TEST && process.env.TEST === 'unit') {

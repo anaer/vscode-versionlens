@@ -16,6 +16,10 @@ const testPathParts = [
 const testPackagePath = path.resolve(...testPathParts)
 const testProjectPath = path.resolve(...testPathParts.slice(0, 2))
 
+type TestContext = {
+  testPath: string
+}
+
 export const resolveDotFilePathTests = {
 
   [test.title]: NpmUtils.resolveDotFilePath.name,
@@ -25,7 +29,7 @@ export const resolveDotFilePathTests = {
     assert.ok(await fileExists(this.testPath))
   },
 
-  afterAll: async function () {
+  afterAll: async function (this: TestContext) {
     await removeDir(...testPathParts);
     assert.equal(await fileExists(this.testPath), false)
   },

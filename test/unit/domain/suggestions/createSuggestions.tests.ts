@@ -4,10 +4,11 @@ import {
   SuggestionFlags,
   SuggestionStatus
 } from 'domain/suggestions';
+import { test } from 'mocha-ui-esm';
 
 export const CreateSuggestionsTests = {
 
-  title: createSuggestions.name,
+  [test.title]: createSuggestions.name,
 
   "returns PackageVersionStatus.nomatch": {
 
@@ -21,8 +22,8 @@ export const CreateSuggestionsTests = {
       ]
 
       const testRange = '*'
-      const testReleases = []
-      const testPrereleases = []
+      const testReleases: Array<string> = []
+      const testPrereleases: Array<string> = []
       const results = createSuggestions(
         testRange,
         testReleases,

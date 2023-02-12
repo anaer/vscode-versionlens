@@ -31,13 +31,13 @@ type TestContext = {
   testConfig: IProviderConfig
 }
 
-export const AbstractSuggestionProviderTests = {
+export const AbstractSuggestionProviderTests = <any>{
 
   [test.title]: SuggestionProvider.name,
 
   fetchPackage: {
 
-    beforeEach: function () {
+    beforeEach: function (this: TestContext) {
       // logger mocking
       this.loggerMock = mock<ILogger>()
 
@@ -76,9 +76,7 @@ export const AbstractSuggestionProviderTests = {
       this.testConfig = instance(configMock);
     },
 
-    "returns successful package suggestions": async function () {
-      const testContext = this as TestContext;
-
+    "returns successful package suggestions": async function (this: TestContext) {
       // response
       const testRespDoc: TPackageClientResponse = {
         type: PackageVersionType.Version,
@@ -87,10 +85,10 @@ export const AbstractSuggestionProviderTests = {
           status: 202,
           source: ClientResponseSource.local
         },
-        resolved: testContext.testPackageNameVersion,
+        resolved: this.testPackageNameVersion,
         suggestions: [
           {
-            name: testContext.testPackageRes.name,
+            name: this.testPackageRes.name,
             version: "1.0.0",
             flags: SuggestionFlags.release
           }
@@ -99,28 +97,28 @@ export const AbstractSuggestionProviderTests = {
 
       // client
       const clientMock: IPackageClient<any> = mock<IPackageClient<any>>();
-      when(clientMock.logger).thenReturn(testContext.testLogger);
-      when(clientMock.config).thenReturn(testContext.testConfig);
-      when(clientMock.fetchPackage(testContext.testRequest)).thenResolve(testRespDoc);
+      when(clientMock.logger).thenReturn(this.testLogger);
+      when(clientMock.config).thenReturn(this.testConfig);
+      when(clientMock.fetchPackage(this.testRequest)).thenResolve(testRespDoc);
       const testClient = instance(clientMock);
 
       // test
       const abstractProvider = new SuggestionProvider<IPackageClient<any>, any>(
         testClient,
-        null
+        this.testLogger
       );
 
-      return abstractProvider.fetchPackage(testContext.testRequest)
+      return abstractProvider.fetchPackage(this.testRequest)
         .then((actual: Array<PackageResponse>) => {
           // verify
-          verify(testContext.loggerMock.debug("Fetching %s", "testPackageName")).once();
-          verify(clientMock.fetchPackage(testContext.testRequest)).once();
+          verify(this.loggerMock.debug("Fetching %s", "testPackageName")).once();
+          verify(clientMock.fetchPackage(this.testRequest)).once();
           verify(
-            testContext.loggerMock.info(
+            this.loggerMock.info(
               'Fetched %s@%s from %s (%s ms)',
-              testContext.testRequest.dependency.package.name,
-              testContext.testRequest.dependency.package.version,
-              testRespDoc.responseStatus.source,
+              this.testRequest.dependency.package.name,
+              this.testRequest.dependency.package.version,
+              testRespDoc.responseStatus?.source,
               any()
             )
           ).once();
@@ -140,7 +138,7 @@ export const AbstractSuggestionProviderTests = {
           // test name, version and their range are the same
           assert.equal(actualPackageResp.resolved, testRespDoc.resolved);
           assert.ok(
-            testContext.testRequest.dependency.rangeEquals(
+            this.testRequest.dependency.rangeEquals(
               <any>actualPackageResp
             )
           )
@@ -149,63 +147,64 @@ export const AbstractSuggestionProviderTests = {
 
           assert.equal(
             actualPackageResp.requested,
-            testContext.testRequest.dependency.package
+            this.testRequest.dependency.package
           );
 
           assert.equal(actualPackageResp.suggestion, testRespDoc.suggestions[0]);
         });
     },
 
-    "writes error status code to log for packages with handled errors": async function () {
-      // response
-      const testRespDoc: TPackageClientResponse = {
-        type: PackageVersionType.Version,
-        source: PackageClientSourceType.Registry,
-        responseStatus: {
-          status: 401,
-          source: ClientResponseSource.local,
-          rejected: true
-        },
-        resolved: this.testPackageNameVersion,
-        suggestions: [
-          {
-            name: this.testPackageRes.name,
-            version: "1.0.0",
-            flags: SuggestionFlags.release
-          }
-        ]
-      };
+    "writes error status code to log for packages with handled errors":
+      async function (this: TestContext) {
+        // response
+        const testRespDoc: TPackageClientResponse = {
+          type: PackageVersionType.Version,
+          source: PackageClientSourceType.Registry,
+          responseStatus: {
+            status: 401,
+            source: ClientResponseSource.local,
+            rejected: true
+          },
+          resolved: this.testPackageNameVersion,
+          suggestions: [
+            {
+              name: this.testPackageRes.name,
+              version: "1.0.0",
+              flags: SuggestionFlags.release
+            }
+          ]
+        };
 
-      // client
-      const clientMock: IPackageClient<any> = mock<IPackageClient<any>>();
-      when(clientMock.logger).thenReturn(this.testLogger);
-      when(clientMock.config).thenReturn(this.testConfig)
-      when(clientMock.fetchPackage(this.testRequest)).thenResolve(testRespDoc);
-      const testClient = instance(clientMock);
+        // client
+        const clientMock: IPackageClient<any> = mock<IPackageClient<any>>();
+        when(clientMock.logger).thenReturn(this.testLogger);
+        when(clientMock.config).thenReturn(this.testConfig)
+        when(clientMock.fetchPackage(this.testRequest)).thenResolve(testRespDoc);
+        const testClient = instance(clientMock);
 
-      // test
-      const abstractProvider = new SuggestionProvider<IPackageClient<any>, null>(
-        testClient,
-        null
-      );
+        // test
+        const abstractProvider = new SuggestionProvider<IPackageClient<any>, null>(
+          testClient,
+          this.testLogger
+        );
 
-      return abstractProvider.fetchPackage(this.testRequest)
-        .then(actual => {
-          verify(clientMock.fetchPackage(this.testRequest)).once();
-          verify(
-            this.loggerMock.error(
-              "%s@%s was rejected with the status code %s",
-              this.testRequest.dependency.package.name,
-              this.testRequest.dependency.package.version,
-              testRespDoc.responseStatus.status
-            )
-          ).once();
+        return abstractProvider.fetchPackage(this.testRequest)
+          .then(actual => {
+            verify(clientMock.fetchPackage(this.testRequest)).once();
+            verify(
+              this.loggerMock.error(
+                "%s@%s was rejected with the status code %s",
+                this.testRequest.dependency.package.name,
+                this.testRequest.dependency.package.version,
+                testRespDoc.responseStatus?.status
+              )
+            ).once();
 
-          // assert
-          assert.equal(actual.length, 1);
-          assert.equal(actual[0].providerName, testClient.config.providerName);
-        });
-    },
+            // assert
+            assert.equal(actual.length, 1);
+            assert.equal(actual[0].providerName, testClient.config.providerName);
+          });
+      },
 
   }
 

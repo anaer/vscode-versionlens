@@ -1,9 +1,10 @@
 import assert from 'assert';
 import { UrlHelpers } from 'domain/clients';
+import { test } from 'mocha-ui-esm';
 
 export const UrlHelpersTests = {
 
-  title: "UrlHelpers",
+  [test.title]: "UrlHelpers",
 
   getProtocolFromUrl: {
 

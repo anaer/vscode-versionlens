@@ -8,7 +8,7 @@ export const extractPackageDependenciesFromJsonTests = {
   [test.title]: extractPackageDependenciesFromJson.name,
 
   "returns empty when no matches found": () => {
-    const includeNames = []
+    const includeNames: Array<string> = []
     const results = extractPackageDependenciesFromJson(
       "",
       includeNames

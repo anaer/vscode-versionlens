@@ -1,9 +1,10 @@
 import assert from 'assert';
 import { VersionUtils } from 'domain/packages';
+import { test } from 'mocha-ui-esm';
 
 export const isFourSegmentedVersionTests = {
 
-  title: VersionUtils.isFourSegmentedVersion.name,
+  [test.title]: VersionUtils.isFourSegmentedVersion.name,
 
   "returns false for semver versions $1": [
     '~1.2.3',
@@ -11,7 +12,7 @@ export const isFourSegmentedVersionTests = {
     '1.2.*',
     '>=1.2',
     '*',
-    (testVersion) => {
+    (testVersion: string) => {
       const actual1 = VersionUtils.isFourSegmentedVersion(testVersion)
       assert.equal(actual1, false);
     }
@@ -21,7 +22,7 @@ export const isFourSegmentedVersionTests = {
     '1.2.3.4',
     '1.0.1.1',
     '1.0.0.10',
-    (testVersion) => {
+    (testVersion: string) => {
       const actual1 = VersionUtils.isFourSegmentedVersion(testVersion)
       assert.ok(actual1);
     }

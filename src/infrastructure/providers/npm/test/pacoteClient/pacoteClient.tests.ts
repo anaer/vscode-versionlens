@@ -3,6 +3,7 @@ import assert from 'assert';
 import { CachingOptions, ICachingOptions } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
+  createDependencyRange,
   createPackageResource,
   PackageDependency,
   TPackageClientRequest
@@ -12,9 +13,11 @@ import { fileExists } from 'domain/utils';
 import {
   GitHubOptions,
   IPacote,
+  NpaSpec,
   NpmConfig,
   PacoteClient
 } from 'infrastructure/providers/npm';
+import { test } from 'mocha-ui-esm';
 import path from 'node:path';
 import npa from 'npm-package-arg';
 import { LoggerStub } from 'test/unit/domain/logging';
@@ -35,7 +38,7 @@ let pacoteMock: IPacote;
 
 export const fetchPackageTests = {
 
-  title: PacoteClient.prototype.fetchPackage.name,
+  [test.title]: PacoteClient.prototype.fetchPackage.name,
 
   beforeEach: () => {
     githubOptsMock = mock(GitHubOptions);
@@ -66,8 +69,8 @@ export const fetchPackageTests = {
       clientData: testClientData,
       dependency: new PackageDependency(
         testPackageRes,
-        null,
-        null,
+        createDependencyRange(0, 0),
+        createDependencyRange(1, 1),
       ),
       attempt: 1
     }
@@ -76,7 +79,7 @@ export const fetchPackageTests = {
       testPackageRes.name,
       testPackageRes.version,
       testPackageRes.path
-    );
+    ) as NpaSpec;
 
     when(pacoteMock.packument(anything(), anything()))
       .thenResolve(Fixtures.packumentRegistryRange)
@@ -92,8 +95,8 @@ export const fetchPackageTests = {
       .then((actual) => {
         assert.equal(actual.source, 'registry')
         assert.equal(actual.type, 'range')
-        assert.equal(actual.resolved.name, testPackageRes.name)
-        assert.deepEqual(actual.resolved.version, testPackageRes.version)
+        assert.equal(actual.resolved?.name, testPackageRes.name)
+        assert.deepEqual(actual.resolved?.version, testPackageRes.version)
       })
   },
 
@@ -114,8 +117,8 @@ export const fetchPackageTests = {
       clientData: testClientData,
       dependency: new PackageDependency(
         testPackageRes,
-        null,
-        null,
+        createDependencyRange(0, 0),
+        createDependencyRange(1, 1),
       ),
       attempt: 1
     }
@@ -124,7 +127,7 @@ export const fetchPackageTests = {
       testPackageRes.name,
       testPackageRes.version,
       testPackageRes.path
-    );
+    ) as NpaSpec;
 
     when(pacoteMock.packument(anything(), anything()))
       .thenResolve(Fixtures.packumentRegistryVersion)
@@ -140,7 +143,7 @@ export const fetchPackageTests = {
       .then((actual) => {
         assert.equal(actual.source, 'registry')
         assert.equal(actual.type, 'version')
-        assert.equal(actual.resolved.name, testPackageRes.name)
+        assert.equal(actual.resolved?.name, testPackageRes.name)
       })
   },
 
@@ -161,8 +164,8 @@ export const fetchPackageTests = {
       clientData: testClientData,
       dependency: new PackageDependency(
         testPackageRes,
-        null,
-        null,
+        createDependencyRange(0, 0),
+        createDependencyRange(1, 1),
       ),
       attempt: 1
     }
@@ -171,7 +174,7 @@ export const fetchPackageTests = {
       testPackageRes.name,
       testPackageRes.version,
       testPackageRes.path
-    );
+    ) as NpaSpec;
 
     when(pacoteMock.packument(anything(), anything()))
       .thenResolve(Fixtures.packumentCappedToLatestTaggedVersion)
@@ -210,8 +213,8 @@ export const fetchPackageTests = {
       clientData: testClientData,
       dependency: new PackageDependency(
         testPackageRes,
-        null,
-        null,
+        createDependencyRange(0, 0),
+        createDependencyRange(1, 1),
       ),
       attempt: 1
     }
@@ -220,7 +223,7 @@ export const fetchPackageTests = {
       testPackageRes.name,
       testPackageRes.version,
       testPackageRes.path
-    );
+    ) as NpaSpec;
 
     when(pacoteMock.packument(anything(), anything()))
       .thenResolve(Fixtures.packumentRegistryAlias)
@@ -236,8 +239,8 @@ export const fetchPackageTests = {
       .then((actual) => {
         assert.equal(actual.source, 'registry')
         assert.equal(actual.type, 'alias')
-        assert.equal(actual.resolved.name, 'pacote')
-        assert.equal(actual.resolved.version, '11.1.9')
+        assert.equal(actual.resolved?.name, 'pacote')
+        assert.equal(actual.resolved?.version, '11.1.9')
       })
   },
 
@@ -262,8 +265,8 @@ export const fetchPackageTests = {
       clientData: testClientData,
       dependency: new PackageDependency(
         testPackageRes,
-        null,
-        null,
+        createDependencyRange(0, 0),
+        createDependencyRange(1, 1),
       ),
       attempt: 1
     }
@@ -292,7 +295,7 @@ export const fetchPackageTests = {
       testPackageRes.name,
       testPackageRes.version,
       testPackageRes.path
-    )
+    ) as NpaSpec;
 
     await cut.fetchPackage(testRequest, npaSpec)
 

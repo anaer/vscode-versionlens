@@ -12,10 +12,19 @@ export const projectPath = path.resolve(__dirname, '..');
 
 export const sourcePath = path.resolve(projectPath, 'src');
 
+/**
+ * Use this at the top of modules to get the current module file path
+ * @param stackIndex 
+ * @returns 
+ */
 export const filePath = (stackIndex: number = 2) => {
   const error = new Error();
+  if (!error.stack) return "";
+
   const filePart = error.stack.split('\n')[stackIndex]
   const matches = /[\\.].*\s/.exec(filePart);
+  if (!matches) return "";
+
   return path.resolve(projectPath, matches[0].trim());
 }
 
@@ -44,7 +53,7 @@ export const removeFile = (filePath: string): Promise<void> => {
   return fsUnlink(filePath);
 }
 
-export async function delay(delay) {
+export async function delay(delay: number) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       try {

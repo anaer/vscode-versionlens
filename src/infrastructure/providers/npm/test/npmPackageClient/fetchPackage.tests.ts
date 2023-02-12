@@ -1,7 +1,11 @@
 import assert from 'assert';
 import { ClientResponseSource } from 'domain/clients';
-import { PackageDependency, TPackageClientRequest } from 'domain/packages';
-import { createPackageResource } from 'domain/packages/utils/packageUtils';
+import {
+  createDependencyRange,
+  createPackageResource,
+  PackageDependency,
+  TPackageClientRequest
+} from 'domain/packages';
 import { SuggestionFlags } from 'domain/suggestions';
 import {
   GitHubClient,
@@ -45,8 +49,8 @@ export const fetchPackageTests = {
       clientData: {},
       dependency: new PackageDependency(
         testPackageRes,
-        null,
-        null,
+        createDependencyRange(0, 0),
+        createDependencyRange(1, 1),
       ),
       attempt: 1
     };
@@ -61,7 +65,7 @@ export const fetchPackageTests = {
     return cut.fetchPackage(testRequest)
       .then(actual => {
         assert.equal(actual.source, 'directory', `expected to see ${expectedSource}`)
-        assert.deepEqual(actual.resolved.name, testPackageRes.name)
+        assert.deepEqual(actual.resolved?.name, testPackageRes.name)
       })
   },
 
@@ -81,8 +85,8 @@ export const fetchPackageTests = {
       clientData: {},
       dependency: new PackageDependency(
         testPackageRes,
-        null,
-        null,
+        createDependencyRange(0, 0),
+        createDependencyRange(1, 1),
       ),
       attempt: 1
     };
@@ -137,8 +141,8 @@ export const fetchPackageTests = {
       clientData: {},
       dependency: new PackageDependency(
         testPackageRes,
-        null,
-        null,
+        createDependencyRange(0, 0),
+        createDependencyRange(1, 1),
       ),
       attempt: 1
     };
@@ -167,44 +171,38 @@ export const fetchPackageTests = {
 
   },
 
-  'returns 401, 404 and ECONNREFUSED suggestion statuses': async () => {
-    const testPackageRes = createPackageResource(
-      // package name
-      'private-reg',
-      // package version
-      '1.2.3',
-      // package path
-      'packagepath',
-    );
+  'returns $1 suggestion statuses': [
+    ["401", { status: 401, suggestion: { name: '401 not authorized' } }],
+    ["404", { status: 404, suggestion: { name: 'package not found' } }],
+    ["ECONNREFUSED", { status: 'ECONNREFUSED', suggestion: { name: 'connection refused' } }],
+    async (testTitlePart: string, testState: any) => {
+      const testPackageRes = createPackageResource(
+        // package name
+        'private-reg',
+        // package version
+        '1.2.3',
+        // package path
+        'packagepath',
+      );
 
-    const testRequest: TPackageClientRequest<any> = {
-      providerName: 'testnpmprovider',
-      clientData: {},
-      dependency: new PackageDependency(
-        testPackageRes,
-        null,
-        null,
-      ),
-      attempt: 1
-    };
+      const testRequest: TPackageClientRequest<any> = {
+        providerName: 'testnpmprovider',
+        clientData: {},
+        dependency: new PackageDependency(
+          testPackageRes,
+          createDependencyRange(0, 0),
+          createDependencyRange(1, 1),
+        ),
+        attempt: 1
+      };
 
-    const testStates = [
-      { status: 401, suggestion: { name: '401 not authorized' } },
-      { status: 404, suggestion: { name: 'package not found' } },
-      { status: 'ECONNREFUSED', suggestion: { name: 'connection refused' } },
-    ]
-
-    // setup initial call
-    const cut = new NpmPackageClient(
-      instance(configMock),
-      instance(pacoteMock),
-      instance(githubClientMock),
-      instance(loggerMock)
-    );
-
-    const promised = []
-
-    testStates.forEach(testState => {
+      // setup initial call
+      const cut = new NpmPackageClient(
+        instance(configMock),
+        instance(pacoteMock),
+        instance(githubClientMock),
+        instance(loggerMock)
+      );
 
       when(pacoteMock.fetchPackage(anything(), anything()))
         .thenReject(<any>{
@@ -213,24 +211,19 @@ export const fetchPackageTests = {
           source: ClientResponseSource.remote
         })
 
-      promised.push(
-        cut.fetchPackage(testRequest)
-          .then((actual) => {
-            assert.equal(actual.source, 'registry')
-            assert.equal(actual.resolved, null)
-            assert.deepEqual(
-              actual.suggestions,
-              [{
-                name: testState.suggestion.name,
-                version: '',
-                flags: SuggestionFlags.status
-              }]
-            )
-          })
-      )
-    })
+      const actual = await cut.fetchPackage(testRequest)
 
-    return await Promise.all(promised)
-  }
+      assert.equal(actual.source, 'registry')
+      assert.equal(actual.resolved, null)
+      assert.deepEqual(
+        actual.suggestions,
+        [{
+          name: testState.suggestion.name,
+          version: '',
+          flags: SuggestionFlags.status
+        }]
+      )
+    }
+  ]
 
 }

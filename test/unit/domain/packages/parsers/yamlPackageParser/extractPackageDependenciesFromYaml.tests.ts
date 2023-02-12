@@ -24,10 +24,10 @@ export const extractPackageDependenciesFromYamlTests = {
   [test.title]: extractPackageDependenciesFromYaml.name,
 
   "returns empty when no matches found": () => {
-    const includeNames = [];
+    const includePropNames: Array<string> = [];
 
     const testOptions: TYamlPackageParserOptions = {
-      includePropNames: includeNames,
+      includePropNames,
       complexTypeHandlers
     };
 
@@ -39,10 +39,10 @@ export const extractPackageDependenciesFromYamlTests = {
   },
 
   "returns empty when no dependency entry names match": () => {
-    const includeNames = ["non-dependencies"];
+    const includePropNames = ["non-dependencies"];
 
     const testOptions: TYamlPackageParserOptions = {
-      includePropNames: includeNames,
+      includePropNames,
       complexTypeHandlers
     };
 
@@ -55,10 +55,10 @@ export const extractPackageDependenciesFromYamlTests = {
   },
 
   "extracts general dependencies from yaml": () => {
-    const includeNames = ["dependencies"];
+    const includePropNames = ["dependencies"];
 
     const testOptions: TYamlPackageParserOptions = {
-      includePropNames: includeNames,
+      includePropNames,
       complexTypeHandlers
     };
 
@@ -71,10 +71,10 @@ export const extractPackageDependenciesFromYamlTests = {
   },
 
   "extracts path type dependencies from yaml": () => {
-    const includeNames = ["dependencies"];
+    const includePropNames = ["dependencies"];
 
     const testOptions: TYamlPackageParserOptions = {
-      includePropNames: includeNames,
+      includePropNames,
       complexTypeHandlers
     };
 
@@ -87,10 +87,10 @@ export const extractPackageDependenciesFromYamlTests = {
   },
 
   "extracts git type dependencies from yaml": () => {
-    const includeNames = ["dependencies"];
+    const includePropNames = ["dependencies"];
 
     const testOptions: TYamlPackageParserOptions = {
-      includePropNames: includeNames,
+      includePropNames,
       complexTypeHandlers
     };
 
@@ -102,10 +102,10 @@ export const extractPackageDependenciesFromYamlTests = {
   },
 
   "extracts hosted type dependencies from yaml": () => {
-    const includeNames = ["dependencies"];
+    const includePropNames = ["dependencies"];
 
     const testOptions: TYamlPackageParserOptions = {
-      includePropNames: includeNames,
+      includePropNames,
       complexTypeHandlers
     };
 

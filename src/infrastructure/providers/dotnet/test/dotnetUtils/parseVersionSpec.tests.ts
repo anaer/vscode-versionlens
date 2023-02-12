@@ -1,10 +1,16 @@
 import assert from 'assert';
-
 import { parseVersionSpec } from 'infrastructure/providers/dotnet';
+import { test } from 'mocha-ui-esm';
+
+type TestContext = {
+  test: {
+    title: string
+  }
+}
 
 export const parseVersionSpecTests = {
 
-  title: parseVersionSpec.name,
+  [test.title]: parseVersionSpec.name,
 
   'converts basic nuget range "$1" to semver range "$2"': [
     // basic
@@ -15,7 +21,7 @@ export const parseVersionSpecTests = {
     ["[1.0.0,2.0.0]", ">=1.0.0 <=2.0.0"],
     ["(1.0.0,2.0.0)", ">1.0.0 <2.0.0"],
     ["[1.0.0,2.0.0)", ">=1.0.0 <2.0.0"],
-    function (testDotNetSpec: string, expectedSemver: string) {
+    function (this: TestContext, testDotNetSpec: string, expectedSemver: string) {
       this.test.title = this.test.title.replace("$1", testDotNetSpec);
       this.test.title = this.test.title.replace("$2", expectedSemver);
       const specTest = parseVersionSpec(testDotNetSpec);
@@ -32,7 +38,7 @@ export const parseVersionSpecTests = {
     ["1.0", "1.0.0"],
     ["[1,2]", ">=1.0.0 <=2.0.0"],
     ["(1,2)", ">1.0.0 <2.0.0"],
-    function (testDotNetSpec: string, expectedSemver: string) {
+    function (this: TestContext, testDotNetSpec: string, expectedSemver: string) {
       this.test.title = this.test.title.replace("$1", testDotNetSpec);
       this.test.title = this.test.title.replace("$2", expectedSemver);
       const actual = parseVersionSpec(testDotNetSpec);
@@ -49,7 +55,7 @@ export const parseVersionSpecTests = {
     ["1.0."],
     ["s.2.0"],
     ["beta"],
-    function (testDotNetSpec: string) {
+    function (this: TestContext, testDotNetSpec: string) {
       this.test.title = this.test.title.replace("$1", testDotNetSpec);
       const actual = parseVersionSpec(testDotNetSpec);
       assert.ok(
@@ -62,7 +68,7 @@ export const parseVersionSpecTests = {
   'converts nuget floating range "$1" to semver range "$2"': [
     ["1.*", ">=1.0.0-0 <2.0.0-0"],
     ["1.0.*", ">=1.0.0-0 <1.1.0-0"],
-    function (testDotNetSpec: string, expectedSemver: string) {
+    function (this: TestContext, testDotNetSpec: string, expectedSemver: string) {
       this.test.title = this.test.title.replace("$1", testDotNetSpec);
       this.test.title = this.test.title.replace("$2", expectedSemver);
       const actual = parseVersionSpec(testDotNetSpec);
@@ -85,7 +91,7 @@ export const parseVersionSpecTests = {
     ["(1.0.0,2.0.0)"],
     ["[1.0.0,2.0.0)"],
     ["(1.0.0)"],
-    function (testDotNetSpec: string) {
+    function (this: TestContext, testDotNetSpec: string) {
       this.test.title = this.test.title.replace("$1", testDotNetSpec);
       const actual = parseVersionSpec(testDotNetSpec);
       assert.ok(
@@ -100,7 +106,7 @@ export const parseVersionSpecTests = {
     ["1.0."],
     ["s.2.0"],
     ["beta"],
-    function (testDotNetSpec: string) {
+    function (this: TestContext, testDotNetSpec: string) {
       this.test.title = this.test.title.replace("$1", testDotNetSpec);
       const actual = parseVersionSpec(testDotNetSpec);
       assert.ok(!actual.spec, `Range did not return null for "${testDotNetSpec}"`);

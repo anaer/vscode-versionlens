@@ -12,7 +12,7 @@ export const getSuggestionProvidersByFileNameTests = {
     ["no entries", []],
     ["single entries", Fixtures.single],
     ["multiple entries", Fixtures.multiple],
-    function (caseTitle, testDeps: PackageDependency[]) {
+    function (caseTitle: string, testDeps: PackageDependency[]) {
       const actual = hasPackageDepsChanged(testDeps, testDeps);
       assert.equal(actual, false);
     }
@@ -23,7 +23,7 @@ export const getSuggestionProvidersByFileNameTests = {
     ["recent single entry", Fixtures.single, Fixtures.singleWithDiffNameRange],
     ["original multiple entries", Fixtures.multipleWithDiffNameRange, Fixtures.multiple],
     ["recent multiple entries", Fixtures.multiple, Fixtures.multipleWithDiffNameRange],
-    function (caseTitle, testOriginal: PackageDependency[], testRecent: PackageDependency[]) {
+    function (caseTitle: string, testOriginal: PackageDependency[], testRecent: PackageDependency[]) {
       const actual = hasPackageDepsChanged(testOriginal, testRecent);
       assert.equal(actual, false);
     }
@@ -34,7 +34,7 @@ export const getSuggestionProvidersByFileNameTests = {
     ["recent single entry", Fixtures.single, Fixtures.singleWithDiffVersionRange],
     ["original multiple entries", Fixtures.multipleWithDiffVersionRange, Fixtures.multiple],
     ["recent multiple entries", Fixtures.multiple, Fixtures.multipleWithDiffVersionRange],
-    function (caseTitle, testOriginal: PackageDependency[], testRecent: PackageDependency[]) {
+    function (caseTitle: string, testOriginal: PackageDependency[], testRecent: PackageDependency[]) {
       const actual = hasPackageDepsChanged(testOriginal, testRecent);
       assert.equal(actual, false);
     }
@@ -43,7 +43,7 @@ export const getSuggestionProvidersByFileNameTests = {
   "returns true when $1 items then recent": [
     ["original has less", Fixtures.single, Fixtures.multiple],
     ["recent has less", Fixtures.multiple, Fixtures.single],
-    function (caseTitle, testOriginal, testRecent) {
+    function (caseTitle: string, testOriginal: PackageDependency[], testRecent: PackageDependency[]) {
       const actual = hasPackageDepsChanged(testOriginal, testRecent);
       assert.equal(actual, true);
     }
@@ -54,7 +54,7 @@ export const getSuggestionProvidersByFileNameTests = {
     ["recent single entries", Fixtures.single, Fixtures.singleWithDiffVersion],
     ["original multiple entries", Fixtures.multipleWithDiffVersion, Fixtures.multiple],
     ["recent multiple entries", Fixtures.multiple, Fixtures.multipleWithDiffVersion],
-    function (caseTitle, testOriginal, testRecent) {
+    function (caseTitle: string, testOriginal: PackageDependency[], testRecent: PackageDependency[]) {
       const actual = hasPackageDepsChanged(testOriginal, testRecent);
       assert.equal(actual, true);
     }

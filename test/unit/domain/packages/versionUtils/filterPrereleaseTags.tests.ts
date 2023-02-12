@@ -1,5 +1,6 @@
 import assert from 'assert';
 import { VersionUtils } from 'domain/packages';
+import { test } from 'mocha-ui-esm';
 
 const testPreleases = [
   '2.0.0-beta.1',
@@ -9,10 +10,10 @@ const testPreleases = [
 
 export const filterPrereleaseTagsTests = {
 
-  title: VersionUtils.filterPrereleaseTags.name,
+  [test.title]: VersionUtils.filterPrereleaseTags.name,
 
   "returns all prereleases when tag filters are empty": () => {
-    const testFilterTags = [];
+    const testFilterTags: Array<string> = [];
     const actual = VersionUtils.filterPrereleaseTags(testPreleases, testFilterTags);
     assert.equal(actual.length, testPreleases.length);
     assert.deepEqual(actual, testPreleases);

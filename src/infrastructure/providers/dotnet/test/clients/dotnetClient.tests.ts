@@ -105,7 +105,7 @@ export const DotNetCliTests = {
     },
 
     "return 0 items when no sources are enabled": async () => {
-      const testFeeds = [];
+      const testFeeds: Array<string> = [];
 
       when(clientMock.request(
         anything(),

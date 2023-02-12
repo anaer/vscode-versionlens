@@ -16,7 +16,7 @@ export const AwilixServiceCollectionTests = {
       "Scoped",
       (testLifetimeName: string) => {
         const testAsyncResolverFunction = async () => true;
-        const testCollection = new AwilixServiceCollection();
+        const testCollection = new AwilixServiceCollection() as KeyDictionary<any>;
         testCollection[`add${testLifetimeName}`]("testService", testAsyncResolverFunction);
         const actual: KeyDictionary<any> = (<any>testCollection).asyncSingletons;
         assert.equal(actual["testService"], testAsyncResolverFunction)
@@ -26,11 +26,11 @@ export const AwilixServiceCollectionTests = {
     'adds sync functions to the resolvers dictionary using "$1" lifetime': [
       ["Singleton", "SINGLETON"],
       ["Scoped", "SCOPED"],
-      async (testLifetimeName: string, expectedAwilixLifetime) => {
+      async (testLifetimeName: string, expectedAwilixLifetime: string) => {
         const testServiceName = "testService";
         const testService = { test: 123 };
         const testServiceResolver: TServiceResolver<any> = () => testService;
-        const testCollection = new AwilixServiceCollection();
+        const testCollection = new AwilixServiceCollection() as KeyDictionary<any>;
 
         testCollection[`add${testLifetimeName}`](
           testServiceName,
@@ -52,10 +52,10 @@ export const AwilixServiceCollectionTests = {
     'adds values to the resolvers dictionary using "$1" lifetime': [
       "Singleton",
       "Scoped",
-      async (testLifetimeName) => {
+      async (testLifetimeName: string) => {
         const testServiceName = "testService";
         const testService = { test: 123 };
-        const testCollection = new AwilixServiceCollection();
+        const testCollection = new AwilixServiceCollection() as KeyDictionary<any>;
 
         testCollection[`add${testLifetimeName}`](
           testServiceName,

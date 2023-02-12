@@ -49,7 +49,7 @@ export const fetchGithubTests = {
       testRequest.package.name,
       testRequest.package.version,
       testRequest.package.path
-    );
+    ) as NpaSpec;
 
     when(jsonClientMock.request(anything(), anything(), anything(), anything()))
       .thenResolve({
@@ -69,7 +69,7 @@ export const fetchGithubTests = {
       .then((actual) => {
         assert.equal(actual.source, 'github')
         assert.equal(actual.type, 'range')
-        assert.equal(actual.resolved.name, testRequest.package.name)
+        assert.equal(actual.resolved?.name, testRequest.package.name)
 
         assert.deepEqual(
           actual.suggestions,
@@ -109,7 +109,7 @@ export const fetchGithubTests = {
       testRequest.package.name,
       testRequest.package.version,
       testRequest.package.path
-    );
+    ) as NpaSpec;
 
     when(jsonClientMock.request(anything(), anything(), anything(), anything()))
       .thenResolve({
@@ -129,7 +129,7 @@ export const fetchGithubTests = {
       .then((actual) => {
         assert.equal(actual.source, 'github')
         assert.equal(actual.type, 'range')
-        assert.equal(actual.resolved.name, testRequest.package.name)
+        assert.equal(actual.resolved?.name, testRequest.package.name)
 
         assert.deepEqual(
           actual.suggestions,
@@ -169,7 +169,7 @@ export const fetchGithubTests = {
       testRequest.package.name,
       testRequest.package.version,
       testRequest.package.path
-    );
+    ) as NpaSpec;
 
     when(jsonClientMock.request(anything(), anything(), anything(), anything()))
       .thenResolve({
@@ -188,7 +188,7 @@ export const fetchGithubTests = {
       .then((actual) => {
         assert.equal(actual.source, 'github')
         assert.equal(actual.type, 'committish')
-        assert.equal(actual.resolved.name, testRequest.package.name)
+        assert.equal(actual.resolved?.name, testRequest.package.name)
 
         assert.deepEqual(
           actual.suggestions,
@@ -220,7 +220,7 @@ export const fetchGithubTests = {
       testRequest.package.name,
       testRequest.package.version,
       testRequest.package.path
-    );
+    ) as NpaSpec;
 
     const testToken = 'testToken';
 

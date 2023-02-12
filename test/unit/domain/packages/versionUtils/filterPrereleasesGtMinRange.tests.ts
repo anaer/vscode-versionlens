@@ -1,5 +1,6 @@
 import assert from 'assert';
 import { VersionUtils } from 'domain/packages';
+import { test } from 'mocha-ui-esm';
 
 const testPrereleases = [
   '2.0.0-preview1.12141.1',
@@ -20,7 +21,7 @@ const testPrereleases = [
 
 export const filterPrereleasesGtMinRangeTests = {
 
-  title: VersionUtils.filterPrereleasesGtMinRange.name,
+  [test.title]: VersionUtils.filterPrereleasesGtMinRange.name,
 
   "returns empty when no matches found": () => {
     const results = VersionUtils.filterPrereleasesGtMinRange('*', []);

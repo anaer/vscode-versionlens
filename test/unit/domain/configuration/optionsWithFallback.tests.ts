@@ -1,20 +1,22 @@
 import assert from 'assert';
-import { OptionsWithFallback } from 'domain/configuration'
+import { OptionsWithFallback } from 'domain/configuration';
+import { KeyDictionary } from 'domain/generics';
+import { test } from 'mocha-ui-esm';
 
 export const OptionsWithFallbackTests = {
 
-  title: OptionsWithFallback.name,
+  [test.title]: OptionsWithFallback.name,
 
-  "get": {
+  get: {
 
     "returns section.key value, fallback.key value": () => {
-      const testMap = {
+      const testMap = <KeyDictionary<any>>{
         'caching.duration': null,
         'dotnet.caching.duration': 1,
 
         'logging.level': 2,
         'dotnet.logging.level': null
-      }
+      };
 
       const tests = [
         {
@@ -29,13 +31,13 @@ export const OptionsWithFallbackTests = {
           key: 'level',
           expected: 2
         }
-      ]
+      ];
 
       tests.forEach(test => {
 
         const cot = new OptionsWithFallback(
           {
-            get: k => testMap[k],
+            get: (k: string) => testMap[k],
             defrost: () => null
           },
           test.section,
@@ -45,15 +47,15 @@ export const OptionsWithFallbackTests = {
         const actual = cot.get(test.key);
 
         assert.equal(actual, test.expected);
-      })
+      });
     },
 
   },
 
-  "getOrDefault": {
+  getOrDefault: {
 
     "returns section.key value, fallback.key value, default arg value": () => {
-      const testMap = {
+      const testMap = <KeyDictionary<any>>{
         'caching.duration': null,
         'dotnet.caching.duration': 1,
 
@@ -62,7 +64,7 @@ export const OptionsWithFallbackTests = {
 
         'nuget.feeds': null,
         'dotnet.nuget.feeds': null
-      }
+      };
 
       const tests = [
         {
@@ -83,13 +85,13 @@ export const OptionsWithFallbackTests = {
           key: 'feeds',
           expected: 'default arg'
         }
-      ]
+      ];
 
       tests.forEach(test => {
 
         const cot = new OptionsWithFallback(
           {
-            get: k => testMap[k],
+            get: (k: string) => testMap[k],
             defrost: () => null
           },
           test.section,
@@ -99,7 +101,7 @@ export const OptionsWithFallbackTests = {
         const actual = cot.getOrDefault(test.key, 'default arg');
 
         assert.equal(actual, test.expected);
-      })
+      });
 
     },
 

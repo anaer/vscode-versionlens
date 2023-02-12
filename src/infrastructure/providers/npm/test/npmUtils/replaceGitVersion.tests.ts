@@ -1,17 +1,22 @@
 import assert from 'assert';
-import { PackageClientSourceType, PackageResponse } from 'domain/packages';
+import {
+  createDependencyRange,
+  PackageClientSourceType,
+  PackageResponse
+} from 'domain/packages';
 import { NpmUtils } from 'infrastructure/providers/npm';
+import { test } from 'mocha-ui-esm';
 
 export const npmReplaceVersionTests = {
 
-  title: NpmUtils.npmReplaceVersion.name,
+  [test.title]: NpmUtils.npmReplaceVersion.name,
 
   "handles #tag|commit|semver:": () => {
     const packageInfo: PackageResponse = {
       providerName: 'testreplace',
       source: PackageClientSourceType.Github,
-      nameRange: null,
-      versionRange: null,
+      nameRange: createDependencyRange(0, 0),
+      versionRange: createDependencyRange(1, 1),
       order: 0,
       requested: {
         path: 'packagepath',
