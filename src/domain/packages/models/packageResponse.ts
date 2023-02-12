@@ -7,7 +7,7 @@ import { TPackageDependencyRange } from '../definitions/tPackageDependencyRange'
 import { TPackageNameVersion } from '../definitions/tPackageNameVersion';
 import { TPackageResource } from '../definitions/tPackageResource';
 
-export class PackageResponse {
+export type PackageResponse = {
   providerName: string;
   requested: TPackageResource;
 
