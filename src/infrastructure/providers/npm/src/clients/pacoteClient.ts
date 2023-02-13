@@ -15,14 +15,12 @@ import semver from 'semver';
 import { TNpmClientData } from '../definitions/tNpmClientData';
 import { NpaSpec, NpaTypes } from '../models/npaSpec';
 import { NpmConfig } from '../npmConfig';
-import * as NpmUtils from '../npmUtils';
 
 export class PacoteClient extends AbstractCachedRequest<number, TPackageClientResponse> {
 
-  constructor(pacote: any, npmCliConfig: any, config: NpmConfig, logger: ILogger) {
+  constructor(pacote: any, config: NpmConfig, logger: ILogger) {
     super(config.caching);
     this.pacote = pacote;
-    this.NpmCliConfig = npmCliConfig;
     this.config = config;
     this.logger = logger;
   }
@@ -33,22 +31,14 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
 
   pacote: any;
 
-  NpmCliConfig: any;
-
   async fetchPackage(
     request: TPackageClientRequest<TNpmClientData>,
     npaSpec: NpaSpec
   ): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;
 
-    const pacoteOpts = await NpmUtils.createPacoteOptions(
-      request.clientData,
-      requestedPackage,
-      this.NpmCliConfig
-    );
-
     // fetch the package from npm's pacote
-    const response = await this.request(requestedPackage, npaSpec, pacoteOpts);
+    const response = await this.request(requestedPackage, npaSpec, request.clientData);
 
     const { compareLoose } = semver;
 

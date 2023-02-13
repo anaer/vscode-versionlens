@@ -17,7 +17,7 @@ import { resolve } from 'node:path';
 import { NpmPackageClient } from './clients/npmPackageClient';
 import { TNpmClientData } from './definitions/tNpmClientData';
 import { NpmConfig } from './npmConfig';
-import { npmReplaceVersion, resolveDotFilePath } from './npmUtils';
+import { createPacoteOptions, npmReplaceVersion, resolveDotFilePath } from './npmUtils';
 
 const complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler> = {
   "version": createVersionDescFromJsonNode
@@ -97,7 +97,7 @@ export class NpmSuggestionProvider
   async preFetchSuggestions(
     projectPath: string,
     packagePath: string
-  ): Promise<TNpmClientData> {
+  ): Promise<any> {
     if (this.config.github.accessToken &&
       this.config.github.accessToken.length > 0) {
       // defrost github parameters
@@ -113,10 +113,10 @@ export class NpmSuggestionProvider
       projectPath
     ];
 
-    // try to resolve any project .npmrc files
+    // try to resolve project .npmrc files
     const npmRcFilePath = await resolveDotFilePath(".npmrc", resolveDotFilePaths);
 
-    // try to resolve any .env files (if .npmrc exists)
+    // try to resolve .env files (if .npmrc exists)
     let envFilePath = "";
     if (npmRcFilePath.length > 0) {
       envFilePath = await resolveDotFilePath(".env", resolveDotFilePaths);
@@ -124,12 +124,18 @@ export class NpmSuggestionProvider
       this.logger.debug("Resolved .npmrc %s", npmRcFilePath);
     }
 
-    return {
+    // return pacote options as client data
+    const npmCliOptions = {
       projectPath,
       userConfigPath,
       npmRcFilePath,
       envFilePath
     };
+
+    return createPacoteOptions(
+      packagePath,
+      npmCliOptions
+    )
   }
 
 }

@@ -5,14 +5,14 @@ import {
   GitHubOptions,
   NpmConfig,
   NpmPackageClient,
-  NpmSuggestionProvider,
-  TNpmClientData
+  NpmSuggestionProvider
 } from 'infrastructure/providers/npm';
 import { test } from 'mocha-ui-esm';
 import { homedir } from 'node:os';
 import path, { resolve } from 'node:path';
 import { createDir, createFile, fileDir, removeDir, removeFile } from 'test/unit/utils';
 import { instance, mock, verify, when } from 'ts-mockito';
+import Fixtures from './npmSuggestionProvider.fixtures';
 
 const testDir = fileDir();
 
@@ -61,7 +61,8 @@ export const NpmSuggestionProviderTests = {
       when(this.clientMock.config).thenReturn(instance(this.configMock));
     },
 
-    "returns client data with .npmrc path": async function (this: TestContext) {
+    "returns client data with .npmrc settings": async function (this: TestContext) {
+      const testPackageFilePath = path.join(testPackagePath, 'package.json');
       const testNpmRcFilePath = path.join(testPackagePath, '.npmrc');
       const testEnvFilePath = path.join(testPackagePath, '.env');
 
@@ -70,13 +71,14 @@ export const NpmSuggestionProviderTests = {
         instance(this.loggerMock)
       );
 
-      await createFile(testNpmRcFilePath, "test npmrc");
-      await createFile(testEnvFilePath, "test env");
+      await createFile(testPackageFilePath, "");
+      await createFile(testNpmRcFilePath, Fixtures.preFetchSuggestions['.npmrc']);
+      await createFile(testEnvFilePath, Fixtures.preFetchSuggestions['.npmrc-env']);
 
-      const expectedClientData: TNpmClientData = {
-        projectPath: testProjectPath,
-        userConfigPath: resolve(homedir(), ".npmrc"),
-        npmRcFilePath: testNpmRcFilePath,
+      const expectedClientData = {
+        cwd: testPackagePath,
+        userconfig: resolve(homedir(), ".npmrc"),
+        "//registry.npmjs.example/:_authToken": '12345678',
         envFilePath: testEnvFilePath
       }
 
@@ -87,24 +89,28 @@ export const NpmSuggestionProviderTests = {
 
       verify(this.loggerMock.debug("Resolved .npmrc %s", testNpmRcFilePath)).once();
 
-      assert.deepEqual(actualClientData, expectedClientData);
+      assert.equal(actualClientData.cwd, expectedClientData.cwd);
+      assert.equal(actualClientData.userconfig, expectedClientData.userconfig);
+      assert.equal(
+        actualClientData["//registry.npmjs.example/:_authToken"],
+        expectedClientData["//registry.npmjs.example/:_authToken"]
+      );
 
       // clean up
+      await removeFile(testPackageFilePath);
       await removeFile(testNpmRcFilePath);
       await removeFile(testEnvFilePath);
     },
 
-    "returns client data with empty .npmrc path": async function (this: TestContext) {
+    "returns client data with general settings when no .npmrc": async function (this: TestContext) {
       const put = new NpmSuggestionProvider(
         instance(this.clientMock),
         instance(this.loggerMock)
       );
 
-      const expectedClientData: TNpmClientData = {
-        projectPath: testProjectPath,
-        userConfigPath: resolve(homedir(), ".npmrc"),
-        npmRcFilePath: "",
-        envFilePath: ""
+      const expectedClientData = {
+        cwd: testPackagePath,
+        userconfig: resolve(homedir(), ".npmrc")
       }
 
       const actualClientData = await put.preFetchSuggestions(
@@ -112,7 +118,8 @@ export const NpmSuggestionProviderTests = {
         testPackagePath
       );
 
-      assert.deepEqual(actualClientData, expectedClientData);
+      assert.equal(actualClientData.cwd, expectedClientData.cwd);
+      assert.equal(actualClientData.userconfig, expectedClientData.userconfig);
     },
 
   }

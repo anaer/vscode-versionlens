@@ -1,16 +1,15 @@
+import NpmCliConfig from '@npmcli/config';
 import { ClientResponse, ClientResponseSource } from 'domain/clients';
 import { KeyStringDictionary } from 'domain/generics';
 import {
   PackageClientSourceType,
   PackageResponse,
   PackageVersionType,
-  TPackageResource,
   VersionUtils
 } from 'domain/packages';
 import { fileExists, readFile } from 'domain/utils';
 import dotenv from 'dotenv';
 import { resolve } from 'node:path';
-import { TNpmClientData } from './definitions/tNpmClientData';
 
 export function npmReplaceVersion(packageInfo: PackageResponse, newVersion: string): string {
   if (packageInfo.source === PackageClientSourceType.Github) {
@@ -75,22 +74,21 @@ export async function getDotEnv(envPath: string): Promise<KeyStringDictionary> {
 }
 
 export async function createPacoteOptions(
-  clientData: TNpmClientData,
-  requestedPackage: TPackageResource,
-  NpmCliConfig: any
+  packagePath: string,
+  npmCliOptions: any
 ): Promise<any> {
-  const { npmRcFilePath, envFilePath, userConfigPath } = clientData;
+  const { npmRcFilePath, envFilePath, userConfigPath } = npmCliOptions;
 
   const hasNpmRcFile = npmRcFilePath.length > 0;
 
   // load the npm config
-  const npmConfig = new NpmCliConfig({
+  const npmCliConfig = new NpmCliConfig({
     shorthands: {},
     definitions: {},
-    npmPath: requestedPackage.path,
+    npmPath: packagePath,
     // use the npmrc path to make npm cli parse the npmrc file
     // otherwise defaults to the package path
-    cwd: hasNpmRcFile ? npmRcFilePath : requestedPackage.path,
+    cwd: hasNpmRcFile ? npmRcFilePath : packagePath,
     // ensures user npmrc is parsed by npm
     argv: ['', '', `--userconfig=${userConfigPath}`],
     // pass through .env data
@@ -99,11 +97,11 @@ export async function createPacoteOptions(
       : {}
   });
 
-  await npmConfig.load();
+  await npmCliConfig.load();
 
   // flatten all the options
-  return npmConfig.list.reduce(
+  return npmCliConfig.list.reduce(
     (memo, list) => ({ ...memo, ...list }),
-    { cwd: requestedPackage.path }
+    { cwd: packagePath }
   );
 }

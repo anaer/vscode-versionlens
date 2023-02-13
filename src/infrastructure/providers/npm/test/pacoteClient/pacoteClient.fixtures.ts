@@ -86,8 +86,6 @@ export default {
       "11.1.9": {}
     }
   },
-  ".npmrc": "//registry.npmjs.example/:_authToken=${NPM_AUTH}",
-  ".npmrc-env": "NPM_AUTH=12345678",
   "packumentCappedToLatestTaggedVersion": {
     "name": "npm-package-arg",
     "dist-tags": {

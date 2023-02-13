@@ -1,4 +1,3 @@
-import NpmCliConfig from '@npmcli/config';
 import { CachingOptions, HttpOptions } from "domain/clients";
 import { IServiceCollection } from "domain/di";
 import { DomainService } from "domain/services/domainService";
@@ -95,7 +94,6 @@ export function addPacoteClient(services: IServiceCollection) {
     (container: NpmService & DomainService) =>
       new PacoteClient(
         Pacote,
-        NpmCliConfig,
         container.npmConfig,
         container.logger.child({ namespace: 'npm pacote' })
       )

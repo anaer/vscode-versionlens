@@ -1,4 +1,4 @@
-import NpmCliConfig from '@npmcli/config';
+// import  NpmCliConfig from '@npmcli/config';
 import assert from 'assert';
 import { CachingOptions, ICachingOptions } from 'domain/clients';
 import { ILogger } from 'domain/logging';
@@ -9,7 +9,6 @@ import {
   TPackageClientRequest
 } from 'domain/packages';
 import { SuggestionFlags } from 'domain/suggestions';
-import { fileExists } from 'domain/utils';
 import {
   GitHubOptions,
   IPacote,
@@ -18,19 +17,14 @@ import {
   PacoteClient
 } from 'infrastructure/providers/npm';
 import { test } from 'mocha-ui-esm';
-import path from 'node:path';
 import npa from 'npm-package-arg';
 import { homedir } from 'os';
 import { resolve } from 'path';
 import { LoggerStub } from 'test/unit/domain/logging';
-import { createFile, fileDir, removeFile } from 'test/unit/utils';
-import { anything, capture, instance, mock, when } from 'ts-mockito';
+import { anything, instance, mock, when } from 'ts-mockito';
 import { TNpmClientData } from '../../src/definitions/tNpmClientData';
 import Fixtures from './pacoteClient.fixtures';
-import { NpmCliConfigStub } from './stubs/npmCliConfigStub';
 import { PacoteStub } from './stubs/pacoteStub';
-
-const testDir = fileDir();
 
 let cachingOptsMock: ICachingOptions;
 let githubOptsMock: GitHubOptions;
@@ -93,7 +87,6 @@ export const fetchPackageTests = {
 
     const cut = new PacoteClient(
       instance(pacoteMock),
-      NpmCliConfigStub,
       instance(configMock),
       instance(loggerMock)
     )
@@ -146,7 +139,6 @@ export const fetchPackageTests = {
 
     const cut = new PacoteClient(
       instance(pacoteMock),
-      NpmCliConfigStub,
       instance(configMock),
       instance(loggerMock)
     )
@@ -198,7 +190,6 @@ export const fetchPackageTests = {
 
     const cut = new PacoteClient(
       instance(pacoteMock),
-      NpmCliConfigStub,
       instance(configMock),
       instance(loggerMock)
     )
@@ -252,7 +243,6 @@ export const fetchPackageTests = {
 
     const cut = new PacoteClient(
       instance(pacoteMock),
-      NpmCliConfigStub,
       instance(configMock),
       instance(loggerMock)
     )
@@ -264,79 +254,6 @@ export const fetchPackageTests = {
         assert.equal(actual.resolved?.name, 'pacote')
         assert.equal(actual.resolved?.version, '11.1.9')
       })
-  },
-
-  'uses npmrc registry with dotenv file': async function () {
-    const packagePath = path.join(
-      testDir,
-      'npmrc-test'
-    );
-
-    const testPackageRes = createPackageResource(
-      // package name
-      'pacote',
-      // package version
-      '11.1.9',
-      packagePath,
-    );
-
-    const npmRcFilePath = resolve(packagePath, '.npmrc');
-    const envFilePath = resolve(packagePath, '.env');
-
-    const testClientData: TNpmClientData = {
-      projectPath: packagePath,
-      envFilePath,
-      npmRcFilePath,
-      userConfigPath: resolve(homedir(), ".npmrc")
-    };
-
-    const testRequest: TPackageClientRequest<TNpmClientData> = {
-      providerName: 'testnpmprovider',
-      clientData: testClientData,
-      dependency: new PackageDependency(
-        testPackageRes,
-        createDependencyRange(0, 0),
-        createDependencyRange(1, 1),
-      ),
-      attempt: 1
-    }
-
-    // write the npmrc file
-    await createFile(npmRcFilePath, Fixtures[".npmrc"])
-    await createFile(envFilePath, Fixtures[".npmrc-env"])
-
-    assert.ok(await fileExists(npmRcFilePath), 'test .npmrc doesnt exist?')
-    assert.ok(await fileExists(envFilePath), 'test .env doesnt exist?')
-
-    when(pacoteMock.packument(anything(), anything()))
-      .thenResolve(Fixtures.packumentGit)
-
-    const cut = new PacoteClient(
-      instance(pacoteMock),
-      NpmCliConfig,
-      instance(configMock),
-      instance(loggerMock)
-    )
-
-    const npaSpec = npa.resolve(
-      testPackageRes.name,
-      testPackageRes.version,
-      testPackageRes.path
-    ) as NpaSpec;
-
-    await cut.fetchPackage(testRequest, npaSpec)
-
-    const expectedRegistryAuth = "//registry.npmjs.example/:_authToken";
-
-    const [, actualOpts] = capture(pacoteMock.packument).first()
-    assert.equal(actualOpts.cwd, testPackageRes.path);
-
-    const expectedPassword = "12345678";
-    assert.equal(actualOpts[expectedRegistryAuth], expectedPassword);
-
-    // delete the temp files
-    await removeFile(npmRcFilePath);
-    await removeFile(envFilePath);
   }
 
 }

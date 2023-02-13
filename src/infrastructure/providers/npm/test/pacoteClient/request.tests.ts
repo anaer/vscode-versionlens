@@ -1,9 +1,7 @@
 import assert from 'assert';
 import { CachingOptions, ClientResponseSource, ICachingOptions } from 'domain/clients';
 import { ILogger } from 'domain/logging';
-import {
-  createPackageResource,
-} from 'domain/packages';
+import { createPackageResource } from 'domain/packages';
 import {
   GitHubOptions,
   IPacote,
@@ -13,7 +11,6 @@ import {
 import { test } from 'mocha-ui-esm';
 import { LoggerStub } from 'test/unit/domain/logging';
 import { anything, instance, mock, when } from 'ts-mockito';
-import { NpmCliConfigStub } from './stubs/npmCliConfigStub';
 import { PacoteStub } from './stubs/pacoteStub';
 
 let cachingOptsMock: ICachingOptions;
@@ -65,7 +62,6 @@ export const RequestsTests = {
 
     const cut = new PacoteClient(
       instance(pacoteMock),
-      NpmCliConfigStub,
       instance(configMock),
       instance(loggerMock)
     );
@@ -105,7 +101,6 @@ export const RequestsTests = {
 
     const cut = new PacoteClient(
       instance(pacoteMock),
-      NpmCliConfigStub,
       instance(configMock),
       instance(loggerMock)
     );
@@ -161,7 +156,6 @@ export const RequestsTests = {
 
     const cut = new PacoteClient(
       instance(pacoteMock),
-      NpmCliConfigStub,
       instance(configMock),
       instance(loggerMock)
     );
