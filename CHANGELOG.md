@@ -13,6 +13,11 @@
 
   - Fixed an issue where converting nuget ranges (1.0.*) weren't resolving pre-releases due to a typo in the code
 
+## Npm
+
+  - Increased performance when fetching dependencies by setting the before parameter 
+    in the [pacote](https://www.npmjs.com/package/pacote) options to the current fetch date+time 
+
 # 1.4.1
 
   - Fixed incorrect project path during extension activation
