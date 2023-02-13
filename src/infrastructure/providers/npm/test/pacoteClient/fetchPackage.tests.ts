@@ -20,6 +20,8 @@ import {
 import { test } from 'mocha-ui-esm';
 import path from 'node:path';
 import npa from 'npm-package-arg';
+import { homedir } from 'os';
+import { resolve } from 'path';
 import { LoggerStub } from 'test/unit/domain/logging';
 import { createFile, fileDir, removeFile } from 'test/unit/utils';
 import { anything, capture, instance, mock, when } from 'ts-mockito';
@@ -62,7 +64,12 @@ export const fetchPackageTests = {
       'packagepath',
     );
 
-    const testClientData: TNpmClientData = { projectPath: testPackageRes.path };
+    const testClientData: TNpmClientData = {
+      projectPath: testPackageRes.path,
+      envFilePath: "",
+      npmRcFilePath: "",
+      userConfigPath: resolve(homedir(), ".npmrc")
+    };
 
     const testRequest: TPackageClientRequest<any> = {
       providerName: 'testnpmprovider',
@@ -110,7 +117,12 @@ export const fetchPackageTests = {
       'packagepath',
     );
 
-    const testClientData: TNpmClientData = { projectPath: testPackageRes.path };
+    const testClientData: TNpmClientData = {
+      projectPath: testPackageRes.path,
+      envFilePath: "",
+      npmRcFilePath: "",
+      userConfigPath: resolve(homedir(), ".npmrc")
+    };
 
     const testRequest: TPackageClientRequest<any> = {
       providerName: 'testnpmprovider',
@@ -157,7 +169,12 @@ export const fetchPackageTests = {
       'packagepath',
     );
 
-    const testClientData: TNpmClientData = { projectPath: testPackageRes.path };
+    const testClientData: TNpmClientData = {
+      projectPath: testPackageRes.path,
+      envFilePath: "",
+      npmRcFilePath: "",
+      userConfigPath: resolve(homedir(), ".npmrc")
+    };
 
     const testRequest: TPackageClientRequest<any> = {
       providerName: 'testnpmprovider',
@@ -206,7 +223,12 @@ export const fetchPackageTests = {
       'packagepath',
     );
 
-    const testClientData: TNpmClientData = { projectPath: testPackageRes.path };
+    const testClientData: TNpmClientData = {
+      projectPath: testPackageRes.path,
+      envFilePath: "",
+      npmRcFilePath: "",
+      userConfigPath: resolve(homedir(), ".npmrc")
+    };
 
     const testRequest: TPackageClientRequest<any> = {
       providerName: 'testnpmprovider',
@@ -258,7 +280,15 @@ export const fetchPackageTests = {
       packagePath,
     );
 
-    const testClientData: TNpmClientData = { projectPath: packagePath };
+    const npmRcFilePath = resolve(packagePath, '.npmrc');
+    const envFilePath = resolve(packagePath, '.env');
+
+    const testClientData: TNpmClientData = {
+      projectPath: packagePath,
+      envFilePath,
+      npmRcFilePath,
+      userConfigPath: resolve(homedir(), ".npmrc")
+    };
 
     const testRequest: TPackageClientRequest<TNpmClientData> = {
       providerName: 'testnpmprovider',
@@ -272,14 +302,11 @@ export const fetchPackageTests = {
     }
 
     // write the npmrc file
-    const npmrcPath = packagePath + '/.npmrc';
-    const envPath = packagePath + '/.env';
+    await createFile(npmRcFilePath, Fixtures[".npmrc"])
+    await createFile(envFilePath, Fixtures[".npmrc-env"])
 
-    await createFile(npmrcPath, Fixtures[".npmrc"])
-    await createFile(envPath, Fixtures[".npmrc-env"])
-
-    assert.ok(await fileExists(npmrcPath), 'test .npmrc doesnt exist?')
-    assert.ok(await fileExists(envPath), 'test .env doesnt exist?')
+    assert.ok(await fileExists(npmRcFilePath), 'test .npmrc doesnt exist?')
+    assert.ok(await fileExists(envFilePath), 'test .env doesnt exist?')
 
     when(pacoteMock.packument(anything(), anything()))
       .thenResolve(Fixtures.packumentGit)
@@ -308,8 +335,8 @@ export const fetchPackageTests = {
     assert.equal(actualOpts[expectedRegistryAuth], expectedPassword);
 
     // delete the temp files
-    await removeFile(npmrcPath);
-    await removeFile(envPath);
+    await removeFile(npmRcFilePath);
+    await removeFile(envFilePath);
   }
 
 }

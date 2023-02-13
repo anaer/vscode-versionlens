@@ -1,3 +1,6 @@
 export type TNpmClientData = {
-  projectPath: string
+  projectPath: string;
+  userConfigPath: string;
+  npmRcFilePath: string;
+  envFilePath: string;
 }

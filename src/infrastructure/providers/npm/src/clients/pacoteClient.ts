@@ -42,7 +42,7 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
     const requestedPackage = request.dependency.package;
 
     const pacoteOpts = await NpmUtils.createPacoteOptions(
-      request.clientData.projectPath,
+      request.clientData,
       requestedPackage,
       this.NpmCliConfig
     );

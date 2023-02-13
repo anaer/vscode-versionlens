@@ -12,10 +12,12 @@ import {
 } from 'domain/packages';
 import { SuggestionProvider } from 'domain/providers';
 import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
+import { homedir } from 'node:os';
+import { resolve } from 'node:path';
 import { NpmPackageClient } from './clients/npmPackageClient';
 import { TNpmClientData } from './definitions/tNpmClientData';
 import { NpmConfig } from './npmConfig';
-import { npmReplaceVersion } from './npmUtils';
+import { npmReplaceVersion, resolveDotFilePath } from './npmUtils';
 
 const complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler> = {
   "version": createVersionDescFromJsonNode
@@ -92,7 +94,7 @@ export class NpmSuggestionProvider
     return packageDependencies;
   }
 
-  protected async preFetchSuggestions(
+  async preFetchSuggestions(
     projectPath: string,
     packagePath: string
   ): Promise<TNpmClientData> {
@@ -102,7 +104,32 @@ export class NpmSuggestionProvider
       this.config.github.defrost();
     }
 
-    return { projectPath }
+    // path to user .npmrc
+    const userConfigPath = resolve(homedir(), ".npmrc");
+
+    // package path takes precedence for .npmrc
+    const resolveDotFilePaths = [
+      packagePath,
+      projectPath
+    ];
+
+    // try to resolve any project .npmrc files
+    const npmRcFilePath = await resolveDotFilePath(".npmrc", resolveDotFilePaths);
+
+    // try to resolve any .env files (if .npmrc exists)
+    let envFilePath = "";
+    if (npmRcFilePath.length > 0) {
+      envFilePath = await resolveDotFilePath(".env", resolveDotFilePaths);
+
+      this.logger.debug("Resolved .npmrc %s", npmRcFilePath);
+    }
+
+    return {
+      projectPath,
+      userConfigPath,
+      npmRcFilePath,
+      envFilePath
+    };
   }
 
 }
