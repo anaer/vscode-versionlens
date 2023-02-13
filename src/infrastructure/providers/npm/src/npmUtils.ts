@@ -4,10 +4,12 @@ import {
   PackageClientSourceType,
   PackageResponse,
   PackageVersionType,
+  TPackageResource,
   VersionUtils
 } from 'domain/packages';
 import { fileExists, readFile } from 'domain/utils';
 import dotenv from 'dotenv';
+import { homedir } from 'node:os';
 import { resolve } from 'node:path';
 
 export function npmReplaceVersion(packageInfo: PackageResponse, newVersion: string): string {
@@ -74,4 +76,49 @@ export async function getDotEnv(cwds: Array<string>): Promise<KeyStringDictionar
 
   // return the parsed env object
   return dotenv.parse(await readFile(envPath));
+}
+
+export async function createPacoteOptions(
+  projectPath: string,
+  requestedPackage: TPackageResource,
+  NpmCliConfig: any
+): Promise<any> {
+  // package path takes precedence
+  const resolveDotFilePaths = [
+    requestedPackage.path,
+    projectPath
+  ];
+
+  // try to resolve the .npmrc file path
+  const npmRcFilePath = await resolveDotFilePath(
+    ".npmrc",
+    resolveDotFilePaths
+  );
+
+  const hasNpmRcFile = npmRcFilePath.length > 0;
+
+  // load the npm config
+  const userConfigPath = resolve(homedir(), ".npmrc");
+  const npmConfig = new NpmCliConfig({
+    shorthands: {},
+    definitions: {},
+    npmPath: requestedPackage.path,
+    // use the npmrc path to make npm cli parse the npmrc file
+    // otherwise defaults to the package path
+    cwd: hasNpmRcFile ? npmRcFilePath : requestedPackage.path,
+    // ensures user config is parsed by npm
+    argv: ['', '', `--userconfig=${userConfigPath}`],
+    // pass through .env data only if there is an .npmrc file
+    env: hasNpmRcFile
+      ? await getDotEnv(resolveDotFilePaths)
+      : {}
+  });
+
+  await npmConfig.load();
+
+  // flatten all the options
+  return npmConfig.list.reduce(
+    (memo, list) => ({ ...memo, ...list }),
+    { cwd: requestedPackage.path }
+  );
 }
