@@ -66,8 +66,8 @@ export class PubClient implements IPackageClient<null> {
     );
 
     const url = hosted
-      ? `${hosted.hostUrl}/api/documentation/${requestedPackage.name}`
-      : `${this.config.apiUrl}/api/documentation/${requestedPackage.name}`;
+      ? `${hosted.hostUrl}/${requestedPackage.name}`
+      : `${this.config.apiUrl}/${requestedPackage.name}`;
 
     try {
       return await this.createRemotePackageDocument(
