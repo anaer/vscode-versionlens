@@ -1,3 +1,15 @@
+# 1.5.1
+
+## Pub (dart)
+
+  - Updated pub api endpoint to fix missing tagged versions and sort order
+
+     Related to [issue #323](https://gitlab.com/versionlens/vscode-versionlens/-/issues/323)
+
+## All providers
+
+  - Dependency updates to app npm modules
+
 # 1.5.0
 
 ## Pub (dart)
