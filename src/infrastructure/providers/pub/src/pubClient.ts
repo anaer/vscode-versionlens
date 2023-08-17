@@ -17,7 +17,8 @@ import {
   TSemverSpec,
   VersionUtils
 } from 'domain/packages';
-import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
+import { SuggestionFactory, createSuggestions } from 'domain/suggestions';
+import semver from 'semver';
 import { PubConfig } from './pubConfig';
 
 export class PubClient implements IPackageClient<null> {
@@ -131,7 +132,7 @@ export class PubClient implements IPackageClient<null> {
 
     // seperate versions to releases and prereleases
     const { releases, prereleases } = VersionUtils.splitReleasesFromArray(
-      rawVersions,
+      rawVersions.sort(semver.compareLoose),
       this.config.prereleaseTagFilter
     );
 
