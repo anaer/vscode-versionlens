@@ -128,7 +128,11 @@ export class PubClient implements IPackageClient<null> {
       status: httpResponse.status,
     };
 
-    const rawVersions = VersionUtils.extractVersionsFromMap(packageInfo.versions);
+    // remove redacted versions
+    const liveVersions = packageInfo.versions.filter(pkg => !pkg.retracted);
+
+    // map each package.version in to an array
+    const rawVersions = VersionUtils.extractVersionsFromMap(liveVersions);
 
     // seperate versions to releases and prereleases
     const { releases, prereleases } = VersionUtils.splitReleasesFromArray(
