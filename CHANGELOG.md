@@ -1,3 +1,9 @@
+# 1.5.2
+
+## Pub (dart)
+
+  - Removed retracted versions from the pub api results
+
 # 1.5.1
 
 ## Pub (dart)
