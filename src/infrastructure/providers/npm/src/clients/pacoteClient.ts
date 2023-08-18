@@ -177,7 +177,7 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
   }
 
   getCacheKey(pkg: TPackageResource) {
-    return `${pkg.name}@${pkg.version}_${pkg.path}`;
+    return `${pkg.name}@${pkg.version}`;
   }
 
 }

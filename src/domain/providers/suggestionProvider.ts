@@ -88,10 +88,10 @@ export class SuggestionProvider
         const completedAt = performance.now();
 
         client.logger.info(
-          'Fetched %s@%s from %s (%s ms)',
+          'Fetched from %s %s@%s (%s ms)',
+          response.responseStatus?.source,
           requestedPackage.name,
           requestedPackage.version,
-          response.responseStatus?.source,
           Math.floor(completedAt - startedAt)
         );
 

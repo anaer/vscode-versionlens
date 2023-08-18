@@ -9,7 +9,7 @@
   },
   "author": "Peter Flannery",
   "license": "ISC",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "publisher": "pflannery",
   "displayName": "Version Lens",
   "icon": "images/logo.png",
@@ -141,6 +141,11 @@
           "dark": "images/icons/toggle-active-progress.svg",
           "light": "images/icons/toggle-active-progress.svg"
         }
+      },
+      {
+        "command": "versionlens.suggestions.clearCache",
+        "title": "Clear cache",
+        "category": "VersionLens"
       }
     ],
     "menus": {

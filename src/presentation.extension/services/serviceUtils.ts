@@ -63,8 +63,9 @@ export function addIconCommands(services: IServiceCollection) {
 export function addSuggestionCommands(services: IServiceCollection) {
   services.addSingleton(
     nameOf<ExtensionService>().suggestionCommandHandlers,
-    (container: DomainService & ExtensionService) =>
+    (container: ApplicationService & DomainService & ExtensionService) =>
       new SuggestionCommandHandlers(
+        container.suggestionProviders,
         container.extension.state,
         container.logger.child({ namespace: 'suggestion commands' })
       ),

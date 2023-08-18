@@ -1,3 +1,20 @@
+# 1.6.0
+
+## All providers
+
+  - The cache is no longer reset when de-activating the 'V' icon.
+    This is to allow caching across all project/package files in the workspace.
+
+    To clear the cache manually there is now a command called 
+    `VersionLens: Clear cache`.
+    This can be found by pressing `ctrl + shift + p` and searching for "VersionLens"
+
+## Npm
+
+  - No longer caches per package.json file.
+
+    Related to [issue #322](https://gitlab.com/versionlens/vscode-versionlens/-/issues/322)
+
 # 1.5.2
 
 ## Pub (dart)

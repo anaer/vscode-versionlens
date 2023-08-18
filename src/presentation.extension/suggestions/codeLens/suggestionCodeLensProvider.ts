@@ -70,8 +70,6 @@ export class SuggestionCodeLensProvider
   }
 
   reloadCodeLenses() {
-    // clear the cache
-    this.suggestionProvider.clearCache();
     // notify vscode to refresh version lenses
     this.notifyCodeLensesChanged.fire();
   }

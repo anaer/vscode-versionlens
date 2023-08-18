@@ -1,17 +1,17 @@
 import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import { PackageClientSourceType } from 'domain/packages';
+import { ISuggestionProvider } from 'domain/suggestions';
 import { CommandUtils, SuggestionCodeLens } from 'presentation.extension';
 import * as VsCode from 'vscode';
-import { env, workspace, WorkspaceEdit } from 'vscode';
+import { WorkspaceEdit, env, workspace } from 'vscode';
 import { VersionLensState } from '../../state/versionLensState';
-import {
-  SuggestionCommandContributions
-} from './eSuggestionCommandContributions';
+import { SuggestionCommandContributions } from './eSuggestionCommandContributions';
 
 export class SuggestionCommandHandlers implements IDisposable {
 
-  constructor(state: VersionLensState, logger: ILogger) {
+  constructor(versionLensProviders: Array<ISuggestionProvider>, state: VersionLensState, logger: ILogger) {
+    this.suggestionProviders = versionLensProviders;
     this.state = state;
     this.logger = logger;
 
@@ -23,6 +23,8 @@ export class SuggestionCommandHandlers implements IDisposable {
     );
   }
 
+  suggestionProviders: Array<ISuggestionProvider>;
+
   state: VersionLensState;
 
   logger: ILogger;
@@ -33,7 +35,6 @@ export class SuggestionCommandHandlers implements IDisposable {
    * Executes when a codelens update suggestion is clicked
    * @param codeLens 
    * @param packageVersion 
-   * @returns 
    */
   async onUpdateDependencyClicked(
     codeLens: SuggestionCodeLens,
@@ -51,8 +52,7 @@ export class SuggestionCommandHandlers implements IDisposable {
 
   /**
    * Executes when a codelens file link suggestion is clicked
-   * @param codeLens 
-   * @returns 
+   * @param codeLens
    */
   async onFileLinkClicked(codeLens: SuggestionCodeLens, filePath: string): Promise<void> {
     if (codeLens.package.source !== PackageClientSourceType.Directory) {
@@ -64,6 +64,15 @@ export class SuggestionCommandHandlers implements IDisposable {
     }
 
     await env.openExternal(<any>('file:///' + filePath));
+  }
+
+  /**
+   * Clears all suggestion provider caches
+   */
+  onClearCacheCommand(): void {
+    this.suggestionProviders.forEach(provider => {
+      provider.clearCache();
+    });
   }
 
   async dispose() {
