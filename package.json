@@ -88,6 +88,7 @@
     "commands": [
       {
         "command": "versionlens.icons.error",
+        "enablement": "false",
         "title": "An error has occurred. See log for details.",
         "category": "VersionLens",
         "icon": {
@@ -133,6 +134,7 @@
       },
       {
         "command": "versionlens.icons.showingProgress",
+        "enablement": "false",
         "title": "Analyzing dependencies...",
         "category": "VersionLens",
         "icon": {
