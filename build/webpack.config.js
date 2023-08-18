@@ -20,11 +20,12 @@ module.exports = function (env, argv) {
 
   const tsconfigFile = path.resolve(projectPath, 'tsconfig.json');
 
-  const outputFile = test ?
-    '[name].test.js' :
-    '[name].bundle.js'
+  const outputFile = test
+    ? '[name].test.js'
+    : '[name].bundle.js';
 
-  console.log("[info] " + tsconfigFile)
+  logInfo(tsconfigFile);
+  logInfo("Mode: " + argv.mode);
 
   return {
 
@@ -37,9 +38,9 @@ module.exports = function (env, argv) {
     entry: {
       extension,
     },
-  
+
     externalsType: 'commonjs',
-    externals: generateExternals(),
+    externals: generateExternals(test),
 
     optimization: {
       minimize: !devMode,
@@ -91,20 +92,20 @@ module.exports = function (env, argv) {
   }
 
   function generateAliases() {
-    log("[info] Generating aliases")
+    logInfo("Generating aliases")
 
     let aliases = {
       ...generateDynamicImportAliases(''),
       ...generateDynamicImportAliases('infrastructure/providers')
     }
 
-    // log("[debug] Generated aliases", aliases)
+    // logDebug("Generated aliases", aliases)
 
     return aliases;
   }
 
   function generateDynamicImportAliases(relativePath) {
-    // log("[debug] Generating area aliases for " + relativePath)
+    // logDebug("Generating area aliases for " + relativePath)
 
     const areaAliases = {}
     const areaPrefix = relativePath.length > 0 ?
@@ -132,13 +133,18 @@ module.exports = function (env, argv) {
 
   // Finds all the node_modules package names.
   // Returns a object map of strings {"{moduleName}": true, ...} to mark them as nodejs modules
-  function generateExternals() {
+  function generateExternals(testMode) {
     const externals = {
-      "vscode": true
+      "vscode": true,
+      "@npmcli/config": true,
+      "@npmcli/promise-spawn": true,
     }
 
     getDirectories(path.resolve(projectPath, 'node_modules'))
-      .forEach(moduleName => externals[moduleName] = true)
+      .filter(moduleName => moduleName.startsWith("@") == false)
+      .forEach(moduleName => externals[moduleName] = true);
+
+    // logDebug("Generated externals", externals)
 
     return [
       externals,
@@ -152,8 +158,18 @@ module.exports = function (env, argv) {
     )
   }
 
-  function log(message, ...optional) {
-    if (logging) console.log(message, ...optional)
+
+  function logDebug(message, ...optional) {
+    log("debug", message, ...optional);
+  }
+
+  function logInfo(message, ...optional) {
+    log("info", message, ...optional);
+  }
+
+  function log(level, message, ...optional) {
+    if (logging === false) return;
+    console.log(`[${level}]`, message, ...optional);
   }
 
 }

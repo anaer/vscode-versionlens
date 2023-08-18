@@ -42,7 +42,7 @@
     "compile:test": "tsc -p ./tsconfig.json",
     "lint:src": "npm run -s compile:src -- --noEmit",
     "lint:test": "npm run -s compile:test -- --noEmit",
-    "pack": "webpack --config=./build/webpack.js --env logging=true",
+    "pack": "webpack --config=./build/webpack.config.js --env logging=true",
     "pack:src": "npm run -s pack -- --mode=development",
     "pack:test": "npm run -s pack -- --env test=true --mode=development",
     "pretest": "npm run -s clean && npm run -s lint:test && npm run -s pack:test",
