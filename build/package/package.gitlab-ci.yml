@@ -1,0 +1,19 @@
+image: docker:stable
+
+services:
+  - docker:dind
+
+workflow:
+  rules:
+    - when: always
+
+package:
+  script:
+    - docker build -t versionlens:package -f build/package/package.dockerfile .
+    - docker run --name versionlens-container versionlens:package
+    - docker cp versionlens-container:/versionlens/artifacts/ .
+    - docker rm -f versionlens-container
+    - mv ./artifacts/*.vsix .
+  artifacts:
+    paths:
+      - ./*.vsix
