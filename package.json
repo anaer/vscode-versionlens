@@ -75,7 +75,7 @@
     "awilix": "8.0.1",
     "dotenv": "16.3.1",
     "jsonc-parser": "3.2.0",
-    "minimatch": "6.1.10",
+    "minimatch": "9.0.3",
     "npm-package-arg": "11.0.0",
     "pacote": "17.0.2",
     "request-light": "0.7.0",

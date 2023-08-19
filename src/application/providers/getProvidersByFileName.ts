@@ -1,5 +1,5 @@
 import { IProvider } from "domain/providers";
-import minimatch from 'minimatch';
+import { minimatch } from 'minimatch';
 import { basename } from 'node:path';
 
 export function getProvidersByFileName<T extends IProvider>(
