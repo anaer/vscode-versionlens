@@ -131,25 +131,31 @@ module.exports = function (env, argv) {
     return areaAliases;
   }
 
-  // Finds all the node_modules package names.
+  // Finds all the dependencies in the package.json.
   // Returns a object map of strings {"{moduleName}": true, ...} to mark them as nodejs modules
   function generateExternals(testMode) {
-    const externals = {
-      "vscode": true,
-      "@npmcli/config": true,
-      "@npmcli/promise-spawn": true,
-    }
 
-    getDirectories(path.resolve(projectPath, 'node_modules'))
-      .filter(moduleName => moduleName.startsWith("@") == false)
-      .forEach(moduleName => externals[moduleName] = true);
+    // get the dependencies from the package.json
+    const packageJsonPath = path.resolve(process.cwd(), 'package.json');
+    const jsonContent = fs.readFileSync(packageJsonPath, 'utf8');
+    const { dependencies, devDependencies } = JSON.parse(jsonContent);
+
+    const externals = {
+      "vscode": true
+    };
+
+    Object.keys(dependencies).forEach(x => externals[x] = true);
+
+    if (testMode) {
+      Object.keys(devDependencies).forEach(x => externals[x] = true);
+    }
 
     // logDebug("Generated externals", externals)
 
     return [
       externals,
       /package\.json$/,
-    ]
+    ];
   }
 
   function getDirectories(absolutePath) {
@@ -157,7 +163,6 @@ module.exports = function (env, argv) {
       file => fs.statSync(absolutePath + '/' + file).isDirectory()
     )
   }
-
 
   function logDebug(message, ...optional) {
     log("debug", message, ...optional);
