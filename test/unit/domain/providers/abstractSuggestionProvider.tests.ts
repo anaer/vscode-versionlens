@@ -115,10 +115,10 @@ export const AbstractSuggestionProviderTests = <any>{
           verify(clientMock.fetchPackage(this.testRequest)).once();
           verify(
             this.loggerMock.info(
-              'Fetched %s@%s from %s (%s ms)',
+              'Fetched from %s %s@%s (%s ms)',
+              testRespDoc.responseStatus?.source,
               this.testRequest.dependency.package.name,
               this.testRequest.dependency.package.version,
-              testRespDoc.responseStatus?.source,
               any()
             )
           ).once();
