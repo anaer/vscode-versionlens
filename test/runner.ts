@@ -38,5 +38,5 @@ export function run(): Promise<void> {
 }
 
 if (process.env.TEST && process.env.TEST === 'unit') {
-  runner.run()
+  run().catch(e => process.exit(1));
 }
