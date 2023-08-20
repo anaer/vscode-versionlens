@@ -1,4 +1,4 @@
-# 1.6.0-preview.1
+# 1.6.0-preview.2
 
 ## All providers
 
