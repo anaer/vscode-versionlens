@@ -15,6 +15,12 @@
 
     Related to [issue #322](https://gitlab.com/versionlens/vscode-versionlens/-/issues/322)
 
+## DotNet
+
+  - Added suggestions for the VersionOverride attribute.
+
+    `<PackageReference Include="Newtonsoft.Json" VersionOverride="13.0.1" />`
+
 # 1.5.2
 
 ## Pub (dart)

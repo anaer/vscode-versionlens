@@ -16,6 +16,7 @@ export default {
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.1" />
       <PackageVersion Include="System.Text.Json" Version="4.7.2" />
+      <PackageVersion Include="Microsoft.Extensions.Options" VersionOverride="1.2.3" />
   </ItemGroup>
 </Project>
     `,
@@ -89,6 +90,24 @@ export default {
             versionRange: {
               "end": 362,
               "start": 357
+            },
+          }
+        }
+      },
+      <PackageDescriptor>{
+        name: "Microsoft.Extensions.Options",
+        nameRange: {
+          start: 373,
+          end: 373
+        },
+        typeCount: 1,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          version: <TPackageVersionDescriptor>{
+            type: "version",
+            version: "1.2.3",
+            versionRange: {
+              "end": 450,
+              "start": 445
             },
           }
         }

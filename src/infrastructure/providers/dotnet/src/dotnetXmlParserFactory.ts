@@ -29,7 +29,8 @@ export function createDependenciesFromXml(
 }
 
 function extractPackageLensDataFromNodes(
-  topLevelNodes, xml: string,
+  topLevelNodes,
+  xml: string,
   includePropertyNames: Array<string>
 ): Array<PackageDescriptor> {
   const collector = [];
@@ -44,10 +45,15 @@ function extractPackageLensDataFromNodes(
     }
   )
 
-  function parseVersionNode(itemGroupNode) {
-    if (includePropertyNames.includes(itemGroupNode.name) == false) return;
-    const dependencyLens = createFromAttribute(itemGroupNode, xml);
-    if (dependencyLens) collector.push(dependencyLens);
+  function parseVersionNode(dependencyNode) {
+    if (includePropertyNames.includes(dependencyNode.name) == false) {
+      return;
+    }
+
+    const dependencyLens = createFromAttribute(dependencyNode, xml);
+    if (dependencyLens) {
+      collector.push(dependencyLens);
+    }
   }
 
   return collector;
@@ -60,11 +66,18 @@ function createFromAttribute(node, xml: string): PackageDescriptor {
   };
 
   // xmldoc doesn't report attribute ranges so this gets them manually
-  const versionRange = getAttributeRange(node, ' version="', xml);
+  let versionRange = null;
+  const versionAttrNames = ['VersionOverride', 'Version']
+  for (let index = 0; index < versionAttrNames.length; index++) {
+    const attrName = versionAttrNames[index];
+    versionRange = getAttributeRange(node, ` ${attrName}="`, xml);
+    if (versionRange != null) break;
+  }
+
   if (versionRange === null) return null;
 
   const name = node.attr.Include || node.attr.Update || node.attr.Name;
-  const version = node.attr.Version;
+  const version = node.attr.VersionOverride || node.attr.Version;
 
   const versionDesc: TPackageVersionDescriptor = {
     type: "version",
@@ -79,11 +92,13 @@ function createFromAttribute(node, xml: string): PackageDescriptor {
 }
 
 function getAttributeRange(
-  node, attributeName: string, xml: string
+  node,
+  attributeName: string,
+  xml: string
 ): Nullable<TPackageDependencyRange> {
   const lineText = xml.substring(node.startTagPosition, node.position);
 
-  let start = lineText.toLowerCase().indexOf(attributeName);
+  let start = lineText.indexOf(attributeName);
   if (start === -1) return null;
   start += attributeName.length
 
