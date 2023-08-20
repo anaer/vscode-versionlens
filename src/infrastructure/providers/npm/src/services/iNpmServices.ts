@@ -5,7 +5,7 @@ import { PacoteClient } from '../clients/pacoteClient';
 import { NpmConfig } from '../npmConfig';
 import { GitHubOptions } from '../options/githubOptions';
 
-export interface NpmService {
+export interface INpmServices {
   npmCachingOpts: CachingOptions,
   npmHttpOpts: HttpOptions,
   npmGitHubOpts: GitHubOptions,

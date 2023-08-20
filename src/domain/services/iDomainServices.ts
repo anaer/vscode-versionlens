@@ -1,10 +1,13 @@
 import { CachingOptions, HttpOptions } from 'domain/clients';
 import { Config } from 'domain/configuration';
-import { IServiceProvider } from 'domain/di';
+import { IServiceCollectionFactory, IServiceProvider } from 'domain/di';
 import { ILogger, ILoggerChannel, LoggingOptions } from 'domain/logging';
 import { ISuggestionProvider } from 'domain/suggestions';
 
-export interface DomainService {
+export interface IDomainServices {
+
+  serviceCollectionFactory: IServiceCollectionFactory,
+
   serviceProvider: IServiceProvider,
 
   appConfig: Config,
@@ -19,5 +22,8 @@ export interface DomainService {
 
   loggerChannel: ILoggerChannel,
 
-  suggestionProvider: ISuggestionProvider
+  providerNames: Array<string>,
+
+  suggestionProviders: Array<ISuggestionProvider>
+  
 }

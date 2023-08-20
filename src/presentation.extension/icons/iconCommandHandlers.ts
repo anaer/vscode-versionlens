@@ -1,7 +1,7 @@
 // vscode references
-import { getProvidersByFileName } from 'application/providers';
 import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
+import { getProvidersByFileName } from 'domain/providers';
 import {
   CommandUtils,
   IconCommandContributions,

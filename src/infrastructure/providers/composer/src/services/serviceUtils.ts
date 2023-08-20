@@ -1,18 +1,18 @@
 import { CachingOptions, HttpOptions } from "domain/clients";
 import { IServiceCollection } from "domain/di";
-import { DomainService } from "domain/services/domainService";
+import { IDomainServices, IProviderServices } from "domain/services";
 import { nameOf } from "domain/utils";
 import { createJsonClient } from "infrastructure/http";
 import { ComposerClient } from "../composerClient";
 import { ComposerConfig } from "../composerConfig";
 import { ComposerSuggestionProvider } from "../composerSuggestionProvider";
 import { ComposerContributions } from "../definitions/eComposerContributions";
-import { ComposerService } from "./composerService";
+import { IComposerService } from "./iComposerServices";
 
 export function addCachingOptions(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<ComposerService>().composerCachingOpts,
-    (container: DomainService) =>
+    nameOf<IComposerService>().composerCachingOpts,
+    (container: IDomainServices) =>
       new CachingOptions(
         container.appConfig,
         ComposerContributions.Caching,
@@ -23,8 +23,8 @@ export function addCachingOptions(services: IServiceCollection) {
 
 export function addHttpOptions(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<ComposerService>().composerHttpOpts,
-    (container: DomainService) =>
+    nameOf<IComposerService>().composerHttpOpts,
+    (container: IDomainServices) =>
       new HttpOptions(
         container.appConfig,
         ComposerContributions.Http,
@@ -35,8 +35,8 @@ export function addHttpOptions(services: IServiceCollection) {
 
 export function addComposerConfig(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<ComposerService>().composerConfig,
-    (container: ComposerService & DomainService) =>
+    nameOf<IComposerService>().composerConfig,
+    (container: IComposerService & IDomainServices) =>
       new ComposerConfig(
         container.appConfig,
         container.composerCachingOpts,
@@ -47,8 +47,8 @@ export function addComposerConfig(services: IServiceCollection) {
 
 export function addJsonClient(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<ComposerService>().composerJsonClient,
-    (container: ComposerService & DomainService) =>
+    nameOf<IComposerService>().composerJsonClient,
+    (container: IComposerService & IDomainServices) =>
       createJsonClient(
         {
           caching: container.composerCachingOpts,
@@ -61,8 +61,8 @@ export function addJsonClient(services: IServiceCollection) {
 
 export function addComposerClient(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<ComposerService>().composerClient,
-    (container: ComposerService & DomainService) =>
+    nameOf<IComposerService>().composerClient,
+    (container: IComposerService & IDomainServices) =>
       new ComposerClient(
         container.composerConfig,
         container.composerJsonClient,
@@ -73,8 +73,8 @@ export function addComposerClient(services: IServiceCollection) {
 
 export function addSuggestionProvider(services: IServiceCollection) {
   services.addScoped(
-    nameOf<DomainService>().suggestionProvider,
-    (container: ComposerService & DomainService) =>
+    nameOf<IProviderServices>().suggestionProvider,
+    (container: IComposerService & IDomainServices) =>
       new ComposerSuggestionProvider(
         container.composerClient,
         container.logger.child({ namespace: 'composer provider' })

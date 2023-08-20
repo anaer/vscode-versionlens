@@ -5,7 +5,7 @@ export * from './events/textEditorEvents';
 export * from './extensionContainer';
 export * from './icons/eIconCommandContributions';
 export * from './icons/iconCommandHandlers';
-export * from './services/extensionService';
+export * from './services/iExtensionServices';
 export * from './state/contextState';
 export * from './state/versionLensState';
 export * from './suggestions/codeLens/suggestionCodeLens';

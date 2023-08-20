@@ -5,14 +5,14 @@ import {
   IProcessClient
 } from "domain/clients";
 import {
-  NugetOptions,
   DotNetCli,
   NuGetPackageClient,
-  NuGetResourceClient
+  NuGetResourceClient,
+  NugetOptions
 } from "../..";
 import { DotNetConfig } from "../dotnetConfig";
 
-export interface DotNetService {
+export interface IDotNetServices {
   dotnetCachingOpts: CachingOptions,
   dotnetHttpOpts: HttpOptions,
   nugetOpts: NugetOptions,

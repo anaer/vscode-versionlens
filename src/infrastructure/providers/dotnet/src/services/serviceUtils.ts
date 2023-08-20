@@ -1,6 +1,6 @@
 import { CachingOptions, HttpOptions } from "domain/clients";
 import { IServiceCollection } from "domain/di";
-import { DomainService } from "domain/services/domainService";
+import { IDomainServices, IProviderServices } from "domain/services";
 import { nameOf } from "domain/utils";
 import { createJsonClient } from 'infrastructure/http';
 import { createProcessClient } from 'infrastructure/process';
@@ -11,12 +11,12 @@ import { DotNetContributions } from "../definitions/eDotNetContributions";
 import { DotNetConfig } from '../dotnetConfig';
 import { DotNetSuggestionProvider } from '../dotnetSuggestionProvider';
 import { NugetOptions } from "../options/nugetOptions";
-import { DotNetService } from "./dotnetService";
+import { IDotNetServices } from "./iDotnetServices";
 
 export function addCachingOptions(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<DotNetService>().dotnetCachingOpts,
-    (container: DomainService) =>
+    nameOf<IDotNetServices>().dotnetCachingOpts,
+    (container: IDomainServices) =>
       new CachingOptions(
         container.appConfig,
         DotNetContributions.Caching,
@@ -27,8 +27,8 @@ export function addCachingOptions(services: IServiceCollection) {
 
 export function addHttpOptions(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<DotNetService>().dotnetHttpOpts,
-    (container: DomainService) =>
+    nameOf<IDotNetServices>().dotnetHttpOpts,
+    (container: IDomainServices) =>
       new HttpOptions(
         container.appConfig,
         DotNetContributions.Http,
@@ -39,8 +39,8 @@ export function addHttpOptions(services: IServiceCollection) {
 
 export function addNugetOptions(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<DotNetService>().nugetOpts,
-    (container: DomainService) =>
+    nameOf<IDotNetServices>().nugetOpts,
+    (container: IDomainServices) =>
       new NugetOptions(
         container.appConfig,
         DotNetContributions.Nuget
@@ -50,8 +50,8 @@ export function addNugetOptions(services: IServiceCollection) {
 
 export function addDotNetConfig(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<DotNetService>().dotnetConfig,
-    (container: DotNetService & DomainService) =>
+    nameOf<IDotNetServices>().dotnetConfig,
+    (container: IDotNetServices & IDomainServices) =>
       new DotNetConfig(
         container.appConfig,
         container.dotnetCachingOpts,
@@ -63,8 +63,8 @@ export function addDotNetConfig(services: IServiceCollection) {
 
 export function addProcessClient(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<DotNetService>().dotnetProcess,
-    (container: DotNetService & DomainService) =>
+    nameOf<IDotNetServices>().dotnetProcess,
+    (container: IDotNetServices & IDomainServices) =>
       createProcessClient(
         container.dotnetCachingOpts,
         container.logger.child({ namespace: 'dotnet process' })
@@ -74,8 +74,8 @@ export function addProcessClient(services: IServiceCollection) {
 
 export function addCliClient(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<DotNetService>().dotnetCli,
-    (container: DotNetService & DomainService) =>
+    nameOf<IDotNetServices>().dotnetCli,
+    (container: IDotNetServices & IDomainServices) =>
       new DotNetCli(
         container.dotnetConfig,
         container.dotnetProcess,
@@ -86,8 +86,8 @@ export function addCliClient(services: IServiceCollection) {
 
 export function addJsonClient(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<DotNetService>().dotnetJsonClient,
-    (container: DotNetService & DomainService) =>
+    nameOf<IDotNetServices>().dotnetJsonClient,
+    (container: IDotNetServices & IDomainServices) =>
       createJsonClient(
         {
           caching: container.dotnetCachingOpts,
@@ -100,8 +100,8 @@ export function addJsonClient(services: IServiceCollection) {
 
 export function addNuGetPackageClient(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<DotNetService>().nugetClient,
-    (container: DotNetService & DomainService) =>
+    nameOf<IDotNetServices>().nugetClient,
+    (container: IDotNetServices & IDomainServices) =>
       new NuGetPackageClient(
         container.dotnetConfig,
         container.dotnetJsonClient,
@@ -112,8 +112,8 @@ export function addNuGetPackageClient(services: IServiceCollection) {
 
 export function addNuGetResourceClient(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<DotNetService>().nugetResClient,
-    (container: DotNetService & DomainService) =>
+    nameOf<IDotNetServices>().nugetResClient,
+    (container: IDotNetServices & IDomainServices) =>
       new NuGetResourceClient(
         container.dotnetJsonClient,
         container.logger.child({ namespace: 'dotnet resource service' })
@@ -123,8 +123,8 @@ export function addNuGetResourceClient(services: IServiceCollection) {
 
 export function addSuggestionProvider(services: IServiceCollection) {
   services.addScoped(
-    nameOf<DomainService>().suggestionProvider,
-    (container: DotNetService & DomainService) =>
+    nameOf<IProviderServices>().suggestionProvider,
+    (container: IDotNetServices & IDomainServices) =>
       new DotNetSuggestionProvider(
         container.dotnetCli,
         container.nugetClient,

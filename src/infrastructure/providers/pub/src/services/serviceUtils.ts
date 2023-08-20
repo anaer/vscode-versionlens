@@ -1,18 +1,18 @@
 import { CachingOptions, HttpOptions } from "domain/clients";
 import { IServiceCollection } from "domain/di";
-import { DomainService } from "domain/services/domainService";
+import { IDomainServices, IProviderServices } from "domain/services";
 import { nameOf } from "domain/utils";
 import { createJsonClient } from "infrastructure/http";
 import { PubContributions } from "../definitions/ePubContributions";
 import { PubClient } from "../pubClient";
 import { PubConfig } from "../pubConfig";
 import { PubSuggestionProvider } from "../pubSuggestionProvider";
-import { PubService } from "./ePubService";
+import { IPubServices } from "./iPubServices";
 
 export function addCachingOptions(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<PubService>().pubCachingOpts,
-    (container: DomainService) =>
+    nameOf<IPubServices>().pubCachingOpts,
+    (container: IDomainServices) =>
       new CachingOptions(
         container.appConfig,
         PubContributions.Caching,
@@ -23,8 +23,8 @@ export function addCachingOptions(services: IServiceCollection) {
 
 export function addHttpOptions(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<PubService>().pubHttpOpts,
-    (container: DomainService) =>
+    nameOf<IPubServices>().pubHttpOpts,
+    (container: IDomainServices) =>
       new HttpOptions(
         container.appConfig,
         PubContributions.Http,
@@ -35,8 +35,8 @@ export function addHttpOptions(services: IServiceCollection) {
 
 export function addPubConfig(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<PubService>().pubConfig,
-    (container: PubService & DomainService) =>
+    nameOf<IPubServices>().pubConfig,
+    (container: IPubServices & IDomainServices) =>
       new PubConfig(
         container.appConfig,
         container.pubCachingOpts,
@@ -47,8 +47,8 @@ export function addPubConfig(services: IServiceCollection) {
 
 export function addJsonClient(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<PubService>().pubJsonClient,
-    (container: PubService & DomainService) =>
+    nameOf<IPubServices>().pubJsonClient,
+    (container: IPubServices & IDomainServices) =>
       createJsonClient(
         {
           caching: container.pubCachingOpts,
@@ -61,8 +61,8 @@ export function addJsonClient(services: IServiceCollection) {
 
 export function addPubClient(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<PubService>().pubClient,
-    (container: PubService & DomainService) =>
+    nameOf<IPubServices>().pubClient,
+    (container: IPubServices & IDomainServices) =>
       new PubClient(
         container.pubConfig,
         container.pubJsonClient,
@@ -73,8 +73,8 @@ export function addPubClient(services: IServiceCollection) {
 
 export function addSuggestionProvider(services: IServiceCollection) {
   services.addScoped(
-    nameOf<DomainService>().suggestionProvider,
-    (container: PubService & DomainService) =>
+    nameOf<IProviderServices>().suggestionProvider,
+    (container: IPubServices & IDomainServices) =>
       new PubSuggestionProvider(
         container.pubClient,
         container.logger.child({ namespace: 'pub provider' })

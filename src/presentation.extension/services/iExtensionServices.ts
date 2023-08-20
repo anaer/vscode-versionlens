@@ -8,9 +8,7 @@ import {
 } from 'presentation.extension';
 import { OutputChannel } from 'vscode';
 
-export interface ExtensionService {
-
-  extensionName: string,
+export interface IExtensionServices {
 
   extension: VersionLensExtension,
 

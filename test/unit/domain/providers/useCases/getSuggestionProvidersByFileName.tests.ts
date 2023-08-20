@@ -1,7 +1,6 @@
-import { getProvidersByFileName } from 'application/providers';
 import assert from 'assert';
 import { ILogger } from 'domain/logging';
-import { IProvider, IProviderConfig } from 'domain/providers';
+import { IProvider, IProviderConfig, getProvidersByFileName } from 'domain/providers';
 import { test } from 'mocha-ui-esm';
 import { instance, mock, when } from 'ts-mockito';
 

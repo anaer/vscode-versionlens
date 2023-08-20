@@ -1,14 +1,12 @@
-import {
-  addSuggestionProviderNames,
-  addSuggestionProviders
-} from 'application/services';
 import { IServiceProvider } from 'domain/di';
 import {
+  IDomainServices,
   addCachingOptions,
   addHttpOptions,
   addLoggingOptions
 } from 'domain/services';
-import { AwilixServiceCollection } from 'infrastructure/di';
+import { nameOf } from 'domain/utils';
+import { AwilixServiceCollectionFactory } from 'infrastructure/di';
 import {
   addWinstonChannelLogger,
   addWinstonLogger
@@ -21,21 +19,27 @@ import {
   addAppConfig,
   addIconCommands,
   addOutputChannel,
+  addProviderNames,
   addSuggestionCommands,
+  addSuggestionProviders,
   addTextDocumentEvents,
   addTextEditorEvents,
   addVersionLensExtension,
   addVersionLensProviders
 } from './services/serviceUtils';
 
-export async function configureContainer(
-  context: ExtensionContext
-): Promise<IServiceProvider> {
+export async function configureContainer(context: ExtensionContext): Promise<IServiceProvider> {
 
-  const services = new AwilixServiceCollection();
+  const serviceCollectionFactory = new AwilixServiceCollectionFactory();
+  const services = serviceCollectionFactory.createServiceCollection();
+
+  services.addSingleton(
+    nameOf<IDomainServices>().serviceCollectionFactory,
+    serviceCollectionFactory
+  );
 
   // application
-  addSuggestionProviderNames(services);
+  addProviderNames(services);
 
   addSuggestionProviders(services);
 

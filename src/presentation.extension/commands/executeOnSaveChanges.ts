@@ -1,5 +1,5 @@
-import { hasPackageDepsChanged } from "application/packages";
 import { ILogger } from "domain/logging";
+import { hasPackageDepsChanged } from "domain/packages";
 import { IProvider } from "domain/providers";
 import { VersionLensState } from "presentation.extension";
 import { commands } from "vscode";

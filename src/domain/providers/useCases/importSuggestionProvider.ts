@@ -1,10 +1,9 @@
-import { IServiceProvider } from "domain/di";
+import { IServiceCollectionFactory, IServiceProvider } from "domain/di";
 import { ILogger } from "domain/logging";
 import { IProviderModule } from "domain/providers";
-import { DomainService } from "domain/services";
+import { IDomainServices, IProviderServices } from "domain/services";
 import { ISuggestionProvider } from "domain/suggestions";
 import { nameOf } from "domain/utils";
-import { AwilixServiceCollection } from "infrastructure/di";
 
 export async function importSuggestionProvider(
   serviceProvider: IServiceProvider,
@@ -13,18 +12,25 @@ export async function importSuggestionProvider(
 ): Promise<ISuggestionProvider> {
 
   try {
-    const module: IProviderModule = await import(`infrastructure/providers/${providerName}/index`);
 
     logger.debug('Activating container scope for %s', providerName);
+
+    // get the service collection factory
+    const serviceCollectionFactory = serviceProvider.getService<IServiceCollectionFactory>(
+      nameOf<IDomainServices>().serviceCollectionFactory
+    );
+
+    // import the provider
+    const module: IProviderModule = await import(`infrastructure/providers/${providerName}/index`);
 
     // register the provider
     const childServiceProvider = await module.configureContainer(
       serviceProvider,
-      new AwilixServiceCollection()
+      serviceCollectionFactory.createServiceCollection()
     );
 
     const suggestionProvider = childServiceProvider.getService<ISuggestionProvider>(
-      nameOf<DomainService>().suggestionProvider
+      nameOf<IProviderServices>().suggestionProvider
     );
 
     logger.debug(

@@ -1,7 +1,7 @@
 import { Nullable } from 'domain/generics';
 import { VersionUtils } from 'domain/packages';
 import semver from 'semver';
-import { SuggestionFlags, SuggestionStatus, TPackageSuggestion } from './index';
+import { SuggestionFlags, SuggestionStatus, TPackageSuggestion } from '../index';
 import {
   createFixedStatus,
   createLatest,
@@ -9,7 +9,7 @@ import {
   createNoMatch,
   createSatisifiesLatest,
   createSuggestion
-} from './suggestionFactory';
+} from '../suggestionFactory';
 
 export function createSuggestions(
   versionRange: string,

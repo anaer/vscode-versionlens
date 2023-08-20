@@ -1,12 +1,12 @@
 import { IServiceCollection, ServiceInjectionMode } from "domain/di";
 import { ILoggingOptions } from "domain/logging";
-import { DomainService } from "domain/services";
+import { IDomainServices } from "domain/services";
 import { nameOf } from "domain/utils";
-import { createWinstonLogger, OutputChannelTransport } from "infrastructure/logging";
+import { OutputChannelTransport, createWinstonLogger } from "infrastructure/logging";
 
 export function addWinstonChannelLogger(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<DomainService>().loggerChannel,
+    nameOf<IDomainServices>().loggerChannel,
     (outputChannel, loggingOptions: ILoggingOptions) =>
       new OutputChannelTransport(
         outputChannel,
@@ -19,8 +19,8 @@ export function addWinstonChannelLogger(services: IServiceCollection) {
 
 export function addWinstonLogger(services: IServiceCollection, namespace: string) {
   services.addSingleton(
-    nameOf<DomainService>().logger,
-    (container: DomainService) =>
+    nameOf<IDomainServices>().logger,
+    (container: IDomainServices) =>
       createWinstonLogger(container.loggerChannel, { namespace })
   );
 }

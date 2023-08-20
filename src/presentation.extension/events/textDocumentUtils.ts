@@ -1,5 +1,4 @@
-import { getProvidersByFileName } from "application/providers";
-import { IProvider } from "domain/providers";
+import { IProvider, getProvidersByFileName } from "domain/providers";
 import { TextDocument } from "vscode";
 
 export function getDocumentProviders(

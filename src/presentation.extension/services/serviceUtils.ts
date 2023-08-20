@@ -1,8 +1,8 @@
-import { ApplicationService } from "application/services";
 import { Config } from "domain/configuration";
 import { IServiceCollection } from "domain/di";
 import { DisposableArray } from "domain/generics";
-import { DomainService } from "domain/services";
+import { importSuggestionProviders } from "domain/providers";
+import { IDomainServices } from "domain/services";
 import { nameOf } from "domain/utils";
 import {
   IconCommandHandlers,
@@ -13,11 +13,11 @@ import {
   VersionLensExtension
 } from "presentation.extension";
 import { window, workspace } from "vscode";
-import { ExtensionService } from "./extensionService";
+import { IExtensionServices } from "./iExtensionServices";
 
 export function addAppConfig(services: IServiceCollection, appName: string) {
   services.addSingleton(
-    nameOf<DomainService>().appConfig,
+    nameOf<IDomainServices>().appConfig,
     () => new Config(workspace.getConfiguration, appName)
   )
 }
@@ -28,8 +28,8 @@ export function addVersionLensExtension(services: IServiceCollection) {
     : "";
 
   services.addSingleton(
-    nameOf<ExtensionService>().extension,
-    (container: ApplicationService & DomainService & ExtensionService) =>
+    nameOf<IExtensionServices>().extension,
+    (container: IDomainServices & IExtensionServices) =>
       new VersionLensExtension(
         container.appConfig,
         projectPath,
@@ -40,7 +40,7 @@ export function addVersionLensExtension(services: IServiceCollection) {
 
 export function addOutputChannel(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<ExtensionService>().outputChannel,
+    nameOf<IExtensionServices>().outputChannel,
     // vscode output channel called "VersionLens"
     () => window.createOutputChannel(VersionLensExtension.extensionName)
   )
@@ -48,8 +48,8 @@ export function addOutputChannel(services: IServiceCollection) {
 
 export function addIconCommands(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<ExtensionService>().iconCommandHandlers,
-    (container: DomainService & ExtensionService) =>
+    nameOf<IExtensionServices>().iconCommandHandlers,
+    (container: IDomainServices & IExtensionServices) =>
       new IconCommandHandlers(
         container.extension.state,
         container.outputChannel,
@@ -62,8 +62,8 @@ export function addIconCommands(services: IServiceCollection) {
 
 export function addSuggestionCommands(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<ExtensionService>().suggestionCommandHandlers,
-    (container: ApplicationService & DomainService & ExtensionService) =>
+    nameOf<IExtensionServices>().suggestionCommandHandlers,
+    (container: IDomainServices & IExtensionServices) =>
       new SuggestionCommandHandlers(
         container.suggestionProviders,
         container.extension.state,
@@ -75,8 +75,8 @@ export function addSuggestionCommands(services: IServiceCollection) {
 
 export function addTextEditorEvents(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<ExtensionService>().textEditorEvents,
-    (container: ApplicationService & DomainService & ExtensionService) =>
+    nameOf<IExtensionServices>().textEditorEvents,
+    (container: IDomainServices & IExtensionServices) =>
       new TextEditorEvents(
         container.extension.state,
         container.suggestionProviders,
@@ -89,8 +89,8 @@ export function addTextEditorEvents(services: IServiceCollection) {
 
 export function addTextDocumentEvents(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<ExtensionService>().textDocumentEvents,
-    (container: DomainService & ExtensionService) =>
+    nameOf<IExtensionServices>().textDocumentEvents,
+    (container: IDomainServices & IExtensionServices) =>
       new TextDocumentEvents(
         container.extension.state,
         container.versionLensProviders,
@@ -101,8 +101,8 @@ export function addTextDocumentEvents(services: IServiceCollection) {
 
 export function addVersionLensProviders(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<ExtensionService>().versionLensProviders,
-    (container: ApplicationService & DomainService & ExtensionService) =>
+    nameOf<IExtensionServices>().versionLensProviders,
+    (container: IDomainServices & IExtensionServices) =>
       new DisposableArray(
         container.suggestionProviders.map(
           suggestionProvider => new SuggestionCodeLensProvider(
@@ -113,5 +113,32 @@ export function addVersionLensProviders(services: IServiceCollection) {
         )
       ),
     true
+  )
+}
+
+export async function addSuggestionProviders(services: IServiceCollection) {
+  services.addSingleton(
+    nameOf<IDomainServices>().suggestionProviders,
+    async (container: IDomainServices) => {
+      return await importSuggestionProviders(
+        container.serviceProvider,
+        container.providerNames,
+        container.logger
+      )
+    }
+  )
+}
+
+export function addProviderNames(services: IServiceCollection) {
+  services.addSingleton(
+    nameOf<IDomainServices>().providerNames,
+    [
+      'composer',
+      'dotnet',
+      'dub',
+      'maven',
+      'npm',
+      'pub',
+    ]
   )
 }

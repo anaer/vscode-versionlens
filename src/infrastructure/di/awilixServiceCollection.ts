@@ -12,7 +12,7 @@ import {
   TServiceResolver
 } from 'domain/di';
 import { AsyncFunction, IDisposable, KeyDictionary } from 'domain/generics';
-import { DomainService } from 'domain/services';
+import { IDomainServices } from 'domain/services';
 import { nameOf } from 'domain/utils';
 import { AwilixServiceProvider } from './awilixServiceProvider';
 import { registerAsyncSingletons } from './awillixUtils';
@@ -99,7 +99,7 @@ export class AwilixServiceCollection implements IServiceCollection {
     // add the service provider to the container
     const serviceProvider = new AwilixServiceProvider(name, container);
     this.addSingleton(
-      nameOf<DomainService>().serviceProvider,
+      nameOf<IDomainServices>().serviceProvider,
       serviceProvider,
       true
     );

@@ -1,6 +1,6 @@
 import { CachingOptions, HttpOptions } from "domain/clients";
 import { IServiceCollection } from "domain/di";
-import { DomainService } from "domain/services/domainService";
+import { IDomainServices, IProviderServices } from "domain/services";
 import { nameOf } from "domain/utils";
 import { createJsonClient } from "infrastructure/http";
 import Pacote from 'pacote';
@@ -11,12 +11,12 @@ import { NpmContributions } from '../definitions/eNpmContributions';
 import { NpmConfig } from '../npmConfig';
 import { NpmSuggestionProvider } from "../npmSuggestionProvider";
 import { GitHubOptions } from '../options/githubOptions';
-import { NpmService } from './npmService';
+import { INpmServices } from './iNpmServices';
 
 export function addCachingOptions(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<NpmService>().npmCachingOpts,
-    (container: DomainService) =>
+    nameOf<INpmServices>().npmCachingOpts,
+    (container: IDomainServices) =>
       new CachingOptions(
         container.appConfig,
         NpmContributions.Caching,
@@ -27,8 +27,8 @@ export function addCachingOptions(services: IServiceCollection) {
 
 export function addHttpOptions(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<NpmService>().npmHttpOpts,
-    (container: DomainService) =>
+    nameOf<INpmServices>().npmHttpOpts,
+    (container: IDomainServices) =>
       new HttpOptions(
         container.appConfig,
         NpmContributions.Http,
@@ -39,8 +39,8 @@ export function addHttpOptions(services: IServiceCollection) {
 
 export function addGithubOptions(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<NpmService>().npmGitHubOpts,
-    (container: DomainService) =>
+    nameOf<INpmServices>().npmGitHubOpts,
+    (container: IDomainServices) =>
       new GitHubOptions(
         container.appConfig,
         NpmContributions.Github,
@@ -51,8 +51,8 @@ export function addGithubOptions(services: IServiceCollection) {
 
 export function addNpmConfig(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<NpmService>().npmConfig,
-    (container: NpmService & DomainService) =>
+    nameOf<INpmServices>().npmConfig,
+    (container: INpmServices & IDomainServices) =>
       new NpmConfig(
         container.appConfig,
         container.npmCachingOpts,
@@ -64,8 +64,8 @@ export function addNpmConfig(services: IServiceCollection) {
 
 export function addJsonClient(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<NpmService>().githubJsonClient,
-    (container: NpmService & DomainService) =>
+    nameOf<INpmServices>().githubJsonClient,
+    (container: INpmServices & IDomainServices) =>
       createJsonClient(
         {
           caching: container.npmCachingOpts,
@@ -78,8 +78,8 @@ export function addJsonClient(services: IServiceCollection) {
 
 export function addGitHubClient(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<NpmService>().githubClient,
-    (container: NpmService & DomainService) =>
+    nameOf<INpmServices>().githubClient,
+    (container: INpmServices & IDomainServices) =>
       new GitHubClient(
         container.npmConfig,
         container.githubJsonClient,
@@ -90,8 +90,8 @@ export function addGitHubClient(services: IServiceCollection) {
 
 export function addPacoteClient(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<NpmService>().pacoteClient,
-    (container: NpmService & DomainService) =>
+    nameOf<INpmServices>().pacoteClient,
+    (container: INpmServices & IDomainServices) =>
       new PacoteClient(
         Pacote,
         container.npmConfig,
@@ -102,8 +102,8 @@ export function addPacoteClient(services: IServiceCollection) {
 
 export function addNpmPackageClient(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<NpmService>().npmClient,
-    (container: NpmService & DomainService) =>
+    nameOf<INpmServices>().npmClient,
+    (container: INpmServices & IDomainServices) =>
       new NpmPackageClient(
         container.npmConfig,
         container.pacoteClient,
@@ -115,8 +115,8 @@ export function addNpmPackageClient(services: IServiceCollection) {
 
 export function addSuggestionProvider(services: IServiceCollection) {
   services.addScoped(
-    nameOf<DomainService>().suggestionProvider,
-    (container: NpmService & DomainService) =>
+    nameOf<IProviderServices>().suggestionProvider,
+    (container: INpmServices & IDomainServices) =>
       new NpmSuggestionProvider(
         container.npmClient,
         container.logger.child({ namespace: 'npm provider' })

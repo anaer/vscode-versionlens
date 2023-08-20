@@ -1,11 +1,11 @@
 import { IServiceProvider } from 'domain/di';
 import { ILogger, ILoggingOptions } from 'domain/logging';
-import { DomainService } from 'domain/services';
+import { IDomainServices } from 'domain/services';
 import { nameOf, readJsonFile } from 'domain/utils';
 import { join } from 'node:path';
 import { ExtensionContext, workspace } from 'vscode';
 import { configureContainer } from './extensionContainer';
-import { ExtensionService } from './services/extensionService';
+import { IExtensionServices } from './services/iExtensionServices';
 import { VersionLensExtension } from './versionLensExtension';
 
 let serviceProvider: IServiceProvider;
@@ -14,13 +14,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
   serviceProvider = await configureContainer(context)
 
   // log general start up info
-  const domainService = nameOf<DomainService>();
+  const domainService = nameOf<IDomainServices>();
   const logger = serviceProvider.getService<ILogger>(domainService.logger);
   const loggingOptions = serviceProvider.getService<ILoggingOptions>(
     domainService.loggingOptions
   );
   const extension = serviceProvider.getService<VersionLensExtension>(
-    nameOf<ExtensionService>().extension
+    nameOf<IExtensionServices>().extension
   );
 
   // check editor.codeLens is enabled
@@ -42,7 +42,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   logger.info("log level: %s", loggingOptions.level);
   logger.info("log folder: %s", logPath);
 
-  const extensionService = nameOf<ExtensionService>();
+  const extensionService = nameOf<IExtensionServices>();
 
   // instantiate command handlers
   serviceProvider.getService(extensionService.iconCommandHandlers);
