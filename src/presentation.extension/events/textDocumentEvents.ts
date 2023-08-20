@@ -42,7 +42,7 @@ export class TextDocumentEvents {
     matchedProviders.forEach(
       p => {
         this.logger.debug(
-          "Provider opened %s %s",
+          "[onDidOpenTextDocument] %s provider matched %s",
           p.config.providerName,
           packagePath
         );
@@ -65,16 +65,16 @@ export class TextDocumentEvents {
   }
 
   onDidSaveTextDocument(document: TextDocument) {
-    const providers = TextDocumentUtils.getDocumentProviders(
+    const filteredProviders = TextDocumentUtils.getDocumentProviders(
       document,
       this.suggestionCodeLensProviders
-    )
+    );
 
-    if (providers.length === 0) return;
+    if (filteredProviders.length === 0) return;
 
     const packagePath = document.uri.path;
 
-    providers.forEach(
+    filteredProviders.forEach(
       async provider => await executeOnSaveChanges(
         provider,
         packagePath,

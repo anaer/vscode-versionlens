@@ -3,10 +3,10 @@ import { ILogger } from 'domain/logging';
 import { PackageClientSourceType, PackageResponse } from 'domain/packages';
 import { IProvider, IProviderConfig } from 'domain/providers';
 import {
-  defaultReplaceFn,
   ISuggestionProvider,
   SuggestionFlags,
-  SuggestionStatus
+  SuggestionStatus,
+  defaultReplaceFn
 } from 'domain/suggestions';
 import { dirname } from 'node:path';
 import {
@@ -22,8 +22,8 @@ import {
   CodeLens,
   Event,
   EventEmitter,
-  languages,
-  TextDocument
+  TextDocument,
+  languages
 } from 'vscode';
 
 export class SuggestionCodeLensProvider
@@ -128,8 +128,8 @@ export class SuggestionCodeLensProvider
     // check if the document was just opened
     if (documentOpened) {
       this.logger.debug(
-        "%s provider opened. Saving original state",
-        this.suggestionProvider.name
+        "Saving original packages state of %s",
+        document.uri.fsPath
       );
 
       // store the originally fetched dependencies
