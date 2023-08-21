@@ -11,26 +11,26 @@ export async function executeOnSaveChanges(
   logger: ILogger
 ): Promise<void> {
 
-  // get the original parsed packages
+  // get the original opened parsed packages
   const original = state.getOriginalParsedPackages(
     provider.config.providerName,
     packagePath
   );
 
-  // get the recent parsed packages
-  const recent = state.getRecentParsedPackages(
+  // get the edited parsed packages
+  const edited = state.getEditedParsedPackages(
     provider.config.providerName,
     packagePath
   );
 
   // test if anything has changed
-  if (hasPackageDepsChanged(original, recent)) {
+  if (hasPackageDepsChanged(original, edited)) {
 
-    // set original to recent
+    // update original to edited
     state.setOriginalParsedPackages(
       provider.config.providerName,
       packagePath,
-      recent
+      edited
     );
 
     // check we have a task to run
@@ -44,13 +44,18 @@ export async function executeOnSaveChanges(
 
     // fetch the custom task for the provider
     const availableTasks = await tasks.fetchTasks();
-    const filteredTasks = availableTasks.filter(x => x.name == provider.config.onSaveChangesTask);
+    const filteredTasks = availableTasks.filter
+    (
+      x => x.name == provider.config.onSaveChangesTask
+    );
+
     if (filteredTasks.length == 0) {
       logger.error(
         'Could not find the %s.onSaveChanges["%s"] task.',
         provider.config.providerName,
         provider.config.onSaveChangesTask
       );
+      return;
     }
 
     logger.info(
@@ -70,25 +75,25 @@ export async function executeOnSaveChanges(
       endEventCalled = true;
 
       logger.info(
-        '%s.onSaveChanges["%s"] task exited with %s',
+        '%s.onSaveChanges["%s"] task exited with %s.',
         provider.config.providerName,
         provider.config.onSaveChangesTask,
         e.exitCode
       );
 
       if (e.exitCode !== 0) {
-        // restore original change state
+        logger.info(
+          'Reverting the original parsed packages state.',
+          provider.config.providerName,
+          provider.config.onSaveChangesTask,
+          e.exitCode
+        );
+
+        // revert original parsed packages state
         state.setOriginalParsedPackages(
           provider.config.providerName,
           packagePath,
           original
-        );
-
-        logger.info(
-          '%s.onSaveChanges["%s"] task failed. Reverting to previous change state.',
-          provider.config.providerName,
-          provider.config.onSaveChangesTask,
-          e.exitCode
         );
       }
 

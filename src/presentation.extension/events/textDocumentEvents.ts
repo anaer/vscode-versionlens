@@ -47,19 +47,36 @@ export class TextDocumentEvents {
           packagePath
         );
 
+        // parse the document text dependencies
+        const packageDeps = (<SuggestionCodeLensProvider>p).suggestionProvider.parseDependencies(
+          packagePath,
+          document.getText()
+        );
+
+        this.logger.debug(
+          "Saving original parsed packages state for %s",
+          document.uri.fsPath
+        );
+
+        // save the opened state of the parsed packages
         this.state.setOriginalParsedPackages(
           p.config.providerName,
           packagePath,
-          []
+          packageDeps
         );
 
-        this.state.setRecentParsedPackages(
+        this.logger.debug(
+          "Clearing the edited parsed packages state for %s",
+          document.uri.fsPath
+        );
+
+        // clear the edited state of the parsed packages
+        this.state.setEditedParsedPackages(
           p.config.providerName,
           packagePath,
           []
         );
 
-        this.state.providerOpened.change(true);
       }
     );
   }

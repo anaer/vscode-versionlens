@@ -80,12 +80,6 @@ export class SuggestionCodeLensProvider
   ): Promise<Array<CodeLens>> {
     if (this.state.show.value === false) return [];
 
-    // get the opened state
-    const documentOpened = this.state.providerOpened.value;
-
-    // reset opened state
-    this.state.providerOpened.change(false);
-
     // package path
     const packagePath = dirname(document.uri.fsPath);
 
@@ -94,10 +88,7 @@ export class SuggestionCodeLensProvider
       ? this.extension.projectPath
       : dirname(packagePath);
 
-    this.logger.info(
-      "Project path is %s",
-      projectPath
-    );
+    this.logger.info("Project path is %s", projectPath);
 
     // clear any errors
     this.state.providerError.value = false;
@@ -125,23 +116,8 @@ export class SuggestionCodeLensProvider
       document.getText()
     );
 
-    // check if the document was just opened
-    if (documentOpened) {
-      this.logger.debug(
-        "Saving original packages state of %s",
-        document.uri.fsPath
-      );
-
-      // store the originally fetched dependencies
-      this.state.setOriginalParsedPackages(
-        this.suggestionProvider.name,
-        document.uri.path,
-        packageDeps
-      );
-    }
-
-    // store the recently parsed dependencies
-    this.state.setRecentParsedPackages(
+    // store the edited parsed dependencies
+    this.state.setEditedParsedPackages(
       this.suggestionProvider.name,
       document.uri.path,
       packageDeps

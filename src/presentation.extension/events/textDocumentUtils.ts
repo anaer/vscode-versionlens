@@ -8,10 +8,7 @@ export function getDocumentProviders(
 
   if (document.uri.scheme !== 'file') return [];
 
-  const providers = getProvidersByFileName(
-    document.fileName,
-    suggestionProviders
-  );
+  const providers = getProvidersByFileName(document.fileName, suggestionProviders);
 
   if (providers.length === 0) return [];
 

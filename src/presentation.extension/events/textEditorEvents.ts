@@ -1,6 +1,5 @@
 import { IDisposable, Undefinable } from 'domain/generics';
 import { ILogger, ILoggerChannel } from 'domain/logging';
-import { ProviderSupport } from 'domain/providers';
 import { ISuggestionProvider } from 'domain/suggestions';
 import { Disposable, TextEditor, window } from 'vscode';
 import { VersionLensState } from '../state/versionLensState';
@@ -48,10 +47,7 @@ export class TextEditorEvents implements IDisposable {
       return;
     }
 
-    const providers = getDocumentProviders(
-      textEditor.document,
-      this.suggestionProviders
-    );
+    const providers = getDocumentProviders(textEditor.document, this.suggestionProviders);
 
     if (providers.length === 0) {
       // disable icons if no match found
@@ -62,13 +58,7 @@ export class TextEditorEvents implements IDisposable {
     // ensure the latest logging level is set
     this.loggerChannel.refreshLoggingLevel();
 
-    // determine prerelease support
-    const providerSupportsPrereleases = providers.reduce(
-      (v, p) => p.config.supports.includes(ProviderSupport.Prereleases),
-      false
-    );
-
-    this.state.providerSupportsPrereleases.value = providerSupportsPrereleases;
+    // update provider active state to enable icons
     this.state.providerActive.value = true;
   }
 
