@@ -61,7 +61,7 @@ export const NpmSuggestionProviderTests = {
       when(this.clientMock.config).thenReturn(instance(this.configMock));
     },
 
-    "returns client data with .npmrc settings": async function (this: TestContext) {
+    "returns client data using .npmrc settings": async function (this: TestContext) {
       const testPackageFilePath = path.join(testPackagePath, 'package.json');
       const testNpmRcFilePath = path.join(testPackagePath, '.npmrc');
       const testEnvFilePath = path.join(testPackagePath, '.env');
@@ -87,7 +87,8 @@ export const NpmSuggestionProviderTests = {
         testPackagePath
       );
 
-      verify(this.loggerMock.debug("Resolved .npmrc %s", testNpmRcFilePath)).once();
+      verify(this.loggerMock.debug("Resolved .npmrc is %s", testNpmRcFilePath)).once();
+      verify(this.loggerMock.debug("Resolved .env is %s", testEnvFilePath)).once();
 
       assert.equal(actualClientData.cwd, expectedClientData.cwd);
       assert.equal(actualClientData.userconfig, expectedClientData.userconfig);
@@ -102,7 +103,7 @@ export const NpmSuggestionProviderTests = {
       await removeFile(testEnvFilePath);
     },
 
-    "returns client data with general settings when no .npmrc": async function (this: TestContext) {
+    "returns client data when no .npmrc": async function (this: TestContext) {
       const put = new NpmSuggestionProvider(
         instance(this.clientMock),
         instance(this.loggerMock)
@@ -118,10 +119,51 @@ export const NpmSuggestionProviderTests = {
         testPackagePath
       );
 
+      verify(this.loggerMock.debug("Resolved .npmrc is %s", false)).once();
+      verify(this.loggerMock.debug("Resolved .env is %s", false)).once();
+
       assert.equal(actualClientData.cwd, expectedClientData.cwd);
       assert.equal(actualClientData.userconfig, expectedClientData.userconfig);
     },
 
+    "returns client data when no .env": async function (this: TestContext) {
+      const testPackageFilePath = path.join(testPackagePath, 'package.json');
+      const testNpmRcFilePath = path.join(testPackagePath, '.npmrc');
+
+      const put = new NpmSuggestionProvider(
+        instance(this.clientMock),
+        instance(this.loggerMock)
+      );
+
+      await createFile(testPackageFilePath, "");
+      await createFile(testNpmRcFilePath, Fixtures.preFetchSuggestions['.npmrc']);
+
+      const expectedClientData = {
+        cwd: testPackagePath,
+        userconfig: resolve(homedir(), ".npmrc"),
+        "//registry.npmjs.example/:_authToken": '${NPM_AUTH}'
+      }
+
+      const actualClientData = await put.preFetchSuggestions(
+        testProjectPath,
+        testPackagePath
+      );
+
+      verify(this.loggerMock.debug("Resolved .npmrc is %s", testNpmRcFilePath)).once();
+      verify(this.loggerMock.debug("Resolved .env is %s", false)).once();
+
+      assert.equal(actualClientData.cwd, expectedClientData.cwd);
+      assert.equal(actualClientData.userconfig, expectedClientData.userconfig);
+
+      assert.equal(
+        actualClientData["//registry.npmjs.example/:_authToken"],
+        expectedClientData["//registry.npmjs.example/:_authToken"]
+      );
+
+      // clean up
+      await removeFile(testPackageFilePath);
+      await removeFile(testNpmRcFilePath);
+    },
   }
 
 }

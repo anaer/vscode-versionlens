@@ -73,13 +73,14 @@ export async function getDotEnv(envPath: string): Promise<KeyStringDictionary> {
   return dotenv.parse(await readFile(envPath));
 }
 
-export async function createPacoteOptions(
-  packagePath: string,
-  npmCliOptions: any
-): Promise<any> {
-  const { npmRcFilePath, envFilePath, userConfigPath } = npmCliOptions;
-
-  const hasNpmRcFile = npmRcFilePath.length > 0;
+export async function createPacoteOptions(packagePath: string, options: any): Promise<any> {
+  const {
+    npmRcFilePath,
+    envFilePath,
+    userConfigPath,
+    hasNpmRcFile,
+    hasEnvFile
+  } = options;
 
   // load the npm config
   const npmCliConfig = new NpmCliConfig({
@@ -92,7 +93,7 @@ export async function createPacoteOptions(
     // ensures user npmrc is parsed by npm
     argv: ['', '', `--userconfig=${userConfigPath}`],
     // pass through .env data
-    env: hasNpmRcFile
+    env: hasEnvFile
       ? await getDotEnv(envFilePath)
       : {}
   });

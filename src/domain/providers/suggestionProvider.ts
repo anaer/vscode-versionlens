@@ -49,6 +49,8 @@ export class SuggestionProvider
       clientData = await this.preFetchSuggestions(projectPath, packagePath);
     }
 
+    this.logger.debug("Queuing %s package fetch tasks", dependencies.length);
+
     // queue package fetch tasks
     const promises = [];
     for (const dependency of dependencies) {

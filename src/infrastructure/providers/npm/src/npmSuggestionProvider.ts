@@ -115,27 +115,28 @@ export class NpmSuggestionProvider
 
     // try to resolve project .npmrc files
     const npmRcFilePath = await resolveDotFilePath(".npmrc", resolveDotFilePaths);
+    const hasNpmRcFile = npmRcFilePath.length > 0;
+    this.logger.debug("Resolved .npmrc is %s", hasNpmRcFile ? npmRcFilePath : false);
 
     // try to resolve .env files (if .npmrc exists)
     let envFilePath = "";
-    if (npmRcFilePath.length > 0) {
+    if (hasNpmRcFile) {
       envFilePath = await resolveDotFilePath(".env", resolveDotFilePaths);
-
-      this.logger.debug("Resolved .npmrc %s", npmRcFilePath);
     }
+    const hasEnvFile = envFilePath.length > 0;
+    this.logger.debug("Resolved .env is %s", hasEnvFile ? envFilePath : false);
 
     // return pacote options as client data
     const npmCliOptions = {
       projectPath,
       userConfigPath,
       npmRcFilePath,
-      envFilePath
+      envFilePath,
+      hasNpmRcFile,
+      hasEnvFile
     };
 
-    return createPacoteOptions(
-      packagePath,
-      npmCliOptions
-    )
+    return createPacoteOptions(packagePath, npmCliOptions)
   }
 
 }

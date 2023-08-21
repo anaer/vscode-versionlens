@@ -1,4 +1,4 @@
-# 1.6.0-preview.2
+# 1.6.0-preview.3
 
 ## All providers
 
@@ -10,6 +10,10 @@
     This can be found by pressing `ctrl + shift + p` and searching for "VersionLens"
 
 ## Npm
+
+  - Fixed an ERR ENOENT error when using an .npmrc file without an .env file
+
+    Related to [issue #324](https://gitlab.com/versionlens/vscode-versionlens/-/issues/324)
 
   - No longer caches per package.json file.
 
