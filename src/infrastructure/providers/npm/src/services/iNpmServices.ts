@@ -6,12 +6,21 @@ import { NpmConfig } from '../npmConfig';
 import { GitHubOptions } from '../options/githubOptions';
 
 export interface INpmServices {
-  npmCachingOpts: CachingOptions,
-  npmHttpOpts: HttpOptions,
-  npmGitHubOpts: GitHubOptions,
-  npmConfig: NpmConfig,
-  githubJsonClient: IJsonHttpClient,
-  githubClient: GitHubClient,
-  pacoteClient: PacoteClient,
-  npmClient: NpmPackageClient
+
+  npmCachingOpts: CachingOptions;
+
+  npmHttpOpts: HttpOptions;
+
+  npmGitHubOpts: GitHubOptions;
+
+  npmConfig: NpmConfig;
+
+  githubJsonClient: IJsonHttpClient;
+
+  githubClient: GitHubClient;
+
+  pacoteClient: PacoteClient;
+
+  npmClient: NpmPackageClient;
+
 }

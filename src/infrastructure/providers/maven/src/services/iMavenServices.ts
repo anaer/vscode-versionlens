@@ -3,11 +3,19 @@ import { MavenClient, MvnCli } from "../../index";
 import { MavenConfig } from "../mavenConfig";
 
 export interface IMavenServices {
-  mavenCachingOpts: CachingOptions,
-  mavenHttpOpts: HttpOptions,
-  mavenConfig: MavenConfig,
-  mvnProcess: IProcessClient,
-  mvnCli: MvnCli,
-  mavenHttpClient: IHttpClient,
-  mavenClient: MavenClient
+
+  mavenCachingOpts: CachingOptions;
+
+  mavenHttpOpts: HttpOptions;
+
+  mavenConfig: MavenConfig;
+
+  mvnProcess: IProcessClient;
+
+  mvnCli: MvnCli;
+
+  mavenHttpClient: IHttpClient;
+
+  mavenClient: MavenClient;
+
 }

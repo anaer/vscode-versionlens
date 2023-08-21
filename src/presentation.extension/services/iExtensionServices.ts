@@ -10,18 +10,18 @@ import { OutputChannel } from 'vscode';
 
 export interface IExtensionServices {
 
-  extension: VersionLensExtension,
+  extension: VersionLensExtension;
 
-  outputChannel: OutputChannel,
+  outputChannel: OutputChannel;
 
-  iconCommandHandlers: IconCommandHandlers,
+  iconCommandHandlers: IconCommandHandlers;
 
-  suggestionCommandHandlers: SuggestionCommandHandlers,
+  suggestionCommandHandlers: SuggestionCommandHandlers;
 
-  textEditorEvents: TextEditorEvents,
+  textEditorEvents: TextEditorEvents;
 
-  textDocumentEvents: TextDocumentEvents,
+  textDocumentEvents: TextDocumentEvents;
 
-  versionLensProviders: Array<SuggestionCodeLensProvider>
+  versionLensProviders: Array<SuggestionCodeLensProvider>;
 
 }

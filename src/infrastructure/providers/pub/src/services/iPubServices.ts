@@ -3,9 +3,15 @@ import { PubClient } from "../pubClient";
 import { PubConfig } from "../pubConfig";
 
 export interface IPubServices {
-  pubCachingOpts: CachingOptions,
-  pubHttpOpts: HttpOptions,
-  pubConfig: PubConfig,
-  pubJsonClient: JsonHttpClient,
-  pubClient: PubClient
+
+  pubCachingOpts: CachingOptions;
+
+  pubHttpOpts: HttpOptions;
+
+  pubConfig: PubConfig;
+
+  pubJsonClient: JsonHttpClient;
+
+  pubClient: PubClient;
+
 }

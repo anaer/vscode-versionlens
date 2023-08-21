@@ -13,13 +13,23 @@ import {
 import { DotNetConfig } from "../dotnetConfig";
 
 export interface IDotNetServices {
-  dotnetCachingOpts: CachingOptions,
-  dotnetHttpOpts: HttpOptions,
-  nugetOpts: NugetOptions,
-  dotnetConfig: DotNetConfig,
-  dotnetProcess: IProcessClient,
-  dotnetCli: DotNetCli,
-  dotnetJsonClient: IJsonHttpClient,
-  nugetClient: NuGetPackageClient,
-  nugetResClient: NuGetResourceClient
+
+  dotnetCachingOpts: CachingOptions;
+
+  dotnetHttpOpts: HttpOptions;
+
+  nugetOpts: NugetOptions;
+
+  dotnetConfig: DotNetConfig;
+
+  dotnetProcess: IProcessClient;
+
+  dotnetCli: DotNetCli;
+
+  dotnetJsonClient: IJsonHttpClient;
+
+  nugetClient: NuGetPackageClient;
+
+  nugetResClient: NuGetResourceClient;
+
 }

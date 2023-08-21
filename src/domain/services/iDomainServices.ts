@@ -6,24 +6,24 @@ import { ISuggestionProvider } from 'domain/suggestions';
 
 export interface IDomainServices {
 
-  serviceCollectionFactory: IServiceCollectionFactory,
+  serviceCollectionFactory: IServiceCollectionFactory;
 
-  serviceProvider: IServiceProvider,
+  serviceProvider: IServiceProvider;
 
-  appConfig: Config,
+  appConfig: Config;
 
-  loggingOptions: LoggingOptions,
+  loggingOptions: LoggingOptions;
 
-  httpOptions: HttpOptions,
+  httpOptions: HttpOptions;
 
-  cachingOptions: CachingOptions,
+  cachingOptions: CachingOptions;
 
-  logger: ILogger
+  logger: ILogger;
 
-  loggerChannel: ILoggerChannel,
+  loggerChannel: ILoggerChannel;
 
-  providerNames: Array<string>,
+  providerNames: Array<string>;
 
-  suggestionProviders: Array<ISuggestionProvider>
-  
+  suggestionProviders: Array<ISuggestionProvider>;
+
 }
