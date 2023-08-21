@@ -7,14 +7,11 @@
   "compilerOptions": {
     "strict": false,
     "target": "ES2022",
-    "module": "Node16",
-    "moduleResolution": "Node16",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "outDir": "./out/",
     "noUnusedLocals": true,
     "noUnusedParameters": false,
-    "lib": [
-      "ES2022"
-    ],
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
