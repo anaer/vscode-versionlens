@@ -1,3 +1,4 @@
+import { throwNull, throwUndefined } from "@esm-test/guards";
 import { ILogger } from "domain/logging";
 import {
   IPackageClient,
@@ -8,13 +9,18 @@ import {
   TPackageClientResponse
 } from "domain/packages";
 
-export class SuggestionProvider
-  <
-    TClient extends IPackageClient<TClientData>,
-    TClientData
-  > {
+export class SuggestionProvider<
+  TClient extends IPackageClient<TClientData>,
+  TClientData
+> {
 
   constructor(client: TClient, logger: ILogger) {
+    throwUndefined("client", client);
+    throwNull("client", client);
+
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
+
     this.client = client;
     this.logger = logger;
   }
