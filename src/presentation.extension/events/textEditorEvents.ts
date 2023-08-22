@@ -1,3 +1,4 @@
+import { throwNull, throwUndefined } from '@esm-test/guards';
 import { IDisposable, Undefinable } from 'domain/generics';
 import { ILogger, ILoggerChannel } from 'domain/logging';
 import { ISuggestionProvider } from 'domain/suggestions';
@@ -13,6 +14,18 @@ export class TextEditorEvents implements IDisposable {
     loggerChannel: ILoggerChannel,
     logger: ILogger
   ) {
+    throwUndefined("state", state);
+    throwNull("state", state);
+
+    throwUndefined("suggestionProviders", suggestionProviders);
+    throwNull("suggestionProviders", suggestionProviders);
+
+    throwUndefined("loggerChannel", loggerChannel);
+    throwNull("loggerChannel", loggerChannel);
+
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
+
     this.state = state;
     this.suggestionProviders = suggestionProviders;
     this.loggerChannel = loggerChannel;
