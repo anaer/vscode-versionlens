@@ -4,13 +4,11 @@ import {
   ClientResponseFactory,
   IPackageClient,
   PackageClientSourceType,
-  PackageVersionType,
   TPackageClientRequest,
   TPackageClientResponse
 } from 'domain/packages';
 import { SuggestionFactory, TPackageSuggestion } from 'domain/suggestions';
 import npa from 'npm-package-arg';
-import * as PackageFactory from '../factories/packageFactory';
 import { NpaSpec, NpaTypes } from '../models/npaSpec';
 import { NpmConfig } from '../npmConfig';
 import * as NpmUtils from '../npmUtils';
@@ -45,9 +43,8 @@ export class NpmPackageClient implements IPackageClient<null> {
     const requestedPackage = request.dependency.package;
 
     return new Promise<TPackageClientResponse>((resolve, reject) => {
-      let npaSpec: NpaSpec;
-
       // try parse the package
+      let npaSpec: NpaSpec;
       try {
         npaSpec = npa.resolve(
           requestedPackage.name,
@@ -61,21 +58,31 @@ export class NpmPackageClient implements IPackageClient<null> {
         );
       }
 
-      // return if directory or file document
-      if (npaSpec.type === NpaTypes.Directory || npaSpec.type === NpaTypes.File) {
-        source = PackageClientSourceType.Directory;
-        return resolve(
-          PackageFactory.createDirectory(
-            requestedPackage,
-            ClientResponseFactory.createResponseStatus(ClientResponseSource.local, 200),
-            npaSpec,
-          )
-        );
+      switch (npaSpec.type) {
+        case NpaTypes.Directory:
+          source = PackageClientSourceType.Directory
+          break;
+        case NpaTypes.File:
+          source = PackageClientSourceType.File
+          break;
+        case NpaTypes.Git:
+          source = PackageClientSourceType.Github
+          break;
+        case NpaTypes.Version:
+        case NpaTypes.Range:
+        case NpaTypes.Remote:
+        case NpaTypes.Alias:
+        case NpaTypes.Tag:
+          source = PackageClientSourceType.Registry
+          break;
       }
 
-      if (npaSpec.type === NpaTypes.Git) {
+      // return if directory or file document
+      if (source === PackageClientSourceType.Directory || source === PackageClientSourceType.File) {
+        return resolve(ClientResponseFactory.createDirectoryFromFileProtocol(requestedPackage));
+      }
 
-        source = PackageClientSourceType.Git;
+      if (source === PackageClientSourceType.Github) {
 
         if (!npaSpec.hosted) {
           // could not resolve
@@ -87,27 +94,16 @@ export class NpmPackageClient implements IPackageClient<null> {
         }
 
         if (!npaSpec.gitCommittish && npaSpec.hosted.default !== 'shortcut') {
-          return resolve(
-            ClientResponseFactory.createFixed(
-              PackageClientSourceType.Git,
-              ClientResponseFactory.createResponseStatus(ClientResponseSource.local, 0),
-              PackageVersionType.Committish,
-              'git repository'
-            )
-          );
+          return resolve(ClientResponseFactory.createGit());
         }
 
         // resolve tags, committishes
-        source = PackageClientSourceType.Github;
         return resolve(this.githubClient.fetchGithub(npaSpec));
       }
 
       // otherwise return registry result
-      source = PackageClientSourceType.Registry;
       return resolve(this.pacoteClient.fetchPackage(request, npaSpec));
-
     }).catch(response => {
-
       this.logger.debug("Caught exception from %s: %O", source, response);
 
       if (!response.data) {

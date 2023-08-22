@@ -4,8 +4,8 @@ import {
   SuggestionFlags,
   TPackageSuggestion
 } from 'domain/suggestions';
-import { ClientResponseFactory } from '..';
 import { PackageVersionType } from "../definitions/ePackageVersionType";
+import { TPackageResource } from '../definitions/tPackageResource';
 import { PackageClientSourceType } from "./ePackageClientSourceType";
 import { TPackageClientResponse } from "./tPackageClientResponse";
 import { TPackageClientResponseStatus } from "./tPackageClientResponseStatus";
@@ -107,10 +107,7 @@ export function createDirectory(
     },
   ];
 
-  const responseStatus = ClientResponseFactory.createResponseStatus(
-    ClientResponseSource.local,
-    200
-  );
+  const responseStatus = createResponseStatus(ClientResponseSource.local, 200);
 
   return {
     source,
@@ -121,10 +118,28 @@ export function createDirectory(
   };
 }
 
+const fileDependencyRegex = /^file:(.*)$/;
+export function createDirectoryFromFileProtocol(
+  requested: TPackageResource
+): TPackageClientResponse {
+
+  const fileRegExpResult = fileDependencyRegex.exec(requested.version);
+  if (!fileRegExpResult) {
+    return createInvalidVersion(
+      createResponseStatus(ClientResponseSource.local, 400),
+      <any>PackageClientSourceType.Directory
+    );
+  }
+
+  const path = fileRegExpResult[1];
+
+  return createDirectory(requested.name, path);
+}
+
 export function createGit(): TPackageClientResponse {
   return createFixed(
     PackageClientSourceType.Git,
-    ClientResponseFactory.createResponseStatus(ClientResponseSource.local, 0),
+    createResponseStatus(ClientResponseSource.local, 0),
     PackageVersionType.Committish,
     'git repository'
   );
