@@ -1,3 +1,4 @@
+import { MemoryCache } from "domain/caching";
 import { Config } from "domain/configuration";
 import { IServiceCollection } from "domain/di";
 import { DisposableArray } from "domain/generics";
@@ -30,11 +31,7 @@ export function addVersionLensExtension(services: IServiceCollection) {
   services.addSingleton(
     nameOf<IExtensionServices>().extension,
     (container: IDomainServices & IExtensionServices) =>
-      new VersionLensExtension(
-        container.appConfig,
-        projectPath,
-        container.providerNames
-      )
+      new VersionLensExtension(container.appConfig, projectPath)
   )
 }
 
@@ -92,8 +89,9 @@ export function addTextDocumentEvents(services: IServiceCollection) {
     nameOf<IExtensionServices>().textDocumentEvents,
     (container: IDomainServices & IExtensionServices) =>
       new TextDocumentEvents(
-        container.extension.state,
         container.versionLensProviders,
+        container.originalPackagesCache,
+        container.editedPackagesCache,
         container.logger.child({ namespace: 'text document event' })
       )
   )
@@ -108,6 +106,7 @@ export function addVersionLensProviders(services: IServiceCollection) {
           suggestionProvider => new SuggestionCodeLensProvider(
             container.extension,
             suggestionProvider,
+            container.editedPackagesCache,
             container.logger.child({ namespace: `${suggestionProvider.name} codelens` })
           )
         )
@@ -140,5 +139,19 @@ export function addProviderNames(services: IServiceCollection) {
       'npm',
       'pub',
     ]
+  )
+}
+
+export function addOriginalPackagesCache(services: IServiceCollection) {
+  services.addSingleton(
+    nameOf<IExtensionServices>().originalPackagesCache,
+    new MemoryCache("originalPackagesCache")
+  )
+}
+
+export function addEditedPackagesCache(services: IServiceCollection) {
+  services.addSingleton(
+    nameOf<IExtensionServices>().editedPackagesCache,
+    new MemoryCache("editedPackagesCache")
   )
 }

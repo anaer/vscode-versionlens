@@ -17,7 +17,9 @@ import {
 import { ExtensionContext } from 'vscode';
 import {
   addAppConfig,
+  addEditedPackagesCache,
   addIconCommands,
+  addOriginalPackagesCache,
   addOutputChannel,
   addProviderNames,
   addSuggestionCommands,
@@ -38,11 +40,6 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
     serviceCollectionFactory
   );
 
-  // application
-  addProviderNames(services);
-
-  addSuggestionProviders(services);
-
   // domain
   addAppConfig(services, VersionLensExtension.extensionName.toLowerCase());
 
@@ -51,6 +48,10 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
   addCachingOptions(services);
 
   addLoggingOptions(services);
+
+  addProviderNames(services);
+
+  addSuggestionProviders(services);
 
   // infrastructure
   addWinstonChannelLogger(services);
@@ -71,6 +72,10 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
   addTextDocumentEvents(services);
 
   addVersionLensProviders(services);
+
+  addOriginalPackagesCache(services);
+
+  addEditedPackagesCache(services);
 
   return await services.build();
 }

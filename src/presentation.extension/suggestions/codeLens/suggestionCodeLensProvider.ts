@@ -1,6 +1,12 @@
+import { throwNull, throwUndefined } from '@esm-test/guards';
+import { ICache } from 'domain/caching';
 import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
-import { PackageClientSourceType, PackageResponse } from 'domain/packages';
+import {
+  PackageClientSourceType,
+  PackageDependency,
+  PackageResponse
+} from 'domain/packages';
 import { IProvider, IProviderConfig } from 'domain/providers';
 import {
   ISuggestionProvider,
@@ -32,10 +38,24 @@ export class SuggestionCodeLensProvider
   constructor(
     extension: VersionLensExtension,
     suggestionProvider: ISuggestionProvider,
+    editiedPackagesCache: ICache,
     logger: ILogger
   ) {
+    throwUndefined("extension", extension);
+    throwNull("extension", extension);
+
+    throwUndefined("suggestionProvider", suggestionProvider);
+    throwNull("suggestionProvider", suggestionProvider);
+
+    throwUndefined("editiedPackagesCache", editiedPackagesCache);
+    throwNull("editiedPackagesCache", editiedPackagesCache);
+
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
+
     this.extension = extension;
     this.suggestionProvider = suggestionProvider;
+    this.editiedPackagesCache = editiedPackagesCache;
     this.logger = logger;
 
     // register changed event before registering the codelens
@@ -56,6 +76,8 @@ export class SuggestionCodeLensProvider
   extension: VersionLensExtension;
 
   suggestionProvider: ISuggestionProvider;
+
+  editiedPackagesCache: ICache;
 
   logger: ILogger;
 
@@ -117,9 +139,8 @@ export class SuggestionCodeLensProvider
     );
 
     // store the edited parsed dependencies
-    this.state.setEditedParsedPackages(
-      this.suggestionProvider.name,
-      document.uri.path,
+    this.editiedPackagesCache.set<PackageDependency[]>(
+      `${this.suggestionProvider.name}->${document.uri.path}`,
       packageDeps
     );
 

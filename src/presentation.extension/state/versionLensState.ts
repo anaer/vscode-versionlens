@@ -1,5 +1,4 @@
-import { KeyDictionary } from "domain/generics/collections";
-import { PackageDependency } from "domain/packages/index";
+import { throwNull, throwUndefined } from "@esm-test/guards";
 import { VersionLensExtension } from "../versionLensExtension";
 import { ContextState } from "./contextState";
 import { StateContributions } from "./eStateContributions";
@@ -17,11 +16,9 @@ export class VersionLensState {
 
   providerError: ContextState<boolean>;
 
-  providerOriginalParsedPackages: KeyDictionary<ContextState<KeyDictionary<PackageDependency[]>>> = {};
-
-  providerEditedParsedPackages: KeyDictionary<ContextState<KeyDictionary<PackageDependency[]>>> = {};
-
-  constructor(extension: VersionLensExtension, providerNames: string[]) {
+  constructor(extension: VersionLensExtension) {
+    throwUndefined("extension", extension);
+    throwNull("extension", extension);
 
     this.show = new ContextState(
       StateContributions.Show,
@@ -48,48 +45,6 @@ export class VersionLensState {
       false
     );
 
-    providerNames.forEach(providerName => {
-      this.providerOriginalParsedPackages[providerName] = new ContextState(
-        `versionlens.${providerName}.OriginalPackages`,
-        {}
-      );
-      this.providerEditedParsedPackages[providerName] = new ContextState(
-        `versionlens.${providerName}.EditedPackages`,
-        {}
-      );
-    });
-  }
-
-  getOriginalParsedPackages(providerName: string, packagePath: string): PackageDependency[] {
-    const state = this.providerOriginalParsedPackages[providerName];
-    return state.value[packagePath];
-  }
-
-  setOriginalParsedPackages(
-    providerName: string,
-    packagePath: string,
-    packages: PackageDependency[]
-  ) {
-    const state = this.providerOriginalParsedPackages[providerName];
-    const current = state.value;
-    const newValue = Object.assign(current, { [packagePath]: packages })
-    state.change(newValue);
-  }
-
-  getEditedParsedPackages(providerName: string, packagePath: string): PackageDependency[] {
-    const state = this.providerEditedParsedPackages[providerName];
-    return state.value[packagePath];
-  }
-
-  setEditedParsedPackages(
-    providerName: string,
-    packagePath: string,
-    packages: PackageDependency[]
-  ) {
-    const state = this.providerEditedParsedPackages[providerName];
-    const current = state.value;
-    const newValue = Object.assign(current, { [packagePath]: packages })
-    state.change(newValue);
   }
 
 }

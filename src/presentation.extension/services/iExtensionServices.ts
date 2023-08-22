@@ -1,3 +1,4 @@
+import { ICache } from 'domain/caching';
 import {
   IconCommandHandlers,
   SuggestionCodeLensProvider,
@@ -23,5 +24,9 @@ export interface IExtensionServices {
   textDocumentEvents: TextDocumentEvents;
 
   versionLensProviders: Array<SuggestionCodeLensProvider>;
+
+  originalPackagesCache: ICache
+
+  editedPackagesCache: ICache
 
 }

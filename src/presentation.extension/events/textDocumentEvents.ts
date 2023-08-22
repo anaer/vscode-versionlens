@@ -1,18 +1,34 @@
+import { ICache } from 'domain/caching';
 import { ILogger } from 'domain/logging';
+import { PackageDependency } from 'domain/packages';
 import { SuggestionCodeLensProvider, TextDocumentUtils } from 'presentation.extension';
 import { TextDocument, window, workspace } from 'vscode';
 import { executeOnSaveChanges } from '../commands/executeOnSaveChanges';
-import { VersionLensState } from '../state/versionLensState';
+import { throwNull, throwUndefined } from '@esm-test/guards';
 
 export class TextDocumentEvents {
 
   constructor(
-    state: VersionLensState,
     suggestionCodeLensProviders: Array<SuggestionCodeLensProvider>,
+    originalPackagesCache: ICache,
+    editPackagesCache: ICache,
     logger: ILogger
   ) {
-    this.state = state;
+    throwUndefined("suggestionCodeLensProviders", suggestionCodeLensProviders);
+    throwNull("suggestionCodeLensProviders", suggestionCodeLensProviders);
+
+    throwUndefined("originalPackagesCache", originalPackagesCache);
+    throwNull("originalPackagesCache", originalPackagesCache);
+
+    throwUndefined("editPackagesCache", editPackagesCache);
+    throwNull("editPackagesCache", editPackagesCache);
+
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
+
     this.suggestionCodeLensProviders = suggestionCodeLensProviders;
+    this.originalPackagesCache = originalPackagesCache;
+    this.editPackagesCache = editPackagesCache;
     this.logger = logger;
 
     // regsiter document events
@@ -23,9 +39,11 @@ export class TextDocumentEvents {
     window.visibleTextEditors.map(x => this.onDidOpenTextDocument(x.document));
   }
 
-  state: VersionLensState;
-
   suggestionCodeLensProviders: Array<SuggestionCodeLensProvider>;
+
+  originalPackagesCache: ICache;
+
+  editPackagesCache: ICache;
 
   logger: ILogger;
 
@@ -58,12 +76,11 @@ export class TextDocumentEvents {
           document.uri.fsPath
         );
 
+        // create the cache key
+        const cacheKey = `${p.config.providerName}->${packagePath}`;
+
         // save the opened state of the parsed packages
-        this.state.setOriginalParsedPackages(
-          p.config.providerName,
-          packagePath,
-          packageDeps
-        );
+        this.originalPackagesCache.set<PackageDependency[]>(cacheKey, packageDeps);
 
         this.logger.debug(
           "Clearing the edited parsed packages state for %s",
@@ -71,12 +88,7 @@ export class TextDocumentEvents {
         );
 
         // clear the edited state of the parsed packages
-        this.state.setEditedParsedPackages(
-          p.config.providerName,
-          packagePath,
-          []
-        );
-
+        this.editPackagesCache.set<PackageDependency[]>(cacheKey, []);
       }
     );
   }
@@ -95,7 +107,8 @@ export class TextDocumentEvents {
       async provider => await executeOnSaveChanges(
         provider,
         packagePath,
-        this.state,
+        this.originalPackagesCache,
+        this.editPackagesCache,
         this.logger
       )
     );

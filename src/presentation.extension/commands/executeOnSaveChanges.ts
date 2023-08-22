@@ -1,37 +1,31 @@
+import { ICache } from "domain/caching";
 import { ILogger } from "domain/logging";
-import { hasPackageDepsChanged } from "domain/packages";
+import { PackageDependency, hasPackageDepsChanged } from "domain/packages";
 import { IProvider } from "domain/providers";
-import { VersionLensState } from "presentation.extension";
 import { tasks } from "vscode";
 
 export async function executeOnSaveChanges(
   provider: IProvider,
   packagePath: string,
-  state: VersionLensState,
+  originalPackagesCache: ICache,
+  editedPackagesCache: ICache,
   logger: ILogger
 ): Promise<void> {
 
+  // create the cache key
+  const cacheKey = `${provider.config.providerName}->${packagePath}`;
+
   // get the original opened parsed packages
-  const original = state.getOriginalParsedPackages(
-    provider.config.providerName,
-    packagePath
-  );
+  const original = originalPackagesCache.get<PackageDependency[]>(cacheKey);
 
   // get the edited parsed packages
-  const edited = state.getEditedParsedPackages(
-    provider.config.providerName,
-    packagePath
-  );
+  const edited = editedPackagesCache.get<PackageDependency[]>(cacheKey);
 
   // test if anything has changed
   if (hasPackageDepsChanged(original, edited)) {
 
     // update original to edited
-    state.setOriginalParsedPackages(
-      provider.config.providerName,
-      packagePath,
-      edited
-    );
+    originalPackagesCache.set<PackageDependency[]>(cacheKey, edited);
 
     // check we have a task to run
     if (provider.config.onSaveChangesTask === null) {
@@ -44,8 +38,7 @@ export async function executeOnSaveChanges(
 
     // fetch the custom task for the provider
     const availableTasks = await tasks.fetchTasks();
-    const filteredTasks = availableTasks.filter
-    (
+    const filteredTasks = availableTasks.filter(
       x => x.name == provider.config.onSaveChangesTask
     );
 
@@ -70,7 +63,8 @@ export async function executeOnSaveChanges(
     // listen for the end task event
     let endEventCalled = false;
     tasks.onDidEndTaskProcess(e => {
-      // prevent a bug that calls this mutliple times
+
+      // prevent a vscode bug that calls this fn mutliple times
       if (endEventCalled) return;
       endEventCalled = true;
 
@@ -90,11 +84,7 @@ export async function executeOnSaveChanges(
         );
 
         // revert original parsed packages state
-        state.setOriginalParsedPackages(
-          provider.config.providerName,
-          packagePath,
-          original
-        );
+        originalPackagesCache.set<PackageDependency[]>(cacheKey, original);
       }
 
     });

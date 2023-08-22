@@ -51,6 +51,7 @@
     "trace": "npm run -s clean && tsc --explainFiles --project ./tsconfig.json > trace.log"
   },
   "devDependencies": {
+    "@esm-test/guards": "^1.0.0-beta.5",
     "@types/mocha": "10.0.1",
     "@types/node": "20.5.0",
     "@types/npm-package-arg": "6.1.1",
