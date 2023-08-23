@@ -1,3 +1,4 @@
+import { throwNull, throwUndefined } from '@esm-test/guards';
 import { Undefinable } from 'domain/generics';
 import { IFrozenOptions, IOptions } from '.';
 
@@ -8,6 +9,12 @@ export abstract class Options implements IOptions {
   config: IFrozenOptions;
 
   constructor(config: IFrozenOptions, section: string) {
+    throwUndefined("config", config);
+    throwNull("config", config);
+
+    throwUndefined("section", <any>section);
+    throwNull("section", <any>section);
+
     this.config = config;
     this.section = (section.length > 0) ? section + '.' : '';
   }
