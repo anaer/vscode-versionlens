@@ -1,5 +1,5 @@
 import { throwNull, throwUndefined } from '@esm-test/guards';
-import { ICache } from 'domain/caching';
+import { ICache, MemoryCache } from 'domain/caching';
 import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
@@ -140,7 +140,7 @@ export class SuggestionCodeLensProvider
 
     // store the edited parsed dependencies
     this.editiedPackagesCache.set<PackageDependency[]>(
-      `${this.suggestionProvider.name}->${document.uri.path}`,
+      MemoryCache.createKey(this.suggestionProvider.name, document.uri.path),
       packageDeps
     );
 

@@ -1,4 +1,4 @@
-import { ICache } from "domain/caching";
+import { ICache, MemoryCache } from "domain/caching";
 import { ILogger } from "domain/logging";
 import { PackageDependency, hasPackageDepsChanged } from "domain/packages";
 import { IProvider } from "domain/providers";
@@ -13,7 +13,7 @@ export async function executeOnSaveChanges(
 ): Promise<void> {
 
   // create the cache key
-  const cacheKey = `${provider.config.providerName}->${packagePath}`;
+  const cacheKey = MemoryCache.createKey(provider.config.providerName, packagePath);
 
   // get the original opened parsed packages
   const original = originalPackagesCache.get<PackageDependency[]>(cacheKey);

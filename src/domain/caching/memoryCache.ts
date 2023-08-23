@@ -50,4 +50,8 @@ export class MemoryCache implements ICache {
     this.cacheMap = {};
   }
 
+  static createKey(...keyParts: string[]) {
+    return keyParts.join("->");
+  }
+
 }

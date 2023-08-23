@@ -1,4 +1,4 @@
-import { ICache } from 'domain/caching';
+import { ICache, MemoryCache } from 'domain/caching';
 import { ILogger } from 'domain/logging';
 import { PackageDependency } from 'domain/packages';
 import { SuggestionCodeLensProvider, TextDocumentUtils } from 'presentation.extension';
@@ -77,7 +77,7 @@ export class TextDocumentEvents {
         );
 
         // create the cache key
-        const cacheKey = `${p.config.providerName}->${packagePath}`;
+        const cacheKey = MemoryCache.createKey(p.config.providerName, packagePath);
 
         // save the opened state of the parsed packages
         this.originalPackagesCache.set<PackageDependency[]>(cacheKey, packageDeps);
