@@ -11,16 +11,19 @@ import { VersionLensExtension } from './versionLensExtension';
 let serviceProvider: IServiceProvider;
 
 export async function activate(context: ExtensionContext): Promise<void> {
+  // create the ioc service provider
   serviceProvider = await configureContainer(context)
 
-  // log general start up info
-  const domainService = nameOf<IDomainServices>();
-  const logger = serviceProvider.getService<ILogger>(domainService.logger);
+  const serviceNames = nameOf<IDomainServices & IExtensionServices>();
+
+  const logger = serviceProvider.getService<ILogger>(serviceNames.logger);
+
   const loggingOptions = serviceProvider.getService<ILoggingOptions>(
-    domainService.loggingOptions
+    serviceNames.loggingOptions
   );
+
   const extension = serviceProvider.getService<VersionLensExtension>(
-    nameOf<IExtensionServices>().extension
+    serviceNames.extension
   );
 
   // check editor.codeLens is enabled
@@ -31,10 +34,12 @@ export async function activate(context: ExtensionContext): Promise<void> {
     );
   }
 
+  // get the extension info
   const extensionPath = context.asAbsolutePath("");
   const packageJsonPath = context.asAbsolutePath("package.json");
   const { version } = await readJsonFile<any>(packageJsonPath);
 
+  // log general start up info
   const logPath = join(context.logUri.fsPath, "..");
   logger.info("extension path: %s", extensionPath);
   logger.info("workspace mode: %s", extension.isWorkspaceMode);
@@ -42,15 +47,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
   logger.info("log level: %s", loggingOptions.level);
   logger.info("log folder: %s", logPath);
 
-  const extensionService = nameOf<IExtensionServices>();
-
   // instantiate command handlers
-  serviceProvider.getService(extensionService.iconCommandHandlers);
-  serviceProvider.getService(extensionService.suggestionCommandHandlers);
+  serviceProvider.getService(serviceNames.iconCommandHandlers);
+  serviceProvider.getService(serviceNames.suggestionCommandHandlers);
 
   // instantiate events
-  serviceProvider.getService(extensionService.textDocumentEvents);
-  serviceProvider.getService(extensionService.textEditorEvents);
+  serviceProvider.getService(serviceNames.textDocumentEvents);
+  serviceProvider.getService(serviceNames.textEditorEvents);
 }
 
 export async function deactivate() {
