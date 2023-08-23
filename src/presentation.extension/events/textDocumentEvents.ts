@@ -9,10 +9,10 @@ import { throwNull, throwUndefined } from '@esm-test/guards';
 export class TextDocumentEvents {
 
   constructor(
-    suggestionCodeLensProviders: Array<SuggestionCodeLensProvider>,
-    originalPackagesCache: ICache,
-    editPackagesCache: ICache,
-    logger: ILogger
+    readonly suggestionCodeLensProviders: Array<SuggestionCodeLensProvider>,
+    readonly originalPackagesCache: ICache,
+    readonly editPackagesCache: ICache,
+    readonly logger: ILogger
   ) {
     throwUndefined("suggestionCodeLensProviders", suggestionCodeLensProviders);
     throwNull("suggestionCodeLensProviders", suggestionCodeLensProviders);
@@ -26,11 +26,6 @@ export class TextDocumentEvents {
     throwUndefined("logger", logger);
     throwNull("logger", logger);
 
-    this.suggestionCodeLensProviders = suggestionCodeLensProviders;
-    this.originalPackagesCache = originalPackagesCache;
-    this.editPackagesCache = editPackagesCache;
-    this.logger = logger;
-
     // regsiter document events
     workspace.onDidOpenTextDocument(this.onDidOpenTextDocument, this);
     workspace.onDidSaveTextDocument(this.onDidSaveTextDocument, this);
@@ -38,14 +33,6 @@ export class TextDocumentEvents {
     // ensure we fire for open document events after the extension is loaded
     window.visibleTextEditors.map(x => this.onDidOpenTextDocument(x.document));
   }
-
-  suggestionCodeLensProviders: Array<SuggestionCodeLensProvider>;
-
-  originalPackagesCache: ICache;
-
-  editPackagesCache: ICache;
-
-  logger: ILogger;
 
   onDidOpenTextDocument(document: TextDocument) {
     const matchedProviders = TextDocumentUtils.getDocumentProviders(

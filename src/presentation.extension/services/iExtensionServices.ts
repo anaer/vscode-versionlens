@@ -25,8 +25,8 @@ export interface IExtensionServices {
 
   versionLensProviders: Array<SuggestionCodeLensProvider>;
 
-  originalPackagesCache: ICache
+  originalPackagesCache: ICache;
 
-  editedPackagesCache: ICache
+  editedPackagesCache: ICache;
 
 }

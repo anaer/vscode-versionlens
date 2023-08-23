@@ -9,10 +9,10 @@ import { getDocumentProviders } from './textDocumentUtils';
 export class TextEditorEvents implements IDisposable {
 
   constructor(
-    state: VersionLensState,
-    suggestionProviders: Array<ISuggestionProvider>,
-    loggerChannel: ILoggerChannel,
-    logger: ILogger
+    readonly state: VersionLensState,
+    readonly suggestionProviders: Array<ISuggestionProvider>,
+    readonly loggerChannel: ILoggerChannel,
+    readonly logger: ILogger
   ) {
     throwUndefined("state", state);
     throwNull("state", state);
@@ -26,11 +26,6 @@ export class TextEditorEvents implements IDisposable {
     throwUndefined("logger", logger);
     throwNull("logger", logger);
 
-    this.state = state;
-    this.suggestionProviders = suggestionProviders;
-    this.loggerChannel = loggerChannel;
-    this.logger = logger;
-
     // register editor events
     this.disposable = window.onDidChangeActiveTextEditor(
       this.onDidChangeActiveTextEditor,
@@ -40,14 +35,6 @@ export class TextEditorEvents implements IDisposable {
     // ensure we fire after the extension is loaded
     this.onDidChangeActiveTextEditor(window.activeTextEditor);
   }
-
-  state: VersionLensState;
-
-  suggestionProviders: Array<ISuggestionProvider>;
-
-  loggerChannel: ILoggerChannel;
-
-  logger: ILogger;
 
   disposable: Disposable;
 

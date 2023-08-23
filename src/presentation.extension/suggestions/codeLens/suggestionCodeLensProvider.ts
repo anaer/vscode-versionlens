@@ -36,10 +36,10 @@ export class SuggestionCodeLensProvider
   implements VsCode.CodeLensProvider, IProvider, IDisposable {
 
   constructor(
-    extension: VersionLensExtension,
-    suggestionProvider: ISuggestionProvider,
-    editiedPackagesCache: ICache,
-    logger: ILogger
+    readonly extension: VersionLensExtension,
+    readonly suggestionProvider: ISuggestionProvider,
+    readonly editedPackagesCache: ICache,
+    readonly logger: ILogger
   ) {
     throwUndefined("extension", extension);
     throwNull("extension", extension);
@@ -47,16 +47,11 @@ export class SuggestionCodeLensProvider
     throwUndefined("suggestionProvider", suggestionProvider);
     throwNull("suggestionProvider", suggestionProvider);
 
-    throwUndefined("editiedPackagesCache", editiedPackagesCache);
-    throwNull("editiedPackagesCache", editiedPackagesCache);
+    throwUndefined("editedPackagesCache", editedPackagesCache);
+    throwNull("editedPackagesCache", editedPackagesCache);
 
     throwUndefined("logger", logger);
     throwNull("logger", logger);
-
-    this.extension = extension;
-    this.suggestionProvider = suggestionProvider;
-    this.editiedPackagesCache = editiedPackagesCache;
-    this.logger = logger;
 
     // register changed event before registering the codelens
     this.notifyCodeLensesChanged = new EventEmitter();
@@ -72,14 +67,6 @@ export class SuggestionCodeLensProvider
   notifyCodeLensesChanged: EventEmitter<void>;
 
   onDidChangeCodeLenses: Event<void>;
-
-  extension: VersionLensExtension;
-
-  suggestionProvider: ISuggestionProvider;
-
-  editiedPackagesCache: ICache;
-
-  logger: ILogger;
 
   disposable: VsCode.Disposable
 
@@ -139,7 +126,7 @@ export class SuggestionCodeLensProvider
     );
 
     // store the edited parsed dependencies
-    this.editiedPackagesCache.set<PackageDependency[]>(
+    this.editedPackagesCache.set<PackageDependency[]>(
       MemoryCache.createKey(this.suggestionProvider.name, document.uri.path),
       packageDeps
     );
