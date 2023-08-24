@@ -5,7 +5,6 @@ import { IPackageDependencyWatcher } from 'domain/suggestions';
 import { nameOf, readJsonFile } from 'domain/utils';
 import { join } from 'node:path';
 import { ExtensionContext, workspace } from 'vscode';
-import { executeOnSaveChanges } from './commands/executeOnSaveChanges';
 import { configureContainer } from './extensionContainer';
 import { IExtensionServices } from './services/iExtensionServices';
 import { VersionLensExtension } from './versionLensExtension';
@@ -56,12 +55,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
   // instantiate events
   serviceProvider.getService(serviceNames.textEditorEvents);
 
+  // instantiate tasks
+  serviceProvider.getService(serviceNames.saveChangesTask);
+
   // setup package dependency watcher
   serviceProvider.getService<IPackageDependencyWatcher>(serviceNames.packageDependencyWatcher)
     // watch provider workspace files
-    .watch()
-    // run onSaveChanges task when a change is detected
-    .registerOnDependenciesChange(executeOnSaveChanges);
+    .watch();
 }
 
 export async function deactivate() {

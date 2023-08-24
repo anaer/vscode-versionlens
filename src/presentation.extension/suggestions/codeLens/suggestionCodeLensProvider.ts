@@ -1,14 +1,13 @@
 import { throwNull, throwUndefined } from '@esm-test/guards';
-import { ICache, MemoryCache } from 'domain/caching';
 import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
   PackageClientSourceType,
-  PackageDependency,
   PackageResponse
 } from 'domain/packages';
 import { IProvider, IProviderConfig } from 'domain/providers';
 import {
+  IPackageDependencyWatcher,
   ISuggestionProvider,
   SuggestionFlags,
   SuggestionStatus,
@@ -38,7 +37,7 @@ export class SuggestionCodeLensProvider
   constructor(
     readonly extension: VersionLensExtension,
     readonly suggestionProvider: ISuggestionProvider,
-    readonly editedPackagesCache: ICache,
+    readonly packageDependencyWatcher: IPackageDependencyWatcher,
     readonly logger: ILogger
   ) {
     throwUndefined("extension", extension);
@@ -47,8 +46,8 @@ export class SuggestionCodeLensProvider
     throwUndefined("suggestionProvider", suggestionProvider);
     throwNull("suggestionProvider", suggestionProvider);
 
-    throwUndefined("editedPackagesCache", editedPackagesCache);
-    throwNull("editedPackagesCache", editedPackagesCache);
+    throwUndefined("packageDependencyWatcher", packageDependencyWatcher);
+    throwNull("packageDependencyWatcher", packageDependencyWatcher);
 
     throwUndefined("logger", logger);
     throwNull("logger", logger);
@@ -113,41 +112,20 @@ export class SuggestionCodeLensProvider
       this.config.caching.duration / 1000
     );
 
-    this.logger.info(
-      "Analysing %s dependencies in %s",
-      this.suggestionProvider.name,
-      document.uri.fsPath
-    );
-
     // parse the document text dependencies
-    const packageDeps = this.suggestionProvider.parseDependencies(
+    const packageDeps = this.packageDependencyWatcher.updateDependencies(
+      this.suggestionProvider.name,
       packagePath,
       document.getText()
     );
 
-    // store the edited parsed dependencies
-    this.editedPackagesCache.set<PackageDependency[]>(
-      MemoryCache.createKey(this.suggestionProvider.name, document.uri.path),
-      packageDeps
-    );
-
     let suggestions: Array<PackageResponse> = [];
     try {
-      const startedAt = performance.now();
-
       suggestions = await this.suggestionProvider.fetchSuggestions(
         projectPath,
         packagePath,
         packageDeps
       );
-
-      const completedAt = performance.now();
-      this.logger.info(
-        'All packages fetched for %s (%s ms)',
-        this.suggestionProvider.name,
-        Math.floor(completedAt - startedAt)
-      );
-
     } catch (error) {
       this.state.providerError.value = true;
       this.state.providerBusy.change(0)
@@ -171,6 +149,7 @@ export class SuggestionCodeLensProvider
       this.suggestionProvider.name
     );
 
+    // remove prereleases if not enabled
     if (this.state.prereleasesEnabled.value === false) {
       suggestions = suggestions.filter(
         function (response) {

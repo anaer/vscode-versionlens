@@ -75,26 +75,38 @@ export class SuggestionProvider<
       promises.push(promisedFetch);
     }
 
-    // parallel the fetch requests
-    return Promise.all(promises)
-      // flatten results
-      .then(x => x.flat());
+    // capture start time
+    const startedAt = performance.now();
+
+    // parallel the all fetch requests
+    const responses: Array<PackageResponse> = await Promise.all(promises);
+
+    // report completed duration
+    const completedAt = performance.now();
+    this.logger.info(
+      'All packages fetched for %s (%s ms)',
+      this.client.config.providerName,
+      Math.floor(completedAt - startedAt)
+    );
+
+    // flatten results
+    return responses.flat();
   }
 
-  fetchPackage(
-    request: TPackageClientRequest<TClientData>
-  ): Promise<Array<PackageResponse>> {
+  fetchPackage(request: TPackageClientRequest<TClientData>): Promise<Array<PackageResponse>> {
     const client = this.client;
     const requestedPackage = request.dependency.package;
 
     client.logger.debug("Fetching %s", requestedPackage.name);
 
+    // capture start time
     const startedAt = performance.now();
 
     return client.fetchPackage(request)
       .then(function (response: TPackageClientResponse) {
         const completedAt = performance.now();
 
+        // report completed duration
         client.logger.info(
           'Fetched from %s %s@%s (%s ms)',
           response.responseStatus?.source,
@@ -128,7 +140,7 @@ export class SuggestionProvider<
         );
 
         return Promise.reject(error);
-      })
+      });
   }
 
 }

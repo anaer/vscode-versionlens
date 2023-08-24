@@ -7,6 +7,7 @@ import {
   VersionLensExtension
 } from 'presentation.extension';
 import { OutputChannel } from 'vscode';
+import { SaveChangesTask } from '../commands/saveChangesTask';
 
 export interface IExtensionServices {
 
@@ -21,5 +22,8 @@ export interface IExtensionServices {
   textEditorEvents: TextEditorEvents;
 
   versionLensProviders: Array<SuggestionCodeLensProvider>;
+
+
+  saveChangesTask: SaveChangesTask;
 
 }

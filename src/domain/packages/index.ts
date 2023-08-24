@@ -25,6 +25,5 @@ export * from "./parsers/json/jsonPackageParser";
 export * from './parsers/json/jsonPackageTypeFactory';
 export * from "./parsers/yaml/yamlPackageParser";
 export * from './parsers/yaml/yamlPackageTypeFactory';
-export * from './useCases/hasPackageDepsChanged';
 export * from "./utils/packageUtils";
 export * as VersionUtils from './utils/versionUtils';

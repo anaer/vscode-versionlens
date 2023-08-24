@@ -23,6 +23,7 @@ import {
   addIconCommands,
   addOutputChannel,
   addProviderNames,
+  addSaveChangesTask,
   addSuggestionCommands,
   addSuggestionProviders,
   addTextEditorEvents,
@@ -77,7 +78,7 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
 
   addVersionLensProviders(services);
 
-  addEditedPackagesCache(services);
+  addSaveChangesTask(services);
 
   return await services.build();
 }

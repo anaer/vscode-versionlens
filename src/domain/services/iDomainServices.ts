@@ -27,7 +27,7 @@ export interface IDomainServices {
 
   suggestionProviders: Array<ISuggestionProvider>;
 
-  packageDependencyWatcher: Array<IPackageDependencyWatcher>;
+  packageDependencyWatcher: IPackageDependencyWatcher;
   
   packageDependencyCache: ICache;
 

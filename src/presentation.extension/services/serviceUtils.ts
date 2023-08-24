@@ -12,6 +12,7 @@ import {
   VersionLensExtension
 } from "presentation.extension";
 import { window, workspace } from "vscode";
+import { SaveChangesTask } from "../commands/saveChangesTask";
 import { IExtensionServices } from "./iExtensionServices";
 
 export function addAppConfig(services: IServiceCollection, appName: string) {
@@ -91,7 +92,7 @@ export function addVersionLensProviders(services: IServiceCollection) {
           suggestionProvider => new SuggestionCodeLensProvider(
             container.extension,
             suggestionProvider,
-            container.changedPackageDependencyCache,
+            container.packageDependencyWatcher,
             container.logger.child({ namespace: `${suggestionProvider.name} codelens` })
           )
         )
@@ -124,5 +125,16 @@ export function addProviderNames(services: IServiceCollection) {
       'npm',
       'pub',
     ]
+  )
+}
+
+export function addSaveChangesTask(services: IServiceCollection) {
+  services.addSingleton(
+    nameOf<IExtensionServices>().saveChangesTask,
+    (container: IDomainServices & IExtensionServices) =>
+      new SaveChangesTask(
+        container.packageDependencyWatcher,
+        container.logger.child({ namespace: `save changes task` })
+      )
   )
 }
