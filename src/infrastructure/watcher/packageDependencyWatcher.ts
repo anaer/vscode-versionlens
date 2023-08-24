@@ -1,3 +1,4 @@
+import { throwNull, throwUndefined } from '@esm-test/guards';
 import { ICache, MemoryCache } from 'domain/caching';
 import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
@@ -14,6 +15,18 @@ export class PackageDependencyWatcher implements IPackageDependencyWatcher, IDis
     readonly changedPackageDependencyCache: ICache,
     readonly logger: ILogger
   ) {
+    throwUndefined("providers", providers);
+    throwNull("providers", providers);
+
+    throwUndefined("packageDependencyCache", packageDependencyCache);
+    throwNull("packageDependencyCache", packageDependencyCache);
+
+    throwUndefined("changedPackageDependencyCache", changedPackageDependencyCache);
+    throwNull("changedPackageDependencyCache", changedPackageDependencyCache);
+
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
+
     this.disposables = [];
   }
 
