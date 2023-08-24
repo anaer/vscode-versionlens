@@ -93,54 +93,55 @@ export class SuggestionProvider<
     return responses.flat();
   }
 
-  fetchPackage(request: TPackageClientRequest<TClientData>): Promise<Array<PackageResponse>> {
+  async fetchPackage(request: TPackageClientRequest<TClientData>): Promise<Array<PackageResponse>> {
     const client = this.client;
     const requestedPackage = request.dependency.package;
 
     client.logger.debug("Fetching %s", requestedPackage.name);
 
-    // capture start time
-    const startedAt = performance.now();
+    try {
+      // capture start time
+      const startedAt = performance.now();
 
-    return client.fetchPackage(request)
-      .then(function (response: TPackageClientResponse) {
-        const completedAt = performance.now();
+      // fetch the package
+      const response: TPackageClientResponse = await client.fetchPackage(request);
 
-        // report completed duration
-        client.logger.info(
-          'Fetched from %s %s@%s (%s ms)',
-          response.responseStatus?.source,
+      // report completed duration
+      const completedAt = performance.now();
+      client.logger.info(
+        'Fetched from %s %s@%s (%s ms)',
+        response.responseStatus?.source,
+        requestedPackage.name,
+        requestedPackage.version,
+        Math.floor(completedAt - startedAt)
+      );
+
+      if (response.responseStatus?.rejected) {
+        client.logger.error(
+          "%s@%s was rejected with the status code %s",
           requestedPackage.name,
           requestedPackage.version,
-          Math.floor(completedAt - startedAt)
+          response.responseStatus.status
         );
+      }
 
-        if (response.responseStatus?.rejected) {
-          client.logger.error(
-            "%s@%s was rejected with the status code %s",
-            requestedPackage.name,
-            requestedPackage.version,
-            response.responseStatus.status
-          );
-        }
+      return ResponseFactory.createSuccess(
+        client.config.providerName,
+        request,
+        response
+      );
 
-        return ResponseFactory.createSuccess(
-          client.config.providerName,
-          request,
-          response
-        );
-      })
-      .catch((error: PackageResponse) => {
+    } catch (error) {
 
-        client.logger.error(
-          `%s caught an exception.\n Package: %j\n Error: %j`,
-          this.fetchPackage.name,
-          requestedPackage,
-          error
-        );
+      client.logger.error(
+        `%s caught an exception.\n Package: %j\n Error: %j`,
+        this.fetchPackage.name,
+        requestedPackage,
+        error
+      );
 
-        return Promise.reject(error);
-      });
+      throw error;
+    }
   }
 
 }
