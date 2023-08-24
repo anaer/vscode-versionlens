@@ -1,8 +1,9 @@
+import { ICache } from 'domain/caching';
 import { CachingOptions, HttpOptions } from 'domain/clients';
 import { Config } from 'domain/configuration';
 import { IServiceCollectionFactory, IServiceProvider } from 'domain/di';
 import { ILogger, ILoggerChannel, LoggingOptions } from 'domain/logging';
-import { ISuggestionProvider } from 'domain/suggestions';
+import { IPackageDependencyWatcher, ISuggestionProvider } from 'domain/suggestions';
 
 export interface IDomainServices {
 
@@ -25,5 +26,11 @@ export interface IDomainServices {
   providerNames: Array<string>;
 
   suggestionProviders: Array<ISuggestionProvider>;
+
+  packageDependencyWatcher: Array<IPackageDependencyWatcher>;
+  
+  packageDependencyCache: ICache;
+
+  changedPackageDependencyCache: ICache;
 
 }

@@ -3,7 +3,6 @@ import {
   IconCommandHandlers,
   SuggestionCodeLensProvider,
   SuggestionCommandHandlers,
-  TextDocumentEvents,
   TextEditorEvents,
   VersionLensExtension
 } from 'presentation.extension';
@@ -21,12 +20,6 @@ export interface IExtensionServices {
 
   textEditorEvents: TextEditorEvents;
 
-  textDocumentEvents: TextDocumentEvents;
-
   versionLensProviders: Array<SuggestionCodeLensProvider>;
-
-  originalPackagesCache: ICache;
-
-  editedPackagesCache: ICache;
 
 }

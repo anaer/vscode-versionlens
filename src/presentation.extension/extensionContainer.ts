@@ -2,12 +2,15 @@ import { IServiceProvider } from 'domain/di';
 import {
   IDomainServices,
   addCachingOptions,
+  addChangedPackagesDependencyCache,
   addHttpOptions,
-  addLoggingOptions
+  addLoggingOptions,
+  addPackagesDependencyCache
 } from 'domain/services';
 import { nameOf } from 'domain/utils';
 import { AwilixServiceCollectionFactory } from 'infrastructure/di';
 import {
+  addPackageDependencyWatcher,
   addWinstonChannelLogger,
   addWinstonLogger
 } from 'infrastructure/services';
@@ -17,14 +20,11 @@ import {
 import { ExtensionContext } from 'vscode';
 import {
   addAppConfig,
-  addEditedPackagesCache,
   addIconCommands,
-  addOriginalPackagesCache,
   addOutputChannel,
   addProviderNames,
   addSuggestionCommands,
   addSuggestionProviders,
-  addTextDocumentEvents,
   addTextEditorEvents,
   addVersionLensExtension,
   addVersionLensProviders
@@ -53,10 +53,16 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
 
   addSuggestionProviders(services);
 
+  addPackagesDependencyCache(services);
+
+  addChangedPackagesDependencyCache(services);
+
   // infrastructure
   addWinstonChannelLogger(services);
 
   addWinstonLogger(services, "extension");
+
+  addPackageDependencyWatcher(services);
 
   // extension
   addVersionLensExtension(services);
@@ -69,11 +75,7 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
 
   addTextEditorEvents(services);
 
-  addTextDocumentEvents(services);
-
   addVersionLensProviders(services);
-
-  addOriginalPackagesCache(services);
 
   addEditedPackagesCache(services);
 

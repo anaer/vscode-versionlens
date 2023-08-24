@@ -1,4 +1,3 @@
-import { MemoryCache } from "domain/caching";
 import { Config } from "domain/configuration";
 import { IServiceCollection } from "domain/di";
 import { DisposableArray } from "domain/generics";
@@ -9,7 +8,6 @@ import {
   IconCommandHandlers,
   SuggestionCodeLensProvider,
   SuggestionCommandHandlers,
-  TextDocumentEvents,
   TextEditorEvents,
   VersionLensExtension
 } from "presentation.extension";
@@ -84,19 +82,6 @@ export function addTextEditorEvents(services: IServiceCollection) {
   )
 }
 
-export function addTextDocumentEvents(services: IServiceCollection) {
-  services.addSingleton(
-    nameOf<IExtensionServices>().textDocumentEvents,
-    (container: IDomainServices & IExtensionServices) =>
-      new TextDocumentEvents(
-        container.versionLensProviders,
-        container.originalPackagesCache,
-        container.editedPackagesCache,
-        container.logger.child({ namespace: 'text document event' })
-      )
-  )
-}
-
 export function addVersionLensProviders(services: IServiceCollection) {
   services.addSingleton(
     nameOf<IExtensionServices>().versionLensProviders,
@@ -106,7 +91,7 @@ export function addVersionLensProviders(services: IServiceCollection) {
           suggestionProvider => new SuggestionCodeLensProvider(
             container.extension,
             suggestionProvider,
-            container.editedPackagesCache,
+            container.changedPackageDependencyCache,
             container.logger.child({ namespace: `${suggestionProvider.name} codelens` })
           )
         )
@@ -139,19 +124,5 @@ export function addProviderNames(services: IServiceCollection) {
       'npm',
       'pub',
     ]
-  )
-}
-
-export function addOriginalPackagesCache(services: IServiceCollection) {
-  services.addSingleton(
-    nameOf<IExtensionServices>().originalPackagesCache,
-    new MemoryCache("originalPackagesCache")
-  )
-}
-
-export function addEditedPackagesCache(services: IServiceCollection) {
-  services.addSingleton(
-    nameOf<IExtensionServices>().editedPackagesCache,
-    new MemoryCache("editedPackagesCache")
   )
 }

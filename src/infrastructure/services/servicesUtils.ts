@@ -3,6 +3,7 @@ import { ILoggingOptions } from "domain/logging";
 import { IDomainServices } from "domain/services";
 import { nameOf } from "domain/utils";
 import { OutputChannelTransport, createWinstonLogger } from "infrastructure/logging";
+import { PackageDependencyWatcher } from "infrastructure/watcher";
 
 export function addWinstonChannelLogger(services: IServiceCollection) {
   services.addSingleton(
@@ -22,5 +23,19 @@ export function addWinstonLogger(services: IServiceCollection, namespace: string
     nameOf<IDomainServices>().logger,
     (container: IDomainServices) =>
       createWinstonLogger(container.loggerChannel, { namespace })
+  );
+}
+
+export function addPackageDependencyWatcher(services: IServiceCollection) {
+  services.addSingleton(
+    nameOf<IDomainServices>().packageDependencyWatcher,
+    (container: IDomainServices) =>
+      new PackageDependencyWatcher(
+        container.suggestionProviders,
+        container.packageDependencyCache,
+        container.changedPackageDependencyCache,
+        container.logger.child({ namespace: 'package dependency watcher' })
+      ),
+    true
   );
 }

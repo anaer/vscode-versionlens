@@ -13,6 +13,8 @@ export class LoggerStub implements ILogger {
 
   debug(message: string, ...splats: any): void { }
 
+  verbose(message: string, ...splats: any): void { }
+
   error(message: string, ...splats: any): void { }
 
   child(options: TChildLoggerOptions): ILogger {

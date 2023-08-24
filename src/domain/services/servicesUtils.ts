@@ -1,3 +1,4 @@
+import { MemoryCache } from "domain/caching";
 import { CachingOptions, HttpOptions } from "domain/clients";
 import { IServiceCollection } from "domain/di";
 import { LoggingOptions } from "domain/logging";
@@ -26,4 +27,14 @@ export function addLoggingOptions(services: IServiceCollection) {
     (container: IDomainServices) =>
       new LoggingOptions(container.appConfig, 'logging')
   )
+}
+
+export function addPackagesDependencyCache(services: IServiceCollection) {
+  const serviceName = nameOf<IDomainServices>().packageDependencyCache;
+  services.addSingleton(serviceName, new MemoryCache(serviceName));
+}
+
+export function addChangedPackagesDependencyCache(services: IServiceCollection) {
+  const serviceName = nameOf<IDomainServices>().changedPackageDependencyCache;
+  services.addSingleton(serviceName, new MemoryCache(serviceName));
 }

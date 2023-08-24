@@ -1,5 +1,6 @@
 export enum LogLevelTypes {
   Error = "error",
   Info = "info",
-  Debug = "debug"
+  Debug = "debug",
+  Verbose = "verbose"
 }

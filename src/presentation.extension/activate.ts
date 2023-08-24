@@ -1,9 +1,11 @@
 import { IServiceProvider } from 'domain/di';
 import { ILogger, ILoggingOptions } from 'domain/logging';
 import { IDomainServices } from 'domain/services';
+import { IPackageDependencyWatcher } from 'domain/suggestions';
 import { nameOf, readJsonFile } from 'domain/utils';
 import { join } from 'node:path';
 import { ExtensionContext, workspace } from 'vscode';
+import { executeOnSaveChanges } from './commands/executeOnSaveChanges';
 import { configureContainer } from './extensionContainer';
 import { IExtensionServices } from './services/iExtensionServices';
 import { VersionLensExtension } from './versionLensExtension';
@@ -52,8 +54,14 @@ export async function activate(context: ExtensionContext): Promise<void> {
   serviceProvider.getService(serviceNames.suggestionCommandHandlers);
 
   // instantiate events
-  serviceProvider.getService(serviceNames.textDocumentEvents);
   serviceProvider.getService(serviceNames.textEditorEvents);
+
+  // setup package dependency watcher
+  serviceProvider.getService<IPackageDependencyWatcher>(serviceNames.packageDependencyWatcher)
+    // watch provider workspace files
+    .watch()
+    // run onSaveChanges task when a change is detected
+    .registerOnDependenciesChange(executeOnSaveChanges);
 }
 
 export async function deactivate() {

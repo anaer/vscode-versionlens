@@ -1,5 +1,4 @@
 export * as CommandUtils from './commands/commandUtils';
-export * from './events/textDocumentEvents';
 export * as TextDocumentUtils from './events/textDocumentUtils';
 export * from './events/textEditorEvents';
 export * from './extensionContainer';
