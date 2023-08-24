@@ -2,12 +2,12 @@ import { PackageDependency } from "domain/packages";
 
 export function hasPackageDepsChanged(
   original: PackageDependency[],
-  edited: PackageDependency[]
+  changed: PackageDependency[]
 ): boolean {
-  if (original.length !== edited.length) return true;
+  if (original.length !== changed.length) return true;
 
   for (const dep of original) {
-    const noChange = edited.some(
+    const noChange = changed.some(
       other => other.packageEquals(dep)
     );
 
