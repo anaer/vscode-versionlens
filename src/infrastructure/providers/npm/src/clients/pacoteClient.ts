@@ -1,4 +1,4 @@
-import { AbstractCachedRequest, ClientResponse } from 'domain/clients';
+import { ClientResponse, ClientResponseSource } from 'domain/clients';
 import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
@@ -7,7 +7,6 @@ import {
   PackageVersionType,
   TPackageClientRequest,
   TPackageClientResponse,
-  TPackageResource,
   VersionUtils
 } from 'domain/packages';
 import { createSuggestions } from 'domain/suggestions';
@@ -16,10 +15,9 @@ import { TNpmClientData } from '../definitions/tNpmClientData';
 import { NpaSpec, NpaTypes } from '../models/npaSpec';
 import { NpmConfig } from '../npmConfig';
 
-export class PacoteClient extends AbstractCachedRequest<number, TPackageClientResponse> {
+export class PacoteClient {
 
   constructor(pacote: any, config: NpmConfig, logger: ILogger) {
-    super(config.caching);
     this.pacote = pacote;
     this.config = config;
     this.logger = logger;
@@ -38,7 +36,7 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
     const requestedPackage = request.dependency.package;
 
     // fetch the package from npm's pacote
-    const response = await this.request(requestedPackage, npaSpec, request.clientData);
+    const response = await this.request(npaSpec, request.clientData);
 
     const { compareLoose } = semver;
 
@@ -130,20 +128,9 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
   }
 
   async request(
-    requestedPackage: TPackageResource,
     npaSpec: NpaSpec,
     options: KeyDictionary<any>
   ): Promise<ClientResponse<number, any>> {
-
-    const cacheKey = this.getCacheKey(requestedPackage);
-    if (this.cache.cachingOpts.duration > 0
-      && this.cache.hasExpired(cacheKey) === false) {
-      this.logger.debug("Fetching from cache using key: %s", cacheKey);
-      const cachedResp = this.cache.get(cacheKey);
-      if (cachedResp.rejected) throw cachedResp;
-      return cachedResp;
-    }
-
     const before = new Date();
 
     try {
@@ -156,28 +143,24 @@ export class PacoteClient extends AbstractCachedRequest<number, TPackageClientRe
         }
       );
 
-      return this.createCachedResponse(
-        cacheKey,
-        200,
-        packumentResponse,
-        false
-      );
+      return <ClientResponse<number, TPackageClientResponse>>{
+        source: ClientResponseSource.remote,
+        status: 200,
+        data: packumentResponse,
+        rejected: false
+      };
 
     } catch (error) {
-      const result = this.createCachedResponse(
-        cacheKey,
-        error.code,
-        error.message,
-        true
-      );
+      const result = <ClientResponse<number, TPackageClientResponse>>{
+        source: ClientResponseSource.remote,
+        status: error.code,
+        data: error.message,
+        rejected: true
+      };
 
       throw result;
     }
 
-  }
-
-  getCacheKey(pkg: TPackageResource) {
-    return `${pkg.name}@${pkg.version}`;
   }
 
 }

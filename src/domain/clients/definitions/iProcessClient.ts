@@ -12,6 +12,4 @@ export interface IProcessClient {
 
   request: ProcessClientRequestFn;
 
-  clearCache: () => void;
-
 }

@@ -77,6 +77,7 @@ export function addSuggestionProvider(services: IServiceCollection) {
     (container: IComposerService & IDomainServices) =>
       new ComposerSuggestionProvider(
         container.composerClient,
+        container.suggestionCache,
         container.logger.child({ namespace: 'composer provider' })
       )
   );

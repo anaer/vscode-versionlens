@@ -1,3 +1,4 @@
+import { IExpiryCache } from 'domain/caching/iExpiryCache';
 import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
@@ -31,8 +32,8 @@ export class DubSuggestionProvider
   extends SuggestionProvider<DubClient, null>
   implements ISuggestionProvider {
 
-  constructor(client: DubClient, logger: ILogger) {
-    super(client, logger);
+  constructor(client: DubClient, suggestionCache: IExpiryCache, logger: ILogger) {
+    super(client, suggestionCache, logger);
     this.config = client.config;
     this.suggestionReplaceFn = defaultReplaceFn
   }
@@ -40,10 +41,6 @@ export class DubSuggestionProvider
   config: DubConfig;
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
-
-  clearCache() {
-    this.client.jsonClient.clearCache();
-  }
 
   parseDependencies(
     packagePath: string,

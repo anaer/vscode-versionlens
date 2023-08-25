@@ -1,18 +1,18 @@
+import {
+  ClientResponse,
+  ClientResponseSource,
+  HttpClientRequestMethods,
+  HttpClientResponse,
+  HttpRequestOptions,
+  IHttpClient,
+  UrlHelpers
+} from 'domain/clients';
 import { KeyStringDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
-import {
-  AbstractCachedRequest,
-  HttpClientResponse,
-  IHttpClient,
-  HttpClientRequestMethods,
-  HttpRequestOptions,
-  UrlHelpers,
-} from 'domain/clients';
+import { XHRRequest } from 'request-light';
 import { IXhrResponse } from './iXhrResponse';
-import { XHRRequest } from 'request-light'
 
-export class RequestLightClient extends AbstractCachedRequest<number, string>
-  implements IHttpClient {
+export class RequestLightClient implements IHttpClient {
 
   logger: ILogger;
 
@@ -21,15 +21,10 @@ export class RequestLightClient extends AbstractCachedRequest<number, string>
   xhr: XHRRequest;
 
   constructor(xhr: XHRRequest, requestOptions: HttpRequestOptions, requestLogger: ILogger) {
-    super(requestOptions.caching);
     this.logger = requestLogger;
     this.options = requestOptions;
     this.xhr = xhr;
   }
-
-  clearCache() {
-    this.cache.clear();
-  };
 
   async request(
     method: HttpClientRequestMethods,
@@ -39,15 +34,6 @@ export class RequestLightClient extends AbstractCachedRequest<number, string>
   ): Promise<HttpClientResponse> {
 
     const url = UrlHelpers.createUrl(baseUrl, query);
-    const cacheKey = method + '_' + url;
-
-    // try to get from cache
-    if (this.cache.cachingOpts.duration > 0 &&
-      this.cache.hasExpired(cacheKey) === false) {
-      const cachedResp = this.cache.get(cacheKey);
-      if (cachedResp.rejected) throw cachedResp;
-      return cachedResp;
-    }
 
     try {
       // make the request
@@ -58,27 +44,28 @@ export class RequestLightClient extends AbstractCachedRequest<number, string>
         strictSSL: this.options.http.strictSSL
       });
 
-      // cache the response
-      return this.createCachedResponse(
-        cacheKey,
-        response.status,
-        response.responseText,
-        false
-      );
+      // return the response
+      return <ClientResponse<number, string>>{
+        source: ClientResponseSource.remote,
+        status: response.status,
+        data: response.responseText,
+        rejected: false
+      };
 
     } catch (error) {
       const errorResponse = error as IXhrResponse;
 
-      // cache the error response
-      const result = this.createCachedResponse(
-        cacheKey,
-        errorResponse.status,
-        errorResponse.responseText,
-        true
-      );
+      // throw the error response
+      const result = <ClientResponse<number, string>>{
+        source: ClientResponseSource.remote,
+        status: errorResponse.status,
+        data: errorResponse.responseText,
+        rejected: true
+      };
 
       throw result;
     }
+
   }
 
 }

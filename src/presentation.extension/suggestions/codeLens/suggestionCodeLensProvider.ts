@@ -115,7 +115,7 @@ export class SuggestionCodeLensProvider
     // parse the document text dependencies
     const packageDeps = this.packageDependencyWatcher.updateDependencies(
       this.suggestionProvider.name,
-      packagePath,
+      document.uri.fsPath,
       document.getText()
     );
 

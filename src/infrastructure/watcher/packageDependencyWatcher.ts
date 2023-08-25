@@ -112,7 +112,7 @@ export class PackageDependencyWatcher implements IPackageDependencyWatcher, IDis
   }
 
   private async onFileAdd(provider: ISuggestionProvider, uri: Uri) {
-    this.logger.verbose("File added '%s'", uri);
+    this.logger.silly("File added '%s'", uri);
 
     const packagePath = dirname(uri.fsPath);
     const cacheKey = MemoryCache.createKey(provider.name, packagePath);
@@ -120,7 +120,7 @@ export class PackageDependencyWatcher implements IPackageDependencyWatcher, IDis
   }
 
   private async onFileCreate(provider: ISuggestionProvider, uri: Uri) {
-    this.logger.verbose("File created '%s'", uri);
+    this.logger.silly("File created '%s'", uri);
 
     const packagePath = dirname(uri.fsPath);
     const cacheKey = MemoryCache.createKey(provider.name, packagePath);
@@ -128,7 +128,7 @@ export class PackageDependencyWatcher implements IPackageDependencyWatcher, IDis
   }
 
   private onFileDelete(provider: ISuggestionProvider, uri: Uri) {
-    this.logger.verbose("File removed '%s'", uri);
+    this.logger.silly("File removed '%s'", uri);
 
     const packagePath = dirname(uri.fsPath);
     const cacheKey = MemoryCache.createKey(provider.name, packagePath);
@@ -137,7 +137,7 @@ export class PackageDependencyWatcher implements IPackageDependencyWatcher, IDis
   }
 
   private async onFileChange(provider: ISuggestionProvider, uri: Uri) {
-    this.logger.verbose("File changed '%s'", uri);
+    this.logger.silly("File changed '%s'", uri);
 
     const packagePath = dirname(uri.fsPath);
     const fileContent = await readFile(uri.fsPath);

@@ -16,10 +16,6 @@ export class JsonHttpClient implements IJsonHttpClient {
     this.httpClient = httpClient;
   }
 
-  clearCache() {
-    this.httpClient.clearCache();
-  }
-
   request(
     method: HttpClientRequestMethods,
     url: string,

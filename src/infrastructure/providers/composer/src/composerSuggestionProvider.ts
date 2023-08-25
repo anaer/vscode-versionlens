@@ -1,3 +1,4 @@
+import { IExpiryCache } from 'domain/caching';
 import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
@@ -26,8 +27,8 @@ export class ComposerSuggestionProvider
   extends SuggestionProvider<ComposerClient, any>
   implements ISuggestionProvider {
 
-  constructor(client: ComposerClient, logger: ILogger) {
-    super(client, logger);
+  constructor(client: ComposerClient, suggestionCache: IExpiryCache, logger: ILogger) {
+    super(client, suggestionCache, logger);
     this.config = client.config;
     this.suggestionReplaceFn = defaultReplaceFn
   }
@@ -35,10 +36,6 @@ export class ComposerSuggestionProvider
   config: ComposerConfig;
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
-
-  clearCache() {
-    this.client.jsonClient.clearCache();
-  }
 
   parseDependencies(
     packagePath: string,

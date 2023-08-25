@@ -1,3 +1,4 @@
+import { IExpiryCache } from 'domain/caching/iExpiryCache';
 import { UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
@@ -17,8 +18,13 @@ export class MavenSuggestionProvider
   extends SuggestionProvider<MavenClient, MavenClientData>
   implements ISuggestionProvider {
 
-  constructor(mnvCli: MvnCli, client: MavenClient, logger: ILogger) {
-    super(client, logger);
+  constructor(
+    mnvCli: MvnCli,
+    client: MavenClient,
+    suggestionCache: IExpiryCache,
+    logger: ILogger
+  ) {
+    super(client, suggestionCache, logger);
     this.config = client.config;
     this.mvnCli = mnvCli;
   }
@@ -28,10 +34,6 @@ export class MavenSuggestionProvider
   mvnCli: MvnCli;
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
-
-  clearCache() {
-    this.client.httpClient.clearCache();
-  }
 
   parseDependencies(
     packagePath: string,

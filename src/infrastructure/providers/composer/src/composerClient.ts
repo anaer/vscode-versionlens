@@ -35,10 +35,6 @@ export class ComposerClient implements IPackageClient<null> {
     this.logger = logger;
   }
 
-  clearCache() {
-    this.jsonClient.clearCache();
-  }
-
   async fetchPackage<TClientData>(
     request: TPackageClientRequest<TClientData>
   ): Promise<TPackageClientResponse> {

@@ -1,19 +1,28 @@
+import { throwNull, throwUndefined } from '@esm-test/guards';
+import { IExpiryCache } from 'domain/caching';
 import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import { PackageClientSourceType } from 'domain/packages';
-import { ISuggestionProvider } from 'domain/suggestions';
 import { CommandUtils, SuggestionCodeLens } from 'presentation.extension';
 import * as VsCode from 'vscode';
 import { WorkspaceEdit, env, workspace } from 'vscode';
-import { VersionLensState } from '../../state/versionLensState';
 import { SuggestionCommandContributions } from './eSuggestionCommandContributions';
 
 export class SuggestionCommandHandlers implements IDisposable {
 
-  constructor(versionLensProviders: Array<ISuggestionProvider>, state: VersionLensState, logger: ILogger) {
-    this.suggestionProviders = versionLensProviders;
-    this.state = state;
-    this.logger = logger;
+  constructor(
+    readonly suggestionCache: IExpiryCache,
+    readonly processesCache: IExpiryCache,
+    readonly logger: ILogger
+  ) {
+    throwUndefined("suggestionCache", suggestionCache);
+    throwNull("suggestionCache", suggestionCache);
+
+    throwUndefined("processesCache", processesCache);
+    throwNull("processesCache", processesCache);
+
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
 
     // register the commands
     this.disposables = CommandUtils.registerCommands(
@@ -22,12 +31,6 @@ export class SuggestionCommandHandlers implements IDisposable {
       logger
     );
   }
-
-  suggestionProviders: Array<ISuggestionProvider>;
-
-  state: VersionLensState;
-
-  logger: ILogger;
 
   disposables: Array<VsCode.Disposable>
 
@@ -70,9 +73,8 @@ export class SuggestionCommandHandlers implements IDisposable {
    * Clears all suggestion provider caches
    */
   onClearCacheCommand(): void {
-    this.suggestionProviders.forEach(provider => {
-      provider.clearCache();
-    });
+    this.suggestionCache.clear();
+    this.processesCache.clear();
   }
 
   async dispose() {

@@ -1,12 +1,16 @@
-import { CachingOptions, HttpOptions, IJsonHttpClient } from "domain/clients";
-import { DubClient } from "../dubClient";
-import { DubConfig } from "../dubConfig";
+import {
+  ICachingOptions,
+  IHttpOptions,
+  IJsonHttpClient
+} from 'domain/clients';
+import { DubClient } from '../dubClient';
+import { DubConfig } from '../dubConfig';
 
 export interface IDubServices {
 
-  dubCachingOpts: CachingOptions;
+  dubCachingOpts: ICachingOptions;
 
-  dubHttpOpts: HttpOptions;
+  dubHttpOpts: IHttpOptions;
 
   dubConfig: DubConfig;
 

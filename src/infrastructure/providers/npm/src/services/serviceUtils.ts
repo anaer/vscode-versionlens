@@ -119,6 +119,7 @@ export function addSuggestionProvider(services: IServiceCollection) {
     (container: INpmServices & IDomainServices) =>
       new NpmSuggestionProvider(
         container.npmClient,
+        container.suggestionCache,
         container.logger.child({ namespace: 'npm provider' })
       )
   );

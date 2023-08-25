@@ -66,6 +66,7 @@ export function addProcessClient(services: IServiceCollection) {
     nameOf<IDotNetServices>().dotnetProcess,
     (container: IDotNetServices & IDomainServices) =>
       createProcessClient(
+        container.processesCache,
         container.dotnetCachingOpts,
         container.logger.child({ namespace: 'dotnet process' })
       )
@@ -129,6 +130,7 @@ export function addSuggestionProvider(services: IServiceCollection) {
         container.dotnetCli,
         container.nugetClient,
         container.nugetResClient,
+        container.suggestionCache,
         container.logger.child({ namespace: 'dotnet provider' })
       )
   );

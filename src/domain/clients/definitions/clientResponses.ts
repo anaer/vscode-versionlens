@@ -3,7 +3,8 @@ import { KeyDictionary } from 'domain/generics';
 export enum ClientResponseSource {
   remote = 'remote',
   cache = 'cache',
-  local = 'local'
+  local = 'local',
+  cli = 'cli'
 }
 
 export type ClientResponse<TStatus, TData> = {

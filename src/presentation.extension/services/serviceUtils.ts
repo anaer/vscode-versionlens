@@ -61,8 +61,8 @@ export function addSuggestionCommands(services: IServiceCollection) {
     nameOf<IExtensionServices>().suggestionCommandHandlers,
     (container: IDomainServices & IExtensionServices) =>
       new SuggestionCommandHandlers(
-        container.suggestionProviders,
-        container.extension.state,
+        container.suggestionCache,
+        container.processesCache,
         container.logger.child({ namespace: 'suggestion commands' })
       ),
     true

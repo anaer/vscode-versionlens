@@ -1,4 +1,5 @@
 import { throwNull, throwUndefined } from "@esm-test/guards";
+import { IExpiryCache, MemoryCache } from "domain/caching";
 import { ILogger } from "domain/logging";
 import {
   IPackageClient,
@@ -14,20 +15,20 @@ export class SuggestionProvider<
   TClientData
 > {
 
-  constructor(client: TClient, logger: ILogger) {
+  constructor(
+    readonly client: TClient,
+    readonly suggestionCache: IExpiryCache,
+    readonly logger: ILogger
+  ) {
     throwUndefined("client", client);
     throwNull("client", client);
 
+    throwUndefined("suggestionCache", suggestionCache);
+    throwNull("suggestionCache", suggestionCache);
+
     throwUndefined("logger", logger);
     throwNull("logger", logger);
-
-    this.client = client;
-    this.logger = logger;
   }
-
-  client: TClient;
-
-  logger: ILogger;
 
   get name() {
     return this.client.config.providerName;
@@ -94,46 +95,48 @@ export class SuggestionProvider<
   }
 
   async fetchPackage(request: TPackageClientRequest<TClientData>): Promise<Array<PackageResponse>> {
+    const providerName = this.name;
     const client = this.client;
     const requestedPackage = request.dependency.package;
 
-    client.logger.debug("Fetching %s", requestedPackage.name);
+    this.logger.silly("Fetching %s", requestedPackage.name);
 
+    // create the cache key
+    const cacheKey = MemoryCache.createKey(
+      providerName,
+      request.dependency.package.name,
+      request.dependency.package.version
+    );
+
+    let source = "cache";
+    let response: TPackageClientResponse;
     try {
       // capture start time
       const startedAt = performance.now();
 
       // fetch the package
-      const response: TPackageClientResponse = await client.fetchPackage(request);
+      response = await this.suggestionCache.getOrCreate<TPackageClientResponse>(
+        cacheKey,
+        async () => {
+          source = "client";
+          return await client.fetchPackage(request)
+        },
+        this.client.config.caching.duration
+      );
 
       // report completed duration
       const completedAt = performance.now();
-      client.logger.info(
+      this.logger.info(
         'Fetched from %s %s@%s (%s ms)',
-        response.responseStatus?.source,
+        source,
         requestedPackage.name,
         requestedPackage.version,
         Math.floor(completedAt - startedAt)
       );
 
-      if (response.responseStatus?.rejected) {
-        client.logger.error(
-          "%s@%s was rejected with the status code %s",
-          requestedPackage.name,
-          requestedPackage.version,
-          response.responseStatus.status
-        );
-      }
-
-      return ResponseFactory.createSuccess(
-        client.config.providerName,
-        request,
-        response
-      );
-
     } catch (error) {
-
-      client.logger.error(
+      // unexpected error
+      this.logger.error(
         `%s caught an exception.\n Package: %j\n Error: %j`,
         this.fetchPackage.name,
         requestedPackage,
@@ -142,6 +145,22 @@ export class SuggestionProvider<
 
       throw error;
     }
+
+    // client handled error responses
+    if (response.responseStatus?.rejected) {
+      this.logger.error(
+        "%s@%s was rejected with the status code %s",
+        requestedPackage.name,
+        requestedPackage.version,
+        response.responseStatus.status
+      );
+    }
+
+    return ResponseFactory.createSuccess(
+      providerName,
+      request,
+      response
+    );
   }
 
 }

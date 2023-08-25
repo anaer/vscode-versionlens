@@ -1,4 +1,4 @@
-import { MemoryCache } from "domain/caching";
+import { MemoryCache, MemoryExpiryCache } from "domain/caching";
 import { CachingOptions, HttpOptions } from "domain/clients";
 import { IServiceCollection } from "domain/di";
 import { LoggingOptions } from "domain/logging";
@@ -37,4 +37,14 @@ export function addPackagesDependencyCache(services: IServiceCollection) {
 export function addChangedPackagesDependencyCache(services: IServiceCollection) {
   const serviceName = nameOf<IDomainServices>().changedPackageDependencyCache;
   services.addSingleton(serviceName, new MemoryCache(serviceName));
+}
+
+export function addSuggestionDependencyCache(services: IServiceCollection) {
+  const serviceName = nameOf<IDomainServices>().suggestionCache;
+  services.addSingleton(serviceName, new MemoryExpiryCache(serviceName));
+}
+
+export function addProcessesCache(services: IServiceCollection) {
+  const serviceName = nameOf<IDomainServices>().processesCache;
+  services.addSingleton(serviceName, new MemoryExpiryCache(serviceName));
 }

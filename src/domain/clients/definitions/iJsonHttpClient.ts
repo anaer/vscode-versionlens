@@ -7,8 +7,6 @@ export interface IJsonHttpClient {
 
   httpClient: IHttpClient;
 
-  clearCache: () => void;
-
   request: (
     method: HttpClientRequestMethods,
     url: string,

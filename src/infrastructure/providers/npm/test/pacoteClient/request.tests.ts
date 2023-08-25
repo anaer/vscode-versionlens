@@ -5,10 +5,12 @@ import { createPackageResource } from 'domain/packages';
 import {
   GitHubOptions,
   IPacote,
+  NpaSpec,
   NpmConfig,
   PacoteClient
 } from 'infrastructure/providers/npm';
 import { test } from 'mocha-ui-esm';
+import npa from 'npm-package-arg';
 import { LoggerStub } from 'test/unit/domain/logging';
 import { anything, instance, mock, when } from 'ts-mockito';
 import { PacoteStub } from './stubs/pacoteStub';
@@ -36,13 +38,13 @@ export const RequestsTests = {
     when(configMock.prereleaseTagFilter).thenReturn([])
   },
 
-  "caches request responses on success": async () => {
+  "returns successful responses": async () => {
     const testResponse = {
       any: "test success response from pacote"
     };
 
-    const expectedCacheData = {
-      source: ClientResponseSource.cache,
+    const expectedResponse = {
+      source: ClientResponseSource.remote,
       status: 200,
       data: testResponse,
       rejected: false
@@ -57,6 +59,12 @@ export const RequestsTests = {
       'packagepath',
     );
 
+    const testNpaSpec = npa.resolve(
+      testPackageRes.name,
+      testPackageRes.version,
+      testPackageRes.path
+    ) as NpaSpec;
+
     when(pacoteMock.packument(anything(), anything()))
       .thenResolve(testResponse);
 
@@ -66,12 +74,11 @@ export const RequestsTests = {
       instance(loggerMock)
     );
 
-    const testCacheKey = cut.getCacheKey(testPackageRes);
+    // test
+    const actual = await cut.request(testNpaSpec, anything());
 
-    await cut.request(testPackageRes, anything(), anything());
-
-    const cachedData = cut.cache.get(testCacheKey);
-    assert.deepEqual(cachedData, expectedCacheData);
+    // assert
+    assert.deepEqual(actual, expectedResponse);
   },
 
   "caches url responses when rejected": async () => {
@@ -80,10 +87,10 @@ export const RequestsTests = {
       message: "404 Not Found - GET https://registry.npmjs.org/somepackage - Not found",
     };
 
-    const expectedCacheData = {
+    const expectedResponse = {
       status: testResponse.code,
       data: testResponse.message,
-      source: ClientResponseSource.cache,
+      source: ClientResponseSource.remote,
       rejected: true,
     };
 
@@ -96,6 +103,12 @@ export const RequestsTests = {
       'packagepath',
     );
 
+    const testNpaSpec = npa.resolve(
+      testPackageRes.name,
+      testPackageRes.version,
+      testPackageRes.path
+    ) as NpaSpec;
+
     when(pacoteMock.packument(anything(), anything()))
       .thenReject(<any>testResponse);
 
@@ -105,66 +118,15 @@ export const RequestsTests = {
       instance(loggerMock)
     );
 
-    const testCacheKey = cut.getCacheKey(testPackageRes);
-
-    // first request
     try {
-      await cut.request(testPackageRes, anything(), anything());
+      // test
+      await cut.request(testNpaSpec, anything());
       assert.ok(false);
-    } catch {
-      const cachedData = cut.cache.get(testCacheKey);
-      assert.deepEqual(cachedData, expectedCacheData);
+    } catch (actual) {
+      // assert
+      assert.deepEqual(actual, expectedResponse);
     }
 
-    // accessing a cached rejection should also reject
-    try {
-      await cut.request(testPackageRes, anything(), anything());
-      assert.ok(false);
-    } catch {
-      const cachedData = cut.cache.get(testCacheKey);
-      assert.deepEqual(cachedData, expectedCacheData);
-    }
   },
 
-  "caching disabled when duration is 0": async () => {
-    const expectedCacheData = undefined;
-
-    const testResponse = {
-      any: "test success response from pacote"
-    };
-
-    const expectedResponse = {
-      status: 200,
-      data: testResponse,
-      source: ClientResponseSource.remote,
-      rejected: false,
-    };
-
-    when(pacoteMock.packument(anything(), anything()))
-      .thenResolve(testResponse);
-
-    when(cachingOptsMock.duration).thenReturn(0);
-
-    const testPackageRes = createPackageResource(
-      // package name
-      'pacote',
-      // package version
-      '10.1.*',
-      // package path
-      'packagepath',
-    );
-
-    const cut = new PacoteClient(
-      instance(pacoteMock),
-      instance(configMock),
-      instance(loggerMock)
-    );
-
-    const response = await cut.request(testPackageRes, anything(), anything());
-
-    const testCacheKey = cut.getCacheKey(testPackageRes);
-    const cachedData = cut.cache.get(testCacheKey);
-    assert.equal(cachedData, expectedCacheData);
-    assert.deepEqual(response, expectedResponse);
-  },
 }

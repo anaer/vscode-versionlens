@@ -1,4 +1,5 @@
 import assert from 'assert';
+import { MemoryExpiryCache } from 'domain/caching';
 import {
   CachingOptions,
   ClientResponseSource,
@@ -13,7 +14,7 @@ import { anything, instance, mock, when } from 'ts-mockito';
 import { ProcessSpawnStub } from './processSpawnStub';
 
 let psMock: ProcessSpawnStub;
-let cachingMock: ICachingOptions;
+let cachingOptionsMock: ICachingOptions;
 let loggerMock: ILogger;
 
 export const ProcessClientRequestTests = {
@@ -21,7 +22,7 @@ export const ProcessClientRequestTests = {
   [test.title]: PromiseSpawnClient.name,
 
   beforeEach: () => {
-    cachingMock = mock(CachingOptions)
+    cachingOptionsMock = mock(CachingOptions)
     loggerMock = mock(LoggerStub)
     psMock = mock(ProcessSpawnStub)
   },
@@ -30,7 +31,7 @@ export const ProcessClientRequestTests = {
 
     "returns <ProcessClientResponse> when error occurs": async () => {
 
-      when(cachingMock.duration).thenReturn(30000);
+      when(cachingOptionsMock.duration).thenReturn(30000);
 
       when(psMock.promiseSpawn(anything(), anything(), anything()))
         .thenReject(<any>{
@@ -40,7 +41,8 @@ export const ProcessClientRequestTests = {
 
       const rut = new PromiseSpawnClient(
         instance(psMock).promiseSpawn,
-        instance(cachingMock),
+        new MemoryExpiryCache(""),
+        instance(cachingOptionsMock),
         instance(loggerMock)
       );
 
@@ -62,7 +64,7 @@ export const ProcessClientRequestTests = {
 
     "returns <ProcessClientResponse> and caches response": async () => {
       const testResponse = {
-        source: ClientResponseSource.local,
+        source: ClientResponseSource.cli,
         status: 0,
         data: '123\n',
         rejected: false
@@ -81,11 +83,12 @@ export const ProcessClientRequestTests = {
           stdout: testResponse.data
         });
 
-      when(cachingMock.duration).thenReturn(30000);
+      when(cachingOptionsMock.duration).thenReturn(30000);
 
       const rut = new PromiseSpawnClient(
         instance(psMock).promiseSpawn,
-        instance(cachingMock),
+        new MemoryExpiryCache(""),
+        instance(cachingOptionsMock),
         instance(loggerMock)
       );
 
@@ -107,9 +110,10 @@ export const ProcessClientRequestTests = {
     },
 
     "doesn't cache when duration is 0": async () => {
+      const testDuration = 0;
       const testKey = 'echo 123';
       const testResponse = {
-        source: ClientResponseSource.local,
+        source: ClientResponseSource.cli,
         status: 0,
         data: '123\n',
         rejected: false,
@@ -121,11 +125,13 @@ export const ProcessClientRequestTests = {
           stdout: testResponse.data
         });
 
-      when(cachingMock.duration).thenReturn(0);
+      when(cachingOptionsMock.duration).thenReturn(testDuration);
+      const testCache = new MemoryExpiryCache("");
 
       const rut = new PromiseSpawnClient(
         instance(psMock).promiseSpawn,
-        instance(cachingMock),
+        testCache,
+        instance(cachingOptionsMock),
         instance(loggerMock)
       );
 
@@ -144,7 +150,7 @@ export const ProcessClientRequestTests = {
       );
 
       assert.deepEqual(cachedResponse, testResponse);
-      const cachedData = rut.cache.get(testKey);
+      const cachedData = testCache.get(testKey);
       assert.equal(cachedData, undefined);
     },
 

@@ -4,10 +4,10 @@ import { IDomainServices, IProviderServices } from "domain/services";
 import { nameOf } from "domain/utils";
 import { createJsonClient } from "infrastructure/http";
 import { DubContributions } from "../definitions/eDubContributions";
-import { IDubServices } from "../definitions/iDubServices";
 import { DubClient } from "../dubClient";
 import { DubConfig } from "../dubConfig";
 import { DubSuggestionProvider } from "../dubSuggestionProvider";
+import { IDubServices } from "./iDubServices";
 
 export function addCachingOptions(services: IServiceCollection) {
   services.addSingleton(
@@ -77,6 +77,7 @@ export function addSuggestionProvider(services: IServiceCollection) {
     (container: IDubServices & IDomainServices) =>
       new DubSuggestionProvider(
         container.dubClient,
+        container.suggestionCache,
         container.logger.child({ namespace: 'dub provider' })
       )
   );

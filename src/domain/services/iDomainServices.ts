@@ -1,4 +1,5 @@
 import { ICache } from 'domain/caching';
+import { IExpiryCache } from 'domain/caching/iExpiryCache';
 import { CachingOptions, HttpOptions } from 'domain/clients';
 import { Config } from 'domain/configuration';
 import { IServiceCollectionFactory, IServiceProvider } from 'domain/di';
@@ -32,5 +33,9 @@ export interface IDomainServices {
   packageDependencyCache: ICache;
 
   changedPackageDependencyCache: ICache;
+
+  suggestionCache: IExpiryCache;
+
+  processesCache: IExpiryCache;
 
 }

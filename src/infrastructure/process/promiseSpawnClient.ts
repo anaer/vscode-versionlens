@@ -1,5 +1,7 @@
+import { throwNull, throwUndefined } from '@esm-test/guards';
+import { IExpiryCache } from 'domain/caching';
 import {
-  AbstractCachedRequest,
+  ClientResponse,
   ClientResponseSource,
   ICachingOptions,
   IProcessClient,
@@ -8,65 +10,60 @@ import {
 import { ILogger } from 'domain/logging';
 import { IPromiseSpawnFn } from './iPromiseSpawn';
 
-export class PromiseSpawnClient extends AbstractCachedRequest<string, string>
-  implements IProcessClient {
+export class PromiseSpawnClient implements IProcessClient {
 
   constructor(
-    promiseSpawnFn: IPromiseSpawnFn,
-    processOpts: ICachingOptions,
-    processLogger: ILogger
+    readonly promiseSpawnFn: IPromiseSpawnFn,
+    readonly processCache: IExpiryCache,
+    readonly cachingOptions: ICachingOptions,
+    readonly logger: ILogger
   ) {
-    super(processOpts);
-    this.logger = processLogger;
-    this.promiseSpawn = promiseSpawnFn;
+    throwUndefined("promiseSpawnFn", promiseSpawnFn);
+    throwNull("promiseSpawnFn", promiseSpawnFn);
+
+    throwUndefined("processCache", processCache);
+    throwNull("processCache", processCache);
+
+    throwUndefined("cachingOptions", cachingOptions);
+    throwNull("cachingOptions", cachingOptions);
+
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
   }
 
-  promiseSpawn: IPromiseSpawnFn;
-
-  logger: ILogger;
-
-  clearCache() {
-    this.cache.clear();
-  };
-
-  async request(
-    cmd: string,
-    args: Array<string>,
-    cwd: string
-  ): Promise<ProcessClientResponse> {
+  async request(cmd: string, args: Array<string>, cwd: string): Promise<ProcessClientResponse> {
     const cacheKey = `${cmd} ${args.join(' ')}`;
 
-    // try to get from cache
-    if (this.cache.cachingOpts.duration > 0 &&
-      this.cache.hasExpired(cacheKey) === false) {
-      this.logger.debug('cached - %s', cacheKey);
-
-      const cachedResp = this.cache.get(cacheKey);
-      if (cachedResp.rejected) throw cachedResp;
-      return cachedResp;
-    }
-
-    this.logger.debug('executing - %s', cacheKey);
+    this.logger.silly('executing %s', cacheKey);
 
     try {
-      const result = await this.promiseSpawn(cmd, args, { cwd, stdioString: true });
+      let source = ClientResponseSource.cache;
+      const result = await this.processCache.getOrCreate(
+        cacheKey,
+        async () => {
+          source = ClientResponseSource.cli;
+          return await this.promiseSpawnFn(cmd, args, { cwd, stdioString: true })
+        },
+        this.cachingOptions.duration
+      )
 
-      return this.createCachedResponse(
-        cacheKey,
-        result.code,
-        result.stdout,
-        false,
-        ClientResponseSource.local
-      );
+      this.logger.debug("command result from %s - '%s'", source, cacheKey);
+
+      return <ClientResponse<string, string>>{
+        data: result.stdout,
+        source,
+        status: result.code,
+        rejected: false
+      };
+
     } catch (error) {
-      // cache the error response
-      const result = this.createCachedResponse(
-        cacheKey,
-        error.code,
-        error.message,
-        true,
-        ClientResponseSource.local
-      );
+
+      const result = <ClientResponse<string, string>>{
+        data: error.message,
+        source: ClientResponseSource.cli,
+        status: error.code,
+        rejected: true
+      };
 
       throw result;
     }

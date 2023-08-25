@@ -1,3 +1,4 @@
+import { IExpiryCache } from 'domain/caching/iExpiryCache';
 import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
@@ -27,8 +28,8 @@ export class NpmSuggestionProvider
   extends SuggestionProvider<NpmPackageClient, TNpmClientData>
   implements ISuggestionProvider {
 
-  constructor(client: NpmPackageClient, logger: ILogger) {
-    super(client, logger);
+  constructor(client: NpmPackageClient, suggestionCache: IExpiryCache, logger: ILogger) {
+    super(client, suggestionCache, logger);
     this.config = client.config;
     this.suggestionReplaceFn = npmReplaceVersion;
   }
@@ -36,11 +37,6 @@ export class NpmSuggestionProvider
   config: NpmConfig;
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
-
-  clearCache() {
-    this.client.pacoteClient.cache.clear();
-    this.client.githubClient.jsonClient.clearCache();
-  }
 
   parseDependencies(
     packagePath: string,

@@ -52,6 +52,7 @@ export function addProcessClient(services: IServiceCollection) {
     nameOf<IMavenServices>().mvnProcess,
     (container: IMavenServices & IDomainServices) =>
       createProcessClient(
+        container.processesCache,
         container.mavenCachingOpts,
         container.logger.child({ namespace: 'maven mvn process' })
       )
@@ -103,6 +104,7 @@ export function addSuggestionProvider(services: IServiceCollection) {
       new MavenSuggestionProvider(
         container.mvnCli,
         container.mavenClient,
+        container.suggestionCache,
         container.logger.child({ namespace: 'maven provider' })
       )
   );

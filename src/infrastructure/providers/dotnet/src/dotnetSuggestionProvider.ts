@@ -1,3 +1,4 @@
+import { IExpiryCache } from 'domain/caching';
 import { UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
@@ -26,9 +27,10 @@ export class DotNetSuggestionProvider
     dotnetCli: DotNetCli,
     nugetClient: NuGetPackageClient,
     nugetResClient: NuGetResourceClient,
+    suggestionCache: IExpiryCache,
     logger: ILogger
   ) {
-    super(nugetClient, logger);
+    super(nugetClient, suggestionCache, logger);
     this.config = nugetClient.config;
     this.dotnetClient = dotnetCli;
     this.nugetResClient = nugetResClient;
@@ -42,11 +44,6 @@ export class DotNetSuggestionProvider
   nugetResClient: NuGetResourceClient;
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
-
-  clearCache() {
-    this.dotnetClient.processClient.clearCache();
-    this.client.jsonClient.clearCache();
-  }
 
   parseDependencies(
     packagePath: string,

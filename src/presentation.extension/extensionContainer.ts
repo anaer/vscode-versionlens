@@ -5,7 +5,9 @@ import {
   addChangedPackagesDependencyCache,
   addHttpOptions,
   addLoggingOptions,
-  addPackagesDependencyCache
+  addPackagesDependencyCache,
+  addProcessesCache,
+  addSuggestionDependencyCache
 } from 'domain/services';
 import { nameOf } from 'domain/utils';
 import { AwilixServiceCollectionFactory } from 'infrastructure/di';
@@ -57,6 +59,10 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
   addPackagesDependencyCache(services);
 
   addChangedPackagesDependencyCache(services);
+
+  addSuggestionDependencyCache(services);
+
+  addProcessesCache(services);
 
   // infrastructure
   addWinstonChannelLogger(services);

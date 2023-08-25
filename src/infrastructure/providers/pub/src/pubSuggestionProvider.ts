@@ -1,3 +1,4 @@
+import { IExpiryCache } from 'domain/caching';
 import { ILogger } from 'domain/logging';
 import {
   createGitDescFromYamlNode,
@@ -30,8 +31,8 @@ export class PubSuggestionProvider
   extends SuggestionProvider<PubClient, any>
   implements ISuggestionProvider {
 
-  constructor(client: PubClient, logger: ILogger) {
-    super(client, logger);
+  constructor(client: PubClient, suggestionCache: IExpiryCache, logger: ILogger) {
+    super(client, suggestionCache, logger);
     this.config = client.config;
     this.suggestionReplaceFn = pubReplaceVersion
   }
@@ -39,10 +40,6 @@ export class PubSuggestionProvider
   config: PubConfig;
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
-
-  clearCache() {
-    this.client.jsonClient.clearCache();
-  };
 
   parseDependencies(
     packagePath: string,

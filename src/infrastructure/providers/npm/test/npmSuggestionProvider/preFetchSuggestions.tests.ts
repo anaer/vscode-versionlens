@@ -1,4 +1,5 @@
 import assert from 'assert';
+import { IExpiryCache } from 'domain/caching';
 import { ILogger } from 'domain/logging';
 import { fileExists } from 'domain/utils';
 import {
@@ -33,6 +34,7 @@ type TestContext = {
   githubOptsMock: GitHubOptions,
   clientMock: NpmPackageClient,
   configMock: NpmConfig,
+  suggestionCacheMock: IExpiryCache,
   loggerMock: ILogger
 }
 
@@ -56,6 +58,7 @@ export const NpmSuggestionProviderTests = {
       this.githubOptsMock = mock<GitHubOptions>();
       this.clientMock = mock<NpmPackageClient>();
       this.configMock = mock<NpmConfig>();
+      this.suggestionCacheMock = mock<IExpiryCache>();
       this.loggerMock = mock<ILogger>();
       when(this.configMock.github).thenReturn(instance(this.githubOptsMock));
       when(this.clientMock.config).thenReturn(instance(this.configMock));
@@ -68,6 +71,7 @@ export const NpmSuggestionProviderTests = {
 
       const put = new NpmSuggestionProvider(
         instance(this.clientMock),
+        instance(this.suggestionCacheMock),
         instance(this.loggerMock)
       );
 
@@ -106,6 +110,7 @@ export const NpmSuggestionProviderTests = {
     "returns client data when no .npmrc": async function (this: TestContext) {
       const put = new NpmSuggestionProvider(
         instance(this.clientMock),
+        instance(this.suggestionCacheMock),
         instance(this.loggerMock)
       );
 
@@ -132,6 +137,7 @@ export const NpmSuggestionProviderTests = {
 
       const put = new NpmSuggestionProvider(
         instance(this.clientMock),
+        instance(this.suggestionCacheMock),
         instance(this.loggerMock)
       );
 
