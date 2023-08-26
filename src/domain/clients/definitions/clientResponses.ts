@@ -7,15 +7,15 @@ export enum ClientResponseSource {
   cli = 'cli'
 }
 
-export type ClientResponse<TStatus, TData> = {
+export type TClientResponse<TStatus, TData> = {
   source: ClientResponseSource;
   status: TStatus;
   data: TData;
   rejected?: boolean;
 }
 
-export type HttpClientResponse = ClientResponse<number, string>;
+export type HttpClientResponse = TClientResponse<number, string>;
 
-export type JsonClientResponse = ClientResponse<number, KeyDictionary<any>>;
+export type JsonClientResponse = TClientResponse<number, KeyDictionary<any>>;
 
-export type ProcessClientResponse = ClientResponse<string, string>;
+export type ProcessClientResponse = TClientResponse<string, string>;

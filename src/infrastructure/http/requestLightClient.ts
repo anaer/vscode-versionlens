@@ -1,6 +1,5 @@
 import { throwNull, throwUndefined } from '@esm-test/guards';
 import {
-  ClientResponse,
   ClientResponseSource,
   HttpClientRequestMethods,
   HttpClientResponse,
@@ -49,7 +48,7 @@ export class RequestLightClient implements IHttpClient {
       });
 
       // return the response
-      return <ClientResponse<number, string>>{
+      return <HttpClientResponse>{
         source: ClientResponseSource.remote,
         status: response.status,
         data: response.responseText,
@@ -60,7 +59,7 @@ export class RequestLightClient implements IHttpClient {
       const errorResponse = error as IXhrResponse;
 
       // throw the error response
-      const result = <ClientResponse<number, string>>{
+      const result = <HttpClientResponse>{
         source: ClientResponseSource.remote,
         status: errorResponse.status,
         data: errorResponse.responseText,

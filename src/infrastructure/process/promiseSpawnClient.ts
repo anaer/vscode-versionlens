@@ -1,11 +1,6 @@
 import { throwNull, throwUndefined } from '@esm-test/guards';
 import { ICachingOptions, IExpiryCache } from 'domain/caching';
-import {
-  ClientResponse,
-  ClientResponseSource,
-  IProcessClient,
-  ProcessClientResponse
-} from 'domain/clients';
+import { ClientResponseSource, IProcessClient, ProcessClientResponse } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import { IPromiseSpawnFn } from './iPromiseSpawn';
 
@@ -48,7 +43,7 @@ export class PromiseSpawnClient implements IProcessClient {
 
       this.logger.debug("command result from %s - '%s'", source, cacheKey);
 
-      return <ClientResponse<string, string>>{
+      return <ProcessClientResponse>{
         data: result.stdout,
         source,
         status: result.code,
@@ -57,7 +52,7 @@ export class PromiseSpawnClient implements IProcessClient {
 
     } catch (error) {
 
-      const result = <ClientResponse<string, string>>{
+      const result = <ProcessClientResponse>{
         data: error.message,
         source: ClientResponseSource.cli,
         status: error.code,

@@ -1,9 +1,9 @@
 import assert from 'assert';
 import { CachingOptions, ICachingOptions } from 'domain/caching';
 import {
-  ClientResponse,
   ClientResponseSource,
   HttpClientRequestMethods,
+  HttpClientResponse,
   HttpOptions,
   HttpRequestOptions,
   IHttpOptions,
@@ -117,7 +117,7 @@ export const RequestLightClientTests = {
       responseText: "success test",
     };
 
-    const expectedResponse = <ClientResponse<number, string>>{
+    const expectedResponse = <HttpClientResponse>{
       source: ClientResponseSource.remote,
       status: testXhrResponse.status,
       data: testXhrResponse.responseText,
@@ -144,7 +144,7 @@ export const RequestLightClientTests = {
       source: ClientResponseSource.remote
     };
 
-    const expectedResponse = <ClientResponse<number, string>>{
+    const expectedResponse = <HttpClientResponse>{
       status: testResponse.status,
       data: testResponse.responseText,
       source: ClientResponseSource.remote,

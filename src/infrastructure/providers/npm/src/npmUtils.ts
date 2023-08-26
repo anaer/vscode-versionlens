@@ -1,5 +1,5 @@
 import NpmCliConfig from '@npmcli/config';
-import { ClientResponse, ClientResponseSource } from 'domain/clients';
+import { ClientResponseSource, HttpClientResponse } from 'domain/clients';
 import { KeyStringDictionary } from 'domain/generics';
 import {
   PackageClientSourceType,
@@ -47,7 +47,7 @@ function replaceAliasVersion(packageInfo: PackageResponse, newVersion: string): 
 export function convertNpmErrorToResponse(
   error,
   source: ClientResponseSource
-): ClientResponse<number, string> {
+): HttpClientResponse {
   return {
     source,
     status: error.code,

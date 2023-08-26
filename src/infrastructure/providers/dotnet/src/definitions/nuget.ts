@@ -1,4 +1,4 @@
-import { ClientResponse } from 'domain/clients';
+import { TClientResponse } from 'domain/clients';
 
 export interface NugetServiceResource {
   '@id': string;
@@ -10,7 +10,7 @@ export interface NugetServiceIndex {
   resources: Array<NugetServiceResource>;
 }
 
-export type NugetServiceIndexResponse = ClientResponse<number, NugetServiceIndex>
+export type NugetServiceIndexResponse = TClientResponse<number, NugetServiceIndex>
 
 export type NuGetClientData = {
   serviceUrls: Array<string>,

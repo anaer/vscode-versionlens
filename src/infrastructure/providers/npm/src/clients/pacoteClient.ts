@@ -1,5 +1,5 @@
 import { throwNull, throwUndefined } from '@esm-test/guards';
-import { ClientResponse, ClientResponseSource } from 'domain/clients';
+import { ClientResponseSource } from 'domain/clients';
 import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
@@ -12,6 +12,7 @@ import {
 } from 'domain/packages';
 import { createSuggestions } from 'domain/suggestions';
 import semver from 'semver';
+import { TPactoteClientResponse } from '../definitions/TPactoteClientResponse';
 import { TNpmClientData } from '../definitions/tNpmClientData';
 import { NpaSpec, NpaTypes } from '../models/npaSpec';
 import { NpmConfig } from '../npmConfig';
@@ -134,7 +135,7 @@ export class PacoteClient {
   async request(
     npaSpec: NpaSpec,
     options: KeyDictionary<any>
-  ): Promise<ClientResponse<number, any>> {
+  ): Promise<TPactoteClientResponse> {
     const before = new Date();
 
     try {
@@ -147,7 +148,7 @@ export class PacoteClient {
         }
       );
 
-      return <ClientResponse<number, TPackageClientResponse>>{
+      return <TPactoteClientResponse>{
         source: ClientResponseSource.remote,
         status: 200,
         data: packumentResponse,
@@ -155,7 +156,7 @@ export class PacoteClient {
       };
 
     } catch (error) {
-      const result = <ClientResponse<number, TPackageClientResponse>>{
+      const result = <TPactoteClientResponse>{
         source: ClientResponseSource.remote,
         status: error.code,
         data: error.message,
