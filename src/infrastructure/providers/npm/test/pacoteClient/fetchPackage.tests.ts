@@ -1,12 +1,12 @@
 // import  NpmCliConfig from '@npmcli/config';
 import assert from 'assert';
-import { CachingOptions, ICachingOptions } from 'domain/clients';
+import { CachingOptions, ICachingOptions } from 'domain/caching';
 import { ILogger } from 'domain/logging';
 import {
-  createDependencyRange,
-  createPackageResource,
   PackageDependency,
-  TPackageClientRequest
+  TPackageClientRequest,
+  createDependencyRange,
+  createPackageResource
 } from 'domain/packages';
 import { SuggestionFlags } from 'domain/suggestions';
 import {

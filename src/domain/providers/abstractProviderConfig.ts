@@ -1,6 +1,7 @@
 import { throwNull, throwUndefined } from '@esm-test/guards';
-import { ICachingOptions, IHttpOptions } from 'domain/clients/index';
-import { IFrozenOptions } from 'domain/configuration/index';
+import { ICachingOptions } from 'domain/caching';
+import { IHttpOptions } from 'domain/clients';
+import { IFrozenOptions } from 'domain/configuration';
 import { ProviderSupport } from 'domain/providers';
 
 export abstract class AbstractProviderConfig {

@@ -1,9 +1,8 @@
 import assert from 'assert';
+import { CachingOptions, ICachingOptions } from 'domain/caching';
 import {
-  CachingOptions,
   ClientResponseSource,
   HttpOptions,
-  ICachingOptions,
   IHttpOptions,
   IProcessClient,
   UrlHelpers

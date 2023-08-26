@@ -1,11 +1,6 @@
 import assert from 'assert';
-import { MemoryExpiryCache } from 'domain/caching';
-import {
-  CachingOptions,
-  ClientResponseSource,
-  ICachingOptions,
-  ProcessClientResponse
-} from 'domain/clients';
+import { CachingOptions, ICachingOptions, MemoryExpiryCache } from 'domain/caching';
+import { ClientResponseSource, ProcessClientResponse } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import { PromiseSpawnClient } from 'infrastructure/process';
 import { test } from 'mocha-ui-esm';

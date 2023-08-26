@@ -1,15 +1,14 @@
 import assert from 'assert';
+import { CachingOptions, ICachingOptions } from 'domain/caching';
 import {
   ClientResponseSource,
   HttpClientRequestMethods,
-  JsonHttpClient,
-  CachingOptions,
   HttpOptions,
-  IHttpOptions,
-  ICachingOptions,
   IHttpClient,
-} from 'domain/clients'
-import { mock, instance, when, anything } from 'ts-mockito';
+  IHttpOptions,
+  JsonHttpClient,
+} from 'domain/clients';
+import { anything, instance, mock, when } from 'ts-mockito';
 
 let cachingOptsMock: ICachingOptions;
 let httpOptsMock: IHttpOptions;

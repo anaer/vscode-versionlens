@@ -1,4 +1,5 @@
-import { ICachingOptions, IHttpOptions } from 'domain/clients';
+import { ICachingOptions } from 'domain/caching';
+import { IHttpOptions } from 'domain/clients';
 import { IFrozenOptions } from 'domain/configuration';
 import { IProviderConfig, TProviderFileMatcher } from 'domain/providers';
 import { AbstractProviderConfig } from 'domain/providers/abstractProviderConfig';

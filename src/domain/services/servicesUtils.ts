@@ -1,5 +1,5 @@
-import { MemoryCache, MemoryExpiryCache } from "domain/caching";
-import { CachingOptions, HttpOptions } from "domain/clients";
+import { CachingOptions, MemoryCache, MemoryExpiryCache } from "domain/caching";
+import { HttpOptions } from "domain/clients";
 import { Config, TConfigSectionResolver } from "domain/configuration";
 import { IServiceCollection } from "domain/di";
 import { LoggingOptions } from "domain/logging";

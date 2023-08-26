@@ -1,5 +1,5 @@
 import { IHttpOptions } from "./iHttpOptions";
-import { ICachingOptions } from "./iCachingOptions";
+import { ICachingOptions } from "../../caching/definitions/iCachingOptions";
 
 export type HttpRequestOptions = {
 

@@ -1,4 +1,5 @@
-import { CachingOptions, HttpOptions, JsonHttpClient } from "domain/clients";
+import { CachingOptions } from "domain/caching";
+import { HttpOptions, JsonHttpClient } from "domain/clients";
 import { PubClient } from "../pubClient";
 import { PubConfig } from "../pubConfig";
 

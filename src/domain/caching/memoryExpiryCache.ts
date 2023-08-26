@@ -1,5 +1,5 @@
 import { TAsyncFunction } from "domain/generics";
-import { ExpiryCacheEntry, IExpiryCache } from "./iExpiryCache";
+import { ExpiryCacheEntry, IExpiryCache } from "./definitions/iExpiryCache";
 import { MemoryCache } from "./memoryCache";
 
 export class MemoryExpiryCache implements IExpiryCache {

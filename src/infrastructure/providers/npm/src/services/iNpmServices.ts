@@ -1,4 +1,5 @@
-import { CachingOptions, HttpOptions, IJsonHttpClient } from "domain/clients";
+import { CachingOptions } from "domain/caching";
+import { HttpOptions, IJsonHttpClient } from "domain/clients";
 import { GitHubClient } from '../clients/githubClient';
 import { NpmPackageClient } from '../clients/npmPackageClient';
 import { PacoteClient } from '../clients/pacoteClient';

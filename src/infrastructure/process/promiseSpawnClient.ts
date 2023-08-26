@@ -1,9 +1,8 @@
 import { throwNull, throwUndefined } from '@esm-test/guards';
-import { IExpiryCache } from 'domain/caching';
+import { ICachingOptions, IExpiryCache } from 'domain/caching';
 import {
   ClientResponse,
   ClientResponseSource,
-  ICachingOptions,
   IProcessClient,
   ProcessClientResponse
 } from 'domain/clients';

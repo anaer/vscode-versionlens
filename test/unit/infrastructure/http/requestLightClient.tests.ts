@@ -1,12 +1,11 @@
 import assert from 'assert';
+import { CachingOptions, ICachingOptions } from 'domain/caching';
 import {
-  CachingOptions,
   ClientResponse,
   ClientResponseSource,
   HttpClientRequestMethods,
   HttpOptions,
   HttpRequestOptions,
-  ICachingOptions,
   IHttpOptions,
   UrlHelpers
 } from 'domain/clients';

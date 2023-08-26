@@ -1,4 +1,4 @@
-import { IExpiryCache } from 'domain/caching/iExpiryCache';
+import { IExpiryCache } from 'domain/caching';
 import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {

@@ -1,4 +1,5 @@
-import { CachingOptions, HttpOptions } from "domain/clients";
+import { CachingOptions } from "domain/caching";
+import { HttpOptions } from "domain/clients";
 import { IServiceCollection } from "domain/di";
 import { IDomainServices, IProviderServices } from "domain/services";
 import { nameOf } from "domain/utils";

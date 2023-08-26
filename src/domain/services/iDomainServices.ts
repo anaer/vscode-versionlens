@@ -1,6 +1,5 @@
-import { ICache } from 'domain/caching';
-import { IExpiryCache } from 'domain/caching/iExpiryCache';
-import { CachingOptions, HttpOptions } from 'domain/clients';
+import { CachingOptions, ICache, IExpiryCache } from 'domain/caching';
+import { HttpOptions } from 'domain/clients';
 import { Config } from 'domain/configuration';
 import { IServiceCollectionFactory, IServiceProvider } from 'domain/di';
 import { ILogger, ILoggerChannel, LoggingOptions } from 'domain/logging';

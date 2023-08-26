@@ -1,5 +1,6 @@
 import assert from 'assert';
-import { CachingOptions, ClientResponseSource, ICachingOptions } from 'domain/clients';
+import { CachingOptions, ICachingOptions } from 'domain/caching';
+import { ClientResponseSource } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import { createPackageResource } from 'domain/packages';
 import {
