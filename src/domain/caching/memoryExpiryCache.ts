@@ -6,7 +6,7 @@ export class MemoryExpiryCache implements IExpiryCache {
 
   cache: MemoryCache;
 
-  constructor(cacheName: string) {
+  constructor(readonly cacheName: string) {
     this.cache = new MemoryCache(cacheName);
   }
 

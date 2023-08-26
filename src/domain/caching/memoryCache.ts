@@ -8,11 +8,9 @@ type CacheMap = {
 
 export class MemoryCache implements ICache {
 
-  cacheName: string;
-
   cacheMap: CacheMap;
 
-  constructor(cacheName: string) {
+  constructor(readonly cacheName: string) {
     throwUndefined("cacheName", <any>cacheName);
     throwNull("cacheName", <any>cacheName);
 

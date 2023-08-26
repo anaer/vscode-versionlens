@@ -1,18 +1,15 @@
-import { KeyStringDictionary } from 'domain/generics';
-
 import {
-  HttpClientResponse,
-  JsonClientResponse,
   HttpClientRequestMethods,
+  HttpClientResponse,
+  IHttpClient,
   IJsonHttpClient,
-  IHttpClient
+  JsonClientResponse
 } from 'domain/clients';
+import { KeyStringDictionary } from 'domain/generics';
 
 export class JsonHttpClient implements IJsonHttpClient {
 
-  httpClient: IHttpClient;
-
-  constructor(httpClient: IHttpClient) {
+  constructor(readonly httpClient: IHttpClient) {
     this.httpClient = httpClient;
   }
 

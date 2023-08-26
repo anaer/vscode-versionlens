@@ -6,10 +6,10 @@ import { ProviderSupport } from 'domain/providers';
 export abstract class AbstractProviderConfig {
 
   constructor(
-    providerName: string,
-    config: IFrozenOptions,
-    caching: ICachingOptions,
-    http: IHttpOptions
+    readonly providerName: string,
+    readonly config: IFrozenOptions,
+    readonly caching: ICachingOptions,
+    readonly http: IHttpOptions
   ) {
     throwUndefined("providerName", <any>providerName);
     throwNull("providerName", <any>providerName);
@@ -23,24 +23,12 @@ export abstract class AbstractProviderConfig {
     throwUndefined("http", http);
     throwNull("http", http);
 
-    this.providerName = providerName;
-    this.config = config;
-    this.caching = caching;
-    this.http = http;
     this.supports = [
       ProviderSupport.Releases,
       ProviderSupport.Prereleases,
     ];
   }
 
-  providerName: string;
-
-  config: IFrozenOptions;
-
   supports: Array<ProviderSupport>;
-
-  caching: ICachingOptions;
-
-  http: IHttpOptions;
 
 }

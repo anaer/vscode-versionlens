@@ -4,11 +4,10 @@ import { IFrozenOptions, IOptions } from '.';
 
 export abstract class Options implements IOptions {
 
-  protected section: string;
-
-  config: IFrozenOptions;
-
-  constructor(config: IFrozenOptions, section: string) {
+  constructor(
+    readonly config: IFrozenOptions, 
+    protected section: string
+  ) {
     throwUndefined("config", config);
     throwNull("config", config);
 
