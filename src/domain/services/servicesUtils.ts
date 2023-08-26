@@ -1,9 +1,21 @@
 import { MemoryCache, MemoryExpiryCache } from "domain/caching";
 import { CachingOptions, HttpOptions } from "domain/clients";
+import { Config, TConfigSectionResolver } from "domain/configuration";
 import { IServiceCollection } from "domain/di";
 import { LoggingOptions } from "domain/logging";
 import { nameOf } from "domain/utils";
 import { IDomainServices } from "./iDomainServices";
+
+export function addAppConfig(
+  services: IServiceCollection,
+  configSectionResolver: TConfigSectionResolver,
+  appName: string
+) {
+  services.addSingleton(
+    nameOf<IDomainServices>().appConfig,
+    () => new Config(configSectionResolver, appName.toLowerCase())
+  )
+}
 
 export function addHttpOptions(services: IServiceCollection) {
   services.addSingleton(

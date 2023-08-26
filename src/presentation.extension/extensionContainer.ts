@@ -1,6 +1,7 @@
 import { IServiceProvider } from 'domain/di';
 import {
   IDomainServices,
+  addAppConfig,
   addCachingOptions,
   addChangedPackagesDependencyCache,
   addHttpOptions,
@@ -19,7 +20,7 @@ import {
 import {
   VersionLensExtension
 } from 'presentation.extension';
-import { ExtensionContext } from 'vscode';
+import { ExtensionContext, workspace } from 'vscode';
 import {
   addAppConfig,
   addIconCommands,
@@ -44,7 +45,7 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
   );
 
   // domain
-  addAppConfig(services, VersionLensExtension.extensionName.toLowerCase());
+  addAppConfig(services, workspace.getConfiguration, VersionLensExtension.extensionName);
 
   addHttpOptions(services);
 

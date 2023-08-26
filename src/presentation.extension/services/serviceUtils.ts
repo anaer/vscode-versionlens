@@ -1,4 +1,3 @@
-import { Config } from "domain/configuration";
 import { IServiceCollection } from "domain/di";
 import { DisposableArray } from "domain/generics";
 import { importSuggestionProviders } from "domain/providers";
@@ -14,13 +13,6 @@ import {
 import { window, workspace } from "vscode";
 import { SaveChangesTask } from "../commands/saveChangesTask";
 import { IExtensionServices } from "./iExtensionServices";
-
-export function addAppConfig(services: IServiceCollection, appName: string) {
-  services.addSingleton(
-    nameOf<IDomainServices>().appConfig,
-    () => new Config(workspace.getConfiguration, appName)
-  )
-}
 
 export function addVersionLensExtension(services: IServiceCollection) {
   const projectPath = workspace.workspaceFolders && workspace.workspaceFolders.length > 0
