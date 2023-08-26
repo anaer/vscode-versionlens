@@ -1,3 +1,4 @@
+import { throwNull, throwUndefined } from '@esm-test/guards';
 import { ClientResponseSource } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
@@ -17,25 +18,23 @@ import { PacoteClient } from './pacoteClient';
 
 export class NpmPackageClient implements IPackageClient<null> {
 
-  logger: ILogger;
-
-  config: NpmConfig;
-
-  pacoteClient: PacoteClient;
-
-  githubClient: GitHubClient;
-
   constructor(
-    config: NpmConfig,
-    pacoteClient: PacoteClient,
-    githubClient: GitHubClient,
-    logger: ILogger
+    readonly config: NpmConfig,
+    readonly pacoteClient: PacoteClient,
+    readonly githubClient: GitHubClient,
+    readonly logger: ILogger
   ) {
-    this.config = config;
+    throwUndefined("config", config);
+    throwNull("config", config);
 
-    this.pacoteClient = pacoteClient;
-    this.githubClient = githubClient;
-    this.logger = logger;
+    throwUndefined("pacoteClient", pacoteClient);
+    throwNull("pacoteClient", pacoteClient);
+
+    throwUndefined("githubClient", githubClient);
+    throwNull("githubClient", githubClient);
+
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
   }
 
   fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {

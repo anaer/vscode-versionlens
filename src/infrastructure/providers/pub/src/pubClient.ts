@@ -1,3 +1,4 @@
+import { throwNull, throwUndefined } from '@esm-test/guards';
 import {
   HttpClientRequestMethods,
   HttpClientResponse,
@@ -23,17 +24,20 @@ import { PubConfig } from './pubConfig';
 
 export class PubClient implements IPackageClient<null> {
 
-  constructor(config: PubConfig, jsonClient: IJsonHttpClient, logger: ILogger) {
-    this.config = config;
-    this.jsonClient = jsonClient;
-    this.logger = logger;
+  constructor(
+    readonly config: PubConfig, 
+    readonly jsonClient: IJsonHttpClient, 
+    readonly logger: ILogger
+  ) {
+    throwUndefined("config", config);
+    throwNull("config", config);
+
+    throwUndefined("jsonClient", jsonClient);
+    throwNull("jsonClient", jsonClient);
+
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
   }
-
-  config: PubConfig;
-
-  jsonClient: IJsonHttpClient;
-
-  logger: ILogger;
 
   async fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;

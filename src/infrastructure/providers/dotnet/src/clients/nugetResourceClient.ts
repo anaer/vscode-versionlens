@@ -1,3 +1,4 @@
+import { throwNull, throwUndefined } from '@esm-test/guards';
 import {
   HttpClientRequestMethods,
   HttpClientResponse,
@@ -9,13 +10,15 @@ import { NugetServiceIndexResponse } from '../definitions/nuget';
 
 export class NuGetResourceClient {
 
-  logger: any;
+  constructor(
+    readonly jsonClient: IJsonHttpClient,
+    readonly logger: ILogger
+  ) {
+    throwUndefined("jsonClient", jsonClient);
+    throwNull("jsonClient", jsonClient);
 
-  jsonClient: IJsonHttpClient;
-
-  constructor(client: IJsonHttpClient, logger: ILogger) {
-    this.jsonClient = client;
-    this.logger = logger;
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
   }
 
   async fetchResource(source: DotNetSource): Promise<string> {

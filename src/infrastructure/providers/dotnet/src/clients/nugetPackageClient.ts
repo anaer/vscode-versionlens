@@ -1,3 +1,4 @@
+import { throwNull, throwUndefined } from '@esm-test/guards';
 import {
   HttpClientRequestMethods,
   HttpClientResponse,
@@ -14,24 +15,27 @@ import {
   TPackageClientResponse,
   VersionUtils
 } from 'domain/packages';
-import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
+import { SuggestionFactory, createSuggestions } from 'domain/suggestions';
 import { NuGetClientData } from '../definitions/nuget';
 import { DotNetConfig } from '../dotnetConfig';
 import { parseVersionSpec } from '../dotnetUtils';
 
 export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 
-  constructor(config: DotNetConfig, client: IJsonHttpClient, logger: ILogger) {
-    this.config = config;
-    this.jsonClient = client;
-    this.logger = logger;
+  constructor(
+    readonly config: DotNetConfig,
+    readonly jsonClient: IJsonHttpClient,
+    readonly logger: ILogger
+  ) {
+    throwUndefined("config", config);
+    throwNull("config", config);
+
+    throwUndefined("jsonClient", jsonClient);
+    throwNull("jsonClient", jsonClient);
+
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
   }
-
-  config: DotNetConfig;
-
-  jsonClient: IJsonHttpClient;
-
-  logger: ILogger;
 
   async fetchPackage(
     request: TPackageClientRequest<NuGetClientData>

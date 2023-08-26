@@ -1,3 +1,4 @@
+import { throwNull, throwUndefined } from '@esm-test/guards';
 import { HttpClientRequestMethods, IJsonHttpClient } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
@@ -7,7 +8,7 @@ import {
   TPackageClientResponse,
   VersionUtils
 } from 'domain/packages';
-import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
+import { SuggestionFactory, createSuggestions } from 'domain/suggestions';
 import semver from 'semver';
 import { NpaSpec } from '../models/npaSpec';
 import { NpmConfig } from '../npmConfig';
@@ -19,17 +20,20 @@ const defaultHeaders = {
 
 export class GitHubClient {
 
-  constructor(config: NpmConfig, jsonClient: IJsonHttpClient, logger: ILogger) {
-    this.config = config;
-    this.jsonClient = jsonClient;
-    this.logger = logger;
+  constructor(
+    readonly config: NpmConfig,
+    readonly jsonClient: IJsonHttpClient,
+    readonly logger: ILogger
+  ) {
+    throwUndefined("config", config);
+    throwNull("config", config);
+
+    throwUndefined("jsonClient", jsonClient);
+    throwNull("jsonClient", jsonClient);
+
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
   }
-
-  config: NpmConfig;
-
-  logger: ILogger;
-
-  jsonClient: IJsonHttpClient;
 
   fetchGithub(npaSpec: NpaSpec): Promise<TPackageClientResponse> {
     const { validRange } = semver;

@@ -1,16 +1,19 @@
-import { AwilixContainer } from 'awilix'
-import { IServiceProvider } from 'domain/di'
+import { throwNull, throwUndefined } from '@esm-test/guards';
+import { AwilixContainer } from 'awilix';
+import { IServiceProvider } from 'domain/di';
 
 export class AwilixServiceProvider implements IServiceProvider {
 
-  constructor(name: string, container: AwilixContainer) {
-    this.name = name;
-    this.container = container;
+  constructor(
+    readonly name: string, 
+    readonly container: AwilixContainer
+  ) {
+    throwUndefined("name", <any>name);
+    throwNull("name", <any>name);
+
+    throwUndefined("container", container);
+    throwNull("container", container);
   }
-
-  name: string;
-
-  container: AwilixContainer;
 
   getService<T>(name: string): T {
     return this.container.resolve<T>(name);

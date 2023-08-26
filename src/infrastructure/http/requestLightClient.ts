@@ -1,3 +1,4 @@
+import { throwNull, throwUndefined } from '@esm-test/guards';
 import {
   ClientResponse,
   ClientResponseSource,
@@ -14,16 +15,19 @@ import { IXhrResponse } from './iXhrResponse';
 
 export class RequestLightClient implements IHttpClient {
 
-  logger: ILogger;
+  constructor(
+    readonly xhr: XHRRequest,
+    readonly options: HttpRequestOptions,
+    readonly logger: ILogger
+  ) {
+    throwUndefined("xhr", xhr);
+    throwNull("xhr", xhr);
 
-  options: HttpRequestOptions;
+    throwUndefined("options", options);
+    throwNull("options", options);
 
-  xhr: XHRRequest;
-
-  constructor(xhr: XHRRequest, requestOptions: HttpRequestOptions, requestLogger: ILogger) {
-    this.logger = requestLogger;
-    this.options = requestOptions;
-    this.xhr = xhr;
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
   }
 
   async request(

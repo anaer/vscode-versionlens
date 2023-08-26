@@ -1,3 +1,4 @@
+import { throwNull, throwUndefined } from '@esm-test/guards';
 import {
   HttpClientRequestMethods,
   HttpClientResponse,
@@ -14,26 +15,29 @@ import {
   VersionUtils
 } from 'domain/packages';
 import {
-  createSuggestions,
   SuggestionFactory,
   SuggestionStatus,
-  TPackageSuggestion
+  TPackageSuggestion,
+  createSuggestions
 } from 'domain/suggestions';
 import { DubConfig } from './dubConfig';
 
 export class DubClient implements IPackageClient<null> {
 
-  constructor(config: DubConfig, client: IJsonHttpClient, logger: ILogger) {
-    this.config = config;
-    this.jsonClient = client;
-    this.logger = logger;
+  constructor(
+    readonly config: DubConfig,
+    readonly jsonClient: IJsonHttpClient,
+    readonly logger: ILogger
+  ) {
+    throwUndefined("config", config);
+    throwNull("config", config);
+
+    throwUndefined("jsonClient", jsonClient);
+    throwNull("jsonClient", jsonClient);
+
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
   }
-
-  config: DubConfig;
-
-  jsonClient: IJsonHttpClient;
-
-  logger: ILogger;
 
   async fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;

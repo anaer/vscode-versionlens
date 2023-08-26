@@ -1,3 +1,4 @@
+import { throwNull, throwUndefined } from '@esm-test/guards';
 import { ILoggerChannel, ILoggingOptions } from 'domain/logging';
 import { OutputChannel } from 'vscode';
 import * as Winston from 'winston';
@@ -9,15 +10,18 @@ const MESSAGE = Symbol.for('message');
 
 export class OutputChannelTransport extends WinstonTransport implements ILoggerChannel {
 
-  constructor(outputChannel: OutputChannel, logging: ILoggingOptions) {
+  constructor(
+    readonly outputChannel: OutputChannel,
+    readonly logging: ILoggingOptions
+  ) {
     super({ level: logging.level });
-    this.outputChannel = outputChannel;
-    this.logging = logging;
+
+    throwUndefined("outputChannel", outputChannel);
+    throwNull("outputChannel", outputChannel);
+
+    throwUndefined("logging", logging);
+    throwNull("logging", logging);
   }
-
-  outputChannel: OutputChannel;
-
-  logging: ILoggingOptions;
 
   get name() {
     return this.outputChannel.name;

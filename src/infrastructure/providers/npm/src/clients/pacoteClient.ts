@@ -1,3 +1,4 @@
+import { throwNull, throwUndefined } from '@esm-test/guards';
 import { ClientResponse, ClientResponseSource } from 'domain/clients';
 import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
@@ -17,17 +18,20 @@ import { NpmConfig } from '../npmConfig';
 
 export class PacoteClient {
 
-  constructor(pacote: any, config: NpmConfig, logger: ILogger) {
-    this.pacote = pacote;
-    this.config = config;
-    this.logger = logger;
+  constructor(
+    readonly pacote: any,
+    readonly config: NpmConfig,
+    readonly logger: ILogger
+  ) {
+    throwUndefined("pacote", pacote);
+    throwNull("pacote", pacote);
+
+    throwUndefined("config", config);
+    throwNull("config", config);
+
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
   }
-
-  config: NpmConfig;
-
-  logger: ILogger;
-
-  pacote: any;
 
   async fetchPackage(
     request: TPackageClientRequest<TNpmClientData>,

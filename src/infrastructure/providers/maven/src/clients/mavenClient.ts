@@ -1,3 +1,4 @@
+import { throwNull, throwUndefined } from '@esm-test/guards';
 import {
   HttpClientRequestMethods,
   HttpClientResponse,
@@ -13,24 +14,27 @@ import {
   TSemverSpec,
   VersionUtils
 } from 'domain/packages';
-import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
+import { SuggestionFactory, createSuggestions } from 'domain/suggestions';
 import xmldoc from 'xmldoc';
 import { MavenClientData } from '../definitions/mavenClientData';
 import { MavenConfig } from '../mavenConfig';
 
 export class MavenClient implements IPackageClient<MavenClientData> {
 
-  constructor(config: MavenConfig, httpClient: IHttpClient, logger: ILogger) {
-    this.config = config;
-    this.httpClient = httpClient;
-    this.logger = logger;
+  constructor(
+    readonly config: MavenConfig, 
+    readonly httpClient: IHttpClient, 
+    readonly logger: ILogger
+  ) {
+    throwUndefined("config", config);
+    throwNull("config", config);
+
+    throwUndefined("httpClient", httpClient);
+    throwNull("httpClient", httpClient);
+
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
   }
-
-  config: MavenConfig;
-
-  httpClient: IHttpClient;
-
-  logger: ILogger;
 
   async fetchPackage(
     request: TPackageClientRequest<MavenClientData>

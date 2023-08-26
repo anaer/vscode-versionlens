@@ -1,3 +1,4 @@
+import { throwNull, throwUndefined } from '@esm-test/guards';
 import { IProcessClient, UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import { MavenRepository } from '../definitions/mavenRepository';
@@ -6,17 +7,20 @@ import * as MavenXmlFactory from '../mavenXmlParserFactory';
 
 export class MvnCli {
 
-  constructor(config: MavenConfig, processClient: IProcessClient, logger: ILogger) {
-    this.processClient = processClient;
-    this.config = config;
-    this.logger = logger;
+  constructor(
+    readonly config: MavenConfig, 
+    readonly processClient: IProcessClient, 
+    readonly logger: ILogger
+  ) {
+    throwUndefined("config", config);
+    throwNull("config", config);
+
+    throwUndefined("processClient", processClient);
+    throwNull("processClient", processClient);
+
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
   }
-
-  config: MavenConfig;
-
-  processClient: IProcessClient;
-
-  logger: ILogger;
 
   async fetchRepositories(cwd: string): Promise<Array<MavenRepository>> {
     let repos: Array<string>;

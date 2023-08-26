@@ -1,3 +1,4 @@
+import { throwNull, throwUndefined } from '@esm-test/guards';
 import {
   HttpClientRequestMethods,
   HttpClientResponse,
@@ -13,26 +14,25 @@ import {
   TSemverSpec,
   VersionUtils
 } from 'domain/packages';
-import { createSuggestions, SuggestionFactory } from 'domain/suggestions';
+import { SuggestionFactory, createSuggestions } from 'domain/suggestions';
 import { ComposerConfig } from './composerConfig';
 import { IPackagistApiItem } from './definitions/iPackagistApiItem';
 
 export class ComposerClient implements IPackageClient<null> {
 
-  config: ComposerConfig;
-
-  jsonClient: IJsonHttpClient;
-
-  logger: ILogger;
-
   constructor(
-    config: ComposerConfig,
-    jsonClient: IJsonHttpClient,
-    logger: ILogger
+    readonly config: ComposerConfig,
+    readonly jsonClient: IJsonHttpClient,
+    readonly logger: ILogger
   ) {
-    this.config = config;
-    this.jsonClient = jsonClient;
-    this.logger = logger;
+    throwUndefined("config", config);
+    throwNull("config", config);
+
+    throwUndefined("jsonClient", jsonClient);
+    throwNull("jsonClient", jsonClient);
+
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
   }
 
   async fetchPackage<TClientData>(
