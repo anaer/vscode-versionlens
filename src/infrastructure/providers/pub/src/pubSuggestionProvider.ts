@@ -14,8 +14,11 @@ import {
   TPackageVersionDescriptor,
   TYamlPackageParserOptions
 } from 'domain/packages';
-import { SuggestionProvider } from 'domain/providers';
-import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
+import {
+  ISuggestionProvider,
+  SuggestionProvider,
+  TSuggestionReplaceFunction
+} from 'domain/suggestions';
 import { PubClient } from './pubClient';
 import { PubConfig } from './pubConfig';
 import { pubReplaceVersion } from './pubUtils';

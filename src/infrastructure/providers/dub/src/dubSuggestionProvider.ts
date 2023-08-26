@@ -13,10 +13,10 @@ import {
   TJsonPackageTypeHandler,
   TPackageVersionDescriptor
 } from 'domain/packages';
-import { SuggestionProvider } from 'domain/providers';
 import {
   defaultReplaceFn,
   ISuggestionProvider,
+  SuggestionProvider,
   TSuggestionReplaceFunction
 } from 'domain/suggestions';
 import { DubClient } from './dubClient';

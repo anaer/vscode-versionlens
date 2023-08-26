@@ -6,8 +6,11 @@ import {
   PackageDependency,
   TPackageVersionDescriptor
 } from 'domain/packages';
-import { SuggestionProvider } from 'domain/providers';
-import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
+import {
+  ISuggestionProvider,
+  SuggestionProvider,
+  TSuggestionReplaceFunction
+} from 'domain/suggestions';
 import { MavenClient } from './clients/mavenClient';
 import { MvnCli } from './clients/mvnCli';
 import { MavenClientData } from './definitions/mavenClientData';

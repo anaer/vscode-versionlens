@@ -4,7 +4,6 @@ export * from './definitions/iProvider';
 export * from './definitions/iProviderConfig';
 export * from './definitions/iProviderModule';
 export * from './definitions/tProviderFileMatcher';
-export * from './suggestionProvider';
 export * from './useCases/getProvidersByFileName';
 export * from './useCases/importSuggestionProvider';
 export * from './useCases/importSuggestionProviders';

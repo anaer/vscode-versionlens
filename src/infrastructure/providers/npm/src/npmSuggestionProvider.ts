@@ -11,8 +11,11 @@ import {
   TJsonPackageTypeHandler,
   TPackageVersionDescriptor
 } from 'domain/packages';
-import { SuggestionProvider } from 'domain/providers';
-import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
+import {
+  ISuggestionProvider,
+  SuggestionProvider,
+  TSuggestionReplaceFunction
+} from 'domain/suggestions';
 import { homedir } from 'node:os';
 import { resolve } from 'node:path';
 import { NpmPackageClient } from './clients/npmPackageClient';

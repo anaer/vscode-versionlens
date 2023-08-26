@@ -15,8 +15,8 @@ import {
   createPackageNameVersion,
   createPackageResource
 } from 'domain/packages';
-import { IProviderConfig, SuggestionProvider } from 'domain/providers';
-import { SuggestionFlags } from 'domain/suggestions';
+import { IProviderConfig } from 'domain/providers';
+import { SuggestionFlags, SuggestionProvider } from 'domain/suggestions';
 import { test } from 'mocha-ui-esm';
 import { anything as any, instance, mock, verify, when } from 'ts-mockito';
 

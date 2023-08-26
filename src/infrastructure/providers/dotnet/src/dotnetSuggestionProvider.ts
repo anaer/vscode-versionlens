@@ -6,10 +6,10 @@ import {
   PackageDependency,
   TPackageVersionDescriptor
 } from 'domain/packages';
-import { SuggestionProvider } from 'domain/providers';
 import {
   defaultReplaceFn,
   ISuggestionProvider,
+  SuggestionProvider,
   TSuggestionReplaceFunction
 } from 'domain/suggestions';
 import { DotNetCli } from './clients/dotnetCli';
