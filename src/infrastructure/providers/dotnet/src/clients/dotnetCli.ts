@@ -7,6 +7,10 @@ import { DotNetConfig } from '../dotnetConfig';
 
 export class DotNetCli {
 
+  static command = "dotnet";
+
+  static fetchSourceArgs = ['nuget', 'list', 'source', '--format', 'short'];
+
   constructor(
     readonly config: DotNetConfig,
     readonly processClient: IProcessClient,
@@ -23,10 +27,16 @@ export class DotNetCli {
   }
 
   async fetchSources(cwd: string): Promise<Array<DotNetSource>> {
+    this.logger.debug(
+      "executing %s '%s'",
+      DotNetCli.command,
+      DotNetCli.fetchSourceArgs.join(' ')
+    );
+
     try {
       const result = await this.processClient.request(
-        'dotnet',
-        ['nuget', 'list', 'source', '--format', 'short'],
+        DotNetCli.command,
+        DotNetCli.fetchSourceArgs,
         cwd
       );
 

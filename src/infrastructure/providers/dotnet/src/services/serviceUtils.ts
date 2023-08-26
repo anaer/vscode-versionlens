@@ -68,7 +68,7 @@ export function addProcessClient(services: IServiceCollection) {
       createProcessClient(
         container.processesCache,
         container.dotnetCachingOpts,
-        container.logger.child({ namespace: 'dotnet process' })
+        container.logger.child({ namespace: 'process client' })
       )
   );
 }
