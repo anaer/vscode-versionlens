@@ -3,6 +3,7 @@ import { CachingOptions, HttpOptions } from "domain/clients";
 import { Config, TConfigSectionResolver } from "domain/configuration";
 import { IServiceCollection } from "domain/di";
 import { LoggingOptions } from "domain/logging";
+import { importSuggestionProviders } from "domain/providers";
 import { nameOf } from "domain/utils";
 import { IDomainServices } from "./iDomainServices";
 
@@ -38,6 +39,19 @@ export function addLoggingOptions(services: IServiceCollection) {
     nameOf<IDomainServices>().loggingOptions,
     (container: IDomainServices) =>
       new LoggingOptions(container.appConfig, 'logging')
+  )
+}
+
+export async function addSuggestionProviders(services: IServiceCollection) {
+  services.addSingleton(
+    nameOf<IDomainServices>().suggestionProviders,
+    async (container: IDomainServices) => {
+      return await importSuggestionProviders(
+        container.serviceProvider,
+        container.providerNames,
+        container.logger
+      )
+    }
   )
 }
 

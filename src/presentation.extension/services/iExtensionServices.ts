@@ -1,4 +1,3 @@
-import { ICache } from 'domain/caching';
 import {
   IconCommandHandlers,
   SuggestionCodeLensProvider,
@@ -22,7 +21,6 @@ export interface IExtensionServices {
   textEditorEvents: TextEditorEvents;
 
   versionLensProviders: Array<SuggestionCodeLensProvider>;
-
 
   saveChangesTask: SaveChangesTask;
 

@@ -1,6 +1,5 @@
 import { IServiceCollection } from "domain/di";
 import { DisposableArray } from "domain/generics";
-import { importSuggestionProviders } from "domain/providers";
 import { IDomainServices } from "domain/services";
 import { nameOf } from "domain/utils";
 import {
@@ -90,19 +89,6 @@ export function addVersionLensProviders(services: IServiceCollection) {
         )
       ),
     true
-  )
-}
-
-export async function addSuggestionProviders(services: IServiceCollection) {
-  services.addSingleton(
-    nameOf<IDomainServices>().suggestionProviders,
-    async (container: IDomainServices) => {
-      return await importSuggestionProviders(
-        container.serviceProvider,
-        container.providerNames,
-        container.logger
-      )
-    }
   )
 }
 

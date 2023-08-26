@@ -8,7 +8,8 @@ import {
   addLoggingOptions,
   addPackagesDependencyCache,
   addProcessesCache,
-  addSuggestionDependencyCache
+  addSuggestionDependencyCache,
+  addSuggestionProviders
 } from 'domain/services';
 import { nameOf } from 'domain/utils';
 import { AwilixServiceCollectionFactory } from 'infrastructure/di';
@@ -22,13 +23,11 @@ import {
 } from 'presentation.extension';
 import { ExtensionContext, workspace } from 'vscode';
 import {
-  addAppConfig,
   addIconCommands,
   addOutputChannel,
   addProviderNames,
   addSaveChangesTask,
   addSuggestionCommands,
-  addSuggestionProviders,
   addTextEditorEvents,
   addVersionLensExtension,
   addVersionLensProviders
