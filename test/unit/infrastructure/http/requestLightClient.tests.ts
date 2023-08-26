@@ -4,12 +4,11 @@ import {
   ClientResponseSource,
   HttpClientRequestMethods,
   HttpClientResponse,
-  HttpOptions,
-  HttpRequestOptions,
-  IHttpOptions,
+  HttpClientOptions,
   UrlHelpers
 } from 'domain/clients';
 import { KeyStringDictionary } from 'domain/generics';
+import { HttpOptions, IHttpOptions } from 'domain/http';
 import { ILogger } from 'domain/logging';
 import { RequestLightClient } from 'infrastructure/http';
 import { test } from 'mocha-ui-esm';
@@ -42,7 +41,7 @@ export const RequestLightClientTests = {
 
     rut = new RequestLightClient(
       <any>instance(requestLightMock).xhr,
-      <HttpRequestOptions>{
+      <HttpClientOptions>{
         caching: instance(cachingOptsMock),
         http: instance(httpOptsMock)
       },
@@ -68,7 +67,7 @@ export const RequestLightClientTests = {
 
       const rut = new RequestLightClient(
         <any>instance(requestLightMock).xhr,
-        <HttpRequestOptions>{
+        <HttpClientOptions>{
           caching: instance(cachingOptsMock),
           http: instance(httpOptsMock)
         },

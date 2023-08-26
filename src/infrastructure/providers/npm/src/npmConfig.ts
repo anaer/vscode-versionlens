@@ -1,6 +1,6 @@
 import { ICachingOptions } from 'domain/caching';
-import { IHttpOptions } from 'domain/clients';
 import { IFrozenOptions } from 'domain/configuration';
+import { IHttpOptions } from 'domain/http';
 import { IProviderConfig, TProviderFileMatcher } from 'domain/providers';
 import { AbstractProviderConfig } from 'domain/providers/abstractProviderConfig';
 import { NpmContributions } from './definitions/eNpmContributions';

@@ -1,5 +1,5 @@
 import {
-  HttpRequestOptions,
+  HttpClientOptions,
   IHttpClient,
   IJsonHttpClient,
   JsonHttpClient
@@ -9,14 +9,14 @@ import * as RequireLight from 'request-light';
 import { RequestLightClient } from "./requestLightClient";
 
 export function createHttpClient(
-  options: HttpRequestOptions,
+  options: HttpClientOptions,
   logger: ILogger
 ): IHttpClient {
   return new RequestLightClient(RequireLight.xhr, options, logger);
 }
 
 export function createJsonClient(
-  options: HttpRequestOptions,
+  options: HttpClientOptions,
   logger: ILogger
 ): IJsonHttpClient {
   return new JsonHttpClient(createHttpClient(options, logger));

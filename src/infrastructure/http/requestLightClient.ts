@@ -3,7 +3,7 @@ import {
   ClientResponseSource,
   HttpClientRequestMethods,
   HttpClientResponse,
-  HttpRequestOptions,
+  HttpClientOptions,
   IHttpClient,
   UrlHelpers
 } from 'domain/clients';
@@ -16,7 +16,7 @@ export class RequestLightClient implements IHttpClient {
 
   constructor(
     readonly xhr: XHRRequest,
-    readonly options: HttpRequestOptions,
+    readonly options: HttpClientOptions,
     readonly logger: ILogger
   ) {
     throwUndefined("xhr", xhr);

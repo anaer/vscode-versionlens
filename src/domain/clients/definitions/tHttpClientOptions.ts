@@ -1,7 +1,7 @@
-import { IHttpOptions } from "./iHttpOptions";
+import { IHttpOptions } from "domain/http";
 import { ICachingOptions } from "../../caching/definitions/iCachingOptions";
 
-export type HttpRequestOptions = {
+export type HttpClientOptions = {
 
     caching: ICachingOptions,
 

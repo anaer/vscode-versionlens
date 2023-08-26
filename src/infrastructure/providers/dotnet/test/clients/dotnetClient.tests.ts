@@ -1,12 +1,7 @@
 import assert from 'assert';
 import { CachingOptions, ICachingOptions } from 'domain/caching';
-import {
-  ClientResponseSource,
-  HttpOptions,
-  IHttpOptions,
-  IProcessClient,
-  UrlHelpers
-} from 'domain/clients';
+import { ClientResponseSource, IProcessClient, UrlHelpers } from 'domain/clients';
+import { HttpOptions, IHttpOptions } from 'domain/http';
 import { ILogger } from 'domain/logging';
 import {
   DotNetCli,

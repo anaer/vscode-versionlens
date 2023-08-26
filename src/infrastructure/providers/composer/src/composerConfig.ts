@@ -1,6 +1,7 @@
 import { ICachingOptions } from 'domain/caching';
-import { IHttpOptions, UrlHelpers } from 'domain/clients';
+import { UrlHelpers } from 'domain/clients';
 import { IFrozenOptions } from 'domain/configuration';
+import { IHttpOptions } from 'domain/http';
 import { IProviderConfig, TProviderFileMatcher } from 'domain/providers';
 import { AbstractProviderConfig } from 'domain/providers/abstractProviderConfig';
 import { ComposerContributions } from './definitions/eComposerContributions';

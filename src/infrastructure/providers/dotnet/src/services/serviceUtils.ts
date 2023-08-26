@@ -1,6 +1,6 @@
 import { CachingOptions } from "domain/caching";
-import { HttpOptions } from "domain/clients";
 import { IServiceCollection } from "domain/di";
+import { HttpOptions } from "domain/http";
 import { IDomainServices, IProviderServices } from "domain/services";
 import { nameOf } from "domain/utils";
 import { createJsonClient } from 'infrastructure/http';

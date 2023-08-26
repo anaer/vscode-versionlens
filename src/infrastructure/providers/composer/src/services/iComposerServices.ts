@@ -1,5 +1,6 @@
 import { CachingOptions } from "domain/caching";
-import { HttpOptions, IJsonHttpClient } from "domain/clients";
+import { IJsonHttpClient } from "domain/clients";
+import { HttpOptions } from "domain/http";
 import { ComposerClient } from "../composerClient";
 import { ComposerConfig } from "../composerConfig";
 

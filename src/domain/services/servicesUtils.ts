@@ -1,7 +1,7 @@
 import { CachingOptions, MemoryCache, MemoryExpiryCache } from "domain/caching";
-import { HttpOptions } from "domain/clients";
 import { Config, TConfigSectionResolver } from "domain/configuration";
 import { IServiceCollection } from "domain/di";
+import { HttpOptions } from "domain/http";
 import { LoggingOptions } from "domain/logging";
 import { importSuggestionProviders } from "domain/providers";
 import { nameOf } from "domain/utils";
