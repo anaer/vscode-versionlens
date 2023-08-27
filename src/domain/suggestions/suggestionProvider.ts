@@ -1,8 +1,8 @@
 import { throwNull, throwUndefined } from "@esm-test/guards";
-import { IExpiryCache, MemoryCache } from "domain/caching";
 import { ILogger } from "domain/logging";
 import {
   IPackageClient,
+  PackageCache,
   PackageDependency,
   PackageResponse,
   ResponseFactory,
@@ -17,14 +17,14 @@ export class SuggestionProvider<
 
   constructor(
     readonly client: TClient,
-    readonly suggestionCache: IExpiryCache,
+    readonly packageCache: PackageCache,
     readonly logger: ILogger
   ) {
     throwUndefined("client", client);
     throwNull("client", client);
 
-    throwUndefined("suggestionCache", suggestionCache);
-    throwNull("suggestionCache", suggestionCache);
+    throwUndefined("packageCache", packageCache);
+    throwNull("packageCache", packageCache);
 
     throwUndefined("logger", logger);
     throwNull("logger", logger);
@@ -70,7 +70,7 @@ export class SuggestionProvider<
       };
 
       // get the fetch task
-      const promisedFetch = this.fetchPackage(clientRequest);
+      const promisedFetch = this.fetchPackageSuggestions(clientRequest);
 
       // queue the fetch task
       promises.push(promisedFetch);
@@ -79,7 +79,7 @@ export class SuggestionProvider<
     // capture start time
     const startedAt = performance.now();
 
-    // parallel the all fetch requests
+    // parallel the fetch requests
     const responses: Array<PackageResponse> = await Promise.all(promises);
 
     // report completed duration
@@ -94,45 +94,53 @@ export class SuggestionProvider<
     return responses.flat();
   }
 
-  async fetchPackage(request: TPackageClientRequest<TClientData>): Promise<Array<PackageResponse>> {
+  async fetchPackageSuggestions(request: TPackageClientRequest<TClientData>): Promise<Array<PackageResponse>> {
+    let source = "cache";
     const providerName = this.name;
+    const requestedPackage = request.dependency.package;
+
+    // capture start time
+    const startedAt = performance.now();
+
+    // get the package from the client or the cache
+    const response = await this.packageCache.getOrCreate(
+      providerName,
+      requestedPackage,
+      async () => {
+        source = "client";
+        return await this.fetchPackage(request);
+      },
+      this.client.config.caching.duration
+    );
+
+    // report completed duration
+    const completedAt = performance.now();
+    this.logger.info(
+      'Fetched from %s %s@%s (%s ms)',
+      source,
+      requestedPackage.name,
+      requestedPackage.version,
+      Math.floor(completedAt - startedAt)
+    );
+
+    return ResponseFactory.createSuccess(
+      providerName,
+      request,
+      response
+    );;
+  }
+
+  async fetchPackage(request: TPackageClientRequest<TClientData>): Promise<TPackageClientResponse> {
     const client = this.client;
     const requestedPackage = request.dependency.package;
 
     this.logger.silly("Fetching %s", requestedPackage.name);
 
-    // create the cache key
-    const cacheKey = MemoryCache.createKey(
-      providerName,
-      request.dependency.package.name,
-      request.dependency.package.version
-    );
-
-    let source = "cache";
     let response: TPackageClientResponse;
     try {
-      // capture start time
-      const startedAt = performance.now();
 
       // fetch the package
-      response = await this.suggestionCache.getOrCreate<TPackageClientResponse>(
-        cacheKey,
-        async () => {
-          source = "client";
-          return await client.fetchPackage(request)
-        },
-        this.client.config.caching.duration
-      );
-
-      // report completed duration
-      const completedAt = performance.now();
-      this.logger.info(
-        'Fetched from %s %s@%s (%s ms)',
-        source,
-        requestedPackage.name,
-        requestedPackage.version,
-        Math.floor(completedAt - startedAt)
-      );
+      response = await client.fetchPackage(request);
 
     } catch (error) {
       // unexpected error
@@ -156,11 +164,7 @@ export class SuggestionProvider<
       );
     }
 
-    return ResponseFactory.createSuccess(
-      providerName,
-      request,
-      response
-    );
+    return response;
   }
 
 }

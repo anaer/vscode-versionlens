@@ -78,7 +78,7 @@ export function addSuggestionProvider(services: IServiceCollection) {
     (container: IPubServices & IDomainServices) =>
       new PubSuggestionProvider(
         container.pubClient,
-        container.suggestionCache,
+        container.packageCache,
         container.logger.child({ namespace: 'pub provider' })
       )
   );

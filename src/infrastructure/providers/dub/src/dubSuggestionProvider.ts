@@ -1,23 +1,23 @@
-import { IExpiryCache } from 'domain/caching';
 import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
-  createPackageResource,
-  createPathDescFromJsonNode,
-  createRepoDescFromJsonNode,
-  createVersionDescFromJsonNode,
-  extractPackageDependenciesFromJson,
+  PackageCache,
   PackageDependency,
   PackageDescriptorType,
   TJsonPackageParserOptions,
   TJsonPackageTypeHandler,
-  TPackageVersionDescriptor
+  TPackageVersionDescriptor,
+  createPackageResource,
+  createPathDescFromJsonNode,
+  createRepoDescFromJsonNode,
+  createVersionDescFromJsonNode,
+  extractPackageDependenciesFromJson
 } from 'domain/packages';
 import {
-  defaultReplaceFn,
   ISuggestionProvider,
   SuggestionProvider,
-  TSuggestionReplaceFunction
+  TSuggestionReplaceFunction,
+  defaultReplaceFn
 } from 'domain/suggestions';
 import { DubClient } from './dubClient';
 import { DubConfig } from './dubConfig';
@@ -32,8 +32,8 @@ export class DubSuggestionProvider
   extends SuggestionProvider<DubClient, null>
   implements ISuggestionProvider {
 
-  constructor(client: DubClient, suggestionCache: IExpiryCache, logger: ILogger) {
-    super(client, suggestionCache, logger);
+  constructor(client: DubClient, packageCache: PackageCache, logger: ILogger) {
+    super(client, packageCache, logger);
     this.config = client.config;
     this.suggestionReplaceFn = defaultReplaceFn
   }

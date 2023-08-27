@@ -78,7 +78,7 @@ export function addSuggestionProvider(services: IServiceCollection) {
     (container: IDubServices & IDomainServices) =>
       new DubSuggestionProvider(
         container.dubClient,
-        container.suggestionCache,
+        container.packageCache,
         container.logger.child({ namespace: 'dub provider' })
       )
   );

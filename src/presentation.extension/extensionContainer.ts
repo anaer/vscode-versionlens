@@ -3,7 +3,6 @@ import {
   IDomainServices,
   addAppConfig,
   addCachingOptions,
-  addChangedPackagesDependencyCache,
   addHttpOptions,
   addLoggingOptions,
   addPackagesDependencyCache,
@@ -57,8 +56,6 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
   addSuggestionProviders(services);
 
   addPackagesDependencyCache(services);
-
-  addChangedPackagesDependencyCache(services);
 
   addSuggestionDependencyCache(services);
 

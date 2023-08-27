@@ -2,12 +2,12 @@ import { throwNull, throwUndefined } from '@esm-test/guards';
 import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
+  IPackageDependencyWatcher,
   PackageClientSourceType,
   PackageResponse
 } from 'domain/packages';
 import { IProvider, IProviderConfig } from 'domain/providers';
 import {
-  IPackageDependencyWatcher,
   ISuggestionProvider,
   SuggestionFlags,
   SuggestionStatus,
@@ -113,8 +113,7 @@ export class SuggestionCodeLensProvider
     );
 
     // parse the document text dependencies
-    const packageDeps = this.packageDependencyWatcher.updateDependencies(
-      this.suggestionProvider.name,
+    const packageDeps = this.suggestionProvider.parseDependencies(
       document.uri.fsPath,
       document.getText()
     );

@@ -2,7 +2,7 @@ import { throwNull, throwUndefined } from '@esm-test/guards';
 import { IExpiryCache } from 'domain/caching';
 import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
-import { PackageClientSourceType } from 'domain/packages';
+import { PackageCache, PackageClientSourceType } from 'domain/packages';
 import { CommandUtils, SuggestionCodeLens } from 'presentation.extension';
 import * as VsCode from 'vscode';
 import { WorkspaceEdit, env, workspace } from 'vscode';
@@ -11,12 +11,12 @@ import { SuggestionCommandContributions } from './eSuggestionCommandContribution
 export class SuggestionCommandHandlers implements IDisposable {
 
   constructor(
-    readonly suggestionCache: IExpiryCache,
+    readonly packageCache: PackageCache,
     readonly processesCache: IExpiryCache,
     readonly logger: ILogger
   ) {
-    throwUndefined("suggestionCache", suggestionCache);
-    throwNull("suggestionCache", suggestionCache);
+    throwUndefined("packageCache", packageCache);
+    throwNull("packageCache", packageCache);
 
     throwUndefined("processesCache", processesCache);
     throwNull("processesCache", processesCache);
@@ -73,7 +73,7 @@ export class SuggestionCommandHandlers implements IDisposable {
    * Clears all suggestion provider caches
    */
   onClearCacheCommand(): void {
-    this.suggestionCache.clear();
+    this.packageCache.clear();
     this.processesCache.clear();
   }
 

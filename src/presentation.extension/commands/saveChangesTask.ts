@@ -1,8 +1,8 @@
 import { throwNull, throwUndefined } from "@esm-test/guards";
 import { ILogger } from "domain/logging";
-import { PackageDependency } from "domain/packages";
-import { IPackageDependencyWatcher, ISuggestionProvider } from "domain/suggestions";
-import { tasks } from "vscode";
+import { IPackageDependencyWatcher, PackageDependency } from "domain/packages";
+import { ISuggestionProvider } from "domain/suggestions";
+import { Task, tasks } from "vscode";
 
 export class SaveChangesTask {
 
@@ -17,7 +17,7 @@ export class SaveChangesTask {
     throwNull("logger", logger);
 
     // run execute when a change is detected
-    packageDependencyWatcher.registerOnDependenciesChange(this.execute.bind(this));
+    packageDependencyWatcher.registerOnPackageFileChanged(this.execute.bind(this));
   }
 
   async execute(provider: ISuggestionProvider, packageDeps: PackageDependency[]): Promise<boolean> {
@@ -54,23 +54,14 @@ export class SaveChangesTask {
     );
 
     // execute the task
-    await tasks.executeTask(filteredTasks[0]);
+    const exitCode = await executeTask(filteredTasks[0])
 
-    // listen for the end task event
-    let exitCode = 0;
-    const disposable = tasks.onDidEndTaskProcess(e => {
-      this.logger.info(
-        '%s.onSaveChanges["%s"] task exited with %s.',
-        provider.config.providerName,
-        provider.config.onSaveChangesTask,
-        e.exitCode
-      );
-
-      exitCode = e.exitCode;
-    });
-
-    // prevent vscode calling onDidEndTaskProcess mutliple times
-    disposable.dispose();
+    this.logger.info(
+      '%s.onSaveChanges["%s"] task exited with %s.',
+      provider.config.providerName,
+      provider.config.onSaveChangesTask,
+      exitCode
+    );
 
     // check the install was successful
     if (exitCode !== 0) {
@@ -82,4 +73,16 @@ export class SaveChangesTask {
     return true;
   }
 
+}
+
+async function executeTask(task: Task): Promise<number> {
+  await tasks.executeTask(task);
+  return new Promise((resolve, reject) => {
+    const disposable = tasks.onDidEndTaskProcess(e => {
+      if (task.name === e.execution.task.name) {
+        disposable.dispose();
+        resolve(e.exitCode);
+      }
+    });
+  });
 }

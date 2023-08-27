@@ -2,10 +2,14 @@ import { throwNull, throwUndefined } from '@esm-test/guards';
 import { ICache, MemoryCache } from 'domain/caching';
 import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
-import { PackageDependency, hasPackageDepsChanged } from 'domain/packages';
-import { IPackageDependencyWatcher, ISuggestionProvider, OnChangeFunction } from 'domain/suggestions';
+import {
+  IPackageDependencyWatcher,
+  OnPackageFileChangedFunction,
+  PackageDependency,
+  hasPackageDepsChanged
+} from 'domain/packages';
+import { ISuggestionProvider } from 'domain/suggestions';
 import { readFile } from 'domain/utils';
-import { dirname } from 'node:path';
 import { Uri, workspace } from 'vscode';
 
 export class PackageDependencyWatcher implements IPackageDependencyWatcher, IDisposable {
@@ -13,7 +17,6 @@ export class PackageDependencyWatcher implements IPackageDependencyWatcher, IDis
   constructor(
     readonly providers: ISuggestionProvider[],
     readonly packageDependencyCache: ICache,
-    readonly changedPackageDependencyCache: ICache,
     readonly logger: ILogger
   ) {
     throwUndefined("providers", providers);
@@ -22,19 +25,15 @@ export class PackageDependencyWatcher implements IPackageDependencyWatcher, IDis
     throwUndefined("packageDependencyCache", packageDependencyCache);
     throwNull("packageDependencyCache", packageDependencyCache);
 
-    throwUndefined("changedPackageDependencyCache", changedPackageDependencyCache);
-    throwNull("changedPackageDependencyCache", changedPackageDependencyCache);
-
     throwUndefined("logger", logger);
     throwNull("logger", logger);
 
     this.disposables = [];
-    this.onDependenciesChangedListeners = [];
   }
 
   private disposables: IDisposable[];
 
-  private onDependenciesChangedListeners: OnChangeFunction[];
+  private packageFileChangedListener: OnPackageFileChangedFunction;
 
   watch(): IPackageDependencyWatcher {
 
@@ -69,77 +68,42 @@ export class PackageDependencyWatcher implements IPackageDependencyWatcher, IDis
     return this;
   }
 
-  updateDependencies(providerName: string, packagePath: string, content: string): PackageDependency[] {
-    // get the provider
-    const provider = this.providers.find(p => p.name == providerName);
-
-    // parse the content to dependencies
-    this.logger.info("Parsing %s dependencies in %s", providerName, packagePath);
-    const latestDeps = provider.parseDependencies(packagePath, content);
-
-    // create the cache key
-    const cacheKey = MemoryCache.createKey(providerName, packagePath);
-
-    // store the changed dependencies
-    this.logger.debug("Caching %s dependencies from %s", providerName, packagePath);
-    this.changedPackageDependencyCache.set<PackageDependency[]>(cacheKey, latestDeps);
-
-    // return changed dependencies to caller
-    return latestDeps;
-  }
-
-  registerOnDependenciesChange(listener: OnChangeFunction): void {
-    this.onDependenciesChangedListeners.push(listener);
+  registerOnPackageFileChanged(listener: OnPackageFileChangedFunction): void {
+    this.packageFileChangedListener = listener;
   }
 
   async dispose(): Promise<void> {
     this.disposables.forEach(async disposable => await disposable.dispose());
   }
 
-  private async fireOnDependenciesChange(
-    provider: ISuggestionProvider,
-    packageDeps: PackageDependency[]
-  ): Promise<boolean> {
-
-    for (const listener of this.onDependenciesChangedListeners) {
-      const ok = await listener(provider, packageDeps);
-      if (ok == false) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
   private async onFileAdd(provider: ISuggestionProvider, uri: Uri) {
     this.logger.silly("File added '%s'", uri);
 
-    const packagePath = dirname(uri.fsPath);
+    const packagePath = uri.fsPath;
     const cacheKey = MemoryCache.createKey(provider.name, packagePath);
-    await this.updateCaches(cacheKey, uri, provider);
+    await this.updateCacheFromFile(cacheKey, uri, provider);
   }
 
   private async onFileCreate(provider: ISuggestionProvider, uri: Uri) {
     this.logger.silly("File created '%s'", uri);
 
-    const packagePath = dirname(uri.fsPath);
+    const packagePath = uri.fsPath;
     const cacheKey = MemoryCache.createKey(provider.name, packagePath);
-    await this.updateCaches(cacheKey, uri, provider);
+    await this.updateCacheFromFile(cacheKey, uri, provider);
   }
 
   private onFileDelete(provider: ISuggestionProvider, uri: Uri) {
     this.logger.silly("File removed '%s'", uri);
 
-    const packagePath = dirname(uri.fsPath);
+    const packagePath = uri.fsPath;
     const cacheKey = MemoryCache.createKey(provider.name, packagePath);
     this.packageDependencyCache.remove(cacheKey);
-    this.changedPackageDependencyCache.remove(cacheKey);
   }
 
   private async onFileChange(provider: ISuggestionProvider, uri: Uri) {
     this.logger.silly("File changed '%s'", uri);
 
-    const packagePath = dirname(uri.fsPath);
+    const packagePath = uri.fsPath;
     const fileContent = await readFile(uri.fsPath);
 
     const cacheKey = MemoryCache.createKey(provider.name, packagePath);
@@ -148,24 +112,22 @@ export class PackageDependencyWatcher implements IPackageDependencyWatcher, IDis
     const hasChanged = hasPackageDepsChanged(currentDeps, latestDeps);
 
     // notify change to listener
-    let cancelUpdate = true;
-    if (this.onDependenciesChangedListeners && hasChanged) {
-      cancelUpdate = await this.fireOnDependenciesChange(provider, latestDeps);
+    let shouldUpdate = true;
+    if (this.packageFileChangedListener && hasChanged) {
+      shouldUpdate = await this.packageFileChangedListener(provider, latestDeps);
     }
 
     // update caches
-    if (cancelUpdate == false && hasChanged) {
+    if (shouldUpdate && hasChanged) {
       this.logger.debug("Updating package dependency cache for '%s'", uri);
       this.packageDependencyCache.set<PackageDependency[]>(cacheKey, latestDeps);
-      this.changedPackageDependencyCache.set<PackageDependency[]>(cacheKey, latestDeps);
     }
   }
 
-  private async updateCaches(cacheKey: string, uri: Uri, provider: ISuggestionProvider) {
+  private async updateCacheFromFile(cacheKey: string, uri: Uri, provider: ISuggestionProvider) {
     const fileContent = await readFile(uri.fsPath);
-    const packageDeps = provider.parseDependencies(uri.fsPath, fileContent);
-    this.packageDependencyCache.set<PackageDependency[]>(cacheKey, packageDeps);
-    this.changedPackageDependencyCache.set<PackageDependency[]>(cacheKey, packageDeps);
+    const parsedDeps = provider.parseDependencies(uri.fsPath, fileContent);
+    this.packageDependencyCache.set<PackageDependency[]>(cacheKey, parsedDeps);
   }
 
 }

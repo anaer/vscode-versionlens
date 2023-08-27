@@ -1,8 +1,8 @@
-import { IExpiryCache } from 'domain/caching';
 import { UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
   createPackageResource,
+  PackageCache,
   PackageDependency,
   TPackageVersionDescriptor
 } from 'domain/packages';
@@ -24,10 +24,10 @@ export class MavenSuggestionProvider
   constructor(
     mnvCli: MvnCli,
     client: MavenClient,
-    suggestionCache: IExpiryCache,
+    packageCache: PackageCache,
     logger: ILogger
   ) {
-    super(client, suggestionCache, logger);
+    super(client, packageCache, logger);
     this.config = client.config;
     this.mvnCli = mnvCli;
   }

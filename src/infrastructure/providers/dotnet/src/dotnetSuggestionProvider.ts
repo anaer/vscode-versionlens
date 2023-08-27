@@ -1,16 +1,16 @@
-import { IExpiryCache } from 'domain/caching';
 import { UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
-  createPackageResource,
+  PackageCache,
   PackageDependency,
-  TPackageVersionDescriptor
+  TPackageVersionDescriptor,
+  createPackageResource
 } from 'domain/packages';
 import {
-  defaultReplaceFn,
   ISuggestionProvider,
   SuggestionProvider,
-  TSuggestionReplaceFunction
+  TSuggestionReplaceFunction,
+  defaultReplaceFn
 } from 'domain/suggestions';
 import { DotNetCli } from './clients/dotnetCli';
 import { NuGetPackageClient } from './clients/nugetPackageClient';
@@ -27,10 +27,10 @@ export class DotNetSuggestionProvider
     dotnetCli: DotNetCli,
     nugetClient: NuGetPackageClient,
     nugetResClient: NuGetResourceClient,
-    suggestionCache: IExpiryCache,
+    packageCache: PackageCache,
     logger: ILogger
   ) {
-    super(nugetClient, suggestionCache, logger);
+    super(nugetClient, packageCache, logger);
     this.config = nugetClient.config;
     this.dotnetClient = dotnetCli;
     this.nugetResClient = nugetResClient;

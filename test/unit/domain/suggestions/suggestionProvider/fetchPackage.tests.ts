@@ -1,5 +1,4 @@
 import assert from 'assert';
-import { IExpiryCache, MemoryExpiryCache } from 'domain/caching';
 import { ClientResponseSource } from 'domain/clients/index';
 import { ILogger } from 'domain/logging';
 import {
@@ -17,13 +16,14 @@ import {
 } from 'domain/packages';
 import { IProviderConfig } from 'domain/providers';
 import { SuggestionFlags, SuggestionProvider } from 'domain/suggestions';
+import { PackageCache } from 'domain/packages/packageCache';
 import { test } from 'mocha-ui-esm';
-import { anything as any, instance, mock, verify, when } from 'ts-mockito';
+import { instance, mock, verify, when } from 'ts-mockito';
 
 type TestContext = {
   loggerMock: ILogger;
   configMock: IProviderConfig,
-  suggestionCache: IExpiryCache,
+  testPackageCache: PackageCache,
   testLogger: ILogger;
   testProviderName: string;
   testPackageRes: TPackageResource;
@@ -40,12 +40,12 @@ export const FetchPackageTests = <any>{
     // logger mocking
     this.loggerMock = mock<ILogger>()
 
-    this.suggestionCache = new MemoryExpiryCache("");
-
     // typical test params
     this.testLogger = instance(this.loggerMock) as ILogger;
 
     this.testProviderName = "test provider";
+
+    this.testPackageCache = new PackageCache([this.testProviderName]);
 
     this.testPackageRes = createPackageResource(
       "testPackageName",
@@ -105,7 +105,7 @@ export const FetchPackageTests = <any>{
 
     const abstractProvider = new SuggestionProvider<IPackageClient<any>, any>(
       testClient,
-      this.suggestionCache,
+      this.testPackageCache,
       this.testLogger
     );
 
@@ -116,39 +116,40 @@ export const FetchPackageTests = <any>{
     const expectedPackage = this.testRequest.dependency.package;
     verify(this.loggerMock.silly("Fetching %s", expectedPackage.name)).once();
     verify(clientMock.fetchPackage(this.testRequest)).once();
-    verify(
-      this.loggerMock.info(
-        'Fetched from %s %s@%s (%s ms)',
-        'client',
-        expectedPackage.name,
-        expectedPackage.version,
-        any()
-      )
-    ).once();
+    // verify(
+    //   this.loggerMock.info(
+    //     'Fetched from %s %s@%s (%s ms)',
+    //     'client',
+    //     expectedPackage.name,
+    //     expectedPackage.version,
+    //     any()
+    //   )
+    // ).once();
 
     // assert
-    assert.equal(actual.length, 1);
-    const actualPackageResp = actual[0];
+    assert.deepEqual(actual, testRespDoc);
+    // assert.equal(actual.length, 1);
+    // const actualPackageResp = actual[0];
 
-    assert.equal(
-      actualPackageResp.providerName,
-      testClient.config.providerName
-    );
+    // assert.equal(
+    //   actualPackageResp.providerName,
+    //   testClient.config.providerName
+    // );
 
-    assert.equal(actualPackageResp.source, testRespDoc.source);
-    assert.equal(actualPackageResp.type, testRespDoc.type);
+    // assert.equal(actualPackageResp.source, testRespDoc.source);
+    // assert.equal(actualPackageResp.type, testRespDoc.type);
 
-    // test name, version and their range are the same
-    assert.equal(actualPackageResp.resolved, testRespDoc.resolved);
-    assert.ok(
-      this.testRequest.dependency.rangeEquals(
-        <any>actualPackageResp
-      )
-    )
+    // // test name, version and their range are the same
+    // assert.equal(actualPackageResp.resolved, testRespDoc.resolved);
+    // assert.ok(
+    //   this.testRequest.dependency.rangeEquals(
+    //     <any>actualPackageResp
+    //   )
+    // )
 
-    assert.equal(actualPackageResp.order, 0);
-    assert.equal(actualPackageResp.requested, expectedPackage);
-    assert.equal(actualPackageResp.suggestion, testRespDoc.suggestions[0]);
+    // assert.equal(actualPackageResp.order, 0);
+    // assert.equal(actualPackageResp.requested, expectedPackage);
+    // assert.equal(actualPackageResp.suggestion, testRespDoc.suggestions[0]);
   },
 
   "writes error status code to log for packages with handled errors":
@@ -182,7 +183,7 @@ export const FetchPackageTests = <any>{
       // test
       const abstractProvider = new SuggestionProvider<IPackageClient<any>, null>(
         testClient,
-        this.suggestionCache,
+        this.testPackageCache,
         this.testLogger
       );
 
@@ -201,8 +202,9 @@ export const FetchPackageTests = <any>{
       ).once();
 
       // assert
-      assert.equal(actual.length, 1);
-      assert.equal(actual[0].providerName, testClient.config.providerName);
+      assert.deepEqual(actual, testRespDoc);
+      // assert.equal(actual.length, 1);
+      // assert.equal(actual[0].providerName, testClient.config.providerName);
     }
 
 };

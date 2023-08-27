@@ -1,18 +1,18 @@
-import { IExpiryCache } from 'domain/caching';
 import { ILogger } from 'domain/logging';
 import {
-  createGitDescFromYamlNode,
-  createHostedDescFromYamlNode,
-  createPackageResource,
-  createPathDescFromYamlNode,
-  createVersionDescFromYamlNode,
-  extractPackageDependenciesFromYaml,
+  PackageCache,
   PackageDependency,
   PackageDescriptorType,
   TPackageGitDescriptor,
   TPackagePathDescriptor,
   TPackageVersionDescriptor,
-  TYamlPackageParserOptions
+  TYamlPackageParserOptions,
+  createGitDescFromYamlNode,
+  createHostedDescFromYamlNode,
+  createPackageResource,
+  createPathDescFromYamlNode,
+  createVersionDescFromYamlNode,
+  extractPackageDependenciesFromYaml
 } from 'domain/packages';
 import {
   ISuggestionProvider,
@@ -34,8 +34,8 @@ export class PubSuggestionProvider
   extends SuggestionProvider<PubClient, any>
   implements ISuggestionProvider {
 
-  constructor(client: PubClient, suggestionCache: IExpiryCache, logger: ILogger) {
-    super(client, suggestionCache, logger);
+  constructor(client: PubClient, packageCache: PackageCache, logger: ILogger) {
+    super(client, packageCache, logger);
     this.config = client.config;
     this.suggestionReplaceFn = pubReplaceVersion
   }

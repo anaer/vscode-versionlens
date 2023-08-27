@@ -131,7 +131,7 @@ export function addSuggestionProvider(services: IServiceCollection) {
         container.dotnetCli,
         container.nugetClient,
         container.nugetResClient,
-        container.suggestionCache,
+        container.packageCache,
         container.logger.child({ namespace: 'dotnet provider' })
       )
   );

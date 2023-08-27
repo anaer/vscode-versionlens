@@ -3,6 +3,7 @@ import { Config, TConfigSectionResolver } from "domain/configuration";
 import { IServiceCollection } from "domain/di";
 import { HttpOptions } from "domain/http";
 import { LoggingOptions } from "domain/logging";
+import { PackageCache } from "domain/packages";
 import { importSuggestionProviders } from "domain/providers";
 import { nameOf } from "domain/utils";
 import { IDomainServices } from "./iDomainServices";
@@ -60,14 +61,12 @@ export function addPackagesDependencyCache(services: IServiceCollection) {
   services.addSingleton(serviceName, new MemoryCache(serviceName));
 }
 
-export function addChangedPackagesDependencyCache(services: IServiceCollection) {
-  const serviceName = nameOf<IDomainServices>().changedPackageDependencyCache;
-  services.addSingleton(serviceName, new MemoryCache(serviceName));
-}
-
 export function addSuggestionDependencyCache(services: IServiceCollection) {
-  const serviceName = nameOf<IDomainServices>().suggestionCache;
-  services.addSingleton(serviceName, new MemoryExpiryCache(serviceName));
+  services.addSingleton(
+    nameOf<IDomainServices>().packageCache,
+    (container: IDomainServices) =>
+      new PackageCache(container.providerNames)
+  );
 }
 
 export function addProcessesCache(services: IServiceCollection) {

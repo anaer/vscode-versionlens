@@ -33,7 +33,6 @@ export function addPackageDependencyWatcher(services: IServiceCollection) {
       new PackageDependencyWatcher(
         container.suggestionProviders,
         container.packageDependencyCache,
-        container.changedPackageDependencyCache,
         container.logger.child({ namespace: 'package dependency watcher' })
       ),
     true

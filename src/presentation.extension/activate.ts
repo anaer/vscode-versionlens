@@ -1,7 +1,7 @@
 import { IServiceProvider } from 'domain/di';
 import { ILogger, ILoggingOptions } from 'domain/logging';
+import { IPackageDependencyWatcher } from 'domain/packages';
 import { IDomainServices } from 'domain/services';
-import { IPackageDependencyWatcher } from 'domain/suggestions';
 import { nameOf, readJsonFile } from 'domain/utils';
 import { join } from 'node:path';
 import { ExtensionContext, workspace } from 'vscode';

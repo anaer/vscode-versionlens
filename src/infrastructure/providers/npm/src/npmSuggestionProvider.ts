@@ -1,15 +1,15 @@
-import { IExpiryCache } from 'domain/caching';
 import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
-  createPackageResource,
-  createVersionDescFromJsonNode,
-  extractPackageDependenciesFromJson,
+  PackageCache,
   PackageDependency,
   PackageDescriptorType,
   TJsonPackageParserOptions,
   TJsonPackageTypeHandler,
-  TPackageVersionDescriptor
+  TPackageVersionDescriptor,
+  createPackageResource,
+  createVersionDescFromJsonNode,
+  extractPackageDependenciesFromJson
 } from 'domain/packages';
 import {
   ISuggestionProvider,
@@ -31,8 +31,8 @@ export class NpmSuggestionProvider
   extends SuggestionProvider<NpmPackageClient, TNpmClientData>
   implements ISuggestionProvider {
 
-  constructor(client: NpmPackageClient, suggestionCache: IExpiryCache, logger: ILogger) {
-    super(client, suggestionCache, logger);
+  constructor(client: NpmPackageClient, packageCache: PackageCache, logger: ILogger) {
+    super(client, packageCache, logger);
     this.config = client.config;
     this.suggestionReplaceFn = npmReplaceVersion;
   }
