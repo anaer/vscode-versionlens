@@ -7,10 +7,13 @@ import { join } from 'node:path';
 import {
   IExtensionServices,
   OnActiveTextEditorChange,
+  OnClearCache,
+  OnFileLinkClick,
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
   OnSaveChanges,
   OnTextDocumentChange,
+  OnUpdateDependencyClick,
   VersionLensExtension,
   configureContainer
 } from 'presentation.extension';
@@ -57,9 +60,11 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   // instantiate command handlers
   serviceProvider.getService(serviceNames.iconCommandHandlers);
-  serviceProvider.getService(serviceNames.suggestionCommandHandlers);
 
   // instantiate events
+  serviceProvider.getService<OnUpdateDependencyClick>(serviceNames.onUpdateDependencyClick);
+  serviceProvider.getService<OnFileLinkClick>(serviceNames.onFileLinkClick);
+  serviceProvider.getService<OnClearCache>(serviceNames.onClearCache);
   serviceProvider.getService<OnSaveChanges>(serviceNames.onSaveChanges);
   serviceProvider.getService<OnProviderEditorActivated>(serviceNames.onProviderEditorActivated);
   serviceProvider.getService<OnProviderTextDocumentChange>(serviceNames.onProviderTextDocumentChange);

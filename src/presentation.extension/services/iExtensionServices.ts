@@ -2,12 +2,14 @@ import { DependencyCache } from 'domain/packages';
 import {
   IconCommandHandlers,
   OnActiveTextEditorChange,
+  OnClearCache,
+  OnFileLinkClick,
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
   OnSaveChanges,
   OnTextDocumentChange,
+  OnUpdateDependencyClick,
   SuggestionCodeLensProvider,
-  SuggestionCommandHandlers,
   VersionLensExtension
 } from 'presentation.extension';
 import { OutputChannel } from 'vscode';
@@ -19,8 +21,6 @@ export interface IExtensionServices {
   outputChannel: OutputChannel;
 
   iconCommandHandlers: IconCommandHandlers;
-
-  suggestionCommandHandlers: SuggestionCommandHandlers;
 
   versionLensProviders: Array<SuggestionCodeLensProvider>;
 
@@ -35,5 +35,11 @@ export interface IExtensionServices {
   onProviderTextDocumentChange: OnProviderTextDocumentChange;
 
   onSaveChanges: OnSaveChanges;
+
+  onClearCache: OnClearCache;
+
+  onFileLinkClick: OnFileLinkClick;
+
+  onUpdateDependencyClick: OnUpdateDependencyClick;
 
 }

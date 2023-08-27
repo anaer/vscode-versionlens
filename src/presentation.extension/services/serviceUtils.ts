@@ -7,12 +7,14 @@ import {
   IExtensionServices,
   IconCommandHandlers,
   OnActiveTextEditorChange,
+  OnClearCache,
+  OnFileLinkClick,
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
-  OnTextDocumentChange,
   OnSaveChanges,
+  OnTextDocumentChange,
+  OnUpdateDependencyClick,
   SuggestionCodeLensProvider,
-  SuggestionCommandHandlers,
   VersionLensExtension
 } from "presentation.extension";
 import { window, workspace } from "vscode";
@@ -46,19 +48,6 @@ export function addIconCommands(services: IServiceCollection) {
         container.outputChannel,
         container.versionLensProviders,
         container.logger.child({ namespace: 'icon commands' })
-      ),
-    true
-  )
-}
-
-export function addSuggestionCommands(services: IServiceCollection) {
-  services.addSingleton(
-    nameOf<IExtensionServices>().suggestionCommandHandlers,
-    (container: IDomainServices & IExtensionServices) =>
-      new SuggestionCommandHandlers(
-        container.packageCache,
-        container.processesCache,
-        container.logger.child({ namespace: 'suggestion commands' })
       ),
     true
   )
@@ -126,6 +115,47 @@ export function addOnProviderTextDocumentChange(services: IServiceCollection) {
       return listener;
     },
     false
+  )
+}
+
+export function addOnClearCache(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onClearCache;
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices & IExtensionServices) => {
+      return new OnClearCache(
+        container.packageCache,
+        container.processesCache,
+        container.logger.child({ namespace: serviceName })
+      );
+    },
+    true
+  )
+}
+
+export function addOnFileLinkClick(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onFileLinkClick;
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices) => {
+      return new OnFileLinkClick(
+        container.logger.child({ namespace: serviceName })
+      );
+    },
+    true
+  )
+}
+
+export function addOnUpdateDependencyClick(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onUpdateDependencyClick;
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices) => {
+      return new OnUpdateDependencyClick(
+        container.logger.child({ namespace: serviceName })
+      );
+    },
+    true
   )
 }
 

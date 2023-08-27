@@ -21,13 +21,15 @@ import {
   VersionLensExtension,
   addIconCommands,
   addOnActiveTextEditorChange,
+  addOnClearCache,
+  addOnFileLinkClick,
   addOnProviderEditorActivated,
   addOnProviderTextDocumentChange,
   addOnTextDocumentChange,
+  addOnUpdateDependencyClick,
   addOutputChannel,
   addProviderNames,
   addSaveChangesTask,
-  addSuggestionCommands,
   addTempDependencyCache,
   addVersionLensExtension,
   addVersionLensProviders
@@ -77,8 +79,6 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
 
   addIconCommands(services);
 
-  addSuggestionCommands(services);
-
   addOnActiveTextEditorChange(services);
 
   addOnTextDocumentChange(services);
@@ -86,6 +86,12 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
   addOnProviderEditorActivated(services);
 
   addOnProviderTextDocumentChange(services);
+
+  addOnClearCache(services);
+
+  addOnFileLinkClick(services);
+
+  addOnUpdateDependencyClick(services);
 
   addVersionLensProviders(services);
 
