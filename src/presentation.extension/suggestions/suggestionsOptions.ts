@@ -1,13 +1,9 @@
 import { IConfig } from 'domain/configuration';
-import { SuggestionContributions } from './eSuggestionContributions';
+import { SuggestionContributions } from './definitions/eSuggestionContributions';
 
 export class SuggestionsOptions {
 
-  private config: IConfig;
-
-  constructor(config: IConfig) {
-    this.config = config;
-  }
+  constructor(readonly config: IConfig) { }
 
   get showOnStartup(): boolean {
     return this.config.get<boolean>(

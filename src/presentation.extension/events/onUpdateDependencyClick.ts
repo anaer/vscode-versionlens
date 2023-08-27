@@ -5,9 +5,7 @@ import { Disposable, WorkspaceEdit, commands, workspace } from 'vscode';
 
 export class OnUpdateDependencyClick {
 
-  constructor(
-    readonly logger: ILogger
-  ) {
+  constructor(readonly logger: ILogger) {
     throwUndefined("logger", logger);
     throwNull("logger", logger);
 

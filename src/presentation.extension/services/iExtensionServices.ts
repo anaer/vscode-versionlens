@@ -1,13 +1,15 @@
 import { DependencyCache } from 'domain/packages';
 import {
-  IconCommandHandlers,
   OnActiveTextEditorChange,
   OnClearCache,
   OnFileLinkClick,
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
   OnSaveChanges,
+  OnShowError,
   OnTextDocumentChange,
+  OnTogglePrereleases,
+  OnToggleReleases,
   OnUpdateDependencyClick,
   SuggestionCodeLensProvider,
   VersionLensExtension
@@ -19,8 +21,6 @@ export interface IExtensionServices {
   extension: VersionLensExtension;
 
   outputChannel: OutputChannel;
-
-  iconCommandHandlers: IconCommandHandlers;
 
   versionLensProviders: Array<SuggestionCodeLensProvider>;
 
@@ -41,5 +41,11 @@ export interface IExtensionServices {
   onFileLinkClick: OnFileLinkClick;
 
   onUpdateDependencyClick: OnUpdateDependencyClick;
+
+  onToggleReleases: OnToggleReleases;
+
+  onTogglePrereleases: OnTogglePrereleases;
+
+  onShowError: OnShowError;
 
 }

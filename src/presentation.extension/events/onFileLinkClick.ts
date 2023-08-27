@@ -6,9 +6,7 @@ import { Disposable, commands, env } from 'vscode';
 
 export class OnFileLinkClick {
 
-  constructor(
-    readonly logger: ILogger
-  ) {
+  constructor(readonly logger: ILogger) {
     throwUndefined("logger", logger);
     throwNull("logger", logger);
 

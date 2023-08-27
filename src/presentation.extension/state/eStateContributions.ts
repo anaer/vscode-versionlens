@@ -1,6 +1,6 @@
 export enum StateContributions {
   Show = 'versionlens.show',
-  PrereleasesEnabled = 'versionlens.prereleasesEnabled',
+  ShowPrereleases = 'versionlens.showPrereleases',
   ProviderActive = 'versionlens.providerActive',
   ProviderBusy = 'versionlens.providerBusy',
   ProviderError = 'versionlens.providerError'

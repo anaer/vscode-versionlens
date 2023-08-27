@@ -191,12 +191,12 @@
         },
         {
           "command": "versionlens.icons.showPrereleaseVersions",
-          "when": "versionlens.prereleasesEnabled == false && versionlens.show && versionlens.providerActive && textCompareEditorVisible == false",
+          "when": "versionlens.showPrereleases == false && versionlens.show && versionlens.providerActive && textCompareEditorVisible == false",
           "group": "navigation@2"
         },
         {
           "command": "versionlens.icons.hidePrereleaseVersions",
-          "when": "versionlens.prereleasesEnabled && versionlens.show && versionlens.providerActive && textCompareEditorVisible == false",
+          "when": "versionlens.showPrereleases && versionlens.show && versionlens.providerActive && textCompareEditorVisible == false",
           "group": "navigation@2"
         }
       ]

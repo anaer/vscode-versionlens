@@ -12,7 +12,10 @@ import {
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
   OnSaveChanges,
+  OnShowError,
   OnTextDocumentChange,
+  OnTogglePrereleases,
+  OnToggleReleases,
   OnUpdateDependencyClick,
   VersionLensExtension,
   configureContainer
@@ -58,10 +61,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
   logger.info("log level: %s", loggingOptions.level);
   logger.info("log folder: %s", logPath);
 
-  // instantiate command handlers
-  serviceProvider.getService(serviceNames.iconCommandHandlers);
-
   // instantiate events
+  serviceProvider.getService<OnShowError>(serviceNames.onShowError);
+  serviceProvider.getService<OnToggleReleases>(serviceNames.onToggleReleases);
+  serviceProvider.getService<OnTogglePrereleases>(serviceNames.onTogglePrereleases);
   serviceProvider.getService<OnUpdateDependencyClick>(serviceNames.onUpdateDependencyClick);
   serviceProvider.getService<OnFileLinkClick>(serviceNames.onFileLinkClick);
   serviceProvider.getService<OnClearCache>(serviceNames.onClearCache);

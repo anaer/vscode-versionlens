@@ -8,7 +8,7 @@ export class VersionLensState {
   // states
   show: ContextState<boolean>;
 
-  prereleasesEnabled: ContextState<boolean>;
+  showPrereleases: ContextState<boolean>;
 
   providerActive: ContextState<boolean>;
 
@@ -25,8 +25,8 @@ export class VersionLensState {
       extension.suggestions.showOnStartup
     );
 
-    this.prereleasesEnabled = new ContextState(
-      StateContributions.PrereleasesEnabled,
+    this.showPrereleases = new ContextState(
+      StateContributions.ShowPrereleases,
       extension.suggestions.showPrereleasesOnStartup
     );
 

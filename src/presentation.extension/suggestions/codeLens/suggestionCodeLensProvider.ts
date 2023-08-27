@@ -147,7 +147,7 @@ export class SuggestionCodeLensProvider
     );
 
     // remove prereleases if not enabled
-    if (this.state.prereleasesEnabled.value === false) {
+    if (this.state.showPrereleases.value === false) {
       suggestions = suggestions.filter(
         function (response) {
           const { suggestion } = response;

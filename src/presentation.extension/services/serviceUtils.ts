@@ -5,14 +5,16 @@ import { IDomainServices } from "domain/services";
 import { nameOf } from "domain/utils";
 import {
   IExtensionServices,
-  IconCommandHandlers,
   OnActiveTextEditorChange,
   OnClearCache,
   OnFileLinkClick,
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
   OnSaveChanges,
+  OnShowError,
   OnTextDocumentChange,
+  OnTogglePrereleases,
+  OnToggleReleases,
   OnUpdateDependencyClick,
   SuggestionCodeLensProvider,
   VersionLensExtension
@@ -36,20 +38,6 @@ export function addOutputChannel(services: IServiceCollection) {
     nameOf<IExtensionServices>().outputChannel,
     // vscode output channel called "VersionLens"
     () => window.createOutputChannel(VersionLensExtension.extensionName)
-  )
-}
-
-export function addIconCommands(services: IServiceCollection) {
-  services.addSingleton(
-    nameOf<IExtensionServices>().iconCommandHandlers,
-    (container: IDomainServices & IExtensionServices) =>
-      new IconCommandHandlers(
-        container.extension.state,
-        container.outputChannel,
-        container.versionLensProviders,
-        container.logger.child({ namespace: 'icon commands' })
-      ),
-    true
   )
 }
 
@@ -159,6 +147,51 @@ export function addOnUpdateDependencyClick(services: IServiceCollection) {
   )
 }
 
+export function addOnToggleReleases(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onToggleReleases;
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices & IExtensionServices) => {
+      return new OnToggleReleases(
+        container.versionLensProviders,
+        container.extension.state,
+        container.logger.child({ namespace: serviceName })
+      );
+    },
+    true
+  )
+}
+
+export function addOnTogglePrereleases(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onTogglePrereleases;
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices & IExtensionServices) => {
+      return new OnTogglePrereleases(
+        container.versionLensProviders,
+        container.extension.state,
+        container.logger.child({ namespace: serviceName })
+      );
+    },
+    true
+  )
+}
+
+export function addOnShowError(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onShowError;
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices & IExtensionServices) => {
+      return new OnShowError(
+        container.extension.state,
+        container.outputChannel,
+        container.logger.child({ namespace: serviceName })
+      );
+    },
+    true
+  )
+}
+
 export function addVersionLensProviders(services: IServiceCollection) {
   services.addSingleton(
     nameOf<IExtensionServices>().versionLensProviders,
@@ -191,7 +224,7 @@ export function addProviderNames(services: IServiceCollection) {
   )
 }
 
-export function addSaveChangesTask(services: IServiceCollection) {
+export function addOnSaveChanges(services: IServiceCollection) {
   const serviceName = nameOf<IExtensionServices>().onSaveChanges
   services.addSingleton(
     serviceName,

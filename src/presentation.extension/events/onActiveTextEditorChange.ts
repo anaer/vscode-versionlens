@@ -4,7 +4,7 @@ import { ILogger } from 'domain/logging';
 import { ISuggestionProvider } from 'domain/suggestions';
 import { Disposable, TextDocument, TextEditor, window } from 'vscode';
 import { VersionLensState } from '../state/versionLensState';
-import { getDocumentProviders } from './textDocumentUtils';
+import { getDocumentProviders } from './eventUtils';
 
 export type ProviderEditorActivatedEvent = (
   activeProviders: ISuggestionProvider[],
