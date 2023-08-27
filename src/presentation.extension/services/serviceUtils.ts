@@ -1,17 +1,21 @@
 import { IServiceCollection } from "domain/di";
 import { DisposableArray } from "domain/generics";
+import { DependencyCache } from "domain/packages";
 import { IDomainServices } from "domain/services";
 import { nameOf } from "domain/utils";
 import {
+  IExtensionServices,
   IconCommandHandlers,
+  OnActiveTextEditorChange,
+  OnProviderEditorActivated,
+  OnProviderTextDocumentChange,
+  OnTextDocumentChange,
+  OnSaveChanges,
   SuggestionCodeLensProvider,
   SuggestionCommandHandlers,
-  TextEditorEvents,
   VersionLensExtension
 } from "presentation.extension";
 import { window, workspace } from "vscode";
-import { SaveChangesTask } from "../commands/saveChangesTask";
-import { IExtensionServices } from "./iExtensionServices";
 
 export function addVersionLensExtension(services: IServiceCollection) {
   const projectPath = workspace.workspaceFolders && workspace.workspaceFolders.length > 0
@@ -60,17 +64,68 @@ export function addSuggestionCommands(services: IServiceCollection) {
   )
 }
 
-export function addTextEditorEvents(services: IServiceCollection) {
+export function addOnActiveTextEditorChange(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onActiveTextEditorChange;
   services.addSingleton(
-    nameOf<IExtensionServices>().textEditorEvents,
+    serviceName,
     (container: IDomainServices & IExtensionServices) =>
-      new TextEditorEvents(
+      new OnActiveTextEditorChange(
         container.extension.state,
         container.suggestionProviders,
-        container.loggerChannel,
-        container.logger
+        container.logger.child({ namespace: serviceName })
       ),
     true
+  )
+}
+
+export function addOnTextDocumentChange(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onTextDocumentChange;
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices & IExtensionServices) =>
+      new OnTextDocumentChange(
+        container.suggestionProviders,
+        container.logger.child({ namespace: serviceName })
+      ),
+    true
+  )
+}
+
+export function addOnProviderEditorActivated(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onProviderEditorActivated;
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices & IExtensionServices) => {
+      const listener = new OnProviderEditorActivated(
+        container.dependencyCache,
+        container.tempDependencyCache,
+        container.loggerChannel,
+        container.logger.child({ namespace: serviceName })
+      );
+
+      // register listener
+      container.onActiveTextEditorChange.registerListener(listener.execute, listener);
+      return listener;
+    },
+    false
+  )
+}
+
+export function addOnProviderTextDocumentChange(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onProviderTextDocumentChange;
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices & IExtensionServices) => {
+      const listener = new OnProviderTextDocumentChange(
+        container.tempDependencyCache,
+        container.logger.child({ namespace: serviceName })
+      );
+
+      // register listener
+      container.onTextDocumentChange.registerListener(listener.execute, listener);
+      return listener;
+    },
+    false
   )
 }
 
@@ -83,7 +138,7 @@ export function addVersionLensProviders(services: IServiceCollection) {
           suggestionProvider => new SuggestionCodeLensProvider(
             container.extension,
             suggestionProvider,
-            container.packageDependencyWatcher,
+            container.tempDependencyCache,
             container.logger.child({ namespace: `${suggestionProvider.name} codelens` })
           )
         )
@@ -107,12 +162,21 @@ export function addProviderNames(services: IServiceCollection) {
 }
 
 export function addSaveChangesTask(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onSaveChanges
   services.addSingleton(
-    nameOf<IExtensionServices>().saveChangesTask,
+    serviceName,
     (container: IDomainServices & IExtensionServices) =>
-      new SaveChangesTask(
+      new OnSaveChanges(
         container.packageDependencyWatcher,
-        container.logger.child({ namespace: `save changes task` })
+        container.logger.child({ namespace: serviceName })
       )
+  )
+}
+
+export function addTempDependencyCache(services: IServiceCollection) {
+  services.addSingleton(
+    nameOf<IExtensionServices>().tempDependencyCache,
+    (container: IDomainServices & IExtensionServices) =>
+      new DependencyCache(container.providerNames)
   )
 }

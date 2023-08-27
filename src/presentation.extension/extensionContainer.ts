@@ -18,19 +18,21 @@ import {
   addWinstonLogger
 } from 'infrastructure/services';
 import {
-  VersionLensExtension
-} from 'presentation.extension';
-import { ExtensionContext, workspace } from 'vscode';
-import {
+  VersionLensExtension,
   addIconCommands,
+  addOnActiveTextEditorChange,
+  addOnProviderEditorActivated,
+  addOnProviderTextDocumentChange,
+  addOnTextDocumentChange,
   addOutputChannel,
   addProviderNames,
   addSaveChangesTask,
   addSuggestionCommands,
-  addTextEditorEvents,
+  addTempDependencyCache,
   addVersionLensExtension,
   addVersionLensProviders
-} from './services/serviceUtils';
+} from 'presentation.extension';
+import { ExtensionContext, workspace } from 'vscode';
 
 export async function configureContainer(context: ExtensionContext): Promise<IServiceProvider> {
 
@@ -77,11 +79,19 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
 
   addSuggestionCommands(services);
 
-  addTextEditorEvents(services);
+  addOnActiveTextEditorChange(services);
+
+  addOnTextDocumentChange(services);
+
+  addOnProviderEditorActivated(services);
+
+  addOnProviderTextDocumentChange(services);
 
   addVersionLensProviders(services);
 
   addSaveChangesTask(services);
+
+  addTempDependencyCache(services);
 
   return await services.build();
 }

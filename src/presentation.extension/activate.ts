@@ -4,10 +4,17 @@ import { IPackageDependencyWatcher } from 'domain/packages';
 import { IDomainServices } from 'domain/services';
 import { nameOf, readJsonFile } from 'domain/utils';
 import { join } from 'node:path';
-import { ExtensionContext, workspace } from 'vscode';
-import { configureContainer } from './extensionContainer';
-import { IExtensionServices } from './services/iExtensionServices';
-import { VersionLensExtension } from './versionLensExtension';
+import {
+  IExtensionServices,
+  OnActiveTextEditorChange,
+  OnProviderEditorActivated,
+  OnProviderTextDocumentChange,
+  OnSaveChanges,
+  OnTextDocumentChange,
+  VersionLensExtension,
+  configureContainer
+} from 'presentation.extension';
+import { ExtensionContext, window, workspace } from 'vscode';
 
 let serviceProvider: IServiceProvider;
 
@@ -53,10 +60,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
   serviceProvider.getService(serviceNames.suggestionCommandHandlers);
 
   // instantiate events
-  serviceProvider.getService(serviceNames.textEditorEvents);
-
-  // instantiate tasks
-  serviceProvider.getService(serviceNames.saveChangesTask);
+  serviceProvider.getService<OnSaveChanges>(serviceNames.onSaveChanges);
+  serviceProvider.getService<OnProviderEditorActivated>(serviceNames.onProviderEditorActivated);
+  serviceProvider.getService<OnProviderTextDocumentChange>(serviceNames.onProviderTextDocumentChange);
+  serviceProvider.getService<OnTextDocumentChange>(serviceNames.onTextDocumentChange);
+  serviceProvider.getService<OnActiveTextEditorChange>(serviceNames.onActiveTextEditorChange)
+    // ensures this is run when the extension is first loaded
+    .execute(window.activeTextEditor)
 
   // setup package dependency watcher
   serviceProvider.getService<IPackageDependencyWatcher>(serviceNames.packageDependencyWatcher)

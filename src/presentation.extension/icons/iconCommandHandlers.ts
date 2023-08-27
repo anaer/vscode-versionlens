@@ -5,10 +5,10 @@ import { getProvidersByFileName } from 'domain/providers';
 import {
   CommandUtils,
   IconCommandContributions,
-  SuggestionCodeLensProvider
+  SuggestionCodeLensProvider,
+  VersionLensState
 } from 'presentation.extension';
 import * as VsCode from 'vscode';
-import { VersionLensState } from '../state/versionLensState';
 
 export class IconCommandHandlers implements IDisposable {
 

@@ -12,6 +12,7 @@ export * from './definitions/tPackageNameVersion';
 export * from './definitions/tPackageResource';
 export * from './definitions/tPackageVersions';
 export * from './definitions/tSemverSpec';
+export * from "./dependencyCache";
 export * as ResponseFactory from './factories/packageResponseFactory';
 export * from './models/packageDependency';
 export * from './models/packageResponse';

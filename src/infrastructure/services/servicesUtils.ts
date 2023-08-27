@@ -32,7 +32,7 @@ export function addPackageDependencyWatcher(services: IServiceCollection) {
     (container: IDomainServices) =>
       new PackageDependencyWatcher(
         container.suggestionProviders,
-        container.packageDependencyCache,
+        container.dependencyCache,
         container.logger.child({ namespace: 'package dependency watcher' })
       ),
     true

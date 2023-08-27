@@ -1,12 +1,16 @@
+import { DependencyCache } from 'domain/packages';
 import {
   IconCommandHandlers,
+  OnActiveTextEditorChange,
+  OnProviderEditorActivated,
+  OnProviderTextDocumentChange,
+  OnSaveChanges,
+  OnTextDocumentChange,
   SuggestionCodeLensProvider,
   SuggestionCommandHandlers,
-  TextEditorEvents,
   VersionLensExtension
 } from 'presentation.extension';
 import { OutputChannel } from 'vscode';
-import { SaveChangesTask } from '../commands/saveChangesTask';
 
 export interface IExtensionServices {
 
@@ -18,10 +22,18 @@ export interface IExtensionServices {
 
   suggestionCommandHandlers: SuggestionCommandHandlers;
 
-  textEditorEvents: TextEditorEvents;
-
   versionLensProviders: Array<SuggestionCodeLensProvider>;
 
-  saveChangesTask: SaveChangesTask;
+  tempDependencyCache: DependencyCache
+
+  onActiveTextEditorChange: OnActiveTextEditorChange;
+
+  onTextDocumentChange: OnTextDocumentChange;
+
+  onProviderEditorActivated: OnProviderEditorActivated;
+
+  onProviderTextDocumentChange: OnProviderTextDocumentChange;
+
+  onSaveChanges: OnSaveChanges;
 
 }

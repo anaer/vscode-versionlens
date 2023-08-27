@@ -1,11 +1,15 @@
 export * as CommandUtils from './commands/commandUtils';
-export * from './commands/saveChangesTask';
+export * from './events/onActiveTextEditorChange';
+export * from './events/onProviderEditorActivated';
+export * from './events/onProviderTextDocumentChange';
+export * from './events/onSaveChanges';
+export * from './events/onTextDocumentChange';
 export * as TextDocumentUtils from './events/textDocumentUtils';
-export * from './events/textEditorEvents';
 export * from './extensionContainer';
 export * from './icons/eIconCommandContributions';
 export * from './icons/iconCommandHandlers';
 export * from './services/iExtensionServices';
+export * from './services/serviceUtils';
 export * from './state/contextState';
 export * from './state/versionLensState';
 export * from './suggestions/codeLens/suggestionCodeLens';

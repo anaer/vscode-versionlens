@@ -1,9 +1,9 @@
-import { CachingOptions, MemoryCache, MemoryExpiryCache } from "domain/caching";
+import { CachingOptions, MemoryExpiryCache } from "domain/caching";
 import { Config, TConfigSectionResolver } from "domain/configuration";
 import { IServiceCollection } from "domain/di";
 import { HttpOptions } from "domain/http";
 import { LoggingOptions } from "domain/logging";
-import { PackageCache } from "domain/packages";
+import { DependencyCache, PackageCache } from "domain/packages";
 import { importSuggestionProviders } from "domain/providers";
 import { nameOf } from "domain/utils";
 import { IDomainServices } from "./iDomainServices";
@@ -22,24 +22,21 @@ export function addAppConfig(
 export function addHttpOptions(services: IServiceCollection) {
   services.addSingleton(
     nameOf<IDomainServices>().httpOptions,
-    (container: IDomainServices) =>
-      new HttpOptions(container.appConfig, 'http')
+    (container: IDomainServices) => new HttpOptions(container.appConfig, 'http')
   )
 }
 
 export function addCachingOptions(services: IServiceCollection) {
   services.addSingleton(
     nameOf<IDomainServices>().cachingOptions,
-    (container: IDomainServices) =>
-      new CachingOptions(container.appConfig, 'caching')
+    (container: IDomainServices) => new CachingOptions(container.appConfig, 'caching')
   )
 }
 
 export function addLoggingOptions(services: IServiceCollection) {
   services.addSingleton(
     nameOf<IDomainServices>().loggingOptions,
-    (container: IDomainServices) =>
-      new LoggingOptions(container.appConfig, 'logging')
+    (container: IDomainServices) => new LoggingOptions(container.appConfig, 'logging')
   )
 }
 
@@ -57,15 +54,16 @@ export async function addSuggestionProviders(services: IServiceCollection) {
 }
 
 export function addPackagesDependencyCache(services: IServiceCollection) {
-  const serviceName = nameOf<IDomainServices>().packageDependencyCache;
-  services.addSingleton(serviceName, new MemoryCache(serviceName));
+  services.addSingleton(
+    nameOf<IDomainServices>().dependencyCache,
+    (container: IDomainServices) => new DependencyCache(container.providerNames)
+  );
 }
 
 export function addSuggestionDependencyCache(services: IServiceCollection) {
   services.addSingleton(
     nameOf<IDomainServices>().packageCache,
-    (container: IDomainServices) =>
-      new PackageCache(container.providerNames)
+    (container: IDomainServices) => new PackageCache(container.providerNames)
   );
 }
 

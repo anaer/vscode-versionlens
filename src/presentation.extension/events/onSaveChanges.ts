@@ -4,7 +4,7 @@ import { IPackageDependencyWatcher, PackageDependency } from "domain/packages";
 import { ISuggestionProvider } from "domain/suggestions";
 import { Task, tasks } from "vscode";
 
-export class SaveChangesTask {
+export class OnSaveChanges {
 
   constructor(
     readonly packageDependencyWatcher: IPackageDependencyWatcher,

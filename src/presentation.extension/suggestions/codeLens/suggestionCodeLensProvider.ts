@@ -2,7 +2,7 @@ import { throwNull, throwUndefined } from '@esm-test/guards';
 import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
-  IPackageDependencyWatcher,
+  DependencyCache,
   PackageClientSourceType,
   PackageResponse
 } from 'domain/packages';
@@ -37,7 +37,7 @@ export class SuggestionCodeLensProvider
   constructor(
     readonly extension: VersionLensExtension,
     readonly suggestionProvider: ISuggestionProvider,
-    readonly packageDependencyWatcher: IPackageDependencyWatcher,
+    readonly tempDependencyCache: DependencyCache,
     readonly logger: ILogger
   ) {
     throwUndefined("extension", extension);
@@ -46,8 +46,8 @@ export class SuggestionCodeLensProvider
     throwUndefined("suggestionProvider", suggestionProvider);
     throwNull("suggestionProvider", suggestionProvider);
 
-    throwUndefined("packageDependencyWatcher", packageDependencyWatcher);
-    throwNull("packageDependencyWatcher", packageDependencyWatcher);
+    throwUndefined("tempDependencyCache", tempDependencyCache);
+    throwNull("tempDependencyCache", tempDependencyCache);
 
     throwUndefined("logger", logger);
     throwNull("logger", logger);
@@ -82,19 +82,16 @@ export class SuggestionCodeLensProvider
     this.notifyCodeLensesChanged.fire();
   }
 
-  async provideCodeLenses(
-    document: TextDocument,
-    token: CancellationToken
-  ): Promise<Array<CodeLens>> {
+  async provideCodeLenses(document: TextDocument, token: CancellationToken): Promise<CodeLens[]> {
     if (this.state.show.value === false) return [];
 
-    // package path
-    const packagePath = dirname(document.uri.fsPath);
+    const packageFilePath = document.uri.fsPath;
+    const packagePath = dirname(packageFilePath);
 
     // get the project path from workspace path otherwise the current file
     const projectPath = this.extension.isWorkspaceMode
       ? this.extension.projectPath
-      : dirname(packagePath);
+      : packagePath;
 
     this.logger.info("Project path is %s", projectPath);
 
@@ -112,12 +109,13 @@ export class SuggestionCodeLensProvider
       this.config.caching.duration / 1000
     );
 
-    // parse the document text dependencies
-    const packageDeps = this.suggestionProvider.parseDependencies(
-      document.uri.fsPath,
-      document.getText()
+    // get the document dependencies
+    const packageDeps = this.tempDependencyCache.get(
+      this.suggestionProvider.name,
+      packageFilePath
     );
 
+    // fetch the package suggestions
     let suggestions: Array<PackageResponse> = [];
     try {
       suggestions = await this.suggestionProvider.fetchSuggestions(
@@ -137,7 +135,7 @@ export class SuggestionCodeLensProvider
       this.logger.info(
         "No %s suggestions found in %s",
         this.suggestionProvider.name,
-        document.uri.fsPath
+        packageFilePath
       );
       return [];
     }
