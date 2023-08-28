@@ -1,4 +1,4 @@
-import { nullMessage, undefinedMessage } from '@esm-test/guards';
+import { emptyMessage, notTypeMessage } from '@esm-test/guards';
 import assert from 'assert';
 import { MemoryCache } from 'domain/caching';
 import { test } from 'mocha-ui-esm';
@@ -8,8 +8,9 @@ export const ctorTests = {
   [test.title]: "constructor",
 
   '$i throws an error when the cache name is $1': [
-    [undefined, undefinedMessage("cacheName")],
-    [null, nullMessage("cacheName")],
+    [undefined, notTypeMessage('cacheName', 'string')],
+    [null, notTypeMessage('cacheName', 'string')],
+    ['', emptyMessage('cacheName')],
     function (testName: string, expectedMessage: string) {
       try {
         new MemoryCache(testName);

@@ -1,3 +1,4 @@
+import { throwUndefinedOrNull } from "@esm-test/guards";
 import { IExpiryCache, MemoryExpiryCache } from "domain/caching";
 import { KeyDictionary, TAsyncFunction } from "domain/generics";
 import { TPackageClientResponse, TPackageResource } from "domain/packages";
@@ -7,6 +8,8 @@ export class PackageCache {
   readonly providerMaps: KeyDictionary<KeyDictionary<IExpiryCache>> = {};
 
   constructor(providerNames: Array<string>) {
+    throwUndefinedOrNull("providerNames", providerNames);
+
     providerNames.forEach(
       k => this.providerMaps[k] = {}
     );

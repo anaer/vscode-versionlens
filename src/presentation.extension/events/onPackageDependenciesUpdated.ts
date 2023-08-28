@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from "@esm-test/guards";
+import { throwUndefinedOrNull } from "@esm-test/guards";
 import { ILogger } from "domain/logging";
 import { IPackageDependencyWatcher, PackageDependency } from "domain/packages";
 import { ISuggestionProvider } from "domain/suggestions";
@@ -10,11 +10,8 @@ export class OnPackageDependenciesUpdated {
     readonly packageDependencyWatcher: IPackageDependencyWatcher,
     readonly logger: ILogger
   ) {
-    throwUndefined("packageDependencyWatcher", packageDependencyWatcher);
-    throwNull("packageDependencyWatcher", packageDependencyWatcher);
-
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("packageDependencyWatcher", packageDependencyWatcher);
+    throwUndefinedOrNull("logger", logger);
 
     // run execute when a change is detected
     packageDependencyWatcher.registerOnPackageDependenciesUpdated(this.execute.bind(this));

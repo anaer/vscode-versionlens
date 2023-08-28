@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwNotStringOrEmpty, throwUndefinedOrNull } from '@esm-test/guards';
 import { TAsyncFunction } from 'domain/generics';
 import { ICache } from './definitions/iCache';
 
@@ -11,8 +11,7 @@ export class MemoryCache implements ICache {
   cacheMap: CacheMap;
 
   constructor(readonly cacheName: string) {
-    throwUndefined("cacheName", <any>cacheName);
-    throwNull("cacheName", <any>cacheName);
+    throwNotStringOrEmpty("cacheName", cacheName);
 
     this.cacheName = cacheName
     this.cacheMap = {};
@@ -33,8 +32,7 @@ export class MemoryCache implements ICache {
   }
 
   set<T>(key: string, value: T): T {
-    throwUndefined("key", <any>key);
-    throwNull("key", <any>key);
+    throwUndefinedOrNull("key", key);
 
     this.cacheMap[key] = value;
     return value;

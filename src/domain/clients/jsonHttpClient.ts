@@ -1,3 +1,4 @@
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import {
   HttpClientRequestMethods,
   HttpClientResponse,
@@ -10,6 +11,8 @@ import { KeyStringDictionary } from 'domain/generics';
 export class JsonHttpClient implements IJsonHttpClient {
 
   constructor(readonly httpClient: IHttpClient) {
+    throwUndefinedOrNull("httpClient", httpClient);
+
     this.httpClient = httpClient;
   }
 

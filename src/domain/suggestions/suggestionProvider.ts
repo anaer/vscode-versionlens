@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from "@esm-test/guards";
+import { throwUndefinedOrNull } from "@esm-test/guards";
 import { ILogger } from "domain/logging";
 import {
   IPackageClient,
@@ -17,14 +17,9 @@ export class SuggestionProvider<TClientData> {
     readonly packageCache: PackageCache,
     readonly logger: ILogger
   ) {
-    throwUndefined("client", client);
-    throwNull("client", client);
-
-    throwUndefined("packageCache", packageCache);
-    throwNull("packageCache", packageCache);
-
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("client", client);
+    throwUndefinedOrNull("packageCache", packageCache);
+    throwUndefinedOrNull("logger", logger);
   }
 
   get name() {

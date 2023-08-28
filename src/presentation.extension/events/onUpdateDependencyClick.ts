@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import { SuggestionCodeLens, SuggestionCommandContributions } from 'presentation.extension';
 import { Disposable, WorkspaceEdit, commands, workspace } from 'vscode';
@@ -6,8 +6,7 @@ import { Disposable, WorkspaceEdit, commands, workspace } from 'vscode';
 export class OnUpdateDependencyClick {
 
   constructor(readonly logger: ILogger) {
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("logger", logger);
 
     // register the vscode command
     this.disposable = commands.registerCommand(

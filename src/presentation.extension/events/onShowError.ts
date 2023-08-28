@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import { IconCommandContributions, VersionLensState } from 'presentation.extension';
 import { Disposable, OutputChannel, commands } from 'vscode';
@@ -10,14 +10,9 @@ export class OnShowError {
     readonly outputChannel: OutputChannel,
     readonly logger: ILogger
   ) {
-    throwUndefined("state", state);
-    throwNull("state", state);
-
-    throwUndefined("outputChannel", outputChannel);
-    throwNull("outputChannel", outputChannel);
-
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("state", state);
+    throwUndefinedOrNull("outputChannel", outputChannel);
+    throwUndefinedOrNull("logger", logger);
 
     // register the vscode commands
     this.disposable = commands.registerCommand(

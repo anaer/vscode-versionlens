@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwNotStringOrEmpty, throwUndefinedOrNull } from '@esm-test/guards';
 import { AwilixContainer } from 'awilix';
 import { IServiceProvider } from 'domain/di';
 
@@ -8,11 +8,8 @@ export class AwilixServiceProvider implements IServiceProvider {
     readonly name: string, 
     readonly container: AwilixContainer
   ) {
-    throwUndefined("name", <any>name);
-    throwNull("name", <any>name);
-
-    throwUndefined("container", container);
-    throwNull("container", container);
+    throwNotStringOrEmpty("name", name);
+    throwUndefinedOrNull("container", container);
   }
 
   getService<T>(name: string): T {

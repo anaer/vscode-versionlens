@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import {
   HttpClientRequestMethods,
   HttpClientResponse,
@@ -26,14 +26,9 @@ export class MavenClient implements IPackageClient<MavenClientData> {
     readonly httpClient: IHttpClient, 
     readonly logger: ILogger
   ) {
-    throwUndefined("config", config);
-    throwNull("config", config);
-
-    throwUndefined("httpClient", httpClient);
-    throwNull("httpClient", httpClient);
-
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("config", config);
+    throwUndefinedOrNull("httpClient", httpClient);
+    throwUndefinedOrNull("logger", logger);
   }
 
   async fetchPackage(

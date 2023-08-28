@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from "@esm-test/guards";
+import { throwUndefinedOrNull } from "@esm-test/guards";
 import { ILogger, ILoggerChannel } from "domain/logging";
 import { ISuggestionProvider } from "domain/suggestions";
 import { TextDocument } from "vscode";
@@ -9,11 +9,8 @@ export class OnProviderEditorActivated {
     readonly loggerChannel: ILoggerChannel,
     readonly logger: ILogger,
   ) {
-    throwUndefined("loggerChannel", loggerChannel);
-    throwNull("loggerChannel", loggerChannel);
-
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("loggerChannel", loggerChannel);
+    throwUndefinedOrNull("logger", logger);
   }
 
   execute(activeProviders: ISuggestionProvider[], document: TextDocument) {

@@ -1,3 +1,4 @@
+import { throwNotStringOrEmpty } from "@esm-test/guards";
 import { TAsyncFunction } from "domain/generics";
 import { ExpiryCacheEntry, IExpiryCache } from "./definitions/iExpiryCache";
 import { MemoryCache } from "./memoryCache";
@@ -7,6 +8,8 @@ export class MemoryExpiryCache implements IExpiryCache {
   cache: MemoryCache;
 
   constructor(readonly cacheName: string) {
+    throwNotStringOrEmpty("cacheName", cacheName);
+
     this.cache = new MemoryCache(cacheName);
   }
 

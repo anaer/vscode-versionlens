@@ -36,7 +36,7 @@ export const ProcessClientRequestTests = {
 
       const rut = new PromiseSpawnClient(
         instance(psMock).promiseSpawn,
-        new MemoryExpiryCache(""),
+        new MemoryExpiryCache("PromiseSpawnClientCache"),
         instance(cachingOptionsMock),
         instance(loggerMock)
       );
@@ -82,7 +82,7 @@ export const ProcessClientRequestTests = {
 
       const rut = new PromiseSpawnClient(
         instance(psMock).promiseSpawn,
-        new MemoryExpiryCache(""),
+        new MemoryExpiryCache("PromiseSpawnClientCache"),
         instance(cachingOptionsMock),
         instance(loggerMock)
       );
@@ -121,7 +121,7 @@ export const ProcessClientRequestTests = {
         });
 
       when(cachingOptionsMock.duration).thenReturn(testDuration);
-      const testCache = new MemoryExpiryCache("");
+      const testCache = new MemoryExpiryCache("PromiseSpawnClientCache");
 
       const rut = new PromiseSpawnClient(
         instance(psMock).promiseSpawn,

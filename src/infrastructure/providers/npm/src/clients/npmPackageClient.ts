@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ClientResponseSource } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
@@ -24,17 +24,10 @@ export class NpmPackageClient implements IPackageClient<null> {
     readonly githubClient: GitHubClient,
     readonly logger: ILogger
   ) {
-    throwUndefined("config", config);
-    throwNull("config", config);
-
-    throwUndefined("pacoteClient", pacoteClient);
-    throwNull("pacoteClient", pacoteClient);
-
-    throwUndefined("githubClient", githubClient);
-    throwNull("githubClient", githubClient);
-
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("config", config);
+    throwUndefinedOrNull("pacoteClient", pacoteClient);
+    throwUndefinedOrNull("githubClient", githubClient);
+    throwUndefinedOrNull("logger", logger);
   }
 
   fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {

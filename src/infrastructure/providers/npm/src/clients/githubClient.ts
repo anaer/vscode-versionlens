@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { HttpClientRequestMethods, IJsonHttpClient } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
@@ -25,14 +25,9 @@ export class GitHubClient {
     readonly jsonClient: IJsonHttpClient,
     readonly logger: ILogger
   ) {
-    throwUndefined("config", config);
-    throwNull("config", config);
-
-    throwUndefined("jsonClient", jsonClient);
-    throwNull("jsonClient", jsonClient);
-
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("config", config);
+    throwUndefinedOrNull("jsonClient", jsonClient);
+    throwUndefinedOrNull("logger", logger);
   }
 
   fetchGithub(npaSpec: NpaSpec): Promise<TPackageClientResponse> {

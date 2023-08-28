@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
@@ -41,20 +41,11 @@ export class SuggestionCodeLensProvider
     readonly editorDependencyCache: DependencyCache,
     readonly logger: ILogger
   ) {
-    throwUndefined("extension", extension);
-    throwNull("extension", extension);
-
-    throwUndefined("suggestionProvider", suggestionProvider);
-    throwNull("suggestionProvider", suggestionProvider);
-
-    throwUndefined("dependencyCache", dependencyCache);
-    throwNull("dependencyCache", dependencyCache);
-
-    throwUndefined("editorDependencyCache", editorDependencyCache);
-    throwNull("editorDependencyCache", editorDependencyCache);
-
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("extension", extension);
+    throwUndefinedOrNull("suggestionProvider", suggestionProvider);
+    throwUndefinedOrNull("dependencyCache", dependencyCache);
+    throwUndefinedOrNull("editorDependencyCache", editorDependencyCache);
+    throwUndefinedOrNull("logger", logger);
 
     // register changed event before registering the codelens
     this.notifyCodeLensesChanged = new EventEmitter();

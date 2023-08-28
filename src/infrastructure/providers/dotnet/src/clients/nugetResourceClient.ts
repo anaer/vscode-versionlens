@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import {
   HttpClientRequestMethods,
   HttpClientResponse,
@@ -14,11 +14,8 @@ export class NuGetResourceClient {
     readonly jsonClient: IJsonHttpClient,
     readonly logger: ILogger
   ) {
-    throwUndefined("jsonClient", jsonClient);
-    throwNull("jsonClient", jsonClient);
-
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("jsonClient", jsonClient);
+    throwUndefinedOrNull("logger", logger);
   }
 
   async fetchResource(source: DotNetSource): Promise<string> {

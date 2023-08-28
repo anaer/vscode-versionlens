@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwNotStringOrEmpty, throwUndefinedOrNull } from '@esm-test/guards';
 import { ICachingOptions } from 'domain/caching';
 import { IFrozenOptions } from 'domain/configuration';
 import { IHttpOptions } from 'domain/http';
@@ -12,17 +12,10 @@ export abstract class AbstractProviderConfig {
     readonly caching: ICachingOptions,
     readonly http: IHttpOptions
   ) {
-    throwUndefined("providerName", <any>providerName);
-    throwNull("providerName", <any>providerName);
-
-    throwUndefined("config", config);
-    throwNull("config", config);
-
-    throwUndefined("caching", caching);
-    throwNull("caching", caching);
-
-    throwUndefined("http", http);
-    throwNull("http", http);
+    throwNotStringOrEmpty("providerName", providerName);
+    throwUndefinedOrNull("config", config);
+    throwUndefinedOrNull("caching", caching);
+    throwUndefinedOrNull("http", http);
 
     this.supports = [
       ProviderSupport.Releases,

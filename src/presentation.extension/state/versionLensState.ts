@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from "@esm-test/guards";
+import { throwUndefinedOrNull } from "@esm-test/guards";
 import { VersionLensExtension } from "../versionLensExtension";
 import { ContextState } from "./contextState";
 import { StateContributions } from "./eStateContributions";
@@ -17,8 +17,7 @@ export class VersionLensState {
   providerError: ContextState<boolean>;
 
   constructor(extension: VersionLensExtension) {
-    throwUndefined("extension", extension);
-    throwNull("extension", extension);
+    throwUndefinedOrNull("extension", extension);
 
     this.show = new ContextState(
       StateContributions.Show,

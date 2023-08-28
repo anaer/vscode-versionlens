@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ICachingOptions, IExpiryCache } from 'domain/caching';
 import { ClientResponseSource, IProcessClient, ProcessClientResponse } from 'domain/clients';
 import { ILogger } from 'domain/logging';
@@ -12,17 +12,10 @@ export class PromiseSpawnClient implements IProcessClient {
     readonly cachingOptions: ICachingOptions,
     readonly logger: ILogger
   ) {
-    throwUndefined("promiseSpawnFn", promiseSpawnFn);
-    throwNull("promiseSpawnFn", promiseSpawnFn);
-
-    throwUndefined("processCache", processCache);
-    throwNull("processCache", processCache);
-
-    throwUndefined("cachingOptions", cachingOptions);
-    throwNull("cachingOptions", cachingOptions);
-
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("promiseSpawnFn", promiseSpawnFn);
+    throwUndefinedOrNull("processCache", processCache);
+    throwUndefinedOrNull("cachingOptions", cachingOptions);
+    throwUndefinedOrNull("logger", logger);
   }
 
   async request(cmd: string, args: Array<string>, cwd: string): Promise<ProcessClientResponse> {

@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { IProcessClient, UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import { CrLf, Lf } from 'domain/utils';
@@ -16,14 +16,9 @@ export class DotNetCli {
     readonly processClient: IProcessClient,
     readonly logger: ILogger
   ) {
-    throwUndefined("config", config);
-    throwNull("config", config);
-
-    throwUndefined("processClient", processClient);
-    throwNull("processClient", processClient);
-
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("config", config);
+    throwUndefinedOrNull("processClient", processClient);
+    throwUndefinedOrNull("logger", logger);
   }
 
   async fetchSources(cwd: string): Promise<Array<DotNetSource>> {

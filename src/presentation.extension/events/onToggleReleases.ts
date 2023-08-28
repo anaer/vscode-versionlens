@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import {
   IconCommandContributions,
@@ -15,14 +15,9 @@ export class OnToggleReleases {
     readonly state: VersionLensState,
     readonly logger: ILogger
   ) {
-    throwUndefined("suggestionCodeLensProvider", suggestionCodeLensProvider);
-    throwNull("suggestionCodeLensProvider", suggestionCodeLensProvider);
-
-    throwUndefined("state", state);
-    throwNull("state", state);
-
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("suggestionCodeLensProvider", suggestionCodeLensProvider);
+    throwUndefinedOrNull("state", state);
+    throwUndefinedOrNull("logger", logger);
 
     // register the vscode commands
     this.disposables.push(

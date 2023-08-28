@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ClientResponseSource } from 'domain/clients';
 import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
@@ -24,14 +24,9 @@ export class PacoteClient {
     readonly config: NpmConfig,
     readonly logger: ILogger
   ) {
-    throwUndefined("pacote", pacote);
-    throwNull("pacote", pacote);
-
-    throwUndefined("config", config);
-    throwNull("config", config);
-
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("pacote", pacote);
+    throwUndefinedOrNull("config", config);
+    throwUndefinedOrNull("logger", logger);
   }
 
   async fetchPackage(

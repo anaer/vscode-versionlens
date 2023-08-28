@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import { PackageClientSourceType } from 'domain/packages';
 import { SuggestionCodeLens, SuggestionCommandContributions } from 'presentation.extension';
@@ -7,8 +7,7 @@ import { Disposable, commands, env } from 'vscode';
 export class OnFileLinkClick {
 
   constructor(readonly logger: ILogger) {
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("logger", logger);
 
     // register the vscode command
     this.disposable = commands.registerCommand(

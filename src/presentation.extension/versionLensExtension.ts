@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwNotStringOrEmpty, throwUndefinedOrNull } from '@esm-test/guards';
 import { IFrozenOptions } from 'domain/configuration';
 import { VersionLensState } from "presentation.extension";
 import { SuggestionsOptions } from "./suggestions/suggestionsOptions";
@@ -6,11 +6,8 @@ import { SuggestionsOptions } from "./suggestions/suggestionsOptions";
 export class VersionLensExtension {
 
   constructor(appConfig: IFrozenOptions, projectPath: string) {
-    throwUndefined("appConfig", appConfig);
-    throwNull("appConfig", appConfig);
-
-    throwUndefined("projectPath", <any>projectPath);
-    throwNull("projectPath", <any>projectPath);
+    throwUndefinedOrNull("appConfig", appConfig);
+    throwNotStringOrEmpty("projectPath", projectPath);
 
     this.config = appConfig;
     this.projectPath = projectPath;

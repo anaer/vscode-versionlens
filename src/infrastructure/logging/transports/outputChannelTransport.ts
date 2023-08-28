@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILoggerChannel, ILoggingOptions } from 'domain/logging';
 import { OutputChannel } from 'vscode';
 import * as Winston from 'winston';
@@ -16,11 +16,8 @@ export class OutputChannelTransport extends WinstonTransport implements ILoggerC
   ) {
     super({ level: logging.level });
 
-    throwUndefined("outputChannel", outputChannel);
-    throwNull("outputChannel", outputChannel);
-
-    throwUndefined("logging", logging);
-    throwNull("logging", logging);
+    throwUndefinedOrNull("outputChannel", outputChannel);
+    throwUndefinedOrNull("logging", logging);
   }
 
   get name() {

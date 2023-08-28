@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import { ISuggestionProvider } from 'domain/suggestions';
 import { TextDocumentUtils } from 'presentation.extension';
@@ -16,11 +16,8 @@ export class OnTextDocumentChange {
     readonly suggestionProviders: Array<ISuggestionProvider>,
     readonly logger: ILogger
   ) {
-    throwUndefined("suggestionProviders", suggestionProviders);
-    throwNull("suggestionProviders", suggestionProviders);
-
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("suggestionProviders", suggestionProviders);
+    throwUndefinedOrNull("logger", logger);
 
     // register the vscode workspace event
     workspace.onDidChangeTextDocument(this.execute, this);

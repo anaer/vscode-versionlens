@@ -1,3 +1,4 @@
+import { throwNotStringOrEmpty, throwUndefinedOrNull } from '@esm-test/guards';
 import { Nullable, Undefinable } from 'domain/generics';
 import { IConfig } from './definitions/iConfig';
 import { IFrozenOptions } from './definitions/iOptions';
@@ -13,6 +14,9 @@ import { TConfigSectionResolver } from './definitions/tConfigResolver';
 export class Config implements IFrozenOptions {
 
   constructor(resolver: TConfigSectionResolver, section: string) {
+    throwUndefinedOrNull("resolver", resolver);
+    throwNotStringOrEmpty("section", section);
+
     this.resolver = resolver;
     this.section = section;
     this.frozen = null;

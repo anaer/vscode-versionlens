@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { IExpiryCache } from 'domain/caching';
 import { ILogger } from 'domain/logging';
 import { PackageCache } from 'domain/packages';
@@ -12,14 +12,9 @@ export class OnClearCache {
     readonly processesCache: IExpiryCache,
     readonly logger: ILogger
   ) {
-    throwUndefined("packageCache", packageCache);
-    throwNull("packageCache", packageCache);
-
-    throwUndefined("processesCache", processesCache);
-    throwNull("processesCache", processesCache);
-
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("packageCache", packageCache);
+    throwUndefinedOrNull("processesCache", processesCache);
+    throwUndefinedOrNull("logger", logger);
 
     // register the vscode command
     this.disposable = commands.registerCommand(

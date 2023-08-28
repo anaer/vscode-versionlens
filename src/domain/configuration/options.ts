@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { Undefinable } from 'domain/generics';
 import { IFrozenOptions, IOptions } from '.';
 
@@ -8,11 +8,8 @@ export abstract class Options implements IOptions {
     readonly config: IFrozenOptions, 
     protected section: string
   ) {
-    throwUndefined("config", config);
-    throwNull("config", config);
-
-    throwUndefined("section", <any>section);
-    throwNull("section", <any>section);
+    throwUndefinedOrNull("config", config);
+    throwUndefinedOrNull("section", section);
 
     this.config = config;
     this.section = (section.length > 0) ? section + '.' : '';

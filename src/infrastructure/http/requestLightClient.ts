@@ -1,9 +1,9 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import {
   ClientResponseSource,
+  HttpClientOptions,
   HttpClientRequestMethods,
   HttpClientResponse,
-  HttpClientOptions,
   IHttpClient,
   UrlHelpers
 } from 'domain/clients';
@@ -19,14 +19,9 @@ export class RequestLightClient implements IHttpClient {
     readonly options: HttpClientOptions,
     readonly logger: ILogger
   ) {
-    throwUndefined("xhr", xhr);
-    throwNull("xhr", xhr);
-
-    throwUndefined("options", options);
-    throwNull("options", options);
-
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("xhr", xhr);
+    throwUndefinedOrNull("options", options);
+    throwUndefinedOrNull("logger", logger);
   }
 
   async request(

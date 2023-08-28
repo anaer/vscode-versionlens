@@ -1,4 +1,4 @@
-import { throwNull, throwUndefined } from '@esm-test/guards';
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { IDisposable, Undefinable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import { ISuggestionProvider } from 'domain/suggestions';
@@ -18,14 +18,9 @@ export class OnActiveTextEditorChange implements IDisposable {
     readonly suggestionProviders: Array<ISuggestionProvider>,
     readonly logger: ILogger
   ) {
-    throwUndefined("state", state);
-    throwNull("state", state);
-
-    throwUndefined("suggestionProviders", suggestionProviders);
-    throwNull("suggestionProviders", suggestionProviders);
-
-    throwUndefined("logger", logger);
-    throwNull("logger", logger);
+    throwUndefinedOrNull("state", state);
+    throwUndefinedOrNull("suggestionProviders", suggestionProviders);
+    throwUndefinedOrNull("logger", logger);
 
     // register the vscode editor event
     this.disposable = window.onDidChangeActiveTextEditor(this.execute, this);
