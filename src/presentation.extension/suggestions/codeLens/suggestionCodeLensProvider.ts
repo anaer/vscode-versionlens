@@ -37,7 +37,8 @@ export class SuggestionCodeLensProvider
   constructor(
     readonly extension: VersionLensExtension,
     readonly suggestionProvider: ISuggestionProvider,
-    readonly tempDependencyCache: DependencyCache,
+    readonly dependencyCache: DependencyCache,
+    readonly editorDependencyCache: DependencyCache,
     readonly logger: ILogger
   ) {
     throwUndefined("extension", extension);
@@ -46,8 +47,11 @@ export class SuggestionCodeLensProvider
     throwUndefined("suggestionProvider", suggestionProvider);
     throwNull("suggestionProvider", suggestionProvider);
 
-    throwUndefined("tempDependencyCache", tempDependencyCache);
-    throwNull("tempDependencyCache", tempDependencyCache);
+    throwUndefined("dependencyCache", dependencyCache);
+    throwNull("dependencyCache", dependencyCache);
+
+    throwUndefined("editorDependencyCache", editorDependencyCache);
+    throwNull("editorDependencyCache", editorDependencyCache);
 
     throwUndefined("logger", logger);
     throwNull("logger", logger);
@@ -110,9 +114,11 @@ export class SuggestionCodeLensProvider
     );
 
     // get the document dependencies
-    const packageDeps = this.tempDependencyCache.get(
+    const packageDeps = DependencyCache.getDependenciesWithFallback(
       this.suggestionProvider.name,
-      packageFilePath
+      packageFilePath,
+      this.editorDependencyCache,
+      this.dependencyCache
     );
 
     // fetch the package suggestions

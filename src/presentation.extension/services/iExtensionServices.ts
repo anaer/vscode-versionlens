@@ -3,9 +3,10 @@ import {
   OnActiveTextEditorChange,
   OnClearCache,
   OnFileLinkClick,
+  OnPackageDependenciesUpdated,
+  OnPackageFileUpdated,
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
-  OnSaveChanges,
   OnShowError,
   OnTextDocumentChange,
   OnTogglePrereleases,
@@ -24,7 +25,7 @@ export interface IExtensionServices {
 
   versionLensProviders: Array<SuggestionCodeLensProvider>;
 
-  tempDependencyCache: DependencyCache
+  editorDependencyCache: DependencyCache
 
   onActiveTextEditorChange: OnActiveTextEditorChange;
 
@@ -34,7 +35,9 @@ export interface IExtensionServices {
 
   onProviderTextDocumentChange: OnProviderTextDocumentChange;
 
-  onSaveChanges: OnSaveChanges;
+  onPackageDependenciesUpdated: OnPackageDependenciesUpdated;
+
+  onPackageFileUpdated: OnPackageFileUpdated;
 
   onClearCache: OnClearCache;
 

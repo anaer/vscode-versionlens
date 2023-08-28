@@ -6,11 +6,11 @@ import { ISuggestionProvider } from "domain/suggestions";
 export class OnProviderTextDocumentChange {
 
   constructor(
-    readonly tempDependencyCache: DependencyCache,
+    readonly editorDependencyCache: DependencyCache,
     readonly logger: ILogger
   ) {
-    throwUndefined("tempDependencyCache", tempDependencyCache);
-    throwNull("tempDependencyCache", tempDependencyCache);
+    throwUndefined("editorDependencyCache", editorDependencyCache);
+    throwNull("editorDependencyCache", editorDependencyCache);
 
     throwUndefined("logger", logger);
     throwNull("logger", logger);
@@ -36,7 +36,7 @@ export class OnProviderTextDocumentChange {
       );
 
       // parse the document text dependencies
-      this.tempDependencyCache.set(
+      this.editorDependencyCache.set(
         suggestionProvider.name,
         packageFilePath,
         tempDependencies

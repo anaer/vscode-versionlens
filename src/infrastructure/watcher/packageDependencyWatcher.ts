@@ -4,7 +4,8 @@ import { ILogger } from 'domain/logging';
 import {
   DependencyCache,
   IPackageDependencyWatcher,
-  OnPackageFileChangedFunction,
+  OnPackageDependenciesUpdatedFunction,
+  OnPackageFileUpdatedFunction,
   hasPackageDepsChanged
 } from 'domain/packages';
 import { ISuggestionProvider } from 'domain/suggestions';
@@ -32,20 +33,26 @@ export class PackageDependencyWatcher implements IPackageDependencyWatcher, IDis
 
   private disposables: IDisposable[];
 
-  private packageFileChangedListener: OnPackageFileChangedFunction;
+  private packageDependenciesUpdatedListener: OnPackageDependenciesUpdatedFunction;
 
-  watch(): IPackageDependencyWatcher {
+  private packageFileUpdatedListener: OnPackageFileUpdatedFunction;
 
-    // find existing files
-    this.providers.forEach(async provider => {
+  async initialize(): Promise<void> {
+
+    for (const provider of this.providers) {
       const files = await workspace.findFiles(
         provider.config.fileMatcher.pattern,
         '**​/node_modules/**'
       );
+      for (const file of files) {
+        await this.onFileAdd(provider, file)
+      }
+    }
 
-      files.forEach(async file => await this.onFileAdd(provider, file));
-    });
+    this.watch();
+  }
 
+  watch(): IPackageDependencyWatcher {
     // watch files
     this.providers.forEach(provider => {
       const watcher = workspace.createFileSystemWatcher(provider.config.fileMatcher.pattern)
@@ -67,8 +74,12 @@ export class PackageDependencyWatcher implements IPackageDependencyWatcher, IDis
     return this;
   }
 
-  registerOnPackageFileChanged(listener: OnPackageFileChangedFunction): void {
-    this.packageFileChangedListener = listener;
+  registerOnPackageDependenciesUpdated(listener: OnPackageDependenciesUpdatedFunction): void {
+    this.packageDependenciesUpdatedListener = listener;
+  }
+
+  registerOnPackageFileUpdated(listener: OnPackageFileUpdatedFunction): void {
+    this.packageFileUpdatedListener = listener;
   }
 
   async dispose(): Promise<void> {
@@ -82,7 +93,7 @@ export class PackageDependencyWatcher implements IPackageDependencyWatcher, IDis
 
   private async onFileCreate(provider: ISuggestionProvider, uri: Uri) {
     this.logger.silly("File created '%s'", uri);
-    await this.updateCacheFromFile(provider.name,  uri.fsPath, provider);
+    await this.updateCacheFromFile(provider.name, uri.fsPath, provider);
   }
 
   private onFileDelete(provider: ISuggestionProvider, uri: Uri) {
@@ -99,14 +110,18 @@ export class PackageDependencyWatcher implements IPackageDependencyWatcher, IDis
     const latestDeps = provider.parseDependencies(uri.fsPath, fileContent);
     const hasChanged = hasPackageDepsChanged(currentDeps, latestDeps);
 
-    // notify change to listener
-    let shouldUpdate = true;
-    if (this.packageFileChangedListener && hasChanged) {
-      shouldUpdate = await this.packageFileChangedListener(provider, latestDeps);
+    // notify dependencies change to listener
+    if (this.packageDependenciesUpdatedListener && hasChanged) {
+      await this.packageDependenciesUpdatedListener(provider, packageFilePath, latestDeps);
     }
 
-    // update caches
-    if (shouldUpdate && hasChanged) {
+    // notify file change to listener
+    if (this.packageFileUpdatedListener) {
+      await this.packageFileUpdatedListener(provider, packageFilePath, latestDeps);
+    }
+
+    // update cache
+    if (hasChanged) {
       this.logger.debug("Updating package dependency cache for '%s'", uri);
       this.dependencyCache.set(provider.name, packageFilePath, latestDeps);
     }

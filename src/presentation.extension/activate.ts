@@ -9,9 +9,10 @@ import {
   OnActiveTextEditorChange,
   OnClearCache,
   OnFileLinkClick,
+  OnPackageDependenciesUpdated,
+  OnPackageFileUpdated,
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
-  OnSaveChanges,
   OnShowError,
   OnTextDocumentChange,
   OnTogglePrereleases,
@@ -61,6 +62,11 @@ export async function activate(context: ExtensionContext): Promise<void> {
   logger.info("log level: %s", loggingOptions.level);
   logger.info("log folder: %s", logPath);
 
+  // setup package dependency watcher
+  await serviceProvider.getService<IPackageDependencyWatcher>(serviceNames.packageDependencyWatcher)
+    // init and watch provider workspace files
+    .initialize();
+
   // instantiate events
   serviceProvider.getService<OnShowError>(serviceNames.onShowError);
   serviceProvider.getService<OnToggleReleases>(serviceNames.onToggleReleases);
@@ -68,18 +74,14 @@ export async function activate(context: ExtensionContext): Promise<void> {
   serviceProvider.getService<OnUpdateDependencyClick>(serviceNames.onUpdateDependencyClick);
   serviceProvider.getService<OnFileLinkClick>(serviceNames.onFileLinkClick);
   serviceProvider.getService<OnClearCache>(serviceNames.onClearCache);
-  serviceProvider.getService<OnSaveChanges>(serviceNames.onSaveChanges);
+  serviceProvider.getService<OnPackageDependenciesUpdated>(serviceNames.onPackageDependenciesUpdated);
+  serviceProvider.getService<OnPackageFileUpdated>(serviceNames.onPackageFileUpdated);
   serviceProvider.getService<OnProviderEditorActivated>(serviceNames.onProviderEditorActivated);
   serviceProvider.getService<OnProviderTextDocumentChange>(serviceNames.onProviderTextDocumentChange);
   serviceProvider.getService<OnTextDocumentChange>(serviceNames.onTextDocumentChange);
   serviceProvider.getService<OnActiveTextEditorChange>(serviceNames.onActiveTextEditorChange)
     // ensures this is run when the extension is first loaded
     .execute(window.activeTextEditor)
-
-  // setup package dependency watcher
-  serviceProvider.getService<IPackageDependencyWatcher>(serviceNames.packageDependencyWatcher)
-    // watch provider workspace files
-    .watch();
 }
 
 export async function deactivate() {

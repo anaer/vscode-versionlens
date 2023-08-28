@@ -1,15 +1,26 @@
 import { PackageDependency } from "domain/packages";
 import { ISuggestionProvider } from "../../suggestions/definitions/iSuggestionProvider";
 
-export type OnPackageFileChangedFunction = (
+export type OnPackageDependenciesUpdatedFunction = (
   provider: ISuggestionProvider,
+  packageFilePath: string,
   packageDeps: PackageDependency[]
-) => Promise<boolean>;
+) => Promise<void>;
+
+export type OnPackageFileUpdatedFunction = (
+  provider: ISuggestionProvider,
+  packageFilePath: string,
+  packageDeps: PackageDependency[]
+) => Promise<void>;
 
 export interface IPackageDependencyWatcher {
 
+  initialize(): Promise<void>;
+
   watch: () => IPackageDependencyWatcher;
 
-  registerOnPackageFileChanged: (listener: OnPackageFileChangedFunction) => void;
+  registerOnPackageDependenciesUpdated: (listener: OnPackageDependenciesUpdatedFunction) => void;
+
+  registerOnPackageFileUpdated: (listener: OnPackageFileUpdatedFunction) => void;
 
 }

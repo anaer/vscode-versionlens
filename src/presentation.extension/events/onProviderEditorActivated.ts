@@ -1,16 +1,19 @@
+import { throwNull, throwUndefined } from "@esm-test/guards";
 import { ILogger, ILoggerChannel } from "domain/logging";
-import { DependencyCache } from "domain/packages";
 import { ISuggestionProvider } from "domain/suggestions";
 import { TextDocument } from "vscode";
 
 export class OnProviderEditorActivated {
 
   constructor(
-    readonly dependencyCache: DependencyCache,
-    readonly tempDependencyCache: DependencyCache,
     readonly loggerChannel: ILoggerChannel,
     readonly logger: ILogger,
   ) {
+    throwUndefined("loggerChannel", loggerChannel);
+    throwNull("loggerChannel", loggerChannel);
+
+    throwUndefined("logger", logger);
+    throwNull("logger", logger);
   }
 
   execute(activeProviders: ISuggestionProvider[], document: TextDocument) {
@@ -18,47 +21,6 @@ export class OnProviderEditorActivated {
 
     // ensure the latest logging level is set
     this.loggerChannel.refreshLoggingLevel();
-
-    // ensure the temp dependency cache is set
-    activeProviders.forEach((provider: ISuggestionProvider) => {
-
-      const tempDeps = this.tempDependencyCache.get(
-        provider.config.providerName,
-        document.uri.fsPath
-      );
-
-      if (tempDeps) return;
-
-      // get the store deps
-      const savedDeps = this.dependencyCache.get(
-        provider.config.providerName,
-        document.uri.fsPath
-      );
-
-      if (savedDeps) {
-        // update temp cache
-        this.tempDependencyCache.set(
-          provider.config.providerName,
-          document.uri.fsPath,
-          savedDeps
-        );
-
-        return;
-      }
-
-      const parsedDeps = provider.parseDependencies(
-        document.uri.fsPath,
-        document.getText()
-      );
-
-      // update temp cache
-      this.tempDependencyCache.set(
-        provider.config.providerName,
-        document.uri.fsPath,
-        parsedDeps
-      );
-    })
-
   }
 
 }

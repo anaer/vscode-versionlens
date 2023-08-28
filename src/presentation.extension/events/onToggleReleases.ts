@@ -40,6 +40,7 @@ export class OnToggleReleases {
   disposables: Disposable[] = [];
 
   async execute(toggle: boolean): Promise<void> {
+    this.logger.debug("toggle %s", toggle);
     await this.state.show.change(toggle)
     refreshActiveCodeLenses(this.suggestionCodeLensProvider);
   }

@@ -4,7 +4,7 @@ import { IPackageDependencyWatcher, PackageDependency } from "domain/packages";
 import { ISuggestionProvider } from "domain/suggestions";
 import { Task, tasks } from "vscode";
 
-export class OnSaveChanges {
+export class OnPackageDependenciesUpdated {
 
   constructor(
     readonly packageDependencyWatcher: IPackageDependencyWatcher,
@@ -17,10 +17,14 @@ export class OnSaveChanges {
     throwNull("logger", logger);
 
     // run execute when a change is detected
-    packageDependencyWatcher.registerOnPackageFileChanged(this.execute.bind(this));
+    packageDependencyWatcher.registerOnPackageDependenciesUpdated(this.execute.bind(this));
   }
 
-  async execute(provider: ISuggestionProvider, packageDeps: PackageDependency[]): Promise<boolean> {
+  async execute(
+    provider: ISuggestionProvider,
+    packageFilePath: string,
+    packageDeps: PackageDependency[]
+  ): Promise<void> {
 
     // check we have a task to run
     if (provider.config.onSaveChangesTask === null) {
@@ -28,7 +32,7 @@ export class OnSaveChanges {
         'Skipping "%s.onSaveChanges" because a custom task was not provided.',
         provider.config.providerName
       );
-      return true;
+      return;
     }
 
     // fetch the custom task for the provider
@@ -44,7 +48,7 @@ export class OnSaveChanges {
         provider.config.providerName,
         provider.config.onSaveChangesTask
       );
-      return false;
+      return;
     }
 
     this.logger.info(
@@ -62,15 +66,6 @@ export class OnSaveChanges {
       provider.config.onSaveChangesTask,
       exitCode
     );
-
-    // check the install was successful
-    if (exitCode !== 0) {
-      this.logger.info('Reverting the original parsed packages state.');
-      return false;
-    }
-
-    // return success
-    return true;
   }
 
 }

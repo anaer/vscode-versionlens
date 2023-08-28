@@ -19,12 +19,14 @@ import {
 } from 'infrastructure/services';
 import {
   VersionLensExtension,
+  addEditorDependencyCacheDependencyCache,
   addOnActiveTextEditorChange,
   addOnClearCache,
   addOnFileLinkClick,
+  addOnPackageDependenciesUpdated,
+  addOnPackageFileUpdated,
   addOnProviderEditorActivated,
   addOnProviderTextDocumentChange,
-  addOnSaveChanges,
   addOnShowError,
   addOnTextDocumentChange,
   addOnTogglePrereleases,
@@ -32,7 +34,6 @@ import {
   addOnUpdateDependencyClick,
   addOutputChannel,
   addProviderNames,
-  addTempDependencyCache,
   addVersionLensExtension,
   addVersionLensProviders
 } from 'presentation.extension';
@@ -81,7 +82,7 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
 
   addVersionLensProviders(services);
 
-  addTempDependencyCache(services);
+  addEditorDependencyCacheDependencyCache(services);
 
   addOnActiveTextEditorChange(services);
 
@@ -101,7 +102,9 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
 
   addOnTogglePrereleases(services);
 
-  addOnSaveChanges(services);
+  addOnPackageDependenciesUpdated(services);
+
+  addOnPackageFileUpdated(services);
 
   addOnShowError(services);
 

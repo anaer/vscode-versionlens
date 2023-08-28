@@ -1,3 +1,4 @@
+import { throwNull, throwUndefined } from "@esm-test/guards";
 import { ICache, MemoryCache } from "domain/caching";
 import { KeyDictionary } from "domain/generics";
 import { PackageDependency } from "domain/packages";
@@ -7,6 +8,9 @@ export class DependencyCache {
   readonly providerMaps: KeyDictionary<ICache> = {};
 
   constructor(providerNames: Array<string>) {
+    throwUndefined("providerNames", providerNames);
+    throwNull("providerNames", providerNames);
+
     providerNames.forEach(
       k => this.providerMaps[k] = new MemoryCache(`${k}-dependency-cache`)
     );
@@ -44,6 +48,17 @@ export class DependencyCache {
     providerNames.forEach(
       k => this.providerMaps[k].clear()
     );
+  }
+
+  static getDependenciesWithFallback(
+    providerName: string,
+    packageFilePath: string,
+    ...dependencyCaches: DependencyCache[]
+  ): PackageDependency[] {
+    for (const cache of dependencyCaches) {
+      const dependencies = cache.get(providerName, packageFilePath);
+      if (dependencies) return dependencies;
+    }
   }
 
 }

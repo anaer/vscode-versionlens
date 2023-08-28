@@ -8,9 +8,10 @@ import {
   OnActiveTextEditorChange,
   OnClearCache,
   OnFileLinkClick,
+  OnPackageDependenciesUpdated,
+  OnPackageFileUpdated,
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
-  OnSaveChanges,
   OnShowError,
   OnTextDocumentChange,
   OnTogglePrereleases,
@@ -74,8 +75,6 @@ export function addOnProviderEditorActivated(services: IServiceCollection) {
     serviceName,
     (container: IDomainServices & IExtensionServices) => {
       const listener = new OnProviderEditorActivated(
-        container.dependencyCache,
-        container.tempDependencyCache,
         container.loggerChannel,
         container.logger.child({ namespace: serviceName })
       );
@@ -94,7 +93,7 @@ export function addOnProviderTextDocumentChange(services: IServiceCollection) {
     serviceName,
     (container: IDomainServices & IExtensionServices) => {
       const listener = new OnProviderTextDocumentChange(
-        container.tempDependencyCache,
+        container.editorDependencyCache,
         container.logger.child({ namespace: serviceName })
       );
 
@@ -201,7 +200,8 @@ export function addVersionLensProviders(services: IServiceCollection) {
           suggestionProvider => new SuggestionCodeLensProvider(
             container.extension,
             suggestionProvider,
-            container.tempDependencyCache,
+            container.dependencyCache,
+            container.editorDependencyCache,
             container.logger.child({ namespace: `${suggestionProvider.name} codelens` })
           )
         )
@@ -224,21 +224,34 @@ export function addProviderNames(services: IServiceCollection) {
   )
 }
 
-export function addOnSaveChanges(services: IServiceCollection) {
-  const serviceName = nameOf<IExtensionServices>().onSaveChanges
+export function addOnPackageDependenciesUpdated(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onPackageDependenciesUpdated
   services.addSingleton(
     serviceName,
     (container: IDomainServices & IExtensionServices) =>
-      new OnSaveChanges(
+      new OnPackageDependenciesUpdated(
         container.packageDependencyWatcher,
         container.logger.child({ namespace: serviceName })
       )
   )
 }
 
-export function addTempDependencyCache(services: IServiceCollection) {
+export function addOnPackageFileUpdated(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onPackageFileUpdated
   services.addSingleton(
-    nameOf<IExtensionServices>().tempDependencyCache,
+    serviceName,
+    (container: IDomainServices & IExtensionServices) =>
+      new OnPackageFileUpdated(
+        container.packageDependencyWatcher,
+        container.editorDependencyCache,
+        container.logger.child({ namespace: serviceName })
+      )
+  )
+}
+
+export function addEditorDependencyCacheDependencyCache(services: IServiceCollection) {
+  services.addSingleton(
+    nameOf<IExtensionServices>().editorDependencyCache,
     (container: IDomainServices & IExtensionServices) =>
       new DependencyCache(container.providerNames)
   )
