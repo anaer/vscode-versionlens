@@ -13,34 +13,20 @@ export class OnProviderTextDocumentChange {
     throwUndefinedOrNull("logger", logger);
   }
 
-  execute(providers: ISuggestionProvider[], packageFilePath: string, newContent: string) {
-    this.logger.silly("%s provider text document change", providers.map(x => x.name));
+  execute(suggestionProvider: ISuggestionProvider, packageFilePath: string, newContent: string) {
+    this.logger.silly("%s provider text document change", suggestionProvider.name);
 
-    providers.forEach((suggestionProvider: ISuggestionProvider) => {
+    const tempDependencies = suggestionProvider.parseDependencies(
+      packageFilePath,
+      newContent
+    );
 
-      // unfreeze config per file request
-      suggestionProvider.config.caching.defrost();
-
-      this.logger.silly(
-        "Caching duration for %s is set to %s seconds",
-        suggestionProvider.name,
-        suggestionProvider.config.caching.duration / 1000
-      );
-
-      const tempDependencies = suggestionProvider.parseDependencies(
-        packageFilePath,
-        newContent
-      );
-
-      // parse the document text dependencies
-      this.editorDependencyCache.set(
-        suggestionProvider.name,
-        packageFilePath,
-        tempDependencies
-      );
-
-    });
-
+    // parse the document text dependencies
+    this.editorDependencyCache.set(
+      suggestionProvider.name,
+      packageFilePath,
+      tempDependencies
+    );
   }
 
 }

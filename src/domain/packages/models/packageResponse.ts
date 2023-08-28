@@ -1,5 +1,5 @@
 import { TPackageSuggestion } from 'domain/suggestions';
-import { PackageClientSourceType } from '../clients/ePackageClientSourceType';
+import { PackageSourceType } from '../clients/ePackageSource';
 import { TPackageClientResponseStatus } from '../clients/tPackageClientResponseStatus';
 import { PackageResponseError } from '../definitions/ePackageResponseError';
 import { PackageVersionType } from '../definitions/ePackageVersionType';
@@ -9,17 +9,16 @@ import { TPackageResource } from '../definitions/tPackageResource';
 
 export type PackageResponse = {
   providerName: string;
-  requested: TPackageResource;
-
+  type?: PackageVersionType;
   nameRange: TPackageDependencyRange;
   versionRange: TPackageDependencyRange;
+  suggestion?: TPackageSuggestion;
   order: number;
 
+  parsedPackage: TPackageResource;
+  fetchedPackage?: TPackageNameVersion;
+  packageSource?: PackageSourceType;
+  clientResponse?: TPackageClientResponseStatus;
   error?: PackageResponseError;
   errorMessage?: string;
-  source?: PackageClientSourceType;
-  response?: TPackageClientResponseStatus;
-  type?: PackageVersionType;
-  resolved?: TPackageNameVersion;
-  suggestion?: TPackageSuggestion;
 }

@@ -1,29 +1,19 @@
-import { IProvider, getProvidersByFileName } from "domain/providers";
+import { IProvider, getProviderByFileName } from "domain/providers";
 import { SuggestionCodeLensProvider } from "presentation.extension";
 import { TextDocument, window } from "vscode";
 
-export function getDocumentProviders(
+export function getDocumentProvider(
   document: TextDocument,
   suggestionProviders: IProvider[]
-): IProvider[] {
-
-  if (document.uri.scheme !== 'file') return [];
-
-  const providers = getProvidersByFileName(document.fileName, suggestionProviders);
-
-  if (providers.length === 0) return [];
-
-  return providers;
+): IProvider {
+  if (document.uri.scheme !== 'file') return;
+  const provider = getProviderByFileName(document.fileName, suggestionProviders);
+  return provider;
 }
 
-export function refreshActiveCodeLenses(codeLensProviders: SuggestionCodeLensProvider[]) {
+export function refreshActiveCodeLenses(codeLensProviders: SuggestionCodeLensProvider[]): void {
   if (!window.activeTextEditor) return;
-
   const fileName = window.activeTextEditor.document.fileName;
-  const providers = getProvidersByFileName(fileName, codeLensProviders);
-  if (!providers) return false;
-
-  providers.forEach(provider => provider.reloadCodeLenses());
-
-  return true;
+  const provider = getProviderByFileName(fileName, codeLensProviders);
+  provider && provider.reloadCodeLenses();
 }

@@ -6,6 +6,7 @@ import {
   PackageDescriptorType,
   TJsonPackageParserOptions,
   TJsonPackageTypeHandler,
+  TPackageNameDescriptor,
   TPackageVersionDescriptor,
   createPackageResource,
   createVersionDescFromJsonNode,
@@ -24,7 +25,7 @@ import { NpmConfig } from './npmConfig';
 import { createPacoteOptions, npmReplaceVersion, resolveDotFilePath } from './npmUtils';
 
 const complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler> = {
-  "version": createVersionDescFromJsonNode
+  [PackageDescriptorType.version]: createVersionDescFromJsonNode
 };
 
 export class NpmSuggestionProvider
@@ -41,10 +42,7 @@ export class NpmSuggestionProvider
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
 
-  parseDependencies(
-    packagePath: string,
-    packageText: string
-  ): Array<PackageDependency> {
+  parseDependencies(packagePath: string, packageText: string): Array<PackageDependency> {
 
     const options: TJsonPackageParserOptions = {
       includePropNames: this.config.dependencyProperties,
@@ -60,8 +58,12 @@ export class NpmSuggestionProvider
 
     for (const packageDesc of packageDescriptors) {
 
+      const nameDesc = packageDesc.getType<TPackageNameDescriptor>(
+        PackageDescriptorType.name
+      );
+
       // handle any pnpm override dependency selectors in the name
-      let name = packageDesc.name;
+      let name = nameDesc.name;
       const atIndex = name.indexOf('@');
       if (atIndex > 0) {
         name = name.slice(0, atIndex);
@@ -69,7 +71,7 @@ export class NpmSuggestionProvider
 
       // map the version descriptor to a package dependency
       if (packageDesc.hasType(PackageDescriptorType.version)) {
-        const versionType = packageDesc.getType<TPackageVersionDescriptor>(
+        const versionDesc = packageDesc.getType<TPackageVersionDescriptor>(
           PackageDescriptorType.version
         );
 
@@ -77,11 +79,12 @@ export class NpmSuggestionProvider
           new PackageDependency(
             createPackageResource(
               name,
-              versionType.version,
+              versionDesc.version,
               packagePath
             ),
-            packageDesc.nameRange,
-            versionType.versionRange
+            nameDesc.nameRange,
+            versionDesc.versionRange,
+            packageDesc
           )
         );
 

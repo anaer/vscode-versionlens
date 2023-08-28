@@ -4,7 +4,7 @@ import { ILogger } from 'domain/logging';
 import {
   ClientResponseFactory,
   IPackageClient,
-  PackageClientSourceType,
+  PackageSourceType,
   TPackageClientRequest,
   TPackageClientResponse
 } from 'domain/packages';
@@ -31,7 +31,7 @@ export class NpmPackageClient implements IPackageClient<null> {
   }
 
   fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
-    let source: PackageClientSourceType;
+    let source: PackageSourceType;
     const requestedPackage = request.dependency.package;
 
     return new Promise<TPackageClientResponse>((resolve, reject) => {
@@ -52,29 +52,29 @@ export class NpmPackageClient implements IPackageClient<null> {
 
       switch (npaSpec.type) {
         case NpaTypes.Directory:
-          source = PackageClientSourceType.Directory
+          source = PackageSourceType.Directory
           break;
         case NpaTypes.File:
-          source = PackageClientSourceType.File
+          source = PackageSourceType.File
           break;
         case NpaTypes.Git:
-          source = PackageClientSourceType.Github
+          source = PackageSourceType.Github
           break;
         case NpaTypes.Version:
         case NpaTypes.Range:
         case NpaTypes.Remote:
         case NpaTypes.Alias:
         case NpaTypes.Tag:
-          source = PackageClientSourceType.Registry
+          source = PackageSourceType.Registry
           break;
       }
 
       // return if directory or file document
-      if (source === PackageClientSourceType.Directory || source === PackageClientSourceType.File) {
+      if (source === PackageSourceType.Directory || source === PackageSourceType.File) {
         return resolve(ClientResponseFactory.createDirectoryFromFileProtocol(requestedPackage));
       }
 
-      if (source === PackageClientSourceType.Github) {
+      if (source === PackageSourceType.Github) {
 
         if (!npaSpec.hosted) {
           // could not resolve

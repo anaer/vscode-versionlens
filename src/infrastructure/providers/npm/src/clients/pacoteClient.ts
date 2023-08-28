@@ -4,7 +4,7 @@ import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
   ClientResponseFactory,
-  PackageClientSourceType,
+  PackageSourceType,
   PackageVersionType,
   TPackageClientRequest,
   TPackageClientResponse,
@@ -99,7 +99,7 @@ export class PacoteClient {
 
         // No match
         return ClientResponseFactory.createNoMatch(
-          PackageClientSourceType.Registry,
+          PackageSourceType.Registry,
           type,
           responseStatus,
           suggestLatestVersion
@@ -118,7 +118,7 @@ export class PacoteClient {
     );
 
     return {
-      source: PackageClientSourceType.Registry,
+      source: PackageSourceType.Registry,
       responseStatus,
       type,
       resolved,

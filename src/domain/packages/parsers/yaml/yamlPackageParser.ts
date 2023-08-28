@@ -1,11 +1,11 @@
 import { KeyDictionary } from 'domain/generics';
 import { Document, isMap, Pair, ParsedNode, parseDocument, YAMLMap } from 'yaml';
 import { findPair } from 'yaml/util';
-import { PackageDescriptor } from '../../index';
-import { TYamlPackageTypeHandler } from '../definitions/tYamlPackageTypeHandler';
+import { createParentDesc, PackageDescriptor } from '../../index';
 import { TYamlPackageParserOptions } from '../definitions/tYamlPackageParserOptions';
+import { TYamlPackageTypeHandler } from '../definitions/tYamlPackageTypeHandler';
 import {
-  createPackageDescFromYamlNode,
+  createNameDescFromYamlNode,
   createVersionDescFromYamlNode
 } from './yamlPackageTypeFactory';
 
@@ -34,8 +34,8 @@ function extractDependenciesFromNodes(
     if (!node) continue;
 
     const children = node instanceof Array
-      ? descendChildNodes(node, complexTypeHandlers)
-      : descendChildNodes(node.items, complexTypeHandlers);
+      ? descendChildNodes(incPropName, node, complexTypeHandlers)
+      : descendChildNodes(incPropName, node.items, complexTypeHandlers);
 
     matchedDependencies.push.apply(matchedDependencies, children);
   }
@@ -44,6 +44,7 @@ function extractDependenciesFromNodes(
 }
 
 function descendChildNodes(
+  path: string,
   pairs: Array<Pair<any, any>>,
   complexTypeHandlers: KeyDictionary<TYamlPackageTypeHandler>
 ): Array<PackageDescriptor> {
@@ -58,15 +59,22 @@ function descendChildNodes(
     if (isStringType) {
 
       // create the package descriptor
-      const packageDesc = createPackageDescFromYamlNode(keyNode);
+      const packageDesc = new PackageDescriptor();
 
-      // add the version type to the package desc
+      // add the name descriptor
+      const nameDesc = createNameDescFromYamlNode(keyNode);
+      packageDesc.addType(nameDesc);
+
+      // add the version descriptor
       const versionDesc = createVersionDescFromYamlNode(
         valueNode,
         isQuotedType
       );
 
       packageDesc.addType(versionDesc);
+
+      // add the parent path desc
+      packageDesc.addType(createParentDesc(path));
 
       // add the package desc to the matched array
       matchedDependencies.push(packageDesc);
@@ -80,7 +88,7 @@ function descendChildNodes(
       const isQuotedType = isNodeQuoted(valueNode);
 
       // create the package descriptor
-      const packageDesc = createPackageDescFromYamlNode(keyNode);
+      const packageDesc = new PackageDescriptor();
 
       for (const typeName in complexTypeHandlers) {
         if (map.has(typeName)) {
@@ -105,6 +113,13 @@ function descendChildNodes(
 
       // skip when no types were added
       if (packageDesc.typeCount === 0) continue;
+
+      // add the name descriptor
+      const nameDesc = createNameDescFromYamlNode(keyNode);
+      packageDesc.addType(nameDesc);
+
+      // add the parent path desc
+      packageDesc.addType(createParentDesc(path));
 
       // add the package desc to the matched array
       matchedDependencies.push(packageDesc);

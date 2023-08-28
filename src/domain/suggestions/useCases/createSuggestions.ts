@@ -26,6 +26,7 @@ export function createSuggestions(
     versionRange,
     VersionUtils.loosePrereleases
   );
+
   if (!satisfiesVersion && versionRange.indexOf('-') > -1) {
     // lookup prereleases
     satisfiesVersion = maxSatisfying(

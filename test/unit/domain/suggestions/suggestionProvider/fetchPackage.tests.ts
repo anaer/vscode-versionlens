@@ -3,8 +3,8 @@ import { ClientResponseSource } from 'domain/clients/index';
 import { ILogger } from 'domain/logging';
 import {
   IPackageClient,
-  PackageClientSourceType,
   PackageDependency,
+  PackageSourceType,
   PackageVersionType,
   TPackageClientRequest,
   TPackageClientResponse,
@@ -14,9 +14,9 @@ import {
   createPackageNameVersion,
   createPackageResource
 } from 'domain/packages';
+import { PackageCache } from 'domain/packages/packageCache';
 import { IProviderConfig } from 'domain/providers';
 import { SuggestionFlags, SuggestionProvider } from 'domain/suggestions';
-import { PackageCache } from 'domain/packages/packageCache';
 import { test } from 'mocha-ui-esm';
 import { instance, mock, verify, when } from 'ts-mockito';
 
@@ -81,7 +81,7 @@ export const FetchPackageTests = <any>{
     // setup response
     const testRespDoc: TPackageClientResponse = {
       type: PackageVersionType.Version,
-      source: PackageClientSourceType.Registry,
+      source: PackageSourceType.Registry,
       responseStatus: {
         status: 202,
         source: ClientResponseSource.local
@@ -157,7 +157,7 @@ export const FetchPackageTests = <any>{
       // response
       const testRespDoc: TPackageClientResponse = {
         type: PackageVersionType.Version,
-        source: PackageClientSourceType.Registry,
+        source: PackageSourceType.Registry,
         responseStatus: {
           status: 401,
           source: ClientResponseSource.local,

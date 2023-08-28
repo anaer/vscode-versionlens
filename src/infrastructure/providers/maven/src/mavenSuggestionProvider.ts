@@ -4,6 +4,8 @@ import {
   createPackageResource,
   PackageCache,
   PackageDependency,
+  PackageDescriptorType,
+  TPackageNameDescriptor,
   TPackageVersionDescriptor
 } from 'domain/packages';
 import {
@@ -49,18 +51,26 @@ export class MavenSuggestionProvider
     );
 
     const packageDependencies = packageLocations
-      .filter(x => x.hasType("version"))
+      .filter(x => x.hasType(PackageDescriptorType.version))
       .map(
-        desc => {
-          const versionType = desc.getType("version") as TPackageVersionDescriptor
+        packageDesc => {
+          const nameDesc = packageDesc.getType<TPackageNameDescriptor>(
+            PackageDescriptorType.name
+          );
+
+          const versionDesc = packageDesc.getType<TPackageVersionDescriptor>(
+            PackageDescriptorType.version
+          );
+
           return new PackageDependency(
             createPackageResource(
-              desc.name,
-              versionType.version,
+              nameDesc.name,
+              versionDesc.version,
               packagePath
             ),
-            desc.nameRange,
-            versionType.versionRange
+            nameDesc.nameRange,
+            versionDesc.versionRange,
+            packageDesc
           )
         }
       );

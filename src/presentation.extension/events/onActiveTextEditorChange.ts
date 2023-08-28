@@ -4,10 +4,10 @@ import { ILogger } from 'domain/logging';
 import { ISuggestionProvider } from 'domain/suggestions';
 import { Disposable, TextDocument, TextEditor, window } from 'vscode';
 import { VersionLensState } from '../state/versionLensState';
-import { getDocumentProviders } from './eventUtils';
+import { getDocumentProvider } from './eventUtils';
 
-export type ProviderEditorActivatedEvent = (
-  activeProviders: ISuggestionProvider[],
+export type ProviderEditorActivatedFunction = (
+  activeProvider: ISuggestionProvider,
   document: TextDocument,
 ) => void;
 
@@ -28,9 +28,9 @@ export class OnActiveTextEditorChange implements IDisposable {
 
   disposable: Disposable;
 
-  listener: ProviderEditorActivatedEvent;
+  listener: ProviderEditorActivatedFunction;
 
-  registerListener(listener: ProviderEditorActivatedEvent, thisArg: any) {
+  registerListener(listener: ProviderEditorActivatedFunction, thisArg: any) {
     this.listener = listener.bind(thisArg);
   }
 
@@ -48,8 +48,8 @@ export class OnActiveTextEditorChange implements IDisposable {
     }
 
     // get the active providers
-    const activeProviders = getDocumentProviders(textEditor.document, this.suggestionProviders);
-    if (activeProviders.length === 0) {
+    const activeProvider = getDocumentProvider(textEditor.document, this.suggestionProviders);
+    if (!activeProvider) {
       // disable icons if no matches found
       this.state.providerActive.value = false;
       return;
@@ -58,11 +58,8 @@ export class OnActiveTextEditorChange implements IDisposable {
     // update provider active state to show icons
     this.state.providerActive.value = true;
 
-    // execute provider activated event
-    this.listener && this.listener(
-      activeProviders as ISuggestionProvider[],
-      textEditor.document
-    );
+    // fire provider activated event
+    this.listener && this.listener(activeProvider as ISuggestionProvider, textEditor.document);
   }
 
   async dispose() {

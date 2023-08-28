@@ -9,7 +9,7 @@ import { ILogger } from 'domain/logging';
 import {
   ClientResponseFactory,
   IPackageClient,
-  PackageClientSourceType,
+  PackageSourceType,
   PackageVersionType,
   TPackageClientRequest,
   TPackageClientResponse,
@@ -46,7 +46,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 
       this.logger.debug(
         "Caught exception from %s: %O",
-        PackageClientSourceType.Registry,
+        PackageSourceType.Registry,
         errorResponse
       );
 
@@ -63,7 +63,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
       const suggestion = SuggestionFactory.createFromHttpStatus(errorResponse.status);
       if (suggestion != null) {
         return ClientResponseFactory.create(
-          PackageClientSourceType.Registry,
+          PackageSourceType.Registry,
           errorResponse,
           [suggestion]
         );
@@ -94,7 +94,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 
     const { data } = httpResponse;
 
-    const source = PackageClientSourceType.Registry;
+    const source = PackageSourceType.Registry;
 
     const packageInfo = data;
 
@@ -109,7 +109,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
     // four segment is not supported
     if (dotnetSpec.spec && dotnetSpec.spec.hasFourSegments) {
       return ClientResponseFactory.create(
-        PackageClientSourceType.Registry,
+        PackageSourceType.Registry,
         httpResponse,
         [],
       );

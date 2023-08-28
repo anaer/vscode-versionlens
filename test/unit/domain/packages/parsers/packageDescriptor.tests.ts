@@ -1,11 +1,19 @@
 import assert from 'assert';
 import {
   PackageDescriptor,
+  PackageDescriptorType,
+  TPackageNameDescriptor,
   TPackagePathDescriptor,
   TPackageTypeDescriptor,
   TPackageVersionDescriptor
 } from 'domain/packages';
 import { test } from 'mocha-ui-esm';
+
+const testNameDesc: TPackageNameDescriptor = {
+  type: PackageDescriptorType.name,
+  name: "testName",
+  nameRange: { start: 1, end: 1 }
+};
 
 const testVersionDesc: TPackageVersionDescriptor = {
   type: "version",
@@ -27,13 +35,15 @@ export const PackageDescriptorTests = {
 
     "can add $1 types": [
       ["single", [testVersionDesc]],
-      ["multiple", [testVersionDesc, testPathDesc]],
+      ["multiple", [testNameDesc, testVersionDesc, testPathDesc]],
       (testTitle: string, testDescriptors: Array<TPackageTypeDescriptor>) => {
+        // setup
+        const testPackageDesc = new PackageDescriptor();
 
-        const testPackageDesc = new PackageDescriptor("testName", { start: 1, end: 1 });
-
+        // test
         testDescriptors.forEach(x => testPackageDesc.addType(x));
 
+        // assert
         assert.equal(testPackageDesc.typeCount, testDescriptors.length);
 
         testDescriptors.forEach(
@@ -48,13 +58,15 @@ export const PackageDescriptorTests = {
 
     "returns true for $1 types": [
       ["single", [testVersionDesc]],
-      ["multiple", [testVersionDesc, testPathDesc]],
+      ["multiple", [testNameDesc, testVersionDesc, testPathDesc]],
       (testTitle: string, testDescriptors: Array<TPackageTypeDescriptor>) => {
+        // setup
+        const testPackageDesc = new PackageDescriptor();
 
-        const testPackageDesc = new PackageDescriptor("testName", { start: 1, end: 1 });
-
+        // test
         testDescriptors.forEach(x => testPackageDesc.addType(x));
 
+        // assert
         testDescriptors.forEach(
           x => assert.ok(testPackageDesc.hasType(x.type))
         );

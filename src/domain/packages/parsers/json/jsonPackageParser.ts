@@ -4,7 +4,8 @@ import * as JsonC from 'jsonc-parser';
 import { TJsonPackageParserOptions } from '../definitions/tJsonPackageParserOptions';
 import { TJsonPackageTypeHandler } from '../definitions/tJsonPackageTypeHandler';
 import {
-  createPackageDescFromJsonNode,
+  createNameDescFromJsonNode,
+  createParentDesc,
   createVersionDescFromJsonNode
 } from './jsonPackageTypeFactory';
 
@@ -32,18 +33,18 @@ function extractDependenciesFromNodes(
   const { includePropNames, complexTypeHandlers } = options;
 
   for (const incPropName of includePropNames) {
-    const node = findNodesAtLocation(rootNode, incPropName);
-    if (!node) continue;
+    const foundAtLocation = findNodesAtLocation(rootNode, incPropName);
+    if (!foundAtLocation || !foundAtLocation.node) continue;
 
-    if (node instanceof Array) {
-      const matched = descendChildNodes(node, complexTypeHandlers);
+    if (foundAtLocation.node instanceof Array) {
+      const matched = descendChildNodes(foundAtLocation.path, foundAtLocation.node, complexTypeHandlers);
       matchedDependencies.push.apply(matchedDependencies, matched);
       continue;
     }
 
-    const hasChildren = node.children && node.children.length > 0;
+    const hasChildren = foundAtLocation.node.children && foundAtLocation.node.children.length > 0;
     if (hasChildren) {
-      const matched = descendChildNodes(node.children, complexTypeHandlers);
+      const matched = descendChildNodes(foundAtLocation.path, foundAtLocation.node.children, complexTypeHandlers);
       matchedDependencies.push.apply(matchedDependencies, matched);
       continue;
     }
@@ -53,6 +54,7 @@ function extractDependenciesFromNodes(
 }
 
 function descendChildNodes(
+  path: string,
   nodes: Array<JsonC.Node>,
   complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler>
 ): Array<PackageDescriptor> {
@@ -65,13 +67,19 @@ function descendChildNodes(
 
     // parse string properties
     if (valueNode.type == "string") {
+      const packageDesc = new PackageDescriptor();
 
-      // create the package descriptor
-      const packageDesc = createPackageDescFromJsonNode(keyNode)
+      // add the name descriptor
+      const nameDesc = createNameDescFromJsonNode(keyNode);
+      packageDesc.addType(nameDesc)
 
-      // add the version type to the package desc
+      // add the version descriptor
       const versionDesc = createVersionDescFromJsonNode(valueNode);
       packageDesc.addType(versionDesc);
+
+      // add the parent descriptor
+      const parentDesc = createParentDesc(path);
+      packageDesc.addType(parentDesc);
 
       // add the package desc to the matched array
       matchedDependencies.push(packageDesc);
@@ -82,8 +90,7 @@ function descendChildNodes(
     // parse complex properties
     if (valueNode.type == "object") {
 
-      // create the package descriptor
-      const packageDesc = createPackageDescFromJsonNode(keyNode);
+      const packageDesc = new PackageDescriptor();
 
       for (const typeName in complexTypeHandlers) {
 
@@ -106,6 +113,14 @@ function descendChildNodes(
       // skip when no types were added
       if (packageDesc.typeCount === 0) continue;
 
+      // add the name descriptor
+      const nameDesc = createNameDescFromJsonNode(keyNode);
+      packageDesc.addType(nameDesc)
+
+      // add the parent path to the package desc
+      const parentDesc = createParentDesc(path);
+      packageDesc.addType(parentDesc);
+
       // add the package desc to the matched array
       matchedDependencies.push(packageDesc);
     }
@@ -115,15 +130,23 @@ function descendChildNodes(
   return matchedDependencies;
 }
 
+type FoundNode = {
+  path: string,
+  node: JsonC.Node | Array<JsonC.Node>
+}
+
 function findNodesAtLocation(
   jsonTree: JsonC.Node,
   expression: string
-): Undefinable<JsonC.Node | Array<JsonC.Node>> {
+): Undefinable<FoundNode> { //Undefinable<JsonC.Node | Array<JsonC.Node>> {
   const pathSegments: Array<JsonC.Segment> = expression.split(".");
 
   // if the path doesn't end with * then process a standard path
   if (pathSegments[pathSegments.length - 1] !== "*") {
-    return JsonC.findNodeAtLocation(jsonTree, pathSegments);
+    return {
+      path: expression,
+      node: JsonC.findNodeAtLocation(jsonTree, pathSegments)
+    }
   }
 
   // find the node up until the .*
@@ -140,10 +163,14 @@ function findNodesAtLocation(
   }
 
   // filter the childrens children where the value type is "object"
-  // @ts-ignore
-  return nodeUntilDotStar.children
+  const deepNode = nodeUntilDotStar.children
     .filter(x => x.children && x.children.length === 2)
     .flat()
     .filter(x => x.children && x.children[1].type === "object")
     .flatMap(x => x.children && x.children[1].children);
+
+  return {
+    path: segmentsWithoutStar.join("."),
+    node: deepNode
+  }
 }

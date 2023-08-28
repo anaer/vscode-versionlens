@@ -1,7 +1,9 @@
 import { Nullable } from 'domain/generics';
 import {
-  TPackageDependencyRange,
   PackageDescriptor,
+  PackageDescriptorType,
+  TPackageDependencyRange,
+  TPackageNameDescriptor,
   TPackageVersionDescriptor
 } from 'domain/packages';
 import xmldoc from 'xmldoc';
@@ -79,13 +81,20 @@ function createFromAttribute(node, xml: string): PackageDescriptor {
   const name = node.attr.Include || node.attr.Update || node.attr.Name;
   const version = node.attr.VersionOverride || node.attr.Version;
 
+  const nameDesc: TPackageNameDescriptor = {
+    type: PackageDescriptorType.name,
+    name,
+    nameRange
+  }
+
   const versionDesc: TPackageVersionDescriptor = {
-    type: "version",
+    type: PackageDescriptorType.version,
     version,
     versionRange
   }
 
-  const packageDesc = new PackageDescriptor(name, nameRange);
+  const packageDesc = new PackageDescriptor();
+  packageDesc.addType(nameDesc);
   packageDesc.addType(versionDesc);
 
   return packageDesc;

@@ -6,12 +6,12 @@ import {
 } from 'domain/suggestions';
 import { PackageVersionType } from "../definitions/ePackageVersionType";
 import { TPackageResource } from '../definitions/tPackageResource';
-import { PackageClientSourceType } from "./ePackageClientSourceType";
+import { PackageSourceType } from "./ePackageSource";
 import { TPackageClientResponse } from "./tPackageClientResponse";
 import { TPackageClientResponseStatus } from "./tPackageClientResponseStatus";
 
 export function create(
-  source: PackageClientSourceType,
+  source: PackageSourceType,
   responseStatus: TPackageClientResponseStatus,
   suggestions: Array<TPackageSuggestion>
 ): TPackageClientResponse {
@@ -30,7 +30,7 @@ export function createInvalidVersion(
   responseStatus: TPackageClientResponseStatus,
   type: PackageVersionType
 ): TPackageClientResponse {
-  const source: PackageClientSourceType = PackageClientSourceType.Registry;
+  const source: PackageSourceType = PackageSourceType.Registry;
   const suggestions: Array<TPackageSuggestion> = [
     SuggestionFactory.createInvalid(''),
     SuggestionFactory.createLatest(),
@@ -46,7 +46,7 @@ export function createInvalidVersion(
 }
 
 export function createNoMatch(
-  source: PackageClientSourceType,
+  source: PackageSourceType,
   type: PackageVersionType,
   responseStatus: TPackageClientResponseStatus,
   latestVersion?: string
@@ -67,7 +67,7 @@ export function createNoMatch(
 }
 
 export function createFixed(
-  source: PackageClientSourceType,
+  source: PackageSourceType,
   responseStatus: TPackageClientResponseStatus,
   type: PackageVersionType,
   fixedVersion: string
@@ -91,7 +91,7 @@ export function createDirectory(
   path: string
 ): TPackageClientResponse {
 
-  const source = PackageClientSourceType.Directory;
+  const source = PackageSourceType.Directory;
   const type = PackageVersionType.Version;
 
   const resolved = {
@@ -127,7 +127,7 @@ export function createDirectoryFromFileProtocol(
   if (!fileRegExpResult) {
     return createInvalidVersion(
       createResponseStatus(ClientResponseSource.local, 400),
-      <any>PackageClientSourceType.Directory
+      <any>PackageSourceType.Directory
     );
   }
 
@@ -138,7 +138,7 @@ export function createDirectoryFromFileProtocol(
 
 export function createGit(): TPackageClientResponse {
   return createFixed(
-    PackageClientSourceType.Git,
+    PackageSourceType.Git,
     createResponseStatus(ClientResponseSource.local, 0),
     PackageVersionType.Committish,
     'git repository'

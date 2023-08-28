@@ -4,6 +4,7 @@ import {
   PackageDependency,
   PackageDescriptorType,
   TPackageGitDescriptor,
+  TPackageNameDescriptor,
   TPackagePathDescriptor,
   TPackageVersionDescriptor,
   TYamlPackageParserOptions,
@@ -62,6 +63,9 @@ export class PubSuggestionProvider
     const packageDependencies = [];
 
     for (const packageDesc of packageDescriptors) {
+      const nameDesc = packageDesc.getType<TPackageNameDescriptor>(
+        PackageDescriptorType.name
+      );
 
       // map the version descriptor to a package dependency
       if (packageDesc.hasType(PackageDescriptorType.version)) {
@@ -72,11 +76,11 @@ export class PubSuggestionProvider
         packageDependencies.push(
           new PackageDependency(
             createPackageResource(
-              packageDesc.name,
+              nameDesc.name,
               versionType.version,
               packagePath
             ),
-            packageDesc.nameRange,
+            nameDesc.nameRange,
             versionType.versionRange,
             packageDesc
           )
@@ -94,11 +98,11 @@ export class PubSuggestionProvider
         packageDependencies.push(
           new PackageDependency(
             createPackageResource(
-              packageDesc.name,
+              nameDesc.name,
               pathType.path,
               packagePath
             ),
-            packageDesc.nameRange,
+            nameDesc.nameRange,
             pathType.pathRange,
             packageDesc
           )
@@ -114,12 +118,12 @@ export class PubSuggestionProvider
         packageDependencies.push(
           new PackageDependency(
             createPackageResource(
-              packageDesc.name,
+              nameDesc.name,
               gitType.gitUrl,
               packagePath
             ),
-            packageDesc.nameRange,
-            packageDesc.nameRange,
+            nameDesc.nameRange,
+            nameDesc.nameRange,
             packageDesc
           )
         );

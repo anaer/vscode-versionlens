@@ -6,6 +6,7 @@ import {
   PackageDescriptorType,
   TJsonPackageParserOptions,
   TJsonPackageTypeHandler,
+  TPackageNameDescriptor,
   TPackageVersionDescriptor,
   createPackageResource,
   createPathDescFromJsonNode,
@@ -23,8 +24,8 @@ import { DubClient } from './dubClient';
 import { DubConfig } from './dubConfig';
 
 const complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler> = {
-  "version": createVersionDescFromJsonNode,
-  "path": createPathDescFromJsonNode,
+  [PackageDescriptorType.version]: createVersionDescFromJsonNode,
+  [PackageDescriptorType.path]: createPathDescFromJsonNode,
   "repository": createRepoDescFromJsonNode
 };
 
@@ -42,10 +43,7 @@ export class DubSuggestionProvider
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
 
-  parseDependencies(
-    packagePath: string,
-    packageText: string
-  ): Array<PackageDependency> {
+  parseDependencies(packagePath: string, packageText: string): Array<PackageDependency> {
 
     const options: TJsonPackageParserOptions = {
       includePropNames: this.config.dependencyProperties,
@@ -63,19 +61,24 @@ export class DubSuggestionProvider
 
       // map the version descriptor to a package dependency
       if (packageDesc.hasType(PackageDescriptorType.version)) {
-        const versionType = packageDesc.getType<TPackageVersionDescriptor>(
+        const nameDesc = packageDesc.getType<TPackageNameDescriptor>(
+          PackageDescriptorType.name
+        );
+
+        const versionDesc = packageDesc.getType<TPackageVersionDescriptor>(
           PackageDescriptorType.version
         );
 
         packageDependencies.push(
           new PackageDependency(
             createPackageResource(
-              packageDesc.name,
-              versionType.version,
+              nameDesc.name,
+              versionDesc.version,
               packagePath
             ),
-            packageDesc.nameRange,
-            versionType.versionRange
+            nameDesc.nameRange,
+            versionDesc.versionRange,
+            packageDesc
           )
         );
 

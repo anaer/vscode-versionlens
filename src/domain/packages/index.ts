@@ -1,4 +1,4 @@
-export * from './clients/ePackageClientSourceType';
+export * from './clients/ePackageSource';
 export * from './clients/iPackageClient';
 export * as ClientResponseFactory from './clients/packageClientResponseFactory';
 export * from "./clients/tPackageClientRequest";

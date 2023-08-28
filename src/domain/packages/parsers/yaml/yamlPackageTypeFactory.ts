@@ -1,8 +1,8 @@
 import { Undefinable } from "domain/generics";
 import {
-  PackageDescriptor,
   TPackageGitDescriptor,
   TPackageHostedDescriptor,
+  TPackageNameDescriptor,
   TPackagePathDescriptor,
   TPackageVersionDescriptor
 } from "domain/packages";
@@ -10,13 +10,19 @@ import { YAMLMap } from 'yaml';
 import { findPair } from 'yaml/util';
 import { PackageDescriptorType } from "../definitions/ePackageDescriptorType";
 
-export function createPackageDescFromYamlNode(keyNode: any): PackageDescriptor {
+export function createNameDescFromYamlNode(keyNode: any): TPackageNameDescriptor {
+  const name = keyNode.value;
+
   const nameRange = {
     start: keyNode.range[0],
     end: keyNode.range[0],
   };
 
-  return new PackageDescriptor(keyNode.value, nameRange);
+  return {
+    type: PackageDescriptorType.name,
+    name,
+    nameRange
+  };
 }
 
 export function createVersionDescFromYamlNode(

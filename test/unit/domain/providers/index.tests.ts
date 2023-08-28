@@ -1,1 +1,1 @@
-export * as ProviderUseCasesTests from './useCases/all.tests'
+export * as ProviderUtilsTests from './utils/all.tests'

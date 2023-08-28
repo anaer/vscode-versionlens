@@ -1,8 +1,11 @@
 import { KeyDictionary } from "domain/generics";
 import {
   PackageDescriptor,
+  PackageDescriptorType,
   TPackageGitDescriptor,
   TPackageHostedDescriptor,
+  TPackageNameDescriptor,
+  TPackageParentDescriptor,
   TPackagePathDescriptor,
   TPackageTypeDescriptor,
   TPackageVersionDescriptor
@@ -35,97 +38,131 @@ dependencies:
 
     expected: [
       <PackageDescriptor>{
-        name: "efts",
-        nameRange: {
-          start: 376,
-          end: 376
-        },
-        typeCount: 1,
+        typeCount: 3,
         types: <KeyDictionary<TPackageTypeDescriptor>>{
+          name: <TPackageNameDescriptor>{
+            type: PackageDescriptorType.name,
+            name: "efts",
+            nameRange: {
+              start: 376,
+              end: 376
+            },
+          },
           version: <TPackageVersionDescriptor>{
-            type: "version",
+            type: PackageDescriptorType.version,
             version: "^2.0.4",
             versionRange: {
               start: 382,
               end: 388
             },
+          },
+          parent: <TPackageParentDescriptor>{
+            type: PackageDescriptorType.parent,
+            path: 'dependencies'
           }
         }
       },
       <PackageDescriptor>{
-        name: "http",
-        nameRange: {
-          start: 391,
-          end: 391
-        },
-        typeCount: 1,
+        typeCount: 3,
         types: <KeyDictionary<TPackageTypeDescriptor>>{
+          name: <TPackageNameDescriptor>{
+            type: PackageDescriptorType.name,
+            name: "http",
+            nameRange: {
+              start: 391,
+              end: 391
+            },
+          },
           version: <TPackageVersionDescriptor>{
-            type: "version",
+            type: PackageDescriptorType.version,
             version: "",
             versionRange: {
               start: 397,
               end: 397
             },
+          },
+          parent: <TPackageParentDescriptor>{
+            type: PackageDescriptorType.parent,
+            path: 'dependencies'
           }
         }
       },
       <PackageDescriptor>{
-        name: "transmogrify",
-        nameRange: {
-          start: 421,
-          end: 421
-        },
-        typeCount: 1,
+        typeCount: 3,
         types: <KeyDictionary<TPackageTypeDescriptor>>{
+          name: <TPackageNameDescriptor>{
+            type: PackageDescriptorType.name,
+            name: "transmogrify",
+            nameRange: {
+              start: 421,
+              end: 421
+            },
+          },
           version: <TPackageVersionDescriptor>{
-            type: "version",
+            type: PackageDescriptorType.version,
             version: "^0.4.0",
             versionRange: {
               start: 448,
               end: 454
             },
+          },
+          parent: <TPackageParentDescriptor>{
+            type: PackageDescriptorType.parent,
+            path: 'dependencies'
           }
         }
       },
       <PackageDescriptor>{
-        name: "test",
-        nameRange: {
-          start: 489,
-          end: 489
-        },
-        typeCount: 1,
+        typeCount: 3,
         types: <KeyDictionary<TPackageTypeDescriptor>>{
+          name: <TPackageNameDescriptor>{
+            type: PackageDescriptorType.name,
+            name: "test",
+            nameRange: {
+              start: 489,
+              end: 489
+            },
+          },
           version: <TPackageVersionDescriptor>{
-            type: "version",
+            type: PackageDescriptorType.version,
             version: ">=0.5.0 <0.12.0",
             versionRange: {
               start: 496,
               end: 511
             },
+          },
+          parent: <TPackageParentDescriptor>{
+            type: PackageDescriptorType.parent,
+            path: 'dependencies'
           }
         }
       },
       <PackageDescriptor>{
-        name: "collection",
-        nameRange: {
-          start: 515,
-          end: 515
-        },
-        typeCount: 1,
+        typeCount: 3,
         types: <KeyDictionary<TPackageTypeDescriptor>>{
+          name: <TPackageNameDescriptor>{
+            type: PackageDescriptorType.name,
+            name: "collection",
+            nameRange: {
+              start: 515,
+              end: 515
+            },
+          },
           version: <TPackageVersionDescriptor>{
-            type: "version",
+            type: PackageDescriptorType.version,
             version: "^1.1.0",
             versionRange: {
               start: 528,
               end: 534
             },
+          },
+          parent: <TPackageParentDescriptor>{
+            type: PackageDescriptorType.parent,
+            path: 'dependencies'
           }
         }
       }
     ]
-
   },
 
   extractPathDependencies: {
@@ -139,38 +176,52 @@ dependencies:
     `,
     expected: [
       <PackageDescriptor>{
-        name: "pathify1",
-        nameRange: {
-          start: 17,
-          end: 17
-        },
-        typeCount: 1,
+        typeCount: 3,
         types: <KeyDictionary<TPackageTypeDescriptor>>{
+          name: <TPackageNameDescriptor>{
+            type: PackageDescriptorType.name,
+            name: "pathify1",
+            nameRange: {
+              start: 17,
+              end: 17
+            },
+          },
           path: <TPackagePathDescriptor>{
-            type: "path",
+            type: PackageDescriptorType.path,
             path: "./some/test/path1",
             pathRange: {
               start: 37,
               end: 54
             },
+          },
+          parent: <TPackageParentDescriptor>{
+            type: PackageDescriptorType.parent,
+            path: 'dependencies'
           }
         }
       },
       <PackageDescriptor>{
-        name: "pathify2",
-        nameRange: {
-          start: 57,
-          end: 57
-        },
-        typeCount: 1,
+        typeCount: 3,
         types: <KeyDictionary<TPackageTypeDescriptor>>{
+          name: <TPackageNameDescriptor>{
+            type: PackageDescriptorType.name,
+            name: "pathify2",
+            nameRange: {
+              start: 57,
+              end: 57
+            },
+          },
           path: <TPackagePathDescriptor>{
-            type: "path",
+            type: PackageDescriptorType.path,
             path: "./some/test/path2",
             pathRange: {
               start: 77,
               end: 94
             },
+          },
+          parent: <TPackageParentDescriptor>{
+            type: PackageDescriptorType.parent,
+            path: 'dependencies'
           }
         }
       }
@@ -195,66 +246,94 @@ dependencies:
     `  ,
     expected: [
       <PackageDescriptor>{
-        name: "gitify1",
-        nameRange: {
-          start: 17,
-          end: 17
-        },
-        typeCount: 1,
+        typeCount: 3,
         types: <KeyDictionary<TPackageTypeDescriptor>>{
+          name: <TPackageNameDescriptor>{
+            type: PackageDescriptorType.name,
+            name: "gitify1",
+            nameRange: {
+              start: 17,
+              end: 17
+            },
+          },
           git: <TPackageGitDescriptor>{
-            type: "git",
+            type: PackageDescriptorType.git,
             gitUrl: "git@github.com:munificent/kittens.git",
             gitRef: "",
             gitPath: "",
+          },
+          parent: <TPackageParentDescriptor>{
+            type: PackageDescriptorType.parent,
+            path: 'dependencies'
           }
         }
       },
       <PackageDescriptor>{
-        name: "gitify2",
-        nameRange: {
-          start: 76,
-          end: 76
-        },
-        typeCount: 1,
+        typeCount: 3,
         types: <KeyDictionary<TPackageTypeDescriptor>>{
+          name: <TPackageNameDescriptor>{
+            type: PackageDescriptorType.name,
+            name: "gitify2",
+            nameRange: {
+              start: 76,
+              end: 76
+            },
+          },
           git: <TPackageGitDescriptor>{
-            type: "git",
+            type: PackageDescriptorType.git,
             gitUrl: "git@github.com:munificent/dogs.git",
             gitRef: "some-branch",
             gitPath: "",
+          },
+          parent: <TPackageParentDescriptor>{
+            type: PackageDescriptorType.parent,
+            path: 'dependencies'
           }
         }
       },
       <PackageDescriptor>{
-        name: "gitify3",
-        nameRange: {
-          start: 167,
-          end: 167
-        },
-        typeCount: 1,
+        typeCount: 3,
         types: <KeyDictionary<TPackageTypeDescriptor>>{
+          name: <TPackageNameDescriptor>{
+            type: PackageDescriptorType.name,
+            name: "gitify3",
+            nameRange: {
+              start: 167,
+              end: 167
+            },
+          },
           git: <TPackageGitDescriptor>{
-            type: "git",
+            type: PackageDescriptorType.git,
             gitUrl: "git@github.com:munificent/birds.git",
             gitPath: "path/to/birds",
             gitRef: "",
+          },
+          parent: <TPackageParentDescriptor>{
+            type: PackageDescriptorType.parent,
+            path: 'dependencies'
           }
         }
       },
       <PackageDescriptor>{
-        name: "gitify4",
-        nameRange: {
-          start: 262,
-          end: 262
-        },
-        typeCount: 1,
+        typeCount: 3,
         types: <KeyDictionary<TPackageTypeDescriptor>>{
+          name: <TPackageNameDescriptor>{
+            type: PackageDescriptorType.name,
+            name: "gitify4",
+            nameRange: {
+              start: 262,
+              end: 262
+            },
+          },
           git: <TPackageGitDescriptor>{
-            type: "git",
+            type: PackageDescriptorType.git,
             gitUrl: "git@github.com:munificent/foxes.git",
             gitPath: "",
             gitRef: "",
+          },
+          parent: <TPackageParentDescriptor>{
+            type: PackageDescriptorType.parent,
+            path: 'dependencies'
           }
         }
       }
@@ -279,15 +358,18 @@ dependencies:
 `,
     expected: [
       <PackageDescriptor>{
-        name: "hostify1",
-        nameRange: {
-          start: 17,
-          end: 17
-        },
-        typeCount: 2,
+        typeCount: 4,
         types: <KeyDictionary<TPackageTypeDescriptor>>{
+          name: <TPackageNameDescriptor>{
+            type: PackageDescriptorType.name,
+            name: "hostify1",
+            nameRange: {
+              start: 17,
+              end: 17
+            },
+          },
           version: <TPackageVersionDescriptor>{
-            type: "version",
+            type: PackageDescriptorType.version,
             version: "1.0.0",
             versionRange: {
               start: 40,
@@ -295,22 +377,29 @@ dependencies:
             },
           },
           hosted: <TPackageHostedDescriptor>{
-            type: "hosted",
+            type: PackageDescriptorType.hosted,
             hostPackageName: "",
             hostUrl: "https://some-package-server.com",
+          },
+          parent: <TPackageParentDescriptor>{
+            type: PackageDescriptorType.parent,
+            path: 'dependencies'
           }
         }
       },
       <PackageDescriptor>{
-        name: "hostify2",
-        nameRange: {
-          start: 93,
-          end: 93
-        },
-        typeCount: 2,
+        typeCount: 4,
         types: <KeyDictionary<TPackageTypeDescriptor>>{
+          name: <TPackageNameDescriptor>{
+            type: PackageDescriptorType.name,
+            name: "hostify2",
+            nameRange: {
+              start: 93,
+              end: 93
+            },
+          },
           version: <TPackageVersionDescriptor>{
-            type: "version",
+            type: PackageDescriptorType.version,
             version: "2.0.0",
             versionRange: {
               start: 116,
@@ -318,22 +407,29 @@ dependencies:
             },
           },
           hosted: <TPackageHostedDescriptor>{
-            type: "hosted",
+            type: PackageDescriptorType.hosted,
             hostPackageName: "",
             hostUrl: "https://some-package-server.com",
+          },
+          parent: <TPackageParentDescriptor>{
+            type: PackageDescriptorType.parent,
+            path: 'dependencies'
           }
         }
       },
       <PackageDescriptor>{
-        name: "hostify3",
-        nameRange: {
-          start: 180,
-          end: 180
-        },
-        typeCount: 2,
+        typeCount: 4,
         types: <KeyDictionary<TPackageTypeDescriptor>>{
+          name: <TPackageNameDescriptor>{
+            type: PackageDescriptorType.name,
+            name: "hostify3",
+            nameRange: {
+              start: 180,
+              end: 180
+            },
+          },
           version: <TPackageVersionDescriptor>{
-            type: "version",
+            type: PackageDescriptorType.version,
             version: "3.0.0",
             versionRange: {
               start: 203,
@@ -341,16 +437,16 @@ dependencies:
             },
           },
           hosted: <TPackageHostedDescriptor>{
-            type: "hosted",
+            type: PackageDescriptorType.hosted,
             hostPackageName: "testHostPackageAlias",
             hostUrl: "https://some-package-server.com",
+          },
+          parent: <TPackageParentDescriptor>{
+            type: PackageDescriptorType.parent,
+            path: 'dependencies'
           }
         }
       },
     ]
-
   }
-
-
-
 }

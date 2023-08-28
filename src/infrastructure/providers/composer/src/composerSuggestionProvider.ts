@@ -3,8 +3,10 @@ import { ILogger } from 'domain/logging';
 import {
   PackageCache,
   PackageDependency,
+  PackageDescriptorType,
   TJsonPackageParserOptions,
   TJsonPackageTypeHandler,
+  TPackageNameDescriptor,
   TPackageVersionDescriptor,
   createPackageResource,
   createVersionDescFromJsonNode,
@@ -20,7 +22,7 @@ import { ComposerClient } from './composerClient';
 import { ComposerConfig } from './composerConfig';
 
 const complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler> = {
-  "version": createVersionDescFromJsonNode
+  [PackageDescriptorType.version]: createVersionDescFromJsonNode
 };
 
 export class ComposerSuggestionProvider
@@ -37,10 +39,7 @@ export class ComposerSuggestionProvider
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
 
-  parseDependencies(
-    packagePath: string,
-    packageText: string
-  ): Array<PackageDependency> {
+  parseDependencies(packagePath: string, packageText: string): Array<PackageDependency> {
 
     const options: TJsonPackageParserOptions = {
       includePropNames: this.config.dependencyProperties,
@@ -53,18 +52,26 @@ export class ComposerSuggestionProvider
     );
 
     const packageDependencies = packageDescriptors
-      .filter(x => x.hasType("version"))
+      .filter(x => x.hasType(PackageDescriptorType.version))
       .map(
-        desc => {
-          const versionType = desc.getType("version") as TPackageVersionDescriptor
+        packageDesc => {
+          const nameDesc = packageDesc.getType<TPackageNameDescriptor>(
+            PackageDescriptorType.name
+          );
+
+          const versionDesc = packageDesc.getType<TPackageVersionDescriptor>(
+            PackageDescriptorType.version
+          );
+
           return new PackageDependency(
             createPackageResource(
-              desc.name,
-              versionType.version,
+              nameDesc.name,
+              versionDesc.version,
               packagePath
             ),
-            desc.nameRange,
-            versionType.versionRange
+            nameDesc.nameRange,
+            versionDesc.versionRange,
+            packageDesc
           )
         }
       );

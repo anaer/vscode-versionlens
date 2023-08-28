@@ -13,8 +13,8 @@ export class OnProviderEditorActivated {
     throwUndefinedOrNull("logger", logger);
   }
 
-  execute(activeProviders: ISuggestionProvider[], document: TextDocument) {
-    this.logger.debug("%s provider editors activated", activeProviders.map(x => x.name));
+  execute(activeProvider: ISuggestionProvider, document: TextDocument) {
+    this.logger.debug("%s provider editor activated", activeProvider.name);
 
     // ensure the latest logging level is set
     this.loggerChannel.refreshLoggingLevel();

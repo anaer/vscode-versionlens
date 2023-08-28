@@ -1,6 +1,8 @@
 export enum PackageDescriptorType {
+  name = "name",
   version = "version",
   path = "path",
   git = "git",
-  hosted = "hosted"
+  hosted = "hosted",
+  parent = "parent"
 }

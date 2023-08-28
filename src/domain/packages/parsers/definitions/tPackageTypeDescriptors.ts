@@ -4,6 +4,11 @@ export type TPackageType = {
   type: string
 }
 
+export type TPackageNameDescriptor = TPackageType & {
+  name: string,
+  nameRange: TPackageDependencyRange;
+}
+
 export type TPackageVersionDescriptor = TPackageType & {
   version: string,
   versionRange: TPackageDependencyRange;
@@ -25,7 +30,13 @@ export type TPackageGitDescriptor = TPackageType & {
   gitPath: string
 }
 
-export type TPackageTypeDescriptor = TPackageVersionDescriptor
+export type TPackageParentDescriptor = TPackageType & {
+  path: string
+}
+
+export type TPackageTypeDescriptor = TPackageNameDescriptor
+  | TPackageVersionDescriptor
   | TPackagePathDescriptor
   | TPackageHostedDescriptor
   | TPackageGitDescriptor
+  | TPackageParentDescriptor

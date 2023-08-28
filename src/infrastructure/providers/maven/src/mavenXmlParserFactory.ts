@@ -1,5 +1,7 @@
 import {
   PackageDescriptor,
+  PackageDescriptorType,
+  TPackageNameDescriptor,
   TPackageVersionDescriptor
 } from 'domain/packages';
 import xmldoc from 'xmldoc';
@@ -98,13 +100,20 @@ function collectFromChildVersionTag(
     const name = group + ":" + artifact;
     const version = versionNode.val;
 
+    const nameDesc: TPackageNameDescriptor = {
+      type: PackageDescriptorType.name,
+      name,
+      nameRange
+    };
+
     const versionDesc: TPackageVersionDescriptor = {
-      type: "version",
+      type: PackageDescriptorType.version,
       version,
       versionRange
     };
 
-    const packageDesc = new PackageDescriptor(name, nameRange);
+    const packageDesc = new PackageDescriptor();
+    packageDesc.addType(nameDesc);
     packageDesc.addType(versionDesc);
 
     collector.push(packageDesc);

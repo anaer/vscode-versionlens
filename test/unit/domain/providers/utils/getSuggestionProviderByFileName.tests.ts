@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { ILogger } from 'domain/logging';
-import { IProvider, IProviderConfig, getProvidersByFileName } from 'domain/providers';
+import { IProvider, IProviderConfig, getProviderByFileName } from 'domain/providers';
 import { test } from 'mocha-ui-esm';
 import { instance, mock, when } from 'ts-mockito';
 
@@ -8,9 +8,9 @@ type TestContext = {
   testProviders: Array<IProvider>
 }
 
-export const getSuggestionProvidersByFileNameTests = {
+export const getSuggestionProviderByFileNameTests = {
 
-  [test.title]: getProvidersByFileName.name,
+  [test.title]: getProviderByFileName.name,
 
   beforeEach: function (this: TestContext) {
     const mockLogger = mock<ILogger>();
@@ -29,14 +29,13 @@ export const getSuggestionProvidersByFileNameTests = {
   },
 
   "returns provider by file pattern": function (this: TestContext) {
-    const actual = getProvidersByFileName("package.json", this.testProviders)
-    assert.equal(actual.length, 1);
-    assert.deepEqual(actual, this.testProviders);
+    const actual = getProviderByFileName("package.json", this.testProviders)
+    assert.deepEqual(actual, this.testProviders[0]);
   },
 
   "returns no providers when file pattern does not match": function (this: TestContext) {
-    const actual = getProvidersByFileName("no-match.json", this.testProviders)
-    assert.equal(actual.length, 0);
+    const actual = getProviderByFileName("no-match.json", this.testProviders)
+    assert.equal(actual, undefined);
   },
 
 };

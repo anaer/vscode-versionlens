@@ -19,7 +19,7 @@ export function createDirectoryLinkCommand(codeLens: SuggestionCodeLens) {
   let title: string;
   let cmd = SuggestionCommandContributions.FileLinkClicked as string;
 
-  const path = codeLens.package.resolved?.version;
+  const path = codeLens.package.fetchedPackage?.version;
   if (!path) return createInvalidCommand(codeLens);
 
   const filePath = resolve(
@@ -31,7 +31,7 @@ export function createDirectoryLinkCommand(codeLens: SuggestionCodeLens) {
   if (fileExists === false)
     title = (cmd = "") || 'Specified resource does not exist';
   else
-    title = `${SuggestionIndicators.OpenNewWindow} ${codeLens.package.requested.version}`;
+    title = `${SuggestionIndicators.OpenNewWindow} ${codeLens.package.parsedPackage.version}`;
 
   return codeLens.setCommand(title, cmd, [codeLens, filePath]);
 }

@@ -3,6 +3,8 @@ import { ILogger } from 'domain/logging';
 import {
   PackageCache,
   PackageDependency,
+  PackageDescriptorType,
+  TPackageNameDescriptor,
   TPackageVersionDescriptor,
   createPackageResource
 } from 'domain/packages';
@@ -45,10 +47,7 @@ export class DotNetSuggestionProvider
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
 
-  parseDependencies(
-    packagePath: string,
-    packageText: string
-  ): Array<PackageDependency> {
+  parseDependencies(packagePath: string, packageText: string): Array<PackageDependency> {
 
     const packageLocations = createDependenciesFromXml(
       packageText,
@@ -56,18 +55,26 @@ export class DotNetSuggestionProvider
     );
 
     const packageDependencies = packageLocations
-      .filter(x => x.hasType("version"))
+      .filter(x => x.hasType(PackageDescriptorType.version))
       .map(
-        desc => {
-          const versionType = desc.getType("version") as TPackageVersionDescriptor
+        packageDesc => {
+          const nameDesc = packageDesc.getType<TPackageNameDescriptor>(
+            PackageDescriptorType.name
+          );
+          
+          const versionDesc = packageDesc.getType<TPackageVersionDescriptor>(
+            PackageDescriptorType.version
+          );
+
           return new PackageDependency(
             createPackageResource(
-              desc.name,
-              versionType.version,
+              nameDesc.name,
+              versionDesc.version,
               packagePath
             ),
-            desc.nameRange,
-            versionType.versionRange
+            nameDesc.nameRange,
+            versionDesc.versionRange,
+            packageDesc
           );
         }
       );

@@ -1,8 +1,8 @@
 import assert from 'assert';
 import {
-  createDependencyRange,
-  PackageClientSourceType,
-  PackageResponse
+  PackageResponse,
+  PackageSourceType,
+  createDependencyRange
 } from 'domain/packages';
 import { NpmUtils } from 'infrastructure/providers/npm';
 import { test } from 'mocha-ui-esm';
@@ -14,16 +14,16 @@ export const npmReplaceVersionTests = {
   "handles #tag|commit|semver:": () => {
     const packageInfo: PackageResponse = {
       providerName: 'testreplace',
-      source: PackageClientSourceType.Github,
+      packageSource: PackageSourceType.Github,
       nameRange: createDependencyRange(0, 0),
       versionRange: createDependencyRange(1, 1),
       order: 0,
-      requested: {
+      parsedPackage: {
         path: 'packagepath',
         name: 'packagename',
         version: 'github:someRepo/someProject#semver:^2',
       },
-      resolved: {
+      fetchedPackage: {
         name: 'packagename',
         version: '^2'
       }

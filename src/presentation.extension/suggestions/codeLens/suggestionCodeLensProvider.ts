@@ -3,8 +3,8 @@ import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
   DependencyCache,
-  PackageClientSourceType,
-  PackageResponse
+  PackageResponse,
+  PackageSourceType
 } from 'domain/packages';
 import { IProvider, IProviderConfig } from 'domain/providers';
 import {
@@ -178,7 +178,7 @@ export class SuggestionCodeLensProvider
   }
 
   evaluateCodeLens(codeLens: SuggestionCodeLens) {
-    if (codeLens.hasPackageSource(PackageClientSourceType.Directory))
+    if (codeLens.hasPackageSource(PackageSourceType.Directory))
       return CommandFactory.createDirectoryLinkCommand(codeLens);
 
     return CommandFactory.createSuggestedVersionCommand(codeLens)

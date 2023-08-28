@@ -114,12 +114,11 @@ export function createLatest(requestedVersion?: string): TPackageSuggestion {
   return {
     name,
     version: requestedVersion || 'latest',
-    flags:
-      isPrerelease ?
-        SuggestionFlags.prerelease :
-        requestedVersion ?
-          SuggestionFlags.release :
-          SuggestionFlags.tag
+    flags: isPrerelease
+      ? SuggestionFlags.prerelease
+      : requestedVersion
+        ? SuggestionFlags.release
+        : SuggestionFlags.tag
   };
 }
 

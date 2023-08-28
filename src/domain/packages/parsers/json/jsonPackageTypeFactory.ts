@@ -1,21 +1,26 @@
 import {
-  PackageDescriptor,
   TPackageGitDescriptor,
+  TPackageNameDescriptor,
+  TPackageParentDescriptor,
   TPackagePathDescriptor,
   TPackageVersionDescriptor
 } from "domain/packages";
 import * as JsonC from 'jsonc-parser';
 import { PackageDescriptorType } from "../definitions/ePackageDescriptorType";
 
-export function createPackageDescFromJsonNode(
-  keyNode: JsonC.Node
-): PackageDescriptor {
+export function createNameDescFromJsonNode(keyNode: JsonC.Node): TPackageNameDescriptor {
+  const name = keyNode.value;
+
   const nameRange = {
     start: keyNode.offset,
     end: keyNode.offset,
   };
 
-  return new PackageDescriptor(keyNode.value, nameRange);
+  return {
+    type: PackageDescriptorType.name,
+    name,
+    nameRange
+  };
 }
 
 export function createVersionDescFromJsonNode(
@@ -61,5 +66,12 @@ export function createRepoDescFromJsonNode(
     gitUrl: valueNode.value,
     gitPath: "",
     gitRef: ""
+  }
+}
+
+export function createParentDesc(path: string): TPackageParentDescriptor {
+  return {
+    type: PackageDescriptorType.parent,
+    path
   }
 }

@@ -2,8 +2,8 @@ import NpmCliConfig from '@npmcli/config';
 import { ClientResponseSource, HttpClientResponse } from 'domain/clients';
 import { KeyStringDictionary } from 'domain/generics';
 import {
-  PackageClientSourceType,
   PackageResponse,
+  PackageSourceType,
   PackageVersionType,
   VersionUtils
 } from 'domain/packages';
@@ -12,7 +12,7 @@ import dotenv from 'dotenv';
 import { resolve } from 'node:path';
 
 export function npmReplaceVersion(packageInfo: PackageResponse, newVersion: string): string {
-  if (packageInfo.source === PackageClientSourceType.Github) {
+  if (packageInfo.packageSource === PackageSourceType.Github) {
     return replaceGitVersion(packageInfo, newVersion);
   }
 
@@ -22,14 +22,14 @@ export function npmReplaceVersion(packageInfo: PackageResponse, newVersion: stri
 
   // fallback to default
   return VersionUtils.formatWithExistingLeading(
-    packageInfo.requested.version,
+    packageInfo.parsedPackage.version,
     newVersion
   );
 }
 
-function replaceGitVersion(packageInfo: PackageResponse, newVersion: string): string {
-  return packageInfo.requested.version.replace(
-    packageInfo.resolved.version,
+function replaceGitVersion(response: PackageResponse, newVersion: string): string {
+  return response.parsedPackage.version.replace(
+    response.fetchedPackage.version,
     newVersion
   )
 }
@@ -37,11 +37,11 @@ function replaceGitVersion(packageInfo: PackageResponse, newVersion: string): st
 function replaceAliasVersion(packageInfo: PackageResponse, newVersion: string): string {
   // preserve the leading symbol from the existing version
   const preservedLeadingVersion = VersionUtils.formatWithExistingLeading(
-    packageInfo.requested.version,
+    packageInfo.parsedPackage.version,
     newVersion
   );
 
-  return `npm:${packageInfo.resolved.name}@${preservedLeadingVersion}`;
+  return `npm:${packageInfo.fetchedPackage.name}@${preservedLeadingVersion}`;
 }
 
 export function convertNpmErrorToResponse(

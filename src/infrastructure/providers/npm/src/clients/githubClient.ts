@@ -3,7 +3,7 @@ import { HttpClientRequestMethods, IJsonHttpClient } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
   ClientResponseFactory,
-  PackageClientSourceType,
+  PackageSourceType,
   PackageVersionType,
   TPackageClientResponse,
   VersionUtils
@@ -71,7 +71,7 @@ export class GitHubClient {
 
     const allVersions = VersionUtils.filterSemverVersions(rawVersions).sort(compareLoose);
 
-    const source: PackageClientSourceType = PackageClientSourceType.Github;
+    const source: PackageSourceType = PackageSourceType.Github;
 
     const type: PackageVersionType = npaSpec.gitRange
       ? PackageVersionType.Range
@@ -127,7 +127,7 @@ export class GitHubClient {
 
     const commits = commitInfos.map((commit: any) => commit.sha);
 
-    const source: PackageClientSourceType = PackageClientSourceType.Github;
+    const source: PackageSourceType = PackageSourceType.Github;
 
     const type = PackageVersionType.Committish;
 
@@ -136,7 +136,7 @@ export class GitHubClient {
     if (commits.length === 0) {
       // no commits found
       return ClientResponseFactory.create(
-        PackageClientSourceType.Github,
+        PackageSourceType.Github,
         clientResponse,
         [SuggestionFactory.createNotFound()]
       )
