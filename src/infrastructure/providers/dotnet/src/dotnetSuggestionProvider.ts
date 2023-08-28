@@ -20,7 +20,7 @@ import { DotNetConfig } from './dotnetConfig';
 import { createDependenciesFromXml } from './dotnetXmlParserFactory';
 
 export class DotNetSuggestionProvider
-  extends SuggestionProvider<NuGetPackageClient, NuGetClientData>
+  extends SuggestionProvider<NuGetClientData>
   implements ISuggestionProvider {
 
   constructor(

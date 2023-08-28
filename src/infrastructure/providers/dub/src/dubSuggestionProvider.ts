@@ -29,7 +29,7 @@ const complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler> = {
 };
 
 export class DubSuggestionProvider
-  extends SuggestionProvider<DubClient, null>
+  extends SuggestionProvider<null>
   implements ISuggestionProvider {
 
   constructor(client: DubClient, packageCache: PackageCache, logger: ILogger) {

@@ -103,7 +103,7 @@ export const FetchPackageTests = <any>{
     when(clientMock.fetchPackage(this.testRequest)).thenResolve(testRespDoc);
     const testClient = instance(clientMock);
 
-    const abstractProvider = new SuggestionProvider<IPackageClient<any>, any>(
+    const abstractProvider = new SuggestionProvider<any>(
       testClient,
       this.testPackageCache,
       this.testLogger
@@ -181,7 +181,7 @@ export const FetchPackageTests = <any>{
       const testClient = instance(clientMock);
 
       // test
-      const abstractProvider = new SuggestionProvider<IPackageClient<any>, null>(
+      const abstractProvider = new SuggestionProvider<null>(
         testClient,
         this.testPackageCache,
         this.testLogger

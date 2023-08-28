@@ -28,7 +28,7 @@ const complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler> = {
 };
 
 export class NpmSuggestionProvider
-  extends SuggestionProvider<NpmPackageClient, TNpmClientData>
+  extends SuggestionProvider<TNpmClientData>
   implements ISuggestionProvider {
 
   constructor(client: NpmPackageClient, packageCache: PackageCache, logger: ILogger) {

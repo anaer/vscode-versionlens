@@ -31,7 +31,7 @@ const complexTypeHandlers = {
 }
 
 export class PubSuggestionProvider
-  extends SuggestionProvider<PubClient, any>
+  extends SuggestionProvider<null>
   implements ISuggestionProvider {
 
   constructor(client: PubClient, packageCache: PackageCache, logger: ILogger) {

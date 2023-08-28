@@ -24,7 +24,7 @@ const complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler> = {
 };
 
 export class ComposerSuggestionProvider
-  extends SuggestionProvider<ComposerClient, any>
+  extends SuggestionProvider<null>
   implements ISuggestionProvider {
 
   constructor(client: ComposerClient, packageCache: PackageCache, logger: ILogger) {

@@ -10,13 +10,10 @@ import {
   TPackageClientResponse
 } from "domain/packages";
 
-export class SuggestionProvider<
-  TClient extends IPackageClient<TClientData>,
-  TClientData
-> {
+export class SuggestionProvider<TClientData> {
 
   constructor(
-    readonly client: TClient,
+    readonly client: IPackageClient<TClientData>,
     readonly packageCache: PackageCache,
     readonly logger: ILogger
   ) {

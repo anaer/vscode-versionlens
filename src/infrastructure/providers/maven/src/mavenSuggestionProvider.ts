@@ -18,7 +18,7 @@ import { MavenConfig } from './mavenConfig';
 import * as MavenXmlFactory from './mavenXmlParserFactory';
 
 export class MavenSuggestionProvider
-  extends SuggestionProvider<MavenClient, MavenClientData>
+  extends SuggestionProvider<MavenClientData>
   implements ISuggestionProvider {
 
   constructor(
