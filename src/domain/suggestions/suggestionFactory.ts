@@ -1,8 +1,8 @@
 import { Nullable } from 'domain/generics';
 import {
   SuggestionFactory,
-  SuggestionFlags,
   SuggestionStatus,
+  SuggestionTypes,
   TPackageSuggestion
 } from 'domain/suggestions';
 
@@ -26,7 +26,7 @@ export function createNotFound(): TPackageSuggestion {
   return {
     name: SuggestionStatus.NotFound,
     version: '',
-    flags: SuggestionFlags.status
+    type: SuggestionTypes.status
   };
 }
 
@@ -34,7 +34,7 @@ export function createInternalServerError(): TPackageSuggestion {
   return {
     name: SuggestionStatus.InternalServerError,
     version: '',
-    flags: SuggestionFlags.status
+    type: SuggestionTypes.status
   };
 }
 
@@ -42,7 +42,7 @@ export function createConnectionRefused(): TPackageSuggestion {
   return {
     name: SuggestionStatus.ConnectionRefused,
     version: '',
-    flags: SuggestionFlags.status
+    type: SuggestionTypes.status
   };
 }
 
@@ -50,7 +50,7 @@ export function createConnectionReset(): TPackageSuggestion {
   return {
     name: SuggestionStatus.ConnectionReset,
     version: '',
-    flags: SuggestionFlags.status
+    type: SuggestionTypes.status
   };
 }
 
@@ -58,7 +58,7 @@ export function createForbidden(): TPackageSuggestion {
   return {
     name: SuggestionStatus.Forbidden,
     version: '',
-    flags: SuggestionFlags.status
+    type: SuggestionTypes.status
   };
 }
 
@@ -66,7 +66,7 @@ export function createNotAuthorized(): TPackageSuggestion {
   return {
     name: SuggestionStatus.NotAuthorized,
     version: '',
-    flags: SuggestionFlags.status
+    type: SuggestionTypes.status
   };
 }
 
@@ -74,7 +74,7 @@ export function createBadRequest(): TPackageSuggestion {
   return {
     name: SuggestionStatus.BadRequest,
     version: '',
-    flags: SuggestionFlags.status
+    type: SuggestionTypes.status
   };
 }
 
@@ -82,7 +82,7 @@ export function createInvalid(requestedVersion: string): TPackageSuggestion {
   return {
     name: SuggestionStatus.Invalid,
     version: requestedVersion,
-    flags: SuggestionFlags.status
+    type: SuggestionTypes.status
   };
 }
 
@@ -90,7 +90,7 @@ export function createNotSupported(): TPackageSuggestion {
   return {
     name: SuggestionStatus.NotSupported,
     version: '',
-    flags: SuggestionFlags.status
+    type: SuggestionTypes.status
   };
 }
 
@@ -98,7 +98,7 @@ export function createNoMatch(): TPackageSuggestion {
   return {
     name: SuggestionStatus.NoMatch,
     version: '',
-    flags: SuggestionFlags.status
+    type: SuggestionTypes.status
   };
 }
 
@@ -114,11 +114,11 @@ export function createLatest(requestedVersion?: string): TPackageSuggestion {
   return {
     name,
     version: requestedVersion || 'latest',
-    flags: isPrerelease
-      ? SuggestionFlags.prerelease
+    type: isPrerelease
+      ? SuggestionTypes.prerelease
       : requestedVersion
-        ? SuggestionFlags.release
-        : SuggestionFlags.tag
+        ? SuggestionTypes.release
+        : SuggestionTypes.tag
   };
 }
 
@@ -132,7 +132,7 @@ export function createMatchesLatest(latestVersion: string): TPackageSuggestion {
   return {
     name,
     version: isPrerelease ? latestVersion : '',
-    flags: SuggestionFlags.status
+    type: SuggestionTypes.status
   };
 }
 
@@ -140,7 +140,7 @@ export function createSatisifiesLatest(): TPackageSuggestion {
   return createSuggestion(
     SuggestionStatus.Satisfies,
     'latest',
-    SuggestionFlags.status
+    SuggestionTypes.status
   )
 }
 
@@ -148,14 +148,14 @@ export function createFixedStatus(version: string): TPackageSuggestion {
   return createSuggestion(
     SuggestionStatus.Fixed,
     version,
-    SuggestionFlags.status
+    SuggestionTypes.status
   );
 }
 
 export function createSuggestion(
   name: string,
   version: string,
-  flags: SuggestionFlags
+  type: SuggestionTypes
 ): TPackageSuggestion {
-  return { name, version, flags };
+  return { name, version, type };
 }

@@ -6,7 +6,7 @@ import {
   PackageDependency,
   TPackageClientRequest
 } from 'domain/packages';
-import { SuggestionFlags } from 'domain/suggestions';
+import { SuggestionStatus, SuggestionTypes, TPackageSuggestion } from 'domain/suggestions';
 import {
   GitHubClient,
   NpmConfig,
@@ -114,10 +114,10 @@ export const fetchPackageTests = {
         assert.deepEqual(
           actual.suggestions,
           [
-            {
-              name: 'fixed',
+            <TPackageSuggestion>{
+              name: SuggestionStatus.Fixed,
               version: 'git repository',
-              flags: SuggestionFlags.status
+              type: SuggestionTypes.status
             }
           ]
         )
@@ -160,10 +160,10 @@ export const fetchPackageTests = {
         assert.deepEqual(
           actual.suggestions,
           [
-            {
-              name: 'not supported',
+            <TPackageSuggestion>{
+              name: SuggestionStatus.NotSupported,
               version: '',
-              flags: SuggestionFlags.status
+              type: SuggestionTypes.status
             }
           ]
         )
@@ -217,11 +217,13 @@ export const fetchPackageTests = {
       assert.equal(actual.resolved, null)
       assert.deepEqual(
         actual.suggestions,
-        [{
-          name: testState.suggestion.name,
-          version: '',
-          flags: SuggestionFlags.status
-        }]
+        [
+          <TPackageSuggestion>{
+            name: testState.suggestion.name,
+            version: '',
+            type: SuggestionTypes.status
+          }
+        ]
       )
     }
   ]

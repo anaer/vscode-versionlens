@@ -1,7 +1,7 @@
 import { ClientResponseSource } from 'domain/clients';
 import {
   SuggestionFactory,
-  SuggestionFlags,
+  SuggestionTypes,
   TPackageSuggestion
 } from 'domain/suggestions';
 import { PackageVersionType } from "../definitions/ePackageVersionType";
@@ -103,7 +103,7 @@ export function createDirectory(
     {
       name: 'file://',
       version: resolved.version,
-      flags: SuggestionFlags.release
+      type: SuggestionTypes.release
     },
   ];
 

@@ -1,8 +1,9 @@
 import assert from 'assert';
 import {
   createSuggestions,
-  SuggestionFlags,
-  SuggestionStatus
+  SuggestionTypes,
+  SuggestionStatus,
+  TPackageSuggestion
 } from 'domain/suggestions';
 import { test } from 'mocha-ui-esm';
 
@@ -14,10 +15,10 @@ export const CreateSuggestionsTests = {
 
     "when releases and prereleases are empty": () => {
       const expected = [
-        {
+        <TPackageSuggestion>{
           name: SuggestionStatus.NoMatch,
           version: '',
-          flags: SuggestionFlags.status
+          type: SuggestionTypes.status
         }
       ]
 
@@ -32,21 +33,21 @@ export const CreateSuggestionsTests = {
       assert.equal(results.length, expected.length);
       assert.equal(results[0].name, expected[0].name);
       assert.equal(results[0].version, expected[0].version);
-      assert.equal(results[0].flags, expected[0].flags);
+      assert.equal(results[0].type, expected[0].type);
     },
 
     "when releases or prereleases do not contain a matching version": () => {
 
       const expected = [
-        {
+        <TPackageSuggestion>{
           name: SuggestionStatus.NoMatch,
           version: '',
-          flags: SuggestionFlags.status
+          type: SuggestionTypes.status
         },
-        {
+        <TPackageSuggestion>{
           name: SuggestionStatus.Latest,
           version: '1.0.0',
-          flags: SuggestionFlags.release
+          type: SuggestionTypes.release
         }
       ]
 
@@ -63,15 +64,15 @@ export const CreateSuggestionsTests = {
 
     "when using a release range": () => {
       const expected = [
-        {
+        <TPackageSuggestion>{
           name: SuggestionStatus.NoMatch,
           version: '',
-          flags: SuggestionFlags.status
+          type: SuggestionTypes.status
         },
-        {
+        <TPackageSuggestion>{
           name: SuggestionStatus.Latest,
           version: '1.0.3-1.2.3',
-          flags: SuggestionFlags.release
+          type: SuggestionTypes.release
         }
       ]
 
@@ -94,15 +95,15 @@ export const CreateSuggestionsTests = {
     "when versionRange matches the latest release": () => {
 
       const expected = [
-        {
+        <TPackageSuggestion>{
           name: SuggestionStatus.Latest,
           version: '',
-          flags: SuggestionFlags.status
+          type: SuggestionTypes.status
         },
-        {
+        <TPackageSuggestion>{
           name: 'next',
           version: '4.0.0-next',
-          flags: SuggestionFlags.prerelease
+          type: SuggestionTypes.prerelease
         }
       ]
 
@@ -128,10 +129,10 @@ export const CreateSuggestionsTests = {
       const testSuggestedVersion = '5.0.0';
 
       const expected = [
-        {
+        <TPackageSuggestion>{
           name: SuggestionStatus.Latest,
           version: '',
-          flags: SuggestionFlags.status
+          type: SuggestionTypes.status
         }
       ]
 
@@ -156,15 +157,15 @@ export const CreateSuggestionsTests = {
       const testDistTagLatest = '4.0.0-next';
 
       const expected = [
-        {
+        <TPackageSuggestion>{
           name: SuggestionStatus.NoMatch,
           version: '',
-          flags: SuggestionFlags.status
+          type: SuggestionTypes.status
         },
-        {
+        <TPackageSuggestion>{
           name: SuggestionStatus.LatestIsPrerelease,
           version: '4.0.0-next',
-          flags: SuggestionFlags.prerelease
+          type: SuggestionTypes.prerelease
         }
       ]
 
@@ -188,20 +189,20 @@ export const CreateSuggestionsTests = {
     "when versionRange satisfies the latest release": () => {
 
       const expected = [
-        {
+        <TPackageSuggestion>{
           name: SuggestionStatus.Satisfies,
           version: 'latest',
-          flags: SuggestionFlags.status
+          type: SuggestionTypes.status
         },
-        {
+        <TPackageSuggestion>{
           name: SuggestionStatus.Latest,
           version: '3.0.0',
-          flags: SuggestionFlags.release
+          type: SuggestionTypes.release
         },
-        {
+        <TPackageSuggestion>{
           name: 'next',
           version: '4.0.0-next',
-          flags: SuggestionFlags.prerelease
+          type: SuggestionTypes.prerelease
         }
       ]
 
@@ -221,20 +222,20 @@ export const CreateSuggestionsTests = {
       const testLatest = '7.10.1'
 
       const expected = [
-        {
+        <TPackageSuggestion>{
           name: SuggestionStatus.Satisfies,
           version: 'latest',
-          flags: SuggestionFlags.status
+          type: SuggestionTypes.status
         },
-        {
+        <TPackageSuggestion>{
           name: SuggestionStatus.Latest,
           version: testLatest,
-          flags: SuggestionFlags.release
+          type: SuggestionTypes.release
         },
-        {
+        <TPackageSuggestion>{
           name: 'next',
           version: '8.0.0-next',
-          flags: SuggestionFlags.prerelease
+          type: SuggestionTypes.prerelease
         }
       ]
 
@@ -253,20 +254,20 @@ export const CreateSuggestionsTests = {
     "when versionRange satisfies a range in the releases": () => {
 
       const expected = [
-        {
+        <TPackageSuggestion>{
           name: SuggestionStatus.Satisfies,
           version: '2.1.0',
-          flags: SuggestionFlags.release
+          type: SuggestionTypes.release
         },
-        {
+        <TPackageSuggestion>{
           name: SuggestionStatus.Latest,
           version: '3.0.0',
-          flags: SuggestionFlags.release
+          type: SuggestionTypes.release
         },
-        {
+        <TPackageSuggestion>{
           name: 'next',
           version: '4.0.0-next',
-          flags: SuggestionFlags.prerelease
+          type: SuggestionTypes.prerelease
         }
       ]
 

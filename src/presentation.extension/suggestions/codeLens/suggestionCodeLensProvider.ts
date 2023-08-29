@@ -9,7 +9,7 @@ import {
 import { IProvider, IProviderConfig } from 'domain/providers';
 import {
   ISuggestionProvider,
-  SuggestionFlags,
+  SuggestionTypes,
   SuggestionStatus,
   defaultReplaceFn
 } from 'domain/suggestions';
@@ -150,7 +150,7 @@ export class SuggestionCodeLensProvider
           const { suggestion } = response;
           return suggestion
             && (
-              (suggestion.flags & SuggestionFlags.prerelease) === 0
+              (suggestion.type & SuggestionTypes.prerelease) === 0
               || suggestion.name.includes(SuggestionStatus.LatestIsPrerelease)
             );
         }

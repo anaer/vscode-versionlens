@@ -1,4 +1,4 @@
-export enum SuggestionFlags {
+export enum SuggestionTypes {
   // bitwise
   status = 1,
   release = 2,

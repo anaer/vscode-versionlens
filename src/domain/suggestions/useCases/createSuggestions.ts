@@ -1,7 +1,7 @@
 import { Nullable } from 'domain/generics';
 import { VersionUtils } from 'domain/packages';
 import semver from 'semver';
-import { SuggestionFlags, SuggestionStatus, TPackageSuggestion } from '../index';
+import { SuggestionStatus, SuggestionTypes, TPackageSuggestion } from '../index';
 import {
   createFixedStatus,
   createLatest,
@@ -77,8 +77,8 @@ export function createSuggestions(
         SuggestionStatus.Satisfies,
         satisfiesVersion,
         noSuggestionNeeded ?
-          SuggestionFlags.status :
-          SuggestionFlags.release
+          SuggestionTypes.status :
+          SuggestionTypes.release
       ),
       // suggest latestVersion
       createLatest(latestVersion),
@@ -102,7 +102,7 @@ export function createSuggestions(
     suggestions.push({
       name: pvn.name,
       version: pvn.version,
-      flags: SuggestionFlags.prerelease
+      type: SuggestionTypes.prerelease
     });
   }
 

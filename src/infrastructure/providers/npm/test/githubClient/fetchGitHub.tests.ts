@@ -4,7 +4,7 @@ import {
   IJsonHttpClient,
   JsonHttpClient
 } from 'domain/clients';
-import { SuggestionFlags } from 'domain/suggestions';
+import { SuggestionStatus, SuggestionTypes, TPackageSuggestion } from 'domain/suggestions';
 import {
   GitHubClient,
   GitHubOptions,
@@ -73,23 +73,28 @@ export const fetchGithubTests = {
 
         assert.deepEqual(
           actual.suggestions,
-          [{
-            name: 'satisfies',
-            version: 'latest',
-            flags: SuggestionFlags.status
-          }, {
-            name: 'latest',
-            version: 'v2.5.0',
-            flags: SuggestionFlags.release
-          }, {
-            name: 'rc',
-            version: 'v2.6.0-rc.1',
-            flags: SuggestionFlags.prerelease
-          }, {
-            name: 'preview',
-            version: 'v2.5.0-preview.1',
-            flags: SuggestionFlags.prerelease
-          }]
+          [
+            <TPackageSuggestion>{
+              name: SuggestionStatus.Satisfies,
+              version: 'latest',
+              type: SuggestionTypes.status
+            },
+            <TPackageSuggestion>{
+              name: SuggestionStatus.Latest,
+              version: 'v2.5.0',
+              type: SuggestionTypes.release
+            },
+            <TPackageSuggestion>{
+              name: 'rc',
+              version: 'v2.6.0-rc.1',
+              type: SuggestionTypes.prerelease
+            },
+            <TPackageSuggestion>{
+              name: 'preview',
+              version: 'v2.5.0-preview.1',
+              type: SuggestionTypes.prerelease
+            }
+          ]
         )
       })
   },
@@ -133,23 +138,28 @@ export const fetchGithubTests = {
 
         assert.deepEqual(
           actual.suggestions,
-          [{
-            name: 'fixed',
-            version: 'v2.0.0',
-            flags: SuggestionFlags.status
-          }, {
-            name: 'latest',
-            version: 'v2.5.0',
-            flags: SuggestionFlags.release
-          }, {
-            name: 'rc',
-            version: 'v2.6.0-rc.1',
-            flags: SuggestionFlags.prerelease
-          }, {
-            name: 'preview',
-            version: 'v2.5.0-preview.1',
-            flags: SuggestionFlags.prerelease
-          }]
+          [
+            <TPackageSuggestion>{
+              name: SuggestionStatus.Fixed,
+              version: 'v2.0.0',
+              type: SuggestionTypes.status
+            },
+            <TPackageSuggestion>{
+              name: SuggestionStatus.Latest,
+              version: 'v2.5.0',
+              type: SuggestionTypes.release
+            },
+            <TPackageSuggestion>{
+              name: 'rc',
+              version: 'v2.6.0-rc.1',
+              type: SuggestionTypes.prerelease
+            },
+            <TPackageSuggestion>{
+              name: 'preview',
+              version: 'v2.5.0-preview.1',
+              type: SuggestionTypes.prerelease
+            }
+          ]
         )
       })
   },
@@ -192,15 +202,18 @@ export const fetchGithubTests = {
 
         assert.deepEqual(
           actual.suggestions,
-          [{
-            name: 'fixed',
-            version: '166c3497',
-            flags: SuggestionFlags.status
-          }, {
-            name: 'latest',
-            version: 'df4d9435',
-            flags: SuggestionFlags.release
-          }]
+          [
+            <TPackageSuggestion>{
+              name: SuggestionStatus.Fixed,
+              version: '166c3497',
+              type: SuggestionTypes.status
+            },
+            <TPackageSuggestion>{
+              name: SuggestionStatus.Latest,
+              version: 'df4d9435',
+              type: SuggestionTypes.release
+            }
+          ]
         )
       })
   },

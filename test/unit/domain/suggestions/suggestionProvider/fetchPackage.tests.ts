@@ -16,7 +16,7 @@ import {
 } from 'domain/packages';
 import { PackageCache } from 'domain/packages/packageCache';
 import { IProviderConfig } from 'domain/providers';
-import { SuggestionFlags, SuggestionProvider } from 'domain/suggestions';
+import { SuggestionProvider, SuggestionTypes, TPackageSuggestion } from 'domain/suggestions';
 import { test } from 'mocha-ui-esm';
 import { instance, mock, verify, when } from 'ts-mockito';
 
@@ -88,10 +88,10 @@ export const FetchPackageTests = <any>{
       },
       resolved: this.testPackageNameVersion,
       suggestions: [
-        {
+        <TPackageSuggestion>{
           name: this.testPackageRes.name,
           version: "1.0.0",
-          flags: SuggestionFlags.release
+          type: SuggestionTypes.release
         }
       ]
     };
@@ -165,10 +165,10 @@ export const FetchPackageTests = <any>{
         },
         resolved: this.testPackageNameVersion,
         suggestions: [
-          {
+          <TPackageSuggestion>{
             name: this.testPackageRes.name,
             version: "1.0.0",
-            flags: SuggestionFlags.release
+            type: SuggestionTypes.release
           }
         ]
       };

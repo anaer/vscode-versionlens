@@ -8,7 +8,7 @@ import {
   createDependencyRange,
   createPackageResource
 } from 'domain/packages';
-import { SuggestionFlags } from 'domain/suggestions';
+import { SuggestionStatus, SuggestionTypes, TPackageSuggestion } from 'domain/suggestions';
 import {
   GitHubOptions,
   IPacote,
@@ -196,11 +196,16 @@ export const fetchPackageTests = {
 
     return cut.fetchPackage(testRequest, npaSpec)
       .then((actual) => {
-        assert.deepEqual(actual.suggestions, [{
-          name: 'latest',
-          version: '',
-          flags: SuggestionFlags.status
-        }])
+        assert.deepEqual(
+          actual.suggestions,
+          [
+            <TPackageSuggestion>{
+              name: SuggestionStatus.Latest,
+              version: '',
+              type: SuggestionTypes.status
+            }
+          ]
+        )
       })
   },
 

@@ -2,7 +2,8 @@ import assert from 'assert';
 import {
   SuggestionFactory,
   SuggestionStatus,
-  SuggestionFlags
+  SuggestionTypes,
+  TPackageSuggestion
 } from 'domain/suggestions';
 
 export const CreateLatestTests = {
@@ -13,10 +14,10 @@ export const CreateLatestTests = {
     const actual = SuggestionFactory.createLatest()
     assert.deepEqual(
       actual,
-      {
+      <TPackageSuggestion>{
         name: SuggestionStatus.Latest,
         version: SuggestionStatus.Latest,
-        flags: SuggestionFlags.tag
+        type: SuggestionTypes.tag
       });
   },
 
@@ -25,10 +26,10 @@ export const CreateLatestTests = {
     const actual = SuggestionFactory.createLatest(testRelease)
     assert.deepEqual(
       actual,
-      {
+      <TPackageSuggestion>{
         name: SuggestionStatus.Latest,
         version: testRelease,
-        flags: SuggestionFlags.release
+        type: SuggestionTypes.release
       });
   },
 
@@ -37,10 +38,10 @@ export const CreateLatestTests = {
     const actual = SuggestionFactory.createLatest(testRelease)
     assert.deepEqual(
       actual,
-      {
+      <TPackageSuggestion>{
         name: SuggestionStatus.LatestIsPrerelease,
         version: testRelease,
-        flags: SuggestionFlags.prerelease
+        type: SuggestionTypes.prerelease
       });
   },
 

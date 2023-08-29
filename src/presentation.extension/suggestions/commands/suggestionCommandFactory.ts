@@ -1,6 +1,6 @@
-import { SuggestionFlags } from 'domain/suggestions';
+import { SuggestionTypes } from 'domain/suggestions';
 import fs from 'node:fs';
-import { resolve, dirname } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import {
   SuggestionCodeLens,
   SuggestionCommandContributions,
@@ -39,10 +39,10 @@ export function createDirectoryLinkCommand(codeLens: SuggestionCodeLens) {
 export function createSuggestedVersionCommand(codeLens: SuggestionCodeLens) {
   if (!codeLens.package.suggestion) return createInvalidCommand(codeLens);
 
-  const { name, version, flags } = codeLens.package.suggestion;
-  const isStatus = (flags & SuggestionFlags.status);
-  const isTag = (flags & SuggestionFlags.tag);
-  const isPrerelease = flags & SuggestionFlags.prerelease;
+  const { name, version, type } = codeLens.package.suggestion;
+  const isStatus = (type & SuggestionTypes.status);
+  const isTag = (type & SuggestionTypes.tag);
+  const isPrerelease = type & SuggestionTypes.prerelease;
 
   if (!isStatus) {
     const replaceWithVersion: string = isPrerelease || isTag ?
