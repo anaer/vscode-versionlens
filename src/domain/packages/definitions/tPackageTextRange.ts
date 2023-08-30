@@ -1,4 +1,4 @@
-export type TPackageDependencyRange = {
+export type TPackageTextRange = {
 
   start: number;
 

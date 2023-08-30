@@ -1,12 +1,12 @@
-import { TPackageDependencyRange } from "../definitions/tPackageDependencyRange";
 import { PackageDescriptor, TPackageResource } from "..";
+import { TPackageTextRange } from "../definitions/tPackageTextRange";
 
 export class PackageDependency {
 
   constructor(
     packageRes: TPackageResource,
-    nameRange: TPackageDependencyRange,
-    versionRange: TPackageDependencyRange,
+    nameRange: TPackageTextRange,
+    versionRange: TPackageTextRange,
     packageDesc?: PackageDescriptor
   ) {
     this.package = packageRes;
@@ -15,9 +15,9 @@ export class PackageDependency {
     this.packageDesc = packageDesc;
   }
 
-  nameRange: TPackageDependencyRange;
+  nameRange: TPackageTextRange;
 
-  versionRange: TPackageDependencyRange;
+  versionRange: TPackageTextRange;
 
   package: TPackageResource;
 

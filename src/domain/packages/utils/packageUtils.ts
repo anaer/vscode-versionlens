@@ -1,14 +1,14 @@
 import { PackageDependency } from "domain/packages";
 import {
-  TPackageDependencyRange,
   TPackageNameVersion,
-  TPackageResource
+  TPackageResource,
+  TPackageTextRange
 } from "../index";
 
 export function createDependencyRange(
   start: number,
   end: number
-): TPackageDependencyRange {
+): TPackageTextRange {
   return {
     start,
     end

@@ -1,4 +1,4 @@
-import { TPackageDependencyRange } from "../../definitions/tPackageDependencyRange";
+import { TPackageTextRange } from "../../definitions/tPackageTextRange";
 
 export type TPackageType = {
   type: string
@@ -6,17 +6,17 @@ export type TPackageType = {
 
 export type TPackageNameDescriptor = TPackageType & {
   name: string,
-  nameRange: TPackageDependencyRange;
+  nameRange: TPackageTextRange;
 }
 
 export type TPackageVersionDescriptor = TPackageType & {
   version: string,
-  versionRange: TPackageDependencyRange;
+  versionRange: TPackageTextRange;
 }
 
 export type TPackagePathDescriptor = TPackageType & {
   path: string
-  pathRange: TPackageDependencyRange;
+  pathRange: TPackageTextRange;
 }
 
 export type TPackageHostedDescriptor = TPackageType & {

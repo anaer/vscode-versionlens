@@ -2,8 +2,8 @@ import { Nullable } from 'domain/generics';
 import {
   PackageDescriptor,
   PackageDescriptorType,
-  TPackageDependencyRange,
   TPackageNameDescriptor,
+  TPackageTextRange,
   TPackageVersionDescriptor
 } from 'domain/packages';
 import xmldoc from 'xmldoc';
@@ -104,7 +104,7 @@ function getAttributeRange(
   node,
   attributeName: string,
   xml: string
-): Nullable<TPackageDependencyRange> {
+): Nullable<TPackageTextRange> {
   const lineText = xml.substring(node.startTagPosition, node.position);
 
   let start = lineText.indexOf(attributeName);

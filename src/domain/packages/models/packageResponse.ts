@@ -3,15 +3,15 @@ import { PackageSourceType } from '../clients/ePackageSource';
 import { TPackageClientResponseStatus } from '../clients/tPackageClientResponseStatus';
 import { PackageResponseError } from '../definitions/ePackageResponseError';
 import { PackageVersionType } from '../definitions/ePackageVersionType';
-import { TPackageDependencyRange } from '../definitions/tPackageDependencyRange';
 import { TPackageNameVersion } from '../definitions/tPackageNameVersion';
 import { TPackageResource } from '../definitions/tPackageResource';
+import { TPackageTextRange } from '../definitions/tPackageTextRange';
 
 export type PackageResponse = {
   providerName: string;
   type?: PackageVersionType;
-  nameRange: TPackageDependencyRange;
-  versionRange: TPackageDependencyRange;
+  nameRange: TPackageTextRange;
+  versionRange: TPackageTextRange;
   suggestion?: TPackageSuggestion;
   order: number;
 
