@@ -69,12 +69,18 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
     return this;
   }
 
-  registerOnPackageDependenciesUpdated(listener: OnPackageDependenciesUpdatedFunction): void {
-    this.packageDependenciesUpdatedListener = listener;
+  registerOnPackageDependenciesUpdated(
+    listener: OnPackageDependenciesUpdatedFunction,
+    thisArg: any,
+  ): void {
+    this.packageDependenciesUpdatedListener = listener.bind(thisArg);
   }
 
-  registerOnPackageFileUpdated(listener: OnPackageFileUpdatedFunction): void {
-    this.packageFileUpdatedListener = listener;
+  registerOnPackageFileUpdated(
+    listener: OnPackageFileUpdatedFunction,
+    thisArg: any
+  ): void {
+    this.packageFileUpdatedListener = listener.bind(thisArg);
   }
 
   async dispose(): Promise<void> {

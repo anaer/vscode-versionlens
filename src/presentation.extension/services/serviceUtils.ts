@@ -228,11 +228,19 @@ export function addOnPackageDependenciesUpdated(services: IServiceCollection) {
   const serviceName = nameOf<IExtensionServices>().onPackageDependenciesUpdated
   services.addSingleton(
     serviceName,
-    (container: IDomainServices & IExtensionServices) =>
-      new OnPackageDependenciesUpdated(
-        container.packageFileWatcher,
+    (container: IDomainServices & IExtensionServices) => {
+      const event = new OnPackageDependenciesUpdated(
         container.logger.child({ namespace: serviceName })
-      )
+      );
+
+      // register listener
+      container.packageFileWatcher.registerOnPackageDependenciesUpdated(
+        event.execute, 
+        event
+      );
+
+      return event;
+    }
   )
 }
 
@@ -240,12 +248,17 @@ export function addOnPackageFileUpdated(services: IServiceCollection) {
   const serviceName = nameOf<IExtensionServices>().onPackageFileUpdated
   services.addSingleton(
     serviceName,
-    (container: IDomainServices & IExtensionServices) =>
-      new OnPackageFileUpdated(
-        container.packageFileWatcher,
+    (container: IDomainServices & IExtensionServices) => {
+      const event = new OnPackageFileUpdated(
         container.editorDependencyCache,
         container.logger.child({ namespace: serviceName })
-      )
+      );
+
+      // register listener
+      container.packageFileWatcher.registerOnPackageFileUpdated(event.execute, event);
+
+      return event;
+    }
   )
 }
 

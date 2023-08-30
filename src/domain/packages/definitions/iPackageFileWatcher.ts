@@ -19,8 +19,14 @@ export interface IPackageFileWatcher {
 
   watch: () => IPackageFileWatcher;
 
-  registerOnPackageDependenciesUpdated: (listener: OnPackageDependenciesUpdatedFunction) => void;
+  registerOnPackageDependenciesUpdated: (
+    listener: OnPackageDependenciesUpdatedFunction,
+    thisArg: any
+  ) => void;
 
-  registerOnPackageFileUpdated: (listener: OnPackageFileUpdatedFunction) => void;
+  registerOnPackageFileUpdated: (
+    listener: OnPackageFileUpdatedFunction, 
+    thisArg: any
+  ) => void;
 
 }
