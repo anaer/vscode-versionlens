@@ -13,7 +13,7 @@ import {
 import { nameOf } from 'domain/utils';
 import { AwilixServiceCollectionFactory } from 'infrastructure/di';
 import {
-  addPackageDependencyWatcher,
+  addPackageFileWatcher,
   addWinstonChannelLogger,
   addWinstonLogger
 } from 'infrastructure/services';
@@ -73,7 +73,7 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
 
   addWinstonLogger(services, "extension");
 
-  addPackageDependencyWatcher(services);
+  addPackageFileWatcher(services);
 
   // extension
   addVersionLensExtension(services);

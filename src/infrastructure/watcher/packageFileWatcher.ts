@@ -3,7 +3,7 @@ import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
   DependencyCache,
-  IPackageDependencyWatcher,
+  IPackageFileWatcher,
   OnPackageDependenciesUpdatedFunction,
   OnPackageFileUpdatedFunction,
   hasPackageDepsChanged
@@ -12,7 +12,7 @@ import { ISuggestionProvider } from 'domain/suggestions';
 import { readFile } from 'domain/utils';
 import { Uri, workspace } from 'vscode';
 
-export class PackageDependencyWatcher implements IPackageDependencyWatcher, IDisposable {
+export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
 
   constructor(
     readonly providers: ISuggestionProvider[],
@@ -47,7 +47,7 @@ export class PackageDependencyWatcher implements IPackageDependencyWatcher, IDis
     this.watch();
   }
 
-  watch(): IPackageDependencyWatcher {
+  watch(): IPackageFileWatcher {
     // watch files
     this.providers.forEach(provider => {
       const watcher = workspace.createFileSystemWatcher(provider.config.fileMatcher.pattern)

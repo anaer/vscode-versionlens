@@ -230,7 +230,7 @@ export function addOnPackageDependenciesUpdated(services: IServiceCollection) {
     serviceName,
     (container: IDomainServices & IExtensionServices) =>
       new OnPackageDependenciesUpdated(
-        container.packageDependencyWatcher,
+        container.packageFileWatcher,
         container.logger.child({ namespace: serviceName })
       )
   )
@@ -242,7 +242,7 @@ export function addOnPackageFileUpdated(services: IServiceCollection) {
     serviceName,
     (container: IDomainServices & IExtensionServices) =>
       new OnPackageFileUpdated(
-        container.packageDependencyWatcher,
+        container.packageFileWatcher,
         container.editorDependencyCache,
         container.logger.child({ namespace: serviceName })
       )

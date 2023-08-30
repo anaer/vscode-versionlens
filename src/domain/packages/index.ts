@@ -6,7 +6,7 @@ export * from './clients/tPackageClientResponse';
 export * from "./clients/tPackageClientResponseStatus";
 export * from './definitions/ePackageResponseError';
 export * from './definitions/ePackageVersionType';
-export * from './definitions/iPackageDependencyWatcher';
+export * from './definitions/iPackageFileWatcher';
 export * from './definitions/tPackageNameVersion';
 export * from './definitions/tPackageResource';
 export * from './definitions/tPackageTextRange';

@@ -3,7 +3,7 @@ import { Config } from 'domain/configuration';
 import { IServiceCollectionFactory, IServiceProvider } from 'domain/di';
 import { HttpOptions } from 'domain/http';
 import { ILogger, ILoggerChannel, LoggingOptions } from 'domain/logging';
-import { DependencyCache, IPackageDependencyWatcher, PackageCache } from 'domain/packages';
+import { DependencyCache, IPackageFileWatcher, PackageCache } from 'domain/packages';
 import { ISuggestionProvider } from 'domain/suggestions';
 
 export interface IDomainServices {
@@ -28,7 +28,7 @@ export interface IDomainServices {
 
   suggestionProviders: Array<ISuggestionProvider>;
 
-  packageDependencyWatcher: IPackageDependencyWatcher;
+  packageFileWatcher: IPackageFileWatcher;
 
   dependencyCache: DependencyCache;
 

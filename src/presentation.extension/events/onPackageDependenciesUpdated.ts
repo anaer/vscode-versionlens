@@ -1,20 +1,20 @@
 import { throwUndefinedOrNull } from "@esm-test/guards";
 import { ILogger } from "domain/logging";
-import { IPackageDependencyWatcher, PackageDependency } from "domain/packages";
+import { IPackageFileWatcher, PackageDependency } from "domain/packages";
 import { ISuggestionProvider } from "domain/suggestions";
 import { Task, tasks } from "vscode";
 
 export class OnPackageDependenciesUpdated {
 
   constructor(
-    readonly packageDependencyWatcher: IPackageDependencyWatcher,
+    readonly packageFileWatcher: IPackageFileWatcher,
     readonly logger: ILogger
   ) {
-    throwUndefinedOrNull("packageDependencyWatcher", packageDependencyWatcher);
+    throwUndefinedOrNull("packageFileWatcher", packageFileWatcher);
     throwUndefinedOrNull("logger", logger);
 
     // run execute when a change is detected
-    packageDependencyWatcher.registerOnPackageDependenciesUpdated(this.execute.bind(this));
+    packageFileWatcher.registerOnPackageDependenciesUpdated(this.execute.bind(this));
   }
 
   async execute(

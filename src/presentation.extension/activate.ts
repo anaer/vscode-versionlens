@@ -1,6 +1,6 @@
 import { IServiceProvider } from 'domain/di';
 import { ILogger, ILoggingOptions } from 'domain/logging';
-import { IPackageDependencyWatcher } from 'domain/packages';
+import { IPackageFileWatcher } from 'domain/packages';
 import { IDomainServices } from 'domain/services';
 import { nameOf, readJsonFile } from 'domain/utils';
 import { join } from 'node:path';
@@ -63,7 +63,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   logger.info("log folder: %s", logPath);
 
   // setup package dependency watcher
-  await serviceProvider.getService<IPackageDependencyWatcher>(serviceNames.packageDependencyWatcher)
+  await serviceProvider.getService<IPackageFileWatcher>(serviceNames.packageFileWatcher)
     // init and watch provider workspace files
     .initialize();
 

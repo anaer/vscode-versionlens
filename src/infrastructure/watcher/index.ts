@@ -1,1 +1,1 @@
-export * from './packageDependencyWatcher';
+export * from './packageFileWatcher';

@@ -13,11 +13,11 @@ export type OnPackageFileUpdatedFunction = (
   packageDeps: PackageDependency[]
 ) => Promise<void>;
 
-export interface IPackageDependencyWatcher {
+export interface IPackageFileWatcher {
 
   initialize(): Promise<void>;
 
-  watch: () => IPackageDependencyWatcher;
+  watch: () => IPackageFileWatcher;
 
   registerOnPackageDependenciesUpdated: (listener: OnPackageDependenciesUpdatedFunction) => void;
 
