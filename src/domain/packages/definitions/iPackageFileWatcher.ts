@@ -1,5 +1,5 @@
 import { PackageDependency } from "domain/packages";
-import { ISuggestionProvider } from "../../suggestions/definitions/iSuggestionProvider";
+import { ISuggestionProvider } from "domain/suggestions";
 
 export type OnPackageDependenciesUpdatedFunction = (
   provider: ISuggestionProvider,
