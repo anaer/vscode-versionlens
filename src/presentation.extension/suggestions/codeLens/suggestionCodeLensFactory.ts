@@ -5,10 +5,10 @@ import { SuggestionCodeLens } from './suggestionCodeLens';
 
 export function createFromPackageResponses(
   document: TextDocument,
-  responses: Array<PackageResponse>,
+  suggestions: Array<PackageResponse>,
   replaceVersionFn: TSuggestionReplaceFunction,
 ): Array<SuggestionCodeLens> {
-  return responses.map(
+  return suggestions.map(
     function (response) {
       return createFromPackageResponse(
         response,

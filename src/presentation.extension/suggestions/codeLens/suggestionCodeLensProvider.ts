@@ -8,9 +8,10 @@ import {
 } from 'domain/packages';
 import { IProvider, IProviderConfig } from 'domain/providers';
 import {
+  GetSuggestions,
   ISuggestionProvider,
-  SuggestionTypes,
   SuggestionStatus,
+  SuggestionTypes,
   defaultReplaceFn
 } from 'domain/suggestions';
 import { dirname } from 'node:path';
@@ -37,13 +38,13 @@ export class SuggestionCodeLensProvider
   constructor(
     readonly extension: VersionLensExtension,
     readonly suggestionProvider: ISuggestionProvider,
-    readonly dependencyCache: DependencyCache,
+    readonly getSuggestions: GetSuggestions,
     readonly editorDependencyCache: DependencyCache,
     readonly logger: ILogger
   ) {
     throwUndefinedOrNull("extension", extension);
     throwUndefinedOrNull("suggestionProvider", suggestionProvider);
-    throwUndefinedOrNull("dependencyCache", dependencyCache);
+    throwUndefinedOrNull("getSuggestions", getSuggestions);
     throwUndefinedOrNull("editorDependencyCache", editorDependencyCache);
     throwUndefinedOrNull("logger", logger);
 
@@ -96,29 +97,14 @@ export class SuggestionCodeLensProvider
     // set in progress
     this.state.providerBusy.value++;
 
-    // unfreeze config per file request
-    this.config.caching.defrost();
-
-    this.logger.info(
-      "Caching duration is set to %s seconds",
-      this.config.caching.duration / 1000
-    );
-
-    // get the document dependencies
-    const packageDeps = DependencyCache.getDependenciesWithFallback(
-      this.suggestionProvider.name,
-      packageFilePath,
-      this.editorDependencyCache,
-      this.dependencyCache
-    );
-
     // fetch the package suggestions
     let suggestions: Array<PackageResponse> = [];
     try {
-      suggestions = await this.suggestionProvider.fetchSuggestions(
+      suggestions = await this.getSuggestions.execute(
+        this.suggestionProvider,
         projectPath,
-        packagePath,
-        packageDeps
+        packageFilePath,
+        this.editorDependencyCache
       );
     } catch (error) {
       this.state.providerError.value = true;
@@ -127,21 +113,6 @@ export class SuggestionCodeLensProvider
     }
 
     this.state.providerBusy.value--;
-
-    if (suggestions === null) {
-      this.logger.info(
-        "No %s suggestions found in %s",
-        this.suggestionProvider.name,
-        packageFilePath
-      );
-      return [];
-    }
-
-    this.logger.info(
-      "Resolved %s %s package release and pre-release suggestions",
-      suggestions.length,
-      this.suggestionProvider.name
-    );
 
     // remove prereleases if not enabled
     if (this.state.showPrereleases.value === false) {

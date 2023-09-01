@@ -3,6 +3,7 @@ import {
   IDomainServices,
   addAppConfig,
   addCachingOptions,
+  addGetSuggestionsUseCase,
   addHttpOptions,
   addLoggingOptions,
   addPackagesDependencyCache,
@@ -67,6 +68,8 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
   addSuggestionDependencyCache(services);
 
   addProcessesCache(services);
+
+  addGetSuggestionsUseCase(services);
 
   // infrastructure
   addWinstonChannelLogger(services);

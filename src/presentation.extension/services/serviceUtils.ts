@@ -200,7 +200,7 @@ export function addVersionLensProviders(services: IServiceCollection) {
           suggestionProvider => new SuggestionCodeLensProvider(
             container.extension,
             suggestionProvider,
-            container.dependencyCache,
+            container.getSuggestions,
             container.editorDependencyCache,
             container.logger.child({ namespace: `${suggestionProvider.name}CodeLensProvider` })
           )

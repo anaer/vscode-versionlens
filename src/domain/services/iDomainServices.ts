@@ -5,6 +5,7 @@ import { HttpOptions } from 'domain/http';
 import { ILogger, ILoggerChannel, LoggingOptions } from 'domain/logging';
 import { DependencyCache, IPackageFileWatcher, PackageCache } from 'domain/packages';
 import { ISuggestionProvider } from 'domain/suggestions';
+import { GetSuggestions } from 'domain/suggestions/useCases/getSuggestions';
 
 export interface IDomainServices {
 
@@ -35,5 +36,7 @@ export interface IDomainServices {
   packageCache: PackageCache;
 
   processesCache: IExpiryCache;
+
+  getSuggestions: GetSuggestions;
 
 }
