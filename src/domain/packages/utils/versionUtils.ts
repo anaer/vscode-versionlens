@@ -182,6 +182,8 @@ export function filterPrereleasesGtMinRange(
     minVersion(versionRange, loosePrereleases) :
     versionRange;
 
+  if(!minVersionFromRange) return [];
+
   const gtfn = isValidRange ? gt : maxSatisfying;
 
   // for each group;

@@ -201,7 +201,7 @@ export const fetchPackageTests = {
           [
             <TPackageSuggestion>{
               name: SuggestionStatus.Latest,
-              version: '',
+              version: testPackageRes.version,
               type: SuggestionTypes.status
             }
           ]

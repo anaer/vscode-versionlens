@@ -6,12 +6,13 @@ import {
   TPackageSuggestion
 } from 'domain/suggestions';
 import { test } from 'mocha-ui-esm';
+import Fixtures from './createSuggestions.fixtures';
 
 export const CreateSuggestionsTests = {
 
   [test.title]: createSuggestions.name,
 
-  "returns PackageVersionStatus.nomatch": {
+  "returns nomatch": {
 
     "when releases and prereleases are empty": () => {
       const expected = [
@@ -61,233 +62,199 @@ export const CreateSuggestionsTests = {
       );
       assert.deepEqual(results, expected);
     },
-
-    "when using a release range": () => {
-      const expected = [
-        <TPackageSuggestion>{
-          name: SuggestionStatus.NoMatch,
-          version: '',
-          type: SuggestionTypes.status
-        },
-        <TPackageSuggestion>{
-          name: SuggestionStatus.Latest,
-          version: '1.0.3-1.2.3',
-          type: SuggestionTypes.release
-        }
-      ]
-
-      const testRange = '^1.0.0'
-      const testReleases = ['0.0.6']
-      const testPrereleases = ['1.0.1-1.2.3', '1.0.2-1.2.3', '1.0.3-1.2.3']
-      const results = createSuggestions(
-        testRange,
-        testReleases,
-        testPrereleases,
-        '1.0.3-1.2.3'
-      );
-      assert.equal(results.length, expected.length);
-    },
-
   },
 
-  "returns PackageVersionStatus.Latest": {
+  "when has dist tag suggestion": {
+    "and version has no match": {
+      "returns 'no match' with latest dist tag suggestion": () => {
+        // setup
+        const testDistTagLatest = '4.0.0-next';
 
-    "when versionRange matches the latest release": () => {
+        const expected = [
+          <TPackageSuggestion>{
+            name: SuggestionStatus.NoMatch,
+            version: '',
+            type: SuggestionTypes.status
+          },
+          <TPackageSuggestion>{
+            name: SuggestionStatus.LatestIsPrerelease,
+            version: '4.0.0-next',
+            type: SuggestionTypes.prerelease
+          }
+        ]
 
-      const expected = [
-        <TPackageSuggestion>{
-          name: SuggestionStatus.Latest,
-          version: '',
-          type: SuggestionTypes.status
-        },
-        <TPackageSuggestion>{
-          name: 'next',
-          version: '4.0.0-next',
-          type: SuggestionTypes.prerelease
-        }
-      ]
+        const testRange = '4.0.0'
+        const testReleases = ['0.0.5', '0.0.6']
+        const testPrereleases = ['1.1.0-alpha.1', '4.0.0-next']
 
-      const testReleases = ['1.0.0', '2.0.0', '2.1.0', '3.0.0']
-      const testPrereleases = ['1.1.0-alpha.1', '4.0.0-next']
-      const testRanges = [
-        '3.0.0',
-        '^3.0.0'
-      ]
+        // test
+        const results = createSuggestions(
+          testRange,
+          testReleases,
+          testPrereleases,
+          testDistTagLatest
+        );
 
-      testRanges.forEach(testRange => {
+        // assert
+        assert.deepEqual(results, expected);
+      },
+    },
+    "version matches dist tag": {
+      "returns 'latest'": () => {
+        // setup
+        const testDistTagVersion = '5.0.0';
+
+        const expected = [
+          <TPackageSuggestion>{
+            name: SuggestionStatus.Latest,
+            version: '5.0.0',
+            type: SuggestionTypes.status
+          }
+        ]
+
+        const testReleases = ['0.0.5', '2.0.0', '5.0.0']
+        const testPrereleases = ['1.1.0-alpha.1', '4.0.0-next']
+        const testRange = testDistTagVersion
+
+        // test
+        const results = createSuggestions(
+          testRange,
+          testReleases,
+          testPrereleases,
+          testDistTagVersion
+        );
+
+        // assert
+        assert.deepEqual(results, expected);
+      }
+    }
+  },
+
+  "when version is fixed": {
+    "has no match": {
+      "returns 'no match' with latest suggestions": () => {
+        // setup
+        const testRange = '0.5.0'
+        const testReleases = ['1.0.0']
+        const testPrereleases = ['1.1.0-alpha.1']
+
+        // test
         const results = createSuggestions(
           testRange,
           testReleases,
           testPrereleases
         );
-        assert.deepEqual(results, expected);
-      })
 
+        // assert
+        assert.deepEqual(results, Fixtures.fixedNoMatchWithLatestSuggestions);
+      }
     },
+    "is the latest release": {
+      "returns 'latest' with latest prerelease suggestions": () => {
+        // setup
+        const testVersion = '3.0.0';
+        const testReleases = ['1.0.0', '2.0.0', '2.1.0', testVersion]
+        const testPrereleases = ['1.1.0-alpha.1', '4.0.0-next']
 
-    "when suggestedVersion is the latest release": () => {
-      const testSuggestedVersion = '5.0.0';
+        // test
+        const results = createSuggestions(
+          testVersion,
+          testReleases,
+          testPrereleases
+        );
 
-      const expected = [
-        <TPackageSuggestion>{
-          name: SuggestionStatus.Latest,
-          version: '',
-          type: SuggestionTypes.status
-        }
-      ]
+        // assert
+        assert.deepEqual(results, Fixtures.fixedIsLatestWithPrereleaseSuggestions);
+        assert.equal(results[0].version, testVersion);
+      },
+      "returns 'latest' with no suggestions": () => {
+        // setup
+        const testVersion = '3.0.0';
+        const testReleases = ['1.0.0', '2.0.0', '2.1.0', testVersion]
+        const testPrereleases = ['1.1.0-alpha.1', '3.0.0-next']
 
-      const testReleases = ['0.0.5', '2.0.0', '5.0.0']
-      const testPrereleases = ['1.1.0-alpha.1', '4.0.0-next']
-      const testRange = testSuggestedVersion
+        // test
+        const results = createSuggestions(
+          testVersion,
+          testReleases,
+          testPrereleases
+        );
 
-      const results = createSuggestions(
-        testRange,
-        testReleases,
-        testPrereleases,
-        testSuggestedVersion
-      );
-      assert.deepEqual(results, expected);
-    },
-
+        // assert
+        assert.deepEqual(results, Fixtures.fixedIsLatestNoSuggestions);
+        assert.equal(results[0].version, testVersion);
+      }
+    }
   },
+  "when version is a range": {
+    "has no match": {
+      "returns 'no match' with latest suggestion": () => {
+        // setup
+        const testRange = '>2.0.0 <3.0.0'
+        const testReleases = ['1.0.0', '2.0.0']
+        const testPrereleases = ['1.1.0-alpha.1']
 
-  "returns PackageVersionStatus.LatestIsPrerelease": {
-
-    "when suggestedVersion is not the latest release": () => {
-      const testDistTagLatest = '4.0.0-next';
-
-      const expected = [
-        <TPackageSuggestion>{
-          name: SuggestionStatus.NoMatch,
-          version: '',
-          type: SuggestionTypes.status
-        },
-        <TPackageSuggestion>{
-          name: SuggestionStatus.LatestIsPrerelease,
-          version: '4.0.0-next',
-          type: SuggestionTypes.prerelease
-        }
-      ]
-
-      const testReleases = ['0.0.5', '0.0.6']
-      const testPrereleases = ['1.1.0-alpha.1', '4.0.0-next']
-      const testRange = '4.0.0'
-
-      const results = createSuggestions(
-        testRange,
-        testReleases,
-        testPrereleases,
-        testDistTagLatest
-      );
-      assert.deepEqual(results, expected);
-    },
-
-  },
-
-  "returns PackageVersionStatus.satisfies": {
-
-    "when versionRange satisfies the latest release": () => {
-
-      const expected = [
-        <TPackageSuggestion>{
-          name: SuggestionStatus.Satisfies,
-          version: 'latest',
-          type: SuggestionTypes.status
-        },
-        <TPackageSuggestion>{
-          name: SuggestionStatus.Latest,
-          version: '3.0.0',
-          type: SuggestionTypes.release
-        },
-        <TPackageSuggestion>{
-          name: 'next',
-          version: '4.0.0-next',
-          type: SuggestionTypes.prerelease
-        }
-      ]
-
-      const testReleases = ['1.0.0', '2.0.0', '2.1.0', '3.0.0']
-      const testPrereleases = ['1.1.0-alpha.1', '4.0.0-next']
-
-      const results = createSuggestions(
-        '>=2',
-        testReleases,
-        testPrereleases
-      );
-
-      assert.deepEqual(results, expected);
-    },
-
-    "when versionRange satisfies the latest tagged release": () => {
-      const testLatest = '7.10.1'
-
-      const expected = [
-        <TPackageSuggestion>{
-          name: SuggestionStatus.Satisfies,
-          version: 'latest',
-          type: SuggestionTypes.status
-        },
-        <TPackageSuggestion>{
-          name: SuggestionStatus.Latest,
-          version: testLatest,
-          type: SuggestionTypes.release
-        },
-        <TPackageSuggestion>{
-          name: 'next',
-          version: '8.0.0-next',
-          type: SuggestionTypes.prerelease
-        }
-      ]
-
-      const testReleases = ['1.0.0', '2.0.0', '2.1.0', '7.9.6', '7.9.7', testLatest]
-      const testPrereleases = ['1.1.0-alpha.1', '8.0.0-next']
-
-      const results = createSuggestions(
-        '^7.9.1',
-        testReleases,
-        testPrereleases,
-        testLatest
-      );
-
-      assert.deepEqual(results, expected);
-    },
-    "when versionRange satisfies a range in the releases": () => {
-
-      const expected = [
-        <TPackageSuggestion>{
-          name: SuggestionStatus.Satisfies,
-          version: '2.1.0',
-          type: SuggestionTypes.release
-        },
-        <TPackageSuggestion>{
-          name: SuggestionStatus.Latest,
-          version: '3.0.0',
-          type: SuggestionTypes.release
-        },
-        <TPackageSuggestion>{
-          name: 'next',
-          version: '4.0.0-next',
-          type: SuggestionTypes.prerelease
-        }
-      ]
-
-      const testReleases = ['1.0.0', '2.0.0', '2.1.0', '3.0.0']
-      const testPrereleases = ['1.1.0-alpha.1', '4.0.0-next']
-      const testRanges = [
-        '2.*'
-      ]
-
-      testRanges.forEach(testRange => {
+        // test
         const results = createSuggestions(
           testRange,
           testReleases,
           testPrereleases
         );
-        assert.deepEqual(results, expected);
-      })
 
+        // assert
+        assert.deepEqual(results, Fixtures.rangeNoMatchWithLatestSuggestions);
+      }
     },
+    "includes the latest release": {
+      "$i: returns 'satisfies latest' with latest prerelease suggestions": [
+        ['>=2'],
+        ['>=2 <=5'],
+        ['>=3'],
+        ['^3'],
+        ['3.*'],
+        ['^3.0.0'],
+        ['>=3.0.* < 4'],
+        (testRange: string) => {
+          // setup
+          const latestVersion = '3.0.0';
+          const testReleases = ['1.0.0', '2.0.0', '2.1.0', latestVersion]
+          const testPrereleases = ['1.1.0-alpha.1', '4.0.0-next']
 
-  },
+          // test
+          const results = createSuggestions(
+            testRange,
+            testReleases,
+            testPrereleases
+          );
 
+          // assert
+          assert.deepEqual(results, Fixtures.rangeSatisfiesLatestOnly);
+          assert.equal(results[0].version, latestVersion);
+        }
+      ],
+    },
+    "doesn't include latest release": {
+      "$i: returns 'satisfies' with latest suggestions": [
+        ['>=2 <3'],
+        ['>=1.2 <2.2.*'],
+        (testRange: string) => {
+          // setup
+          const satisfiesVersion = '2.1.0';
+          const testReleases = ['1.0.0', '2.0.0', '2.1.0', '3.0.0']
+          const testPrereleases = ['1.1.0-alpha.1', '4.0.0-next']
+
+          // test
+          const results = createSuggestions(
+            testRange,
+            testReleases,
+            testPrereleases
+          );
+
+          // assert
+          assert.deepEqual(results, Fixtures.rangeSatisfiesAndSuggestsLatest);
+          assert.equal(results[0].version, satisfiesVersion);
+        }
+      ],
+    }
+  }
 }

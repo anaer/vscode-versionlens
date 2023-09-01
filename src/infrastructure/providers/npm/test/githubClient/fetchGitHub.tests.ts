@@ -75,14 +75,9 @@ export const fetchGithubTests = {
           actual.suggestions,
           [
             <TPackageSuggestion>{
-              name: SuggestionStatus.Satisfies,
-              version: 'latest',
-              type: SuggestionTypes.status
-            },
-            <TPackageSuggestion>{
-              name: SuggestionStatus.Latest,
+              name: SuggestionStatus.SatisfiesLatest,
               version: 'v2.5.0',
-              type: SuggestionTypes.release
+              type: SuggestionTypes.status
             },
             <TPackageSuggestion>{
               name: 'rc',

@@ -10,6 +10,7 @@ export enum SuggestionStatus {
   Invalid = 'invalid entry',
   NoMatch = 'no match',
   Satisfies = 'satisfies',
+  SatisfiesLatest = 'satisfies latest',
   Latest = 'latest',
   LatestIsPrerelease = 'latest prerelease',
   Fixed = 'fixed'

@@ -1,24 +1,28 @@
 import { Nullable } from 'domain/generics';
 import { VersionUtils } from 'domain/packages';
 import semver from 'semver';
-import { SuggestionStatus, SuggestionTypes, TPackageSuggestion } from '../index';
+import { SuggestionTypes, TPackageSuggestion } from '../index';
 import {
   createFixedStatus,
   createLatest,
   createMatchesLatest,
   createNoMatch,
-  createSatisifiesLatest,
-  createSuggestion
+  createSatisifies,
+  createSatisifiesLatest
 } from '../suggestionFactory';
 
 export function createSuggestions(
   versionRange: string,
   releases: string[],
   prereleases: string[],
-  suggestedLatestVersion: Nullable<string> = null
+  distTagVersion: Nullable<string> = null
 ): Array<TPackageSuggestion> {
-  const { maxSatisfying, compareLoose } = semver;
+  const { compareLoose, maxSatisfying, prerelease, valid, validRange } = semver;
   const suggestions: Array<TPackageSuggestion> = [];
+
+  const isFixedVersion = valid(versionRange);
+  const isRangeVersion = validRange(versionRange);
+  const isPreRelease = prerelease(versionRange)
 
   // check for a release
   let satisfiesVersion = maxSatisfying(
@@ -27,7 +31,7 @@ export function createSuggestions(
     VersionUtils.loosePrereleases
   );
 
-  if (!satisfiesVersion && versionRange.indexOf('-') > -1) {
+  if (!satisfiesVersion && isPreRelease) {
     // lookup prereleases
     satisfiesVersion = maxSatisfying(
       prereleases,
@@ -37,11 +41,8 @@ export function createSuggestions(
   }
 
   // get the latest release
-  const latestVersion = suggestedLatestVersion || releases[releases.length - 1];
+  const latestVersion = distTagVersion || releases[releases.length - 1];
   const isLatest = latestVersion === satisfiesVersion;
-
-  const noSuggestionNeeded = versionRange.includes(satisfiesVersion) ||
-    versionRange.includes(suggestedLatestVersion);
 
   if (releases.length === 0 && prereleases.length === 0)
     // no match
@@ -53,33 +54,25 @@ export function createSuggestions(
       // suggest latestVersion
       createLatest(latestVersion),
     )
-  else if (isLatest && noSuggestionNeeded)
+  else if (isLatest && isFixedVersion)
     // latest
-    suggestions.push(createMatchesLatest(versionRange));
-  else if (isLatest)
+    suggestions.push(createMatchesLatest(latestVersion));
+  else if (isLatest && isRangeVersion)
     suggestions.push(
       // satisfies latest
-      createSatisifiesLatest(),
-      // suggest latestVersion
-      createLatest(latestVersion),
+      createSatisifiesLatest(latestVersion)
     );
-  else if (satisfiesVersion && VersionUtils.isFixedVersion(versionRange))
+  else if (satisfiesVersion && isFixedVersion)
     suggestions.push(
       // fixed
-      createFixedStatus(versionRange),
+      createFixedStatus(satisfiesVersion),
       // suggest latestVersion
       createLatest(latestVersion),
     );
   else if (satisfiesVersion)
     suggestions.push(
-      // satisfies >x.y.z <x.y.z
-      createSuggestion(
-        SuggestionStatus.Satisfies,
-        satisfiesVersion,
-        noSuggestionNeeded ?
-          SuggestionTypes.status :
-          SuggestionTypes.release
-      ),
+      // satisfies version that doesnt match latest
+      createSatisifies(satisfiesVersion),
       // suggest latestVersion
       createLatest(latestVersion),
     );

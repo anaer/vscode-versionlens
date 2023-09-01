@@ -131,15 +131,23 @@ export function createMatchesLatest(latestVersion: string): TPackageSuggestion {
 
   return {
     name,
-    version: isPrerelease ? latestVersion : '',
+    version: latestVersion,
     type: SuggestionTypes.status
   };
 }
 
-export function createSatisifiesLatest(): TPackageSuggestion {
+export function createSatisifiesLatest(latestVersion: string): TPackageSuggestion {
+  return createSuggestion(
+    SuggestionStatus.SatisfiesLatest,
+    latestVersion,
+    SuggestionTypes.status
+  )
+}
+
+export function createSatisifies(satisfiesVersion: string): TPackageSuggestion {
   return createSuggestion(
     SuggestionStatus.Satisfies,
-    'latest',
+    satisfiesVersion,
     SuggestionTypes.status
   )
 }
