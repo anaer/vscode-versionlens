@@ -11,8 +11,7 @@ import Fixtures from './createSuggestions.fixtures';
 export const CreateSuggestionsTests = {
 
   [test.title]: createSuggestions.name,
-  only: 1,
-  
+
   "returns nomatch": {
 
     "when releases and prereleases are empty": () => {
