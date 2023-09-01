@@ -27,13 +27,14 @@ export function addWinstonLogger(services: IServiceCollection, namespace: string
 }
 
 export function addPackageFileWatcher(services: IServiceCollection) {
+  const serviceName = nameOf<IDomainServices>().packageFileWatcher;
   services.addSingleton(
-    nameOf<IDomainServices>().packageFileWatcher,
+    serviceName,
     (container: IDomainServices) =>
       new PackageFileWatcher(
         container.suggestionProviders,
         container.dependencyCache,
-        container.logger.child({ namespace: 'package dependency watcher' })
+        container.logger.child({ namespace: serviceName })
       ),
     true
   );

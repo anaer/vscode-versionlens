@@ -47,27 +47,29 @@ export function addDubConfig(services: IServiceCollection) {
 }
 
 export function addJsonClient(services: IServiceCollection) {
+  const serviceName = nameOf<IDubServices>().dubJsonClient;
   services.addSingleton(
-    nameOf<IDubServices>().dubJsonClient,
+    serviceName,
     (container: IDubServices & IDomainServices) =>
       createJsonClient(
         {
           caching: container.dubCachingOpts,
           http: container.dubHttpOpts
         },
-        container.logger.child({ namespace: 'dub request' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
 
 export function addDubClient(services: IServiceCollection) {
+  const serviceName = nameOf<IDubServices>().dubClient;
   services.addSingleton(
-    nameOf<IDubServices>().dubClient,
+    serviceName,
     (container: IDubServices & IDomainServices) =>
       new DubClient(
         container.dubConfig,
         container.dubJsonClient,
-        container.logger.child({ namespace: 'dub client' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
@@ -79,7 +81,7 @@ export function addSuggestionProvider(services: IServiceCollection) {
       new DubSuggestionProvider(
         container.dubClient,
         container.packageCache,
-        container.logger.child({ namespace: 'dub provider' })
+        container.logger.child({ namespace: 'dubSuggestionProvider' })
       )
   );
 }

@@ -63,62 +63,67 @@ export function addDotNetConfig(services: IServiceCollection) {
 }
 
 export function addProcessClient(services: IServiceCollection) {
+  const serviceName = nameOf<IDotNetServices>().dotnetProcess;
   services.addSingleton(
-    nameOf<IDotNetServices>().dotnetProcess,
+    serviceName,
     (container: IDotNetServices & IDomainServices) =>
       createProcessClient(
         container.processesCache,
         container.dotnetCachingOpts,
-        container.logger.child({ namespace: 'process client' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
 
 export function addCliClient(services: IServiceCollection) {
+  const serviceName = nameOf<IDotNetServices>().dotnetCli;
   services.addSingleton(
-    nameOf<IDotNetServices>().dotnetCli,
+    serviceName,
     (container: IDotNetServices & IDomainServices) =>
       new DotNetCli(
         container.dotnetConfig,
         container.dotnetProcess,
-        container.logger.child({ namespace: 'dotnet cli' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
 
 export function addJsonClient(services: IServiceCollection) {
+  const serviceName = nameOf<IDotNetServices>().dotnetJsonClient;
   services.addSingleton(
-    nameOf<IDotNetServices>().dotnetJsonClient,
+    serviceName,
     (container: IDotNetServices & IDomainServices) =>
       createJsonClient(
         {
           caching: container.dotnetCachingOpts,
           http: container.dotnetHttpOpts
         },
-        container.logger.child({ namespace: 'dotnet request' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
 
 export function addNuGetPackageClient(services: IServiceCollection) {
+  const serviceName = nameOf<IDotNetServices>().nugetClient;
   services.addSingleton(
-    nameOf<IDotNetServices>().nugetClient,
+    serviceName,
     (container: IDotNetServices & IDomainServices) =>
       new NuGetPackageClient(
         container.dotnetConfig,
         container.dotnetJsonClient,
-        container.logger.child({ namespace: 'dotnet client' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
 
 export function addNuGetResourceClient(services: IServiceCollection) {
+  const serviceName = nameOf<IDotNetServices>().nugetResClient;
   services.addSingleton(
-    nameOf<IDotNetServices>().nugetResClient,
+    serviceName,
     (container: IDotNetServices & IDomainServices) =>
       new NuGetResourceClient(
         container.dotnetJsonClient,
-        container.logger.child({ namespace: 'dotnet resource service' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
@@ -132,7 +137,7 @@ export function addSuggestionProvider(services: IServiceCollection) {
         container.nugetClient,
         container.nugetResClient,
         container.packageCache,
-        container.logger.child({ namespace: 'dotnet provider' })
+        container.logger.child({ namespace: 'dotnetSuggestionProvider' })
       )
   );
 }

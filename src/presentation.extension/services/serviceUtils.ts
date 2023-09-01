@@ -202,7 +202,7 @@ export function addVersionLensProviders(services: IServiceCollection) {
             suggestionProvider,
             container.dependencyCache,
             container.editorDependencyCache,
-            container.logger.child({ namespace: `${suggestionProvider.name} codelens` })
+            container.logger.child({ namespace: `${suggestionProvider.name}CodeLensProvider` })
           )
         )
       ),

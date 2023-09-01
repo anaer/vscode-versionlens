@@ -47,27 +47,29 @@ export function addPubConfig(services: IServiceCollection) {
 }
 
 export function addJsonClient(services: IServiceCollection) {
+  const serviceName = nameOf<IPubServices>().pubJsonClient;
   services.addSingleton(
-    nameOf<IPubServices>().pubJsonClient,
+    serviceName,
     (container: IPubServices & IDomainServices) =>
       createJsonClient(
         {
           caching: container.pubCachingOpts,
           http: container.pubHttpOpts
         },
-        container.logger.child({ namespace: 'pub request' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
 
 export function addPubClient(services: IServiceCollection) {
+  const serviceName = nameOf<IPubServices>().pubClient;
   services.addSingleton(
-    nameOf<IPubServices>().pubClient,
+    serviceName,
     (container: IPubServices & IDomainServices) =>
       new PubClient(
         container.pubConfig,
         container.pubJsonClient,
-        container.logger.child({ namespace: 'pub client' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
@@ -79,7 +81,7 @@ export function addSuggestionProvider(services: IServiceCollection) {
       new PubSuggestionProvider(
         container.pubClient,
         container.packageCache,
-        container.logger.child({ namespace: 'pub provider' })
+        container.logger.child({ namespace: 'pubSuggestionProvider' })
       )
   );
 }

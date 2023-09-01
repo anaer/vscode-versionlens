@@ -49,51 +49,55 @@ export function addMavenConfig(services: IServiceCollection) {
 }
 
 export function addProcessClient(services: IServiceCollection) {
+  const serviceName = nameOf<IMavenServices>().mvnProcess;
   services.addSingleton(
-    nameOf<IMavenServices>().mvnProcess,
+    serviceName,
     (container: IMavenServices & IDomainServices) =>
       createProcessClient(
         container.processesCache,
         container.mavenCachingOpts,
-        container.logger.child({ namespace: 'maven mvn process' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
 
 export function addCliClient(services: IServiceCollection) {
+  const serviceName = nameOf<IMavenServices>().mvnCli;
   services.addSingleton(
-    nameOf<IMavenServices>().mvnCli,
+    serviceName,
     (container: IMavenServices & IDomainServices) =>
       new MvnCli(
         container.mavenConfig,
         container.mvnProcess,
-        container.logger.child({ namespace: 'maven mvn cli' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
 
 export function addHttpClient(services: IServiceCollection) {
+  const serviceName = nameOf<IMavenServices>().mavenHttpClient;
   services.addSingleton(
-    nameOf<IMavenServices>().mavenHttpClient,
+    serviceName,
     (container: IMavenServices & IDomainServices) =>
       createHttpClient(
         {
           caching: container.mavenCachingOpts,
           http: container.mavenHttpOpts
         },
-        container.logger.child({ namespace: 'maven request' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
 
 export function addMavenClient(services: IServiceCollection) {
+  const serviceName = nameOf<IMavenServices>().mavenClient;
   services.addSingleton(
-    nameOf<IMavenServices>().mavenClient,
+    serviceName,
     (container: IMavenServices & IDomainServices) =>
       new MavenClient(
         container.mavenConfig,
         container.mavenHttpClient,
-        container.logger.child({ namespace: 'maven client' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
@@ -106,7 +110,7 @@ export function addSuggestionProvider(services: IServiceCollection) {
         container.mvnCli,
         container.mavenClient,
         container.packageCache,
-        container.logger.child({ namespace: 'maven provider' })
+        container.logger.child({ namespace: 'mavenSuggestionProvider' })
       )
   );
 }

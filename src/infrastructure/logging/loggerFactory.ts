@@ -35,5 +35,5 @@ export function createWinstonLogger(
 }
 
 function loggerFormatter(entry: TransformableInfo) {
-  return `[${entry.timestamp}] [${entry.namespace}] [${entry.level}] ${entry.message}`
+  return `[${entry.timestamp}] [${entry.level}] [${entry.namespace}] ${entry.message}`
 }

@@ -64,52 +64,56 @@ export function addNpmConfig(services: IServiceCollection) {
 }
 
 export function addJsonClient(services: IServiceCollection) {
+  const serviceName = nameOf<INpmServices>().githubJsonClient;
   services.addSingleton(
-    nameOf<INpmServices>().githubJsonClient,
+    serviceName,
     (container: INpmServices & IDomainServices) =>
       createJsonClient(
         {
           caching: container.npmCachingOpts,
           http: container.npmHttpOpts
         },
-        container.logger.child({ namespace: 'npm request' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
 
 export function addGitHubClient(services: IServiceCollection) {
+  const serviceName = nameOf<INpmServices>().githubClient;
   services.addSingleton(
-    nameOf<INpmServices>().githubClient,
+    serviceName,
     (container: INpmServices & IDomainServices) =>
       new GitHubClient(
         container.npmConfig,
         container.githubJsonClient,
-        container.logger.child({ namespace: 'npm github' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
 
 export function addPacoteClient(services: IServiceCollection) {
+  const serviceName = nameOf<INpmServices>().pacoteClient;
   services.addSingleton(
-    nameOf<INpmServices>().pacoteClient,
+    serviceName,
     (container: INpmServices & IDomainServices) =>
       new PacoteClient(
         Pacote,
         container.npmConfig,
-        container.logger.child({ namespace: 'npm pacote' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
 
 export function addNpmPackageClient(services: IServiceCollection) {
+  const serviceName = nameOf<INpmServices>().npmClient;
   services.addSingleton(
-    nameOf<INpmServices>().npmClient,
+    serviceName,
     (container: INpmServices & IDomainServices) =>
       new NpmPackageClient(
         container.npmConfig,
         container.pacoteClient,
         container.githubClient,
-        container.logger.child({ namespace: 'npm client' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
@@ -121,7 +125,7 @@ export function addSuggestionProvider(services: IServiceCollection) {
       new NpmSuggestionProvider(
         container.npmClient,
         container.packageCache,
-        container.logger.child({ namespace: 'npm provider' })
+        container.logger.child({ namespace: 'npmSuggestionProvider' })
       )
   );
 }

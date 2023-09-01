@@ -47,27 +47,29 @@ export function addComposerConfig(services: IServiceCollection) {
 }
 
 export function addJsonClient(services: IServiceCollection) {
+  const serviceName = nameOf<IComposerService>().composerJsonClient;
   services.addSingleton(
-    nameOf<IComposerService>().composerJsonClient,
+    serviceName,
     (container: IComposerService & IDomainServices) =>
       createJsonClient(
         {
           caching: container.composerCachingOpts,
           http: container.composerHttpOpts
         },
-        container.logger.child({ namespace: 'composer request' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
 
 export function addComposerClient(services: IServiceCollection) {
+  const serviceName = nameOf<IComposerService>().composerClient;
   services.addSingleton(
-    nameOf<IComposerService>().composerClient,
+    serviceName,
     (container: IComposerService & IDomainServices) =>
       new ComposerClient(
         container.composerConfig,
         container.composerJsonClient,
-        container.logger.child({ namespace: 'composer client' })
+        container.logger.child({ namespace: serviceName })
       )
   );
 }
@@ -79,7 +81,7 @@ export function addSuggestionProvider(services: IServiceCollection) {
       new ComposerSuggestionProvider(
         container.composerClient,
         container.packageCache,
-        container.logger.child({ namespace: 'composer provider' })
+        container.logger.child({ namespace: 'composerSuggestionProvider' })
       )
   );
 }
