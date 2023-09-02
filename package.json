@@ -220,7 +220,7 @@
             "error",
             "info",
             "debug",
-            "verbose"
+            "silly"
           ],
           "default": "error",
           "description": "Sets the level of logs to be written to the VersionLens output channel."
