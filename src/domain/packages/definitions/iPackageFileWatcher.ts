@@ -17,7 +17,7 @@ export interface IPackageFileWatcher {
 
   initialize(): Promise<void>;
 
-  watch: () => IPackageFileWatcher;
+  watch: () => void;
 
   registerOnPackageDependenciesUpdated: (
     listener: OnPackageDependenciesUpdatedFunction,

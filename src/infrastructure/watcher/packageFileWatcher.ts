@@ -50,7 +50,7 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
     this.watch();
   }
 
-  watch(): IPackageFileWatcher {
+  watch(): void {
     // watch files
     this.providers.forEach(provider => {
       const watcher = this.workspaceAdapter.createFileSystemWatcher(
@@ -58,7 +58,7 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
       );
 
       this.logger.debug(
-        `Created watcher for '%s' with pattern '%s'`,
+        `created watcher for '%s' with pattern '%s'`,
         provider.name,
         provider.config.fileMatcher.pattern
       );
@@ -70,8 +70,6 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
         watcher
       );
     });
-
-    return this;
   }
 
   registerOnPackageDependenciesUpdated(
@@ -93,22 +91,22 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
   }
 
   async onFileAdd(provider: ISuggestionProvider, uri: Uri) {
-    this.logger.silly("File added '%s'", uri);
+    this.logger.silly("file added '%s'", uri);
     await this.updateCacheFromFile(provider.name, uri.fsPath, provider);
   }
 
   private async onFileCreate(provider: ISuggestionProvider, uri: Uri) {
-    this.logger.silly("File created '%s'", uri);
+    this.logger.silly("file created '%s'", uri);
     await this.updateCacheFromFile(provider.name, uri.fsPath, provider);
   }
 
   private onFileDelete(provider: ISuggestionProvider, uri: Uri) {
-    this.logger.silly("File removed '%s'", uri);
+    this.logger.silly("file removed '%s'", uri);
     this.dependencyCache.remove(provider.name, uri.fsPath);
   }
 
   private async onFileChange(provider: ISuggestionProvider, uri: Uri) {
-    this.logger.silly("File changed '%s'", uri);
+    this.logger.silly("file changed '%s'", uri);
 
     const packageFilePath = uri.fsPath;
     const fileContent = await readFile(uri.fsPath);
@@ -123,7 +121,7 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
 
     // update cache
     if (hasChanged) {
-      this.logger.debug("Updating package dependency cache for '%s'", uri);
+      this.logger.debug("updating package dependency cache for '%s'", uri);
       this.dependencyCache.set(provider.name, packageFilePath, latestDeps);
     }
 
