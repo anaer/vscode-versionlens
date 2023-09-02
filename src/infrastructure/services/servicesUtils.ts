@@ -4,6 +4,7 @@ import { IDomainServices } from "domain/services";
 import { nameOf } from "domain/utils";
 import { OutputChannelTransport, createWinstonLogger } from "infrastructure/logging";
 import { PackageFileWatcher } from "infrastructure/watcher";
+import { workspace } from "vscode";
 
 export function addWinstonChannelLogger(services: IServiceCollection) {
   services.addSingleton(
@@ -32,6 +33,7 @@ export function addPackageFileWatcher(services: IServiceCollection) {
     serviceName,
     (container: IDomainServices) =>
       new PackageFileWatcher(
+        <any>workspace,
         container.suggestionProviders,
         container.dependencyCache,
         container.logger.child({ namespace: serviceName })

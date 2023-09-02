@@ -10,15 +10,18 @@ import {
 } from 'domain/packages';
 import { ISuggestionProvider } from 'domain/suggestions';
 import { readFile } from 'domain/utils';
-import { Uri, workspace } from 'vscode';
+import { Uri } from 'vscode';
+import { IWorkspaceAdapter } from './iWorkspaceAdapter';
 
 export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
 
   constructor(
+    readonly workspaceAdapter: IWorkspaceAdapter,
     readonly providers: ISuggestionProvider[],
     readonly dependencyCache: DependencyCache,
     readonly logger: ILogger
   ) {
+    throwUndefinedOrNull("workspaceAdapter", workspaceAdapter);
     throwUndefinedOrNull("providers", providers);
     throwUndefinedOrNull("dependencyCache", dependencyCache);
     throwUndefinedOrNull("logger", logger);
@@ -35,7 +38,7 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
   async initialize(): Promise<void> {
 
     for (const provider of this.providers) {
-      const files = await workspace.findFiles(
+      const files = await this.workspaceAdapter.findFiles(
         provider.config.fileMatcher.pattern,
         '**​/node_modules/**'
       );
@@ -50,7 +53,9 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
   watch(): IPackageFileWatcher {
     // watch files
     this.providers.forEach(provider => {
-      const watcher = workspace.createFileSystemWatcher(provider.config.fileMatcher.pattern)
+      const watcher = this.workspaceAdapter.createFileSystemWatcher(
+        provider.config.fileMatcher.pattern
+      );
 
       this.logger.debug(
         `Created watcher for '%s' with pattern '%s'`,
@@ -87,7 +92,7 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
     this.disposables.forEach(async disposable => await disposable.dispose());
   }
 
-  private async onFileAdd(provider: ISuggestionProvider, uri: Uri) {
+  async onFileAdd(provider: ISuggestionProvider, uri: Uri) {
     this.logger.silly("File added '%s'", uri);
     await this.updateCacheFromFile(provider.name, uri.fsPath, provider);
   }
@@ -111,20 +116,20 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
     const latestDeps = provider.parseDependencies(uri.fsPath, fileContent);
     const hasChanged = hasPackageDepsChanged(currentDeps, latestDeps);
 
-    // notify dependencies change to listener
+    // notify dependencies updated to listener
     if (this.packageDependenciesUpdatedListener && hasChanged) {
       await this.packageDependenciesUpdatedListener(provider, packageFilePath, latestDeps);
-    }
-
-    // notify file change to listener
-    if (this.packageFileUpdatedListener) {
-      await this.packageFileUpdatedListener(provider, packageFilePath, latestDeps);
     }
 
     // update cache
     if (hasChanged) {
       this.logger.debug("Updating package dependency cache for '%s'", uri);
       this.dependencyCache.set(provider.name, packageFilePath, latestDeps);
+    }
+
+    // notify file updated to listener
+    if (this.packageFileUpdatedListener) {
+      await this.packageFileUpdatedListener(provider, packageFilePath, latestDeps);
     }
   }
 
