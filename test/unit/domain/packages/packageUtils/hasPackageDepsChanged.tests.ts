@@ -3,7 +3,7 @@ import { PackageDependency, hasPackageDepsChanged } from 'domain/packages';
 import { test } from 'mocha-ui-esm';
 import Fixtures from './hasPackageDepsChanged.fixtures';
 
-export const getSuggestionProvidersByFileNameTests = {
+export const hasPackageDepsChangedTests = {
 
   [test.title]: hasPackageDepsChanged.name,
 
