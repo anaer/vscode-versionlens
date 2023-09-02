@@ -33,12 +33,16 @@ export class OnTextDocumentChange implements IDisposable {
   }
 
   execute(e: TextDocumentChangeEvent) {
+    if (e.contentChanges.length == 0) return;
+
     const provider = TextDocumentUtils.getDocumentProvider(
       e.document,
       this.suggestionProviders
     );
 
-    provider && this.listener && this.listener(
+    if (!provider) return;
+
+    this.listener && this.listener(
       provider as ISuggestionProvider,
       e.document.uri.fsPath,
       e.document.getText()
