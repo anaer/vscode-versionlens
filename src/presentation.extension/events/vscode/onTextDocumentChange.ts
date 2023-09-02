@@ -2,7 +2,7 @@ import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import { ISuggestionProvider } from 'domain/suggestions';
 import { TextDocumentUtils } from 'presentation.extension';
-import { TextDocumentChangeEvent, workspace } from 'vscode';
+import { Disposable, TextDocumentChangeEvent, workspace } from 'vscode';
 
 export type ProviderTextDocumentChangeFunction = (
   provider: ISuggestionProvider,
@@ -20,8 +20,10 @@ export class OnTextDocumentChange {
     throwUndefinedOrNull("logger", logger);
 
     // register the vscode workspace event
-    workspace.onDidChangeTextDocument(this.execute, this);
+    this.disposable = workspace.onDidChangeTextDocument(this.execute, this);
   }
+
+  disposable: Disposable;
 
   listener: ProviderTextDocumentChangeFunction;
 
@@ -40,6 +42,11 @@ export class OnTextDocumentChange {
       e.document.uri.fsPath,
       e.document.getText()
     );
+  }
+
+  async dispose() {
+    this.disposable.dispose();
+    this.logger.debug(`disposed ${OnTextDocumentChange.name}`);
   }
 
 }

@@ -8,12 +8,13 @@ import {
   OnActiveTextEditorChange,
   OnClearCache,
   OnFileLinkClick,
-  OnPackageDependenciesUpdated,
-  OnPackageFileUpdated,
+  OnPackageDependenciesChanged,
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
+  OnProviderTextDocumentClose,
   OnShowError,
   OnTextDocumentChange,
+  OnTextDocumentClose,
   OnTogglePrereleases,
   OnToggleReleases,
   OnUpdateDependencyClick,
@@ -62,6 +63,19 @@ export function addOnTextDocumentChange(services: IServiceCollection) {
     serviceName,
     (container: IDomainServices & IExtensionServices) =>
       new OnTextDocumentChange(
+        container.suggestionProviders,
+        container.logger.child({ namespace: serviceName })
+      ),
+    true
+  )
+}
+
+export function addOnTextDocumentClosed(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onTextDocumentClose;
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices & IExtensionServices) =>
+      new OnTextDocumentClose(
         container.suggestionProviders,
         container.logger.child({ namespace: serviceName })
       ),
@@ -224,18 +238,18 @@ export function addProviderNames(services: IServiceCollection) {
   )
 }
 
-export function addOnPackageDependenciesUpdated(services: IServiceCollection) {
-  const serviceName = nameOf<IExtensionServices>().onPackageDependenciesUpdated
+export function addOnPackageDependenciesChanged(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onPackageDependenciesChanged
   services.addSingleton(
     serviceName,
     (container: IDomainServices & IExtensionServices) => {
-      const event = new OnPackageDependenciesUpdated(
+      const event = new OnPackageDependenciesChanged(
         container.logger.child({ namespace: serviceName })
       );
 
       // register listener
-      container.packageFileWatcher.registerOnPackageDependenciesUpdated(
-        event.execute, 
+      container.packageFileWatcher.registerOnPackageDependenciesChanged(
+        event.execute,
         event
       );
 
@@ -244,18 +258,18 @@ export function addOnPackageDependenciesUpdated(services: IServiceCollection) {
   )
 }
 
-export function addOnPackageFileUpdated(services: IServiceCollection) {
-  const serviceName = nameOf<IExtensionServices>().onPackageFileUpdated
+export function addOnProviderTextDocumentClose(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onProviderTextDocumentClose
   services.addSingleton(
     serviceName,
     (container: IDomainServices & IExtensionServices) => {
-      const event = new OnPackageFileUpdated(
+      const event = new OnProviderTextDocumentClose(
         container.editorDependencyCache,
         container.logger.child({ namespace: serviceName })
       );
 
       // register listener
-      container.packageFileWatcher.registerOnPackageFileUpdated(event.execute, event);
+      container.onTextDocumentClose.registerListener(event.execute, event);
 
       return event;
     }

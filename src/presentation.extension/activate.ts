@@ -9,12 +9,13 @@ import {
   OnActiveTextEditorChange,
   OnClearCache,
   OnFileLinkClick,
-  OnPackageDependenciesUpdated,
-  OnPackageFileUpdated,
+  OnPackageDependenciesChanged,
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
+  OnProviderTextDocumentClose,
   OnShowError,
   OnTextDocumentChange,
+  OnTextDocumentClose,
   OnTogglePrereleases,
   OnToggleReleases,
   OnUpdateDependencyClick,
@@ -74,11 +75,12 @@ export async function activate(context: ExtensionContext): Promise<void> {
   serviceProvider.getService<OnUpdateDependencyClick>(serviceNames.onUpdateDependencyClick);
   serviceProvider.getService<OnFileLinkClick>(serviceNames.onFileLinkClick);
   serviceProvider.getService<OnClearCache>(serviceNames.onClearCache);
-  serviceProvider.getService<OnPackageDependenciesUpdated>(serviceNames.onPackageDependenciesUpdated);
-  serviceProvider.getService<OnPackageFileUpdated>(serviceNames.onPackageFileUpdated);
+  serviceProvider.getService<OnPackageDependenciesChanged>(serviceNames.onPackageDependenciesChanged);
   serviceProvider.getService<OnProviderEditorActivated>(serviceNames.onProviderEditorActivated);
   serviceProvider.getService<OnProviderTextDocumentChange>(serviceNames.onProviderTextDocumentChange);
+  serviceProvider.getService<OnProviderTextDocumentClose>(serviceNames.onProviderTextDocumentClose);
   serviceProvider.getService<OnTextDocumentChange>(serviceNames.onTextDocumentChange);
+  serviceProvider.getService<OnTextDocumentClose>(serviceNames.onTextDocumentClose);
   serviceProvider.getService<OnActiveTextEditorChange>(serviceNames.onActiveTextEditorChange)
     // ensures this is run when the extension is first loaded
     .execute(window.activeTextEditor)

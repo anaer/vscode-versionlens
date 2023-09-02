@@ -3,8 +3,16 @@ import { ILoggingOptions } from "domain/logging";
 import { IDomainServices } from "domain/services";
 import { nameOf } from "domain/utils";
 import { OutputChannelTransport, createWinstonLogger } from "infrastructure/logging";
+import { FileSystemStorage } from "infrastructure/storage";
 import { PackageFileWatcher } from "infrastructure/watcher";
-import { workspace } from "vscode";
+import { IInfrastructureServices } from "./infrastructureServices";
+
+export function addStorage(services: IServiceCollection) {
+  services.addSingleton(
+    nameOf<IInfrastructureServices>().storage,
+    () => new FileSystemStorage()
+  )
+}
 
 export function addWinstonChannelLogger(services: IServiceCollection) {
   services.addSingleton(
@@ -31,9 +39,9 @@ export function addPackageFileWatcher(services: IServiceCollection) {
   const serviceName = nameOf<IDomainServices>().packageFileWatcher;
   services.addSingleton(
     serviceName,
-    (container: IDomainServices) =>
+    (container: IInfrastructureServices & IDomainServices) =>
       new PackageFileWatcher(
-        <any>workspace,
+        container.storage,
         container.suggestionProviders,
         container.dependencyCache,
         container.logger.child({ namespace: serviceName })

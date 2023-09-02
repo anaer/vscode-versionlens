@@ -3,12 +3,13 @@ import {
   OnActiveTextEditorChange,
   OnClearCache,
   OnFileLinkClick,
-  OnPackageDependenciesUpdated,
-  OnPackageFileUpdated,
+  OnPackageDependenciesChanged,
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
+  OnProviderTextDocumentClose,
   OnShowError,
   OnTextDocumentChange,
+  OnTextDocumentClose,
   OnTogglePrereleases,
   OnToggleReleases,
   OnUpdateDependencyClick,
@@ -27,17 +28,21 @@ export interface IExtensionServices {
 
   editorDependencyCache: DependencyCache
 
+  // vscode events
   onActiveTextEditorChange: OnActiveTextEditorChange;
 
   onTextDocumentChange: OnTextDocumentChange;
 
+  onTextDocumentClose: OnTextDocumentClose;
+
+  // version lens events
   onProviderEditorActivated: OnProviderEditorActivated;
 
   onProviderTextDocumentChange: OnProviderTextDocumentChange;
 
-  onPackageDependenciesUpdated: OnPackageDependenciesUpdated;
+  onProviderTextDocumentClose: OnProviderTextDocumentClose;
 
-  onPackageFileUpdated: OnPackageFileUpdated;
+  onPackageDependenciesChanged: OnPackageDependenciesChanged;
 
   onClearCache: OnClearCache;
 

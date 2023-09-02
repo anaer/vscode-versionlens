@@ -3,8 +3,8 @@ import { IDisposable, Undefinable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import { ISuggestionProvider } from 'domain/suggestions';
 import { Disposable, TextDocument, TextEditor, window } from 'vscode';
-import { VersionLensState } from '../state/versionLensState';
-import { getDocumentProvider } from './eventUtils';
+import { VersionLensState } from '../../state/versionLensState';
+import { getDocumentProvider } from '../eventUtils';
 
 export type ProviderEditorActivatedFunction = (
   activeProvider: ISuggestionProvider,

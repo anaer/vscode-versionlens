@@ -13,23 +13,20 @@ import {
 } from 'domain/services';
 import { nameOf } from 'domain/utils';
 import { AwilixServiceCollectionFactory } from 'infrastructure/di';
-import {
-  addPackageFileWatcher,
-  addWinstonChannelLogger,
-  addWinstonLogger
-} from 'infrastructure/services';
+import { addInfrastructureServices } from 'infrastructure/services/container';
 import {
   VersionLensExtension,
   addEditorDependencyCacheDependencyCache,
   addOnActiveTextEditorChange,
   addOnClearCache,
   addOnFileLinkClick,
-  addOnPackageDependenciesUpdated,
-  addOnPackageFileUpdated,
+  addOnPackageDependenciesChanged,
   addOnProviderEditorActivated,
   addOnProviderTextDocumentChange,
+  addOnProviderTextDocumentClose,
   addOnShowError,
   addOnTextDocumentChange,
+  addOnTextDocumentClosed,
   addOnTogglePrereleases,
   addOnToggleReleases,
   addOnUpdateDependencyClick,
@@ -72,11 +69,7 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
   addGetSuggestionsUseCase(services);
 
   // infrastructure
-  addWinstonChannelLogger(services);
-
-  addWinstonLogger(services, "extension");
-
-  addPackageFileWatcher(services);
+  addInfrastructureServices(services, "extension");
 
   // extension
   addVersionLensExtension(services);
@@ -90,6 +83,8 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
   addOnActiveTextEditorChange(services);
 
   addOnTextDocumentChange(services);
+
+  addOnTextDocumentClosed(services);
 
   addOnProviderEditorActivated(services);
 
@@ -105,9 +100,9 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
 
   addOnTogglePrereleases(services);
 
-  addOnPackageDependenciesUpdated(services);
+  addOnPackageDependenciesChanged(services);
 
-  addOnPackageFileUpdated(services);
+  addOnProviderTextDocumentClose(services);
 
   addOnShowError(services);
 

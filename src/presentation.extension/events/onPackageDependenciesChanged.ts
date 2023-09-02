@@ -4,7 +4,7 @@ import { PackageDependency } from "domain/packages";
 import { ISuggestionProvider } from "domain/suggestions";
 import { Task, tasks } from "vscode";
 
-export class OnPackageDependenciesUpdated {
+export class OnPackageDependenciesChanged {
 
   constructor(readonly logger: ILogger) {
     throwUndefinedOrNull("logger", logger);
@@ -13,7 +13,7 @@ export class OnPackageDependenciesUpdated {
   async execute(
     provider: ISuggestionProvider,
     packageFilePath: string,
-    packageDeps: PackageDependency[]
+    newDependencies: PackageDependency[]
   ): Promise<void> {
 
     // check we have a task to run
