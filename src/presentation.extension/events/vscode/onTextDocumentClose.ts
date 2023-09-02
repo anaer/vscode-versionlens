@@ -1,4 +1,5 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
+import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import { ISuggestionProvider } from 'domain/suggestions';
 import { TextDocumentUtils } from 'presentation.extension';
@@ -9,7 +10,7 @@ export type ProviderTextDocumentClosedFunction = (
   packageFilePath: string
 ) => void;
 
-export class OnTextDocumentClose {
+export class OnTextDocumentClose implements IDisposable {
 
   constructor(
     readonly suggestionProviders: Array<ISuggestionProvider>,
