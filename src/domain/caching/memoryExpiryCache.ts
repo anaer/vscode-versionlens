@@ -55,22 +55,4 @@ export class MemoryExpiryCache implements IExpiryCache {
     this.cache.clear();
   }
 
-  hasExpired<T>(key: string): boolean {
-    const entry = this.cache.get<ExpiryCacheEntry<T>>(key);
-    if (!entry) {
-      return true;
-    }
-
-    return Date.now() >= entry.expiryTime;
-  }
-
-  expire<T>(key: string): T {
-    const entry = this.get<T>(key);
-    if (entry) {
-      this.cache.remove(key)
-    }
-
-    return entry;
-  }
-
 }

@@ -15,8 +15,4 @@ export interface IExpiryCache {
 
   clear();
 
-  hasExpired<T>(key: string): boolean;
-
-  expire<T>(key: string): T;
-
 }
