@@ -1,13 +1,31 @@
-# 1.6.0-preview.3
+# 1.6
 
 ## All providers
 
-  - The cache is no longer reset when de-activating the 'V' icon.
-    This is to allow caching across all project/package files in the workspace.
+  - Updated version suggestion text
 
-    To clear the cache manually there is now a command called 
-    `VersionLens: Clear cache`.
-    This can be found by pressing `ctrl + shift + p` and searching for "VersionLens"
+    - Shows 'safisfies latest x.x.x' when range expressions match the latest version Related to [#289](https://gitlab.com/versionlens/vscode-versionlens/-/issues/289)
+
+    - Shows 'safisfies x.x.x' when range expressions match an existing version that is not the latest
+
+    - Shows 'latest x.x.x' when an exact version matches the latest version.
+
+    - Shows 'latest x.x.x' when a dist tag (i.e. 'latest') is the latest version Related to [#289](https://gitlab.com/versionlens/vscode-versionlens/-/issues/289)
+
+    - Shows 'fixed x.x.x' when a dist tag is not the latest version
+
+    - Stopped suggesting latest version when a range expression matches the latest version
+
+    - Fixed a crash when no minimum version was found when filtering prereleases
+
+  - Updated caching logic
+
+    - The cache is no longer reset when de-activating the 'V' icon.
+      This is to allow caching across all project/package files in the workspace.
+
+      To clear the cache manually there is now a command called 
+      `VersionLens: Clear cache`.
+      This can be found by pressing `ctrl + shift + p` and searching for "VersionLens"
 
 ## Npm
 
