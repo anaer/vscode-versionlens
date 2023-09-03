@@ -17,7 +17,7 @@ type TestContext = {
   mockPackageFileWatcher: PackageFileWatcher
 }
 
-export const PackageFileWatcherTests = {
+export const packageFileWatcherTests = {
 
   [test.title]: PackageFileWatcher.name,
 
@@ -37,7 +37,7 @@ export const PackageFileWatcherTests = {
       // setup
       const testProvider = instance(this.mockProvider);
       const testConfig = instance(this.mockConfig);
-      const testUri = Uri.file('some-dir/package.json');
+      const testUri: Uri = <any>{ fsPath: 'some-dir/package.json' };
 
       when(this.mockConfig.fileMatcher).thenReturn({
         language: "",
@@ -118,7 +118,7 @@ export const PackageFileWatcherTests = {
     "doesn't call changed listener when dependencies haven't changed": async function (this: TestContext) {
       // setup
       const testProvider = instance(this.mockProvider);
-      const testUri = Uri.file('some-dir/package.json');
+      const testUri: Uri = <any>{ fsPath: 'some-dir/package.json' };
       const testFileContent = '{name: "test"}';
 
       when(this.mockStorage.readFile(testUri.fsPath)).thenResolve(testFileContent)
@@ -168,7 +168,7 @@ export const PackageFileWatcherTests = {
       // setup
       const stubWatcher = instance(this.mockPackageFileWatcher);
       const testProvider = instance(this.mockProvider);
-      const testUri = Uri.file('some-dir/package.json');
+      const testUri: Uri = <any>{ fsPath: 'some-dir/package.json' };
       const testFileContent = '{name: "test"}';
       const testNewDependencies = [
         <PackageDependency>{
