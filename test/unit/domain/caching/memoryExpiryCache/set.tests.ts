@@ -15,11 +15,12 @@ export const setTests = {
   "stores the data by the key": () => {
     // setup
     const testKey = 'key1';
+    const testDuration = 1000;
     const testData = {};
-    testCacheMap.set(testKey, testData, 1000);
+    testCacheMap.set(testKey, testData);
 
     // test
-    const actual = testCacheMap.get(testKey);
+    const actual = testCacheMap.get(testKey, testDuration);
 
     // assert
     assert.equal(actual, testData);
@@ -31,7 +32,7 @@ export const setTests = {
     const testData = {};
 
     // test
-    const actual = testCacheMap.set(testKey, testData, 1000);
+    const actual = testCacheMap.set(testKey, testData);
 
     // assert
     assert.equal(actual, testData);

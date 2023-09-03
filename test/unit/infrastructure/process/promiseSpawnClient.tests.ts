@@ -145,7 +145,7 @@ export const ProcessClientRequestTests = {
       );
 
       assert.deepEqual(cachedResponse, testResponse);
-      const cachedData = testCache.get(testKey);
+      const cachedData = testCache.get(testKey, testDuration);
       assert.equal(cachedData, undefined);
     },
 

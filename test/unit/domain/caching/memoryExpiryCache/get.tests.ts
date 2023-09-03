@@ -17,7 +17,7 @@ export const getTests = {
     const testKey = 'missing';
 
     // test
-    const actual = testCacheMap.get(testKey);
+    const actual = testCacheMap.get(testKey, 1000);
 
     // assert
     assert.equal(actual, undefined);
@@ -27,10 +27,10 @@ export const getTests = {
     // setup
     const testKey = 'key1';
     const testData = {};
-    testCacheMap.set(testKey, testData, 1000);
+    testCacheMap.set(testKey, testData);
 
     // test
-    const actual = testCacheMap.get(testKey);
+    const actual = testCacheMap.get(testKey, 1000);
 
     // assert
     assert.equal(actual, testData);
@@ -40,10 +40,10 @@ export const getTests = {
     // setup
     const testKey = 'key1';
     const testData = {};
-    testCacheMap.set(testKey, testData, -1);
+    testCacheMap.set(testKey, testData);
 
     // test
-    const actual = testCacheMap.get(testKey);
+    const actual = testCacheMap.get(testKey, 0);
 
     // assert
     assert.equal(actual, undefined);
