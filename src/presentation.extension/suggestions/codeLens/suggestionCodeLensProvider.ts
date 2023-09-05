@@ -2,7 +2,6 @@ import { throwUndefinedOrNull } from '@esm-test/guards';
 import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
-  DependencyCache,
   PackageResponse,
   PackageSourceType
 } from 'domain/packages';
@@ -39,13 +38,11 @@ export class SuggestionCodeLensProvider
     readonly extension: VersionLensExtension,
     readonly suggestionProvider: ISuggestionProvider,
     readonly getSuggestions: GetSuggestions,
-    readonly editorDependencyCache: DependencyCache,
     readonly logger: ILogger
   ) {
     throwUndefinedOrNull("extension", extension);
     throwUndefinedOrNull("suggestionProvider", suggestionProvider);
     throwUndefinedOrNull("getSuggestions", getSuggestions);
-    throwUndefinedOrNull("editorDependencyCache", editorDependencyCache);
     throwUndefinedOrNull("logger", logger);
 
     // register changed event before registering the codelens
@@ -103,8 +100,7 @@ export class SuggestionCodeLensProvider
       suggestions = await this.getSuggestions.execute(
         this.suggestionProvider,
         projectPath,
-        packageFilePath,
-        this.editorDependencyCache
+        packageFilePath
       );
     } catch (error) {
       this.state.providerError.value = true;

@@ -7,18 +7,17 @@ import { dirname } from 'node:path';
 export class GetSuggestions {
 
   constructor(
-    readonly dependencyCache: DependencyCache,
+    readonly dependencyCaches: DependencyCache[],
     readonly logger: ILogger
   ) {
-    throwUndefinedOrNull("dependencyCache", dependencyCache);
+    throwUndefinedOrNull("dependencyCaches", dependencyCaches);
     throwUndefinedOrNull("logger", logger);
   }
 
   async execute(
     suggestionProvider: ISuggestionProvider,
     projectPath: string,
-    packageFilePath: string,
-    defaultDependencyCache: DependencyCache
+    packageFilePath: string
   ): Promise<PackageResponse[]> {
 
     // ensure the caching duration is up to date
@@ -32,8 +31,7 @@ export class GetSuggestions {
     const packageDeps = DependencyCache.getDependenciesWithFallback(
       suggestionProvider.name,
       packageFilePath,
-      defaultDependencyCache,
-      this.dependencyCache
+      ...this.dependencyCaches
     );
 
     // fetch the package suggestions

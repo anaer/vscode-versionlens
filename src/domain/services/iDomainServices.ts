@@ -31,7 +31,7 @@ export interface IDomainServices {
 
   packageFileWatcher: IPackageFileWatcher;
 
-  dependencyCache: DependencyCache;
+  fileWatcherDependencyCache: DependencyCache;
 
   packageCache: PackageCache;
 

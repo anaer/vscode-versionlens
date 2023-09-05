@@ -5,7 +5,6 @@ import { HttpOptions } from "domain/http";
 import { LoggingOptions } from "domain/logging";
 import { DependencyCache, PackageCache } from "domain/packages";
 import { importSuggestionProviders } from "domain/providers";
-import { GetSuggestions } from "domain/suggestions";
 import { nameOf } from "domain/utils";
 import { IDomainServices } from "./iDomainServices";
 
@@ -54,14 +53,14 @@ export async function addSuggestionProviders(services: IServiceCollection) {
   )
 }
 
-export function addPackagesDependencyCache(services: IServiceCollection) {
+export function addFileWatcherDependencyCache(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<IDomainServices>().dependencyCache,
+    nameOf<IDomainServices>().fileWatcherDependencyCache,
     (container: IDomainServices) => new DependencyCache(container.providerNames)
   );
 }
 
-export function addSuggestionDependencyCache(services: IServiceCollection) {
+export function addSuggestionPackageCache(services: IServiceCollection) {
   services.addSingleton(
     nameOf<IDomainServices>().packageCache,
     (container: IDomainServices) => new PackageCache(container.providerNames)
@@ -71,16 +70,4 @@ export function addSuggestionDependencyCache(services: IServiceCollection) {
 export function addProcessesCache(services: IServiceCollection) {
   const serviceName = nameOf<IDomainServices>().processesCache;
   services.addSingleton(serviceName, new MemoryExpiryCache(serviceName));
-}
-
-export function addGetSuggestionsUseCase(services: IServiceCollection) {
-  const serviceName = nameOf<IDomainServices>().getSuggestions;
-  services.addSingleton(
-    serviceName,
-    (container: IDomainServices) =>
-      new GetSuggestions(
-        container.dependencyCache,
-        container.logger.child({ namespace: serviceName })
-      )
-  );
 }

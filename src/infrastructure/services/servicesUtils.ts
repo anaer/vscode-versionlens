@@ -43,7 +43,7 @@ export function addPackageFileWatcher(services: IServiceCollection) {
       new PackageFileWatcher(
         container.storage,
         container.suggestionProviders,
-        container.dependencyCache,
+        container.fileWatcherDependencyCache,
         container.logger.child({ namespace: serviceName })
       ),
     true

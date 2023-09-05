@@ -2,6 +2,7 @@ import { IServiceCollection } from "domain/di";
 import { DisposableArray } from "domain/generics";
 import { DependencyCache } from "domain/packages";
 import { IDomainServices } from "domain/services";
+import { GetSuggestions } from "domain/suggestions";
 import { nameOf } from "domain/utils";
 import {
   IExtensionServices,
@@ -41,6 +42,61 @@ export function addOutputChannel(services: IServiceCollection) {
     // vscode output channel called "VersionLens"
     () => window.createOutputChannel(VersionLensExtension.extensionName)
   )
+}
+
+export function addVersionLensProviders(services: IServiceCollection) {
+  services.addSingleton(
+    nameOf<IExtensionServices>().versionLensProviders,
+    (container: IDomainServices & IExtensionServices) =>
+      new DisposableArray(
+        container.suggestionProviders.map(
+          suggestionProvider => new SuggestionCodeLensProvider(
+            container.extension,
+            suggestionProvider,
+            container.getSuggestions,
+            container.logger.child({ namespace: `${suggestionProvider.name}CodeLensProvider` })
+          )
+        )
+      ),
+    true
+  )
+}
+
+export function addProviderNames(services: IServiceCollection) {
+  services.addSingleton(
+    nameOf<IDomainServices>().providerNames,
+    [
+      'composer',
+      'dotnet',
+      'dub',
+      'maven',
+      'npm',
+      'pub',
+    ]
+  )
+}
+
+export function addEditorDependencyCache(services: IServiceCollection) {
+  services.addSingleton(
+    nameOf<IExtensionServices>().editorDependencyCache,
+    (container: IDomainServices) => new DependencyCache(container.providerNames)
+
+  );
+}
+
+export function addGetSuggestionsUseCase(services: IServiceCollection) {
+  const serviceName = nameOf<IDomainServices>().getSuggestions;
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices & IExtensionServices) =>
+      new GetSuggestions(
+        [
+          container.editorDependencyCache,
+          container.fileWatcherDependencyCache
+        ],
+        container.logger.child({ namespace: serviceName })
+      )
+  );
 }
 
 export function addOnActiveTextEditorChange(services: IServiceCollection) {
@@ -205,39 +261,6 @@ export function addOnShowError(services: IServiceCollection) {
   )
 }
 
-export function addVersionLensProviders(services: IServiceCollection) {
-  services.addSingleton(
-    nameOf<IExtensionServices>().versionLensProviders,
-    (container: IDomainServices & IExtensionServices) =>
-      new DisposableArray(
-        container.suggestionProviders.map(
-          suggestionProvider => new SuggestionCodeLensProvider(
-            container.extension,
-            suggestionProvider,
-            container.getSuggestions,
-            container.editorDependencyCache,
-            container.logger.child({ namespace: `${suggestionProvider.name}CodeLensProvider` })
-          )
-        )
-      ),
-    true
-  )
-}
-
-export function addProviderNames(services: IServiceCollection) {
-  services.addSingleton(
-    nameOf<IDomainServices>().providerNames,
-    [
-      'composer',
-      'dotnet',
-      'dub',
-      'maven',
-      'npm',
-      'pub',
-    ]
-  )
-}
-
 export function addOnPackageDependenciesChanged(services: IServiceCollection) {
   const serviceName = nameOf<IExtensionServices>().onPackageDependenciesChanged
   services.addSingleton(
@@ -273,13 +296,5 @@ export function addOnProviderTextDocumentClose(services: IServiceCollection) {
 
       return event;
     }
-  )
-}
-
-export function addEditorDependencyCacheDependencyCache(services: IServiceCollection) {
-  services.addSingleton(
-    nameOf<IExtensionServices>().editorDependencyCache,
-    (container: IDomainServices & IExtensionServices) =>
-      new DependencyCache(container.providerNames)
   )
 }

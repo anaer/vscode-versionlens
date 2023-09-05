@@ -26,7 +26,7 @@ export interface IExtensionServices {
 
   versionLensProviders: Array<SuggestionCodeLensProvider>;
 
-  editorDependencyCache: DependencyCache
+  editorDependencyCache: DependencyCache;
 
   // vscode events
   onActiveTextEditorChange: OnActiveTextEditorChange;

@@ -26,8 +26,9 @@ export const getSuggestionsTests = {
       1
     ],
     async function (testSuggestions: PackageResponse[], expectedLength: number) {
-      const mockDefaultDependencyCache = mock<DependencyCache>();
-      const mockDependencyCache = mock<DependencyCache>();
+      const mockEditorDependencyCache = mock<DependencyCache>();
+      const mockFileDependencyCache = mock<DependencyCache>();
+
       const mockLogger = mock<ILogger>();
       const mockConfig = mock<IProviderConfig>()
       const mockProvider = mock<ISuggestionProvider>();
@@ -45,14 +46,14 @@ export const getSuggestionsTests = {
       when(mockProvider.fetchSuggestions(testProjectPath, testProjectPath, anything()))
         .thenResolve(testSuggestions);
 
-      when(mockDefaultDependencyCache.get(testProvider.name, testPackageFilePath))
+      when(mockEditorDependencyCache.get(testProvider.name, testPackageFilePath))
         .thenReturn([]);
 
-      when(mockDependencyCache.get(testProvider.name, testPackageFilePath))
+      when(mockFileDependencyCache.get(testProvider.name, testPackageFilePath))
         .thenReturn([]);
 
       const useCase = new GetSuggestions(
-        instance(mockDependencyCache),
+        [instance(mockEditorDependencyCache), instance(mockFileDependencyCache)],
         instance(mockLogger)
       );
 
@@ -60,8 +61,7 @@ export const getSuggestionsTests = {
       const actualSuggestions = await useCase.execute(
         instance(mockProvider),
         testProjectPath,
-        testPackageFilePath,
-        instance(mockDefaultDependencyCache)
+        testPackageFilePath
       );
 
       // verify
@@ -75,14 +75,14 @@ export const getSuggestionsTests = {
       ).once();
 
       verify(
-        mockDefaultDependencyCache.get(
+        mockEditorDependencyCache.get(
           testProvider.name,
           testPackageFilePath
         )
       ).once();
 
       verify(
-        mockDependencyCache.get(
+        mockFileDependencyCache.get(
           testProvider.name,
           testPackageFilePath
         )

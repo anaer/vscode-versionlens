@@ -3,20 +3,20 @@ import {
   IDomainServices,
   addAppConfig,
   addCachingOptions,
-  addGetSuggestionsUseCase,
+  addFileWatcherDependencyCache,
   addHttpOptions,
   addLoggingOptions,
-  addPackagesDependencyCache,
   addProcessesCache,
-  addSuggestionDependencyCache,
-  addSuggestionProviders
+  addSuggestionPackageCache,
+  addSuggestionProviders,
 } from 'domain/services';
 import { nameOf } from 'domain/utils';
 import { AwilixServiceCollectionFactory } from 'infrastructure/di';
 import { addInfrastructureServices } from 'infrastructure/services/container';
 import {
   VersionLensExtension,
-  addEditorDependencyCacheDependencyCache,
+  addEditorDependencyCache,
+  addGetSuggestionsUseCase,
   addOnActiveTextEditorChange,
   addOnClearCache,
   addOnFileLinkClick,
@@ -60,13 +60,9 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
 
   addSuggestionProviders(services);
 
-  addPackagesDependencyCache(services);
-
-  addSuggestionDependencyCache(services);
+  addSuggestionPackageCache(services);
 
   addProcessesCache(services);
-
-  addGetSuggestionsUseCase(services);
 
   // infrastructure
   addInfrastructureServices(services, "extension");
@@ -78,7 +74,11 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
 
   addVersionLensProviders(services);
 
-  addEditorDependencyCacheDependencyCache(services);
+  addFileWatcherDependencyCache(services);
+
+  addEditorDependencyCache(services);
+
+  addGetSuggestionsUseCase(services);
 
   addOnActiveTextEditorChange(services);
 
