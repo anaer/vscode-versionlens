@@ -3,15 +3,14 @@ import { ILoggingOptions } from "domain/logging";
 import { IDomainServices } from "domain/services";
 import { nameOf } from "domain/utils";
 import { OutputChannelTransport, createWinstonLogger } from "infrastructure/logging";
-import { FileSystemStorage } from "infrastructure/storage";
-import { PackageFileWatcher } from "infrastructure/watcher";
+import { PackageFileWatcher, WorkspaceAdapter } from "infrastructure/watcher";
 import { IInfrastructureServices } from "./infrastructureServices";
 
-export function addStorage(services: IServiceCollection) {
+export function addWorkspaceAdapter(services: IServiceCollection) {
   services.addSingleton(
-    nameOf<IInfrastructureServices>().storage,
-    () => new FileSystemStorage()
-  )
+    nameOf<IInfrastructureServices>().workspaceAdapter,
+    () => new WorkspaceAdapter()
+  );
 }
 
 export function addWinstonChannelLogger(services: IServiceCollection) {
@@ -41,7 +40,8 @@ export function addPackageFileWatcher(services: IServiceCollection) {
     serviceName,
     (container: IInfrastructureServices & IDomainServices) =>
       new PackageFileWatcher(
-        container.storage,
+        container.getDependencyChanges,
+        container.workspaceAdapter,
         container.suggestionProviders,
         container.fileWatcherDependencyCache,
         container.logger.child({ namespace: serviceName })

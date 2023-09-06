@@ -5,6 +5,8 @@ import { HttpOptions } from "domain/http";
 import { LoggingOptions } from "domain/logging";
 import { DependencyCache, PackageCache } from "domain/packages";
 import { importSuggestionProviders } from "domain/providers";
+import { FileSystemStorage } from "domain/storage";
+import { GetDependencyChanges } from "domain/suggestions";
 import { nameOf } from "domain/utils";
 import { IDomainServices } from "./iDomainServices";
 
@@ -40,6 +42,11 @@ export function addLoggingOptions(services: IServiceCollection) {
   )
 }
 
+export function addFileSystemStorage(services: IServiceCollection) {
+  const serviceName = nameOf<IDomainServices>().storage;
+  services.addSingleton(serviceName, new FileSystemStorage());
+}
+
 export async function addSuggestionProviders(services: IServiceCollection) {
   services.addSingleton(
     nameOf<IDomainServices>().suggestionProviders,
@@ -70,4 +77,17 @@ export function addSuggestionPackageCache(services: IServiceCollection) {
 export function addProcessesCache(services: IServiceCollection) {
   const serviceName = nameOf<IDomainServices>().processesCache;
   services.addSingleton(serviceName, new MemoryExpiryCache(serviceName));
+}
+
+export function addGetDependencyChangesUseCase(services: IServiceCollection) {
+  const serviceName = nameOf<IDomainServices>().getDependencyChanges;
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices) =>
+      new GetDependencyChanges(
+        container.storage,
+        container.fileWatcherDependencyCache,
+        container.logger.child({ namespace: serviceName })
+      )
+  );
 }

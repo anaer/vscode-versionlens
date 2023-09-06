@@ -1,7 +1,6 @@
+import { IStorage } from 'domain/storage';
 import fs from 'node:fs';
 import util from 'node:util';
-import { IStorage } from 'infrastructure/storage';
-import { FileSystemWatcher, Uri, workspace } from 'vscode';
 
 export const CrLf = '\r\n';
 export const Lf = '\n';
@@ -22,14 +21,6 @@ export class FileSystemStorage implements IStorage {
   async readJsonFile<T>(absFilePath: string): Promise<T> {
     const jsonContent = await this.readFile(absFilePath)
     return JSON.parse(jsonContent);
-  }
-
-  findFiles(include: string, exclude: string): Promise<Uri[]> {
-    return <any>workspace.findFiles(include, exclude);
-  }
-
-  createFileSystemWatcher(pattern: string): FileSystemWatcher {
-    return workspace.createFileSystemWatcher(pattern);
   }
 
 }

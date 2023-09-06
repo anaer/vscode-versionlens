@@ -4,7 +4,8 @@ import { IServiceCollectionFactory, IServiceProvider } from 'domain/di';
 import { HttpOptions } from 'domain/http';
 import { ILogger, ILoggerChannel, LoggingOptions } from 'domain/logging';
 import { DependencyCache, IPackageFileWatcher, PackageCache } from 'domain/packages';
-import { ISuggestionProvider } from 'domain/suggestions';
+import { IStorage } from 'domain/storage';
+import { GetDependencyChanges, ISuggestionProvider } from 'domain/suggestions';
 import { GetSuggestions } from 'domain/suggestions/useCases/getSuggestions';
 
 export interface IDomainServices {
@@ -25,6 +26,8 @@ export interface IDomainServices {
 
   loggerChannel: ILoggerChannel;
 
+  storage: IStorage,
+
   providerNames: Array<string>;
 
   suggestionProviders: Array<ISuggestionProvider>;
@@ -38,5 +41,7 @@ export interface IDomainServices {
   processesCache: IExpiryCache;
 
   getSuggestions: GetSuggestions;
+
+  getDependencyChanges: GetDependencyChanges;
 
 }

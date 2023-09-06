@@ -1,10 +1,15 @@
 import { IServiceCollection } from "domain/di";
-import { addPackageFileWatcher, addStorage, addWinstonChannelLogger, addWinstonLogger } from ".";
+import {
+  addPackageFileWatcher,
+  addWinstonChannelLogger,
+  addWinstonLogger,
+  addWorkspaceAdapter
+} from ".";
 
 export function addInfrastructureServices(services: IServiceCollection, namespace: string) {
 
-  addStorage(services);
-  
+  addWorkspaceAdapter(services);
+
   addWinstonChannelLogger(services);
 
   addWinstonLogger(services, namespace);

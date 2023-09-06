@@ -3,7 +3,9 @@ import {
   IDomainServices,
   addAppConfig,
   addCachingOptions,
+  addFileSystemStorage,
   addFileWatcherDependencyCache,
+  addGetDependencyChangesUseCase,
   addHttpOptions,
   addLoggingOptions,
   addProcessesCache,
@@ -56,6 +58,8 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
 
   addLoggingOptions(services);
 
+  addFileSystemStorage(services);
+
   addProviderNames(services);
 
   addSuggestionProviders(services);
@@ -63,6 +67,8 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
   addSuggestionPackageCache(services);
 
   addProcessesCache(services);
+
+  addGetDependencyChangesUseCase(services);
 
   // infrastructure
   addInfrastructureServices(services, "extension");

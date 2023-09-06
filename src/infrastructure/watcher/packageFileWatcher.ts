@@ -5,21 +5,23 @@ import {
   DependencyCache,
   IPackageFileWatcher,
   OnPackageDependenciesChangedFunction,
-  hasPackageDepsChanged
+  PackageDependency
 } from 'domain/packages';
-import { ISuggestionProvider } from 'domain/suggestions';
-import { IStorage } from 'infrastructure/storage';
+import { GetDependencyChanges, ISuggestionProvider } from 'domain/suggestions';
 import { Uri } from 'vscode';
+import { IWorkspaceAdapter } from '.';
 
 export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
 
   constructor(
-    readonly storage: IStorage,
+    readonly getDependencyChanges: GetDependencyChanges,
+    readonly workspace: IWorkspaceAdapter,
     readonly providers: ISuggestionProvider[],
     readonly dependencyCache: DependencyCache,
     readonly logger: ILogger
   ) {
-    throwUndefinedOrNull("storage", storage);
+    throwUndefinedOrNull("getDependencyChanges", getDependencyChanges);
+    throwUndefinedOrNull("workspace", workspace);
     throwUndefinedOrNull("providers", providers);
     throwUndefinedOrNull("dependencyCache", dependencyCache);
     throwUndefinedOrNull("logger", logger);
@@ -34,7 +36,7 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
   async initialize(): Promise<void> {
 
     for (const provider of this.providers) {
-      const files = await this.storage.findFiles(
+      const files = await this.workspace.findFiles(
         provider.config.fileMatcher.pattern,
         '**​/node_modules/**'
       );
@@ -49,7 +51,7 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
   watch(): void {
     // watch files
     this.providers.forEach(provider => {
-      const watcher = this.storage.createFileSystemWatcher(
+      const watcher = this.workspace.createFileSystemWatcher(
         provider.config.fileMatcher.pattern
       );
 
@@ -81,12 +83,12 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
 
   async onFileAdd(provider: ISuggestionProvider, uri: Uri) {
     this.logger.silly("file added '%s'", uri);
-    await this.updateCacheFromFile(provider.name, uri.fsPath, provider);
+    await this.updateCacheFromFile(provider, uri.fsPath);
   }
 
   private async onFileCreate(provider: ISuggestionProvider, uri: Uri) {
     this.logger.silly("file created '%s'", uri);
-    await this.updateCacheFromFile(provider.name, uri.fsPath, provider);
+    await this.updateCacheFromFile(provider, uri.fsPath);
   }
 
   private onFileDelete(provider: ISuggestionProvider, uri: Uri) {
@@ -98,16 +100,8 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
     this.logger.silly("file changed '%s'", uri);
 
     const packageFilePath = uri.fsPath;
-    const fileContent = await this.storage.readFile(uri.fsPath);
-    const currentDeps = this.dependencyCache.get(provider.name, packageFilePath);
-    const latestDeps = provider.parseDependencies(uri.fsPath, fileContent);
-    const hasChanged = hasPackageDepsChanged(currentDeps, latestDeps);
-
-    // update cache
-    if (hasChanged) {
-      this.logger.debug("updating package dependency cache for '%s'", uri);
-      this.dependencyCache.set(provider.name, packageFilePath, latestDeps);
-    }
+    const latestDeps = await this.updateCacheFromFile(provider, packageFilePath);
+    const hasChanged = latestDeps.length > 0;
 
     // notify dependencies updated to listener
     if (hasChanged && this.packageDependenciesChangedListener) {
@@ -119,10 +113,19 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
     }
   }
 
-  private async updateCacheFromFile(providerName: string, packageFilePath: string, provider: ISuggestionProvider) {
-    const fileContent = await this.storage.readFile(packageFilePath);
-    const parsedDeps = provider.parseDependencies(packageFilePath, fileContent);
-    this.dependencyCache.set(providerName, packageFilePath, parsedDeps);
+  private async updateCacheFromFile(
+    provider: ISuggestionProvider,
+    packageFilePath: string
+  ): Promise<PackageDependency[]> {
+
+    const latestDeps = await this.getDependencyChanges.execute(provider, packageFilePath);
+    const hasChanged = latestDeps.length > 0;
+    if (hasChanged) {
+      this.logger.debug("updating package dependency cache for '%s'", packageFilePath);
+      this.dependencyCache.set(provider.name, packageFilePath, latestDeps);
+    }
+
+    return hasChanged ? latestDeps : [];
   }
 
 }

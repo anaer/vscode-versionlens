@@ -1,15 +1,15 @@
 import { ILogger } from 'domain/logging';
 import { DependencyCache, PackageDependency } from 'domain/packages';
 import { IProviderConfig } from 'domain/providers';
-import { ISuggestionProvider } from 'domain/suggestions';
-import { IStorage } from 'infrastructure/storage';
-import { PackageFileWatcher } from 'infrastructure/watcher';
+import { GetDependencyChanges, ISuggestionProvider } from 'domain/suggestions';
+import { IWorkspaceAdapter, PackageFileWatcher } from 'infrastructure/watcher';
 import { test } from 'mocha-ui-esm';
 import { anything, instance, mock, verify, when } from 'ts-mockito';
 import { FileSystemWatcher, Uri } from 'vscode';
 
 type TestContext = {
-  mockStorage: IStorage;
+  mockGetDependencyChanges: GetDependencyChanges,
+  mockWorkspace: IWorkspaceAdapter;
   mockProvider: ISuggestionProvider;
   mockCache: DependencyCache;
   mockLogger: ILogger;
@@ -22,7 +22,8 @@ export const packageFileWatcherTests = {
   [test.title]: PackageFileWatcher.name,
 
   beforeEach: function (this: TestContext) {
-    this.mockStorage = mock<IStorage>();
+    this.mockGetDependencyChanges = mock<GetDependencyChanges>();
+    this.mockWorkspace = mock<IWorkspaceAdapter>();
     this.mockProvider = mock<ISuggestionProvider>();
     this.mockCache = mock<DependencyCache>();
     this.mockLogger = mock<ILogger>();
@@ -47,11 +48,12 @@ export const packageFileWatcherTests = {
 
       when(this.mockProvider.config).thenReturn(testConfig);
 
-      when(this.mockStorage.findFiles(testConfig.fileMatcher.pattern, '**​/node_modules/**'))
+      when(this.mockWorkspace.findFiles(testConfig.fileMatcher.pattern, '**​/node_modules/**'))
         .thenResolve([testUri])
 
       const watcher = new PackageFileWatcher(
-        instance(this.mockStorage),
+        instance(this.mockGetDependencyChanges),
+        instance(this.mockWorkspace),
         [testProvider],
         instance(this.mockCache),
         instance(this.mockLogger)
@@ -86,11 +88,12 @@ export const packageFileWatcherTests = {
 
       when(this.mockProvider.config).thenReturn(testConfig);
 
-      when(this.mockStorage.createFileSystemWatcher(testConfig.fileMatcher.pattern))
+      when(this.mockWorkspace.createFileSystemWatcher(testConfig.fileMatcher.pattern))
         .thenReturn(instance(mockFileSystemWatcher))
 
       const watcher = new PackageFileWatcher(
-        instance(this.mockStorage),
+        instance(this.mockGetDependencyChanges),
+        instance(this.mockWorkspace),
         [testProvider],
         instance(this.mockCache),
         instance(this.mockLogger)
@@ -115,18 +118,18 @@ export const packageFileWatcherTests = {
   },
 
   onFileChange: {
+
     "doesn't call changed listener when dependencies haven't changed": async function (this: TestContext) {
       // setup
       const testProvider = instance(this.mockProvider);
       const testUri: Uri = <any>{ fsPath: 'some-dir/package.json' };
-      const testFileContent = '{name: "test"}';
 
-      when(this.mockStorage.readFile(testUri.fsPath)).thenResolve(testFileContent)
-      when(this.mockCache.get(testProvider.name, testUri.fsPath)).thenReturn([])
-      when(this.mockProvider.parseDependencies(testUri.fsPath, testFileContent)).thenReturn([])
+      when(this.mockGetDependencyChanges.execute(testProvider, testUri.fsPath))
+        .thenResolve([]);
 
       const watcher = new PackageFileWatcher(
-        instance(this.mockStorage),
+        instance(this.mockGetDependencyChanges),
+        instance(this.mockWorkspace),
         [],
         instance(this.mockCache),
         instance(this.mockLogger)
@@ -148,11 +151,11 @@ export const packageFileWatcherTests = {
       ).once();
 
       verify(
-        this.mockCache.set(
-          anything(),
-          anything(),
-          anything()
-        )
+        this.mockGetDependencyChanges.execute(testProvider, testUri.fsPath),
+      ).once()
+
+      verify(
+        this.mockCache.set(anything(), anything(), anything())
       ).never();
 
       verify(
@@ -169,7 +172,6 @@ export const packageFileWatcherTests = {
       const stubWatcher = instance(this.mockPackageFileWatcher);
       const testProvider = instance(this.mockProvider);
       const testUri: Uri = <any>{ fsPath: 'some-dir/package.json' };
-      const testFileContent = '{name: "test"}';
       const testNewDependencies = [
         <PackageDependency>{
           package: {
@@ -180,13 +182,12 @@ export const packageFileWatcherTests = {
         }
       ];
 
-      when(this.mockStorage.readFile(testUri.fsPath)).thenResolve(testFileContent)
-      when(this.mockCache.get(testProvider.name, testUri.fsPath)).thenReturn([])
-      when(this.mockProvider.parseDependencies(testUri.fsPath, testFileContent))
-        .thenReturn(testNewDependencies)
+      when(this.mockGetDependencyChanges.execute(testProvider, testUri.fsPath))
+        .thenResolve(testNewDependencies);
 
       const watcher = new PackageFileWatcher(
-        instance(this.mockStorage),
+        instance(this.mockGetDependencyChanges),
+        instance(this.mockWorkspace),
         [],
         instance(this.mockCache),
         instance(this.mockLogger)
@@ -206,9 +207,13 @@ export const packageFileWatcherTests = {
       ).once();
 
       verify(
+        this.mockGetDependencyChanges.execute(testProvider, testUri.fsPath),
+      ).once()
+
+      verify(
         this.mockLogger.debug(
           "updating package dependency cache for '%s'",
-          testUri
+          testUri.fsPath
         )
       ).once();
 

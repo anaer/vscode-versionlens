@@ -1,6 +1,4 @@
-import { IWorkspaceAdapter } from "./iWorkspaceAdapter";
-
-export interface IStorage extends IWorkspaceAdapter {
+export interface IStorage {
 
   fileExists(absFilePath: string): Promise<boolean>;
 

@@ -1,7 +1,7 @@
-import { IStorage } from "infrastructure/storage";
+import { IWorkspaceAdapter } from "infrastructure/watcher";
 
 export interface IInfrastructureServices {
 
-  storage: IStorage;
+  workspaceAdapter: IWorkspaceAdapter;
 
 }
