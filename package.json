@@ -168,7 +168,7 @@
         },
         {
           "command": "versionlens.icons.error",
-          "when": "versionlens.providerError && versionlens.providerActive"
+          "when": "false"
         }
       ],
       "editor/title": [
