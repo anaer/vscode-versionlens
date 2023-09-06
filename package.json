@@ -89,8 +89,7 @@
     "commands": [
       {
         "command": "versionlens.icons.error",
-        "enablement": "false",
-        "title": "An error has occurred. See log for details.",
+        "title": "An error has occurred. Click to see the log for details.",
         "category": "VersionLens",
         "icon": {
           "dark": "images/icons/toggle-death.svg",
@@ -166,6 +165,10 @@
         {
           "command": "versionlens.icons.hideVersionLenses",
           "when": "versionlens.show && versionlens.providerActive"
+        },
+        {
+          "command": "versionlens.icons.error",
+          "when": "versionlens.providerError && versionlens.providerActive"
         }
       ],
       "editor/title": [

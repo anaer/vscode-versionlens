@@ -1,7 +1,7 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import { IconCommandContributions, VersionLensState } from 'presentation.extension';
-import { Disposable, OutputChannel, commands } from 'vscode';
+import { Disposable, OutputChannel, commands, window } from 'vscode';
 
 export class OnShowError {
 
@@ -25,17 +25,22 @@ export class OnShowError {
   disposable: Disposable;
 
   async execute(): Promise<void> {
+    // show the version lens log window
+    this.outputChannel.show();
+
+    // clear the error state
     await Promise.all([
       this.state.providerError.change(false),
       this.state.providerBusy.change(0)
-    ])
+    ]);
 
-    this.outputChannel.show();
+    // focus on the document unhide icons
+    window.showTextDocument(window.activeTextEditor.document);
   }
 
   async dispose() {
     this.disposable.dispose();
-    this.logger.debug("disposed");
+    this.logger.debug(`${OnShowError.name} disposed`);
   }
 
 }

@@ -14,7 +14,7 @@ import {
 } from 'domain/services';
 import { nameOf } from 'domain/utils';
 import { AwilixServiceCollectionFactory } from 'infrastructure/di';
-import { addInfrastructureServices } from 'infrastructure/services/container';
+import { addInfrastructureServices } from 'infrastructure/services';
 import {
   VersionLensExtension,
   addEditorDependencyCache,
@@ -26,9 +26,11 @@ import {
   addOnProviderEditorActivated,
   addOnProviderTextDocumentChange,
   addOnProviderTextDocumentClose,
+  addOnProviderTextDocumentSave,
   addOnShowError,
   addOnTextDocumentChange,
   addOnTextDocumentClosed,
+  addOnTextDocumentSave,
   addOnTogglePrereleases,
   addOnToggleReleases,
   addOnUpdateDependencyClick,
@@ -92,9 +94,15 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
 
   addOnTextDocumentClosed(services);
 
+  addOnTextDocumentSave(services);
+
   addOnProviderEditorActivated(services);
 
   addOnProviderTextDocumentChange(services);
+
+  addOnProviderTextDocumentClose(services);
+
+  addOnProviderTextDocumentSave(services);
 
   addOnClearCache(services);
 
@@ -107,8 +115,6 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
   addOnTogglePrereleases(services);
 
   addOnPackageDependenciesChanged(services);
-
-  addOnProviderTextDocumentClose(services);
 
   addOnShowError(services);
 

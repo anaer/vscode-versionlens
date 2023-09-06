@@ -13,9 +13,11 @@ import {
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
   OnProviderTextDocumentClose,
+  OnProviderTextDocumentSave,
   OnShowError,
   OnTextDocumentChange,
   OnTextDocumentClose,
+  OnTextDocumentSave,
   OnTogglePrereleases,
   OnToggleReleases,
   OnUpdateDependencyClick,
@@ -139,6 +141,19 @@ export function addOnTextDocumentClosed(services: IServiceCollection) {
   )
 }
 
+export function addOnTextDocumentSave(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onTextDocumentSave;
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices & IExtensionServices) =>
+      new OnTextDocumentSave(
+        container.suggestionProviders,
+        container.logger.child({ namespace: serviceName })
+      ),
+    true
+  )
+}
+
 export function addOnProviderEditorActivated(services: IServiceCollection) {
   const serviceName = nameOf<IExtensionServices>().onProviderEditorActivated;
   services.addSingleton(
@@ -163,6 +178,7 @@ export function addOnProviderTextDocumentChange(services: IServiceCollection) {
     serviceName,
     (container: IDomainServices & IExtensionServices) => {
       const listener = new OnProviderTextDocumentChange(
+        container.getDependencyChanges,
         container.editorDependencyCache,
         container.logger.child({ namespace: serviceName })
       );
@@ -293,6 +309,25 @@ export function addOnProviderTextDocumentClose(services: IServiceCollection) {
 
       // register listener
       container.onTextDocumentClose.registerListener(event.execute, event);
+
+      return event;
+    }
+  )
+}
+
+export function addOnProviderTextDocumentSave(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onProviderTextDocumentSave
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices & IExtensionServices) => {
+      const event = new OnProviderTextDocumentSave(
+        container.extension.state,
+        container.editorDependencyCache,
+        container.logger.child({ namespace: serviceName })
+      );
+
+      // register listener
+      container.onTextDocumentSave.registerListener(event.execute, event);
 
       return event;
     }

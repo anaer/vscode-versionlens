@@ -7,9 +7,11 @@ import {
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
   OnProviderTextDocumentClose,
+  OnProviderTextDocumentSave,
   OnShowError,
   OnTextDocumentChange,
   OnTextDocumentClose,
+  OnTextDocumentSave,
   OnTogglePrereleases,
   OnToggleReleases,
   OnUpdateDependencyClick,
@@ -35,12 +37,16 @@ export interface IExtensionServices {
 
   onTextDocumentClose: OnTextDocumentClose;
 
+  onTextDocumentSave: OnTextDocumentSave;
+
   // version lens events
   onProviderEditorActivated: OnProviderEditorActivated;
 
   onProviderTextDocumentChange: OnProviderTextDocumentChange;
 
   onProviderTextDocumentClose: OnProviderTextDocumentClose;
+
+  onProviderTextDocumentSave: OnProviderTextDocumentSave;
 
   onPackageDependenciesChanged: OnPackageDependenciesChanged;
 

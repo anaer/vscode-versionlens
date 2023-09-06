@@ -13,9 +13,8 @@ import {
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
   OnProviderTextDocumentClose,
+  OnProviderTextDocumentSave,
   OnShowError,
-  OnTextDocumentChange,
-  OnTextDocumentClose,
   OnTogglePrereleases,
   OnToggleReleases,
   OnUpdateDependencyClick,
@@ -79,10 +78,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
   serviceProvider.getService<OnProviderEditorActivated>(serviceNames.onProviderEditorActivated);
   serviceProvider.getService<OnProviderTextDocumentChange>(serviceNames.onProviderTextDocumentChange);
   serviceProvider.getService<OnProviderTextDocumentClose>(serviceNames.onProviderTextDocumentClose);
-  serviceProvider.getService<OnTextDocumentChange>(serviceNames.onTextDocumentChange);
-  serviceProvider.getService<OnTextDocumentClose>(serviceNames.onTextDocumentClose);
+  serviceProvider.getService<OnProviderTextDocumentSave>(serviceNames.onProviderTextDocumentSave);
+
+  // ensures this is run when the extension is first loaded
   serviceProvider.getService<OnActiveTextEditorChange>(serviceNames.onActiveTextEditorChange)
-    // ensures this is run when the extension is first loaded
     .execute(window.activeTextEditor)
 }
 
