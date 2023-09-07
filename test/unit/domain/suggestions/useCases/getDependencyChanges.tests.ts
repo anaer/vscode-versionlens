@@ -44,13 +44,14 @@ export const getDependencyChangesTests = {
     )
 
     // test
-    const actual = await getDependencyChanges.execute(
+    const actualResult = await getDependencyChanges.execute(
       testProvider,
       testPackageFilePath
     );
 
     // assert
-    assert.equal(actual.length, 0);
+    assert.equal(actualResult.parsedDependencies.length, 0);
+    assert.equal(actualResult.hasChanged, false);
   },
 
   "returns latest dependencies when has changes": async function (this: TestContext) {
@@ -82,14 +83,15 @@ export const getDependencyChangesTests = {
     )
 
     // test
-    const actual = await getDependencyChanges.execute(
+    const actualResult = await getDependencyChanges.execute(
       testProvider,
       testPackageFilePath
     );
 
     // assert
-    assert.equal(actual.length, testNewDependencies.length);
-    assert.equal(actual, testNewDependencies);
+    assert.equal(actualResult.parsedDependencies.length, testNewDependencies.length);
+    assert.equal(actualResult.parsedDependencies, testNewDependencies);
+    assert.ok(actualResult.hasChanged);
   }
 
 }

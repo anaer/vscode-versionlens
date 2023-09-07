@@ -4,6 +4,11 @@ import { DependencyCache, PackageDependency, hasPackageDepsChanged } from "domai
 import { IStorage } from "domain/storage";
 import { ISuggestionProvider } from "domain/suggestions";
 
+export type DependencyChangesResult = {
+  hasChanged: boolean,
+  parsedDependencies: PackageDependency[]
+}
+
 export class GetDependencyChanges {
 
   constructor(
@@ -19,7 +24,7 @@ export class GetDependencyChanges {
     suggestionProvider: ISuggestionProvider,
     packageFilePath: string,
     fileContent: string = undefined
-  ): Promise<PackageDependency[]> {
+  ): Promise<DependencyChangesResult> {
     // get the cached parsed dependencies
     const currentDeps = this.fileWatcherDependencyCache.get(
       suggestionProvider.name,
@@ -31,13 +36,16 @@ export class GetDependencyChanges {
       fileContent :
       await this.storage.readFile(packageFilePath);
 
-    const latestDeps = suggestionProvider.parseDependencies(packageFilePath, content);
+    const parsedDependencies = suggestionProvider.parseDependencies(packageFilePath, content);
 
     // check if there is a change
-    const hasChanged = hasPackageDepsChanged(currentDeps, latestDeps);
+    const hasChanged = hasPackageDepsChanged(currentDeps, parsedDependencies);
 
-    // return the latest dependencies or an empty array
-    return hasChanged ? latestDeps : [];
+    // return the parsed dependencies and changed state
+    return {
+      parsedDependencies,
+      hasChanged,
+    };
   }
 
 }

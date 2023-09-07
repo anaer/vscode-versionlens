@@ -3,7 +3,7 @@ import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import { ISuggestionProvider } from 'domain/suggestions';
 import { TextDocumentUtils } from 'presentation.extension';
-import { Disposable, TextDocumentChangeEvent, workspace } from 'vscode';
+import { Disposable, TextDocumentChangeEvent, TextDocumentChangeReason, workspace } from 'vscode';
 
 export type ProviderTextDocumentChangeFunction = (
   provider: ISuggestionProvider,
@@ -33,8 +33,14 @@ export class OnTextDocumentChange implements IDisposable {
   }
 
   execute(e: TextDocumentChangeEvent) {
-    if (e.contentChanges.length == 0) return;
+    // check if we have a change
+    const shouldHandleEvent = e.reason == TextDocumentChangeReason.Redo
+      || e.reason == TextDocumentChangeReason.Undo
+      || e.contentChanges.length > 0
 
+    if (shouldHandleEvent == false) return;
+
+    // check a provider handles this document
     const provider = TextDocumentUtils.getDocumentProvider(
       e.document,
       this.suggestionProviders
@@ -42,6 +48,7 @@ export class OnTextDocumentChange implements IDisposable {
 
     if (!provider) return;
 
+    // execute the listener
     this.listener && this.listener(
       provider as ISuggestionProvider,
       e.document.uri.fsPath,

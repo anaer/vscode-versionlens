@@ -18,21 +18,20 @@ export class OnProviderTextDocumentChange {
   async execute(suggestionProvider: ISuggestionProvider, packageFilePath: string, newContent: string): Promise<void> {
     this.logger.silly("%s provider text document change", suggestionProvider.name);
 
-    const changedDeps = await this.getDependencyChanges.execute(
+    const result = await this.getDependencyChanges.execute(
       suggestionProvider,
       packageFilePath,
       newContent
     );
 
-    const hasChanges = changedDeps.length > 0;
+    // update the editor cache
+    this.editorDependencyCache.set(
+      suggestionProvider.name,
+      packageFilePath,
+      result.parsedDependencies
+    );
 
-    if (hasChanges) {
-      this.editorDependencyCache.set(
-        suggestionProvider.name,
-        packageFilePath,
-        changedDeps
-      );
-    }
+    this.logger.debug("has changes = %s", result.hasChanged);
   }
 
 }

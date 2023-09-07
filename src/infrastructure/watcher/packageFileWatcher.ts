@@ -4,10 +4,9 @@ import { ILogger } from 'domain/logging';
 import {
   DependencyCache,
   IPackageFileWatcher,
-  OnPackageDependenciesChangedFunction,
-  PackageDependency
+  OnPackageDependenciesChangedFunction
 } from 'domain/packages';
-import { GetDependencyChanges, ISuggestionProvider } from 'domain/suggestions';
+import { DependencyChangesResult, GetDependencyChanges, ISuggestionProvider } from 'domain/suggestions';
 import { Uri } from 'vscode';
 import { IWorkspaceAdapter } from '.';
 
@@ -100,15 +99,14 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
     this.logger.silly("file changed '%s'", uri);
 
     const packageFilePath = uri.fsPath;
-    const latestDeps = await this.updateCacheFromFile(provider, packageFilePath);
-    const hasChanged = latestDeps.length > 0;
+    const result = await this.updateCacheFromFile(provider, packageFilePath);
 
     // notify dependencies updated to listener
-    if (hasChanged && this.packageDependenciesChangedListener) {
+    if (result.hasChanged && this.packageDependenciesChangedListener) {
       await this.packageDependenciesChangedListener(
         provider,
         packageFilePath,
-        latestDeps
+        result.parsedDependencies
       );
     }
   }
@@ -116,16 +114,15 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
   private async updateCacheFromFile(
     provider: ISuggestionProvider,
     packageFilePath: string
-  ): Promise<PackageDependency[]> {
+  ): Promise<DependencyChangesResult> {
 
-    const latestDeps = await this.getDependencyChanges.execute(provider, packageFilePath);
-    const hasChanged = latestDeps.length > 0;
-    if (hasChanged) {
+    const result = await this.getDependencyChanges.execute(provider, packageFilePath);
+    if (result.hasChanged) {
       this.logger.debug("updating package dependency cache for '%s'", packageFilePath);
-      this.dependencyCache.set(provider.name, packageFilePath, latestDeps);
+      this.dependencyCache.set(provider.name, packageFilePath, result.parsedDependencies);
     }
 
-    return hasChanged ? latestDeps : [];
+    return result;
   }
 
 }

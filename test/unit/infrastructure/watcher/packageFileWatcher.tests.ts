@@ -125,7 +125,10 @@ export const packageFileWatcherTests = {
       const testUri: Uri = <any>{ fsPath: 'some-dir/package.json' };
 
       when(this.mockGetDependencyChanges.execute(testProvider, testUri.fsPath))
-        .thenResolve([]);
+        .thenResolve({
+          parsedDependencies: [],
+          hasChanged: false
+        });
 
       const watcher = new PackageFileWatcher(
         instance(this.mockGetDependencyChanges),
@@ -183,7 +186,10 @@ export const packageFileWatcherTests = {
       ];
 
       when(this.mockGetDependencyChanges.execute(testProvider, testUri.fsPath))
-        .thenResolve(testNewDependencies);
+        .thenResolve({
+          parsedDependencies: testNewDependencies,
+          hasChanged: true
+        });
 
       const watcher = new PackageFileWatcher(
         instance(this.mockGetDependencyChanges),
