@@ -5,6 +5,7 @@ import {
   SuggestionTypes,
   TPackageSuggestion
 } from 'domain/suggestions';
+import semver from 'semver';
 
 export function createFromHttpStatus(status: number | string): Nullable<TPackageSuggestion> {
 
@@ -103,7 +104,7 @@ export function createNoMatch(): TPackageSuggestion {
 }
 
 export function createLatest(requestedVersion?: string): TPackageSuggestion {
-  const isPrerelease = requestedVersion && requestedVersion.indexOf('-') !== -1;
+  const isPrerelease = semver.prerelease(requestedVersion);
 
   const name = isPrerelease ?
     SuggestionStatus.LatestIsPrerelease :
@@ -123,7 +124,7 @@ export function createLatest(requestedVersion?: string): TPackageSuggestion {
 }
 
 export function createMatchesLatest(latestVersion: string): TPackageSuggestion {
-  const isPrerelease = latestVersion && latestVersion.indexOf('-') !== -1;
+  const isPrerelease = semver.prerelease(latestVersion);
 
   const name = isPrerelease ?
     SuggestionStatus.LatestIsPrerelease :

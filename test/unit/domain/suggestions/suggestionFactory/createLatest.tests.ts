@@ -34,13 +34,13 @@ export const CreateLatestTests = {
   },
 
   "when version param is a prerelease then returns 'latest' version package suggestion": () => {
-    const testRelease = '1.0.0-beta.1';
-    const actual = SuggestionFactory.createLatest(testRelease)
+    const testPrerelease = '1.0.0-beta.1';
+    const actual = SuggestionFactory.createLatest(testPrerelease)
     assert.deepEqual(
       actual,
       <TPackageSuggestion>{
         name: SuggestionStatus.LatestIsPrerelease,
-        version: testRelease,
+        version: testPrerelease,
         type: SuggestionTypes.prerelease
       });
   },
