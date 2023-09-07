@@ -140,7 +140,7 @@ export function parseSuggestions(
     const latestRelease = releases[releases.length - 1];
 
     if (latestRelease === versionRange) {
-      suggestions[0] = SuggestionFactory.createMatchesLatest(versionRange);
+      suggestions[0] = SuggestionFactory.createMatchesLatestStatus(versionRange);
       suggestions.pop();
     } else {
       // suggest

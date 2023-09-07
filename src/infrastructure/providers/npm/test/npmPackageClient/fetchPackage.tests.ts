@@ -172,9 +172,9 @@ export const fetchPackageTests = {
   },
 
   'returns $1 suggestion statuses': [
-    ["401", { status: 401, suggestion: { name: '401 not authorized' } }],
-    ["404", { status: 404, suggestion: { name: 'package not found' } }],
-    ["ECONNREFUSED", { status: 'ECONNREFUSED', suggestion: { name: 'connection refused' } }],
+    ["401", { status: 401, suggestion: { name: SuggestionStatus.NotAuthorized} }],
+    ["404", { status: 404, suggestion: { name: SuggestionStatus.NotFound } }],
+    ["ECONNREFUSED", { status: 'ECONNREFUSED', suggestion: { name: SuggestionStatus.ConnectionRefused } }],
     async (testTitlePart: string, testState: any) => {
       const testPackageRes = createPackageResource(
         // package name

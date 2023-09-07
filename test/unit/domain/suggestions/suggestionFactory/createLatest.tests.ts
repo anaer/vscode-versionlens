@@ -15,8 +15,8 @@ export const CreateLatestTests = {
     assert.deepEqual(
       actual,
       <TPackageSuggestion>{
-        name: SuggestionStatus.Latest,
-        version: SuggestionStatus.Latest,
+        name: SuggestionStatus.UpdateLatest,
+        version: 'latest',
         type: SuggestionTypes.tag
       });
   },
@@ -27,7 +27,7 @@ export const CreateLatestTests = {
     assert.deepEqual(
       actual,
       <TPackageSuggestion>{
-        name: SuggestionStatus.Latest,
+        name: SuggestionStatus.UpdateLatest,
         version: testRelease,
         type: SuggestionTypes.release
       });
@@ -39,7 +39,7 @@ export const CreateLatestTests = {
     assert.deepEqual(
       actual,
       <TPackageSuggestion>{
-        name: SuggestionStatus.LatestIsPrerelease,
+        name: SuggestionStatus.UpdateLatestPrerelease,
         version: testPrerelease,
         type: SuggestionTypes.prerelease
       });

@@ -46,7 +46,7 @@ export const CreateSuggestionsTests = {
           type: SuggestionTypes.status
         },
         <TPackageSuggestion>{
-          name: SuggestionStatus.Latest,
+          name: SuggestionStatus.UpdateLatest,
           version: '1.0.0',
           type: SuggestionTypes.release
         }
@@ -77,7 +77,7 @@ export const CreateSuggestionsTests = {
             type: SuggestionTypes.status
           },
           <TPackageSuggestion>{
-            name: SuggestionStatus.LatestIsPrerelease,
+            name: SuggestionStatus.UpdateLatestPrerelease,
             version: '4.0.0-next',
             type: SuggestionTypes.prerelease
           }
@@ -205,7 +205,8 @@ export const CreateSuggestionsTests = {
         assert.deepEqual(results, Fixtures.rangeNoMatchWithLatestSuggestions);
       }
     },
-    "includes the latest release": {
+
+    "satisfies the latest release": {
       "$i: returns 'satisfies latest' with latest prerelease suggestions": [
         ['>=2'],
         ['>=2 <=5'],
@@ -233,8 +234,9 @@ export const CreateSuggestionsTests = {
         }
       ],
     },
-    "doesn't include latest release": {
-      "$i: returns 'satisfies' with latest suggestions": [
+
+    "satisfies an update within the range": {
+      "$i: returns 'satisfies' with update suggestion": [
         ['>=2 <3'],
         ['>=1.2 <2.2.*'],
         (testRange: string) => {
@@ -251,7 +253,30 @@ export const CreateSuggestionsTests = {
           );
 
           // assert
-          assert.deepEqual(results, Fixtures.rangeSatisfiesAndSuggestsLatest);
+          assert.deepEqual(results, Fixtures.rangeSatisfiesUpdateAndSuggestsLatest);
+          assert.equal(results[0].version, satisfiesVersion);
+        }
+      ],
+    },
+
+    "satisfies maximum range": {
+      "$i: returns 'satisfies' with latest suggestion": [
+        ['^2.1.0'],
+        (testRange: string) => {
+          // setup
+          const satisfiesVersion = '2.1.0';
+          const testReleases = ['1.0.0', '2.0.0', '2.1.0', '3.0.0']
+          const testPrereleases = ['1.1.0-alpha.1', '4.0.0-next']
+
+          // test
+          const results = createSuggestions(
+            testRange,
+            testReleases,
+            testPrereleases
+          );
+
+          // assert
+          assert.deepEqual(results, Fixtures.rangeSatisfiesMaxAndSuggestsLatest);
           assert.equal(results[0].version, satisfiesVersion);
         }
       ],

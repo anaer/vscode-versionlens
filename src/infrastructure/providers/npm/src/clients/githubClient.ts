@@ -166,7 +166,7 @@ export class GitHubClient {
       );
     } else if (isLatest) {
       suggestions.push(
-        SuggestionFactory.createMatchesLatest(versionRange)
+        SuggestionFactory.createMatchesLatestStatus(versionRange)
       );
     } else if (commitIndex > 0) {
       suggestions.push(

@@ -140,7 +140,7 @@ export const fetchGithubTests = {
               type: SuggestionTypes.status
             },
             <TPackageSuggestion>{
-              name: SuggestionStatus.Latest,
+              name: SuggestionStatus.UpdateLatest,
               version: 'v2.5.0',
               type: SuggestionTypes.release
             },
@@ -204,7 +204,7 @@ export const fetchGithubTests = {
               type: SuggestionTypes.status
             },
             <TPackageSuggestion>{
-              name: SuggestionStatus.Latest,
+              name: SuggestionStatus.UpdateLatest,
               version: 'df4d9435',
               type: SuggestionTypes.release
             }

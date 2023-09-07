@@ -5,10 +5,11 @@ import { SuggestionTypes, TPackageSuggestion } from '../index';
 import {
   createFixedStatus,
   createLatest,
-  createMatchesLatest,
+  createMatchesLatestStatus,
   createNoMatch,
-  createSatisifies,
-  createSatisifiesLatest
+  createRangeUpdate,
+  createSatisifiesLatestStatus,
+  createSatisifiesStatus
 } from '../suggestionFactory';
 
 export function createSuggestions(
@@ -17,7 +18,7 @@ export function createSuggestions(
   prereleases: string[],
   distTagVersion: Nullable<string> = null
 ): Array<TPackageSuggestion> {
-  const { compareLoose, maxSatisfying, prerelease, valid, validRange } = semver;
+  const { compareLoose, maxSatisfying, prerelease, valid, validRange, gt, minVersion } = semver;
   const suggestions: Array<TPackageSuggestion> = [];
 
   const isFixedVersion = valid(versionRange);
@@ -44,6 +45,15 @@ export function createSuggestions(
   const latestVersion = distTagVersion || releases[releases.length - 1];
   const isLatest = latestVersion === satisfiesVersion;
 
+  let hasRangeUpdate = false;
+
+  if (isRangeVersion && isLatest == false && satisfiesVersion) {
+    // get the lowest version in the range
+    const lowestRangeVersion = minVersion(versionRange);
+    // check satisfiesVersion > minRangeVersion
+    hasRangeUpdate = gt(satisfiesVersion, lowestRangeVersion, compareLoose);
+  }
+
   if (releases.length === 0 && prereleases.length === 0)
     // no match
     suggestions.push(createNoMatch())
@@ -56,11 +66,11 @@ export function createSuggestions(
     )
   else if (isLatest && isFixedVersion)
     // latest
-    suggestions.push(createMatchesLatest(latestVersion));
+    suggestions.push(createMatchesLatestStatus(latestVersion));
   else if (isLatest && isRangeVersion)
     suggestions.push(
       // satisfies latest
-      createSatisifiesLatest(latestVersion)
+      createSatisifiesLatestStatus(latestVersion)
     );
   else if (satisfiesVersion && isFixedVersion)
     suggestions.push(
@@ -69,10 +79,18 @@ export function createSuggestions(
       // suggest latestVersion
       createLatest(latestVersion),
     );
+  else if (hasRangeUpdate) {
+    suggestions.push(
+      // satisfies version that doesnt match latest
+      createSatisifiesStatus(satisfiesVersion),
+      // suggest update
+      createRangeUpdate(satisfiesVersion),
+    );
+  }
   else if (satisfiesVersion)
     suggestions.push(
       // satisfies version that doesnt match latest
-      createSatisifies(satisfiesVersion),
+      createSatisifiesStatus(satisfiesVersion),
       // suggest latestVersion
       createLatest(latestVersion),
     );

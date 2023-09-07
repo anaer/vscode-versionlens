@@ -9,7 +9,7 @@ export default {
     },
     <TPackageSuggestion>{
       type: SuggestionTypes.release,
-      name: SuggestionStatus.Latest,
+      name: SuggestionStatus.UpdateLatest,
       version: '1.0.0'
     },
     <TPackageSuggestion>{
@@ -45,7 +45,7 @@ export default {
     },
     <TPackageSuggestion>{
       type: SuggestionTypes.release,
-      name: SuggestionStatus.Latest,
+      name: SuggestionStatus.UpdateLatest,
       version: '2.0.0'
     }
   ],
@@ -61,7 +61,7 @@ export default {
       version: '4.0.0-next'
     }
   ],
-  rangeSatisfiesAndSuggestsLatest: [
+  rangeSatisfiesUpdateAndSuggestsLatest: [
     <TPackageSuggestion>{
       type: SuggestionTypes.status,
       name: SuggestionStatus.Satisfies,
@@ -69,7 +69,24 @@ export default {
     },
     <TPackageSuggestion>{
       type: SuggestionTypes.release,
-      name: SuggestionStatus.Latest,
+      name: SuggestionStatus.UpdateRange,
+      version: '2.1.0'
+    },
+    <TPackageSuggestion>{
+      type: SuggestionTypes.prerelease,
+      name: 'next',
+      version: '4.0.0-next'
+    }
+  ],
+  rangeSatisfiesMaxAndSuggestsLatest: [
+    <TPackageSuggestion>{
+      type: SuggestionTypes.status,
+      name: SuggestionStatus.Satisfies,
+      version: '2.1.0'
+    },
+    <TPackageSuggestion>{
+      type: SuggestionTypes.release,
+      name: SuggestionStatus.UpdateLatest,
       version: '3.0.0'
     },
     <TPackageSuggestion>{

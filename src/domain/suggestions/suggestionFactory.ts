@@ -107,8 +107,8 @@ export function createLatest(requestedVersion?: string): TPackageSuggestion {
   const isPrerelease = semver.prerelease(requestedVersion);
 
   const name = isPrerelease ?
-    SuggestionStatus.LatestIsPrerelease :
-    SuggestionStatus.Latest;
+    SuggestionStatus.UpdateLatestPrerelease :
+    SuggestionStatus.UpdateLatest;
 
   // treats requestedVersion as latest version
   // if no requestedVersion then uses the 'latest' tag instead
@@ -123,7 +123,15 @@ export function createLatest(requestedVersion?: string): TPackageSuggestion {
   };
 }
 
-export function createMatchesLatest(latestVersion: string): TPackageSuggestion {
+export function createRangeUpdate(rangeVersion: string): TPackageSuggestion {
+  return createSuggestion(
+    SuggestionStatus.UpdateRange,
+    rangeVersion,
+    SuggestionTypes.release
+  );
+}
+
+export function createMatchesLatestStatus(latestVersion: string): TPackageSuggestion {
   const isPrerelease = semver.prerelease(latestVersion);
 
   const name = isPrerelease ?
@@ -137,7 +145,7 @@ export function createMatchesLatest(latestVersion: string): TPackageSuggestion {
   };
 }
 
-export function createSatisifiesLatest(latestVersion: string): TPackageSuggestion {
+export function createSatisifiesLatestStatus(latestVersion: string): TPackageSuggestion {
   return createSuggestion(
     SuggestionStatus.SatisfiesLatest,
     latestVersion,
@@ -145,7 +153,7 @@ export function createSatisifiesLatest(latestVersion: string): TPackageSuggestio
   )
 }
 
-export function createSatisifies(satisfiesVersion: string): TPackageSuggestion {
+export function createSatisifiesStatus(satisfiesVersion: string): TPackageSuggestion {
   return createSuggestion(
     SuggestionStatus.Satisfies,
     satisfiesVersion,

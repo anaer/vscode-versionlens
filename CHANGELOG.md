@@ -1,3 +1,28 @@
+# 1.7.0-preview.1
+
+## All providers
+
+  - Added unicode colour circles to help identify versions that have updates
+
+    Some examples:
+
+    - 🟢latest
+    - 🟢satisfies latest
+    - 🟢latest prerelease
+    - 🟡fixed
+    - 🟡satisfies
+    - ⚪no match
+    - ⚪not supported
+    - 🔴invalid entry
+
+  - Fixed an issue where certain ranged versions were not showing updatable links.
+
+    The new update link is `bump: ↑ x.x.x`.
+
+    Note: There are still replacement issues with ranges. Only `^` and `~` work correctly at present.
+
+  - Icons now match the size of the built in icons in the editor/title bar
+
 # 1.6
 
 ## All providers
