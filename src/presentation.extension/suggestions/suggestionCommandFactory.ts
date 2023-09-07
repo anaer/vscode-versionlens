@@ -1,4 +1,4 @@
-import { SuggestionTypes } from 'domain/suggestions';
+import { SuggestionStatus, SuggestionTypes } from 'domain/suggestions';
 import fs from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import {
@@ -12,7 +12,7 @@ export function createTagCommand(tag: string, codeLens: SuggestionCodeLens) {
 }
 
 export function createInvalidCommand(codeLens: SuggestionCodeLens) {
-  return codeLens.setCommand("Invalid entry", "");
+  return codeLens.setCommand(SuggestionStatus.Invalid, "");
 }
 
 export function createDirectoryLinkCommand(codeLens: SuggestionCodeLens) {
@@ -29,7 +29,7 @@ export function createDirectoryLinkCommand(codeLens: SuggestionCodeLens) {
 
   const fileExists = fs.existsSync(filePath);
   if (fileExists === false)
-    title = (cmd = "") || 'Specified resource does not exist';
+    title = (cmd = "") || SuggestionStatus.DirectoryNotFound;
   else
     title = `${SuggestionIndicators.OpenNewWindow} ${codeLens.package.parsedPackage.version}`;
 

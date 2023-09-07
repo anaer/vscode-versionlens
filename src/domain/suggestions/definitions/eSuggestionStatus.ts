@@ -8,6 +8,7 @@ export enum SuggestionStatus {
   ConnectionRefused = '🔴connection refused',
   ConnectionReset = '🔴connection reset',
   Invalid = '🔴invalid entry',
+  DirectoryNotFound = '🔴directory not found',
   NoMatch = '⚪no match',
   Satisfies = '🟡satisfies',
   SatisfiesLatest = '🟢satisfies latest',
