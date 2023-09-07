@@ -2,13 +2,13 @@ import { DependencyCache } from 'domain/packages';
 import {
   OnActiveTextEditorChange,
   OnClearCache,
+  OnErrorClick,
   OnFileLinkClick,
   OnPackageDependenciesChanged,
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
   OnProviderTextDocumentClose,
   OnProviderTextDocumentSave,
-  OnShowError,
   OnTextDocumentChange,
   OnTextDocumentClose,
   OnTextDocumentSave,
@@ -60,6 +60,6 @@ export interface IExtensionServices {
 
   onTogglePrereleases: OnTogglePrereleases;
 
-  onShowError: OnShowError;
+  onErrorClick: OnErrorClick;
 
 }

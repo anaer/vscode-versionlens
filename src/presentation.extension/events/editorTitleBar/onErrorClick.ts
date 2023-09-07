@@ -3,7 +3,7 @@ import { ILogger } from 'domain/logging';
 import { IconCommandContributions, VersionLensState } from 'presentation.extension';
 import { Disposable, OutputChannel, commands, window } from 'vscode';
 
-export class OnShowError {
+export class OnErrorClick {
 
   constructor(
     readonly state: VersionLensState,
@@ -40,7 +40,7 @@ export class OnShowError {
 
   async dispose() {
     this.disposable.dispose();
-    this.logger.debug(`${OnShowError.name} disposed`);
+    this.logger.debug(`${OnErrorClick.name} disposed`);
   }
 
 }

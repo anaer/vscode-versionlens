@@ -8,13 +8,13 @@ import {
   IExtensionServices,
   OnActiveTextEditorChange,
   OnClearCache,
+  OnErrorClick,
   OnFileLinkClick,
   OnPackageDependenciesChanged,
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
   OnProviderTextDocumentClose,
   OnProviderTextDocumentSave,
-  OnShowError,
   OnTogglePrereleases,
   OnToggleReleases,
   OnUpdateDependencyClick,
@@ -68,7 +68,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     .initialize();
 
   // instantiate events
-  serviceProvider.getService<OnShowError>(serviceNames.onShowError);
+  serviceProvider.getService<OnErrorClick>(serviceNames.onErrorClick);
   serviceProvider.getService<OnToggleReleases>(serviceNames.onToggleReleases);
   serviceProvider.getService<OnTogglePrereleases>(serviceNames.onTogglePrereleases);
   serviceProvider.getService<OnUpdateDependencyClick>(serviceNames.onUpdateDependencyClick);

@@ -8,13 +8,13 @@ import {
   IExtensionServices,
   OnActiveTextEditorChange,
   OnClearCache,
+  OnErrorClick,
   OnFileLinkClick,
   OnPackageDependenciesChanged,
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
   OnProviderTextDocumentClose,
   OnProviderTextDocumentSave,
-  OnShowError,
   OnTextDocumentChange,
   OnTextDocumentClose,
   OnTextDocumentSave,
@@ -263,11 +263,11 @@ export function addOnTogglePrereleases(services: IServiceCollection) {
 }
 
 export function addOnShowError(services: IServiceCollection) {
-  const serviceName = nameOf<IExtensionServices>().onShowError;
+  const serviceName = nameOf<IExtensionServices>().onErrorClick;
   services.addSingleton(
     serviceName,
     (container: IDomainServices & IExtensionServices) => {
-      return new OnShowError(
+      return new OnErrorClick(
         container.extension.state,
         container.outputChannel,
         container.logger.child({ namespace: serviceName })
