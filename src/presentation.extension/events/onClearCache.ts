@@ -18,7 +18,7 @@ export class OnClearCache {
 
     // register the vscode command
     this.disposable = commands.registerCommand(
-      SuggestionCommandContributions.ClearCacheCommand,
+      SuggestionCommandContributions.OnClearCache,
       this.execute,
       this
     );

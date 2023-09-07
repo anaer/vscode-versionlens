@@ -17,7 +17,7 @@ export function createInvalidCommand(codeLens: SuggestionCodeLens) {
 
 export function createDirectoryLinkCommand(codeLens: SuggestionCodeLens) {
   let title: string;
-  let cmd = SuggestionCommandContributions.FileLinkClicked as string;
+  let cmd = SuggestionCommandContributions.OnFileLinkClick as string;
 
   const path = codeLens.package.fetchedPackage?.version;
   if (!path) return createInvalidCommand(codeLens);
@@ -52,7 +52,7 @@ export function createSuggestedVersionCommand(codeLens: SuggestionCodeLens) {
     const prefix = isTag ? '' : name + ': ';
     return codeLens.setCommand(
       `${prefix}${SuggestionIndicators.Update} ${version}`,
-      SuggestionCommandContributions.UpdateDependencyClicked,
+      SuggestionCommandContributions.OnUpdateDependencyClick,
       [codeLens, `${replaceWithVersion}`]
     );
   }

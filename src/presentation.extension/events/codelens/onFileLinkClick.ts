@@ -11,7 +11,7 @@ export class OnFileLinkClick {
 
     // register the vscode command
     this.disposable = commands.registerCommand(
-      SuggestionCommandContributions.FileLinkClicked,
+      SuggestionCommandContributions.OnFileLinkClick,
       this.execute,
       this
     );

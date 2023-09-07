@@ -1,5 +1,5 @@
 export enum SuggestionCommandContributions {
-  UpdateDependencyClicked = 'versionlens.suggestions.updateDependency',
-  FileLinkClicked = "versionlens.suggestions.fileLinkDependency",
-  ClearCacheCommand = "versionlens.suggestions.clearCache"
+  OnUpdateDependencyClick = 'versionlens.suggestions.updateDependencyClick',
+  OnFileLinkClick = "versionlens.suggestions.fileLinkClick",
+  OnClearCache = "versionlens.suggestions.clearCache"
 }

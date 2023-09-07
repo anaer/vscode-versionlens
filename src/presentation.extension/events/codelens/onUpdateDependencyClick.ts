@@ -10,7 +10,7 @@ export class OnUpdateDependencyClick {
 
     // register the vscode command
     this.disposable = commands.registerCommand(
-      SuggestionCommandContributions.UpdateDependencyClicked,
+      SuggestionCommandContributions.OnUpdateDependencyClick,
       this.execute,
       this
     );
