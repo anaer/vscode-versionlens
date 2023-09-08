@@ -1,5 +1,4 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
-import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
   DependencyCache,
@@ -7,7 +6,7 @@ import {
   OnPackageDependenciesChangedEvent
 } from 'domain/packages';
 import { DependencyChangesResult, GetDependencyChanges, ISuggestionProvider } from 'domain/suggestions';
-import { AsyncEmitter } from 'domain/utils';
+import { AsyncEmitter, IDisposable } from 'domain/utils';
 import { Uri } from 'vscode';
 import { IWorkspaceAdapter } from '.';
 

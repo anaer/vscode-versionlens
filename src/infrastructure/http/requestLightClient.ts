@@ -7,8 +7,8 @@ import {
   IHttpClient,
   UrlHelpers
 } from 'domain/clients';
-import { KeyStringDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
+import { KeyStringDictionary } from 'domain/utils';
 import { XHRRequest } from 'request-light';
 import { IXhrResponse } from './iXhrResponse';
 

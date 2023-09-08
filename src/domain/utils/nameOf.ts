@@ -1,4 +1,4 @@
-import { PropertyNameDictionary } from "domain/generics";
+import { PropertyNameDictionary } from 'domain/utils';
 
 export function nameOf<T>() {
   return new Proxy({}, {

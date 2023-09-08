@@ -1,13 +1,12 @@
 import NpmCliConfig from '@npmcli/config';
 import { ClientResponseSource, HttpClientResponse } from 'domain/clients';
-import { KeyStringDictionary } from 'domain/generics';
 import {
   PackageResponse,
   PackageSourceType,
   PackageVersionType,
   VersionUtils
 } from 'domain/packages';
-import { fileExists, readFile } from 'domain/utils';
+import { KeyStringDictionary, fileExists, readFile } from 'domain/utils';
 import dotenv from 'dotenv';
 import { resolve } from 'node:path';
 

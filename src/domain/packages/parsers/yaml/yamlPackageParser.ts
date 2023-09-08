@@ -1,4 +1,4 @@
-import { KeyDictionary } from 'domain/generics';
+import { KeyDictionary } from 'domain/utils';
 import { Document, isMap, Pair, ParsedNode, parseDocument, YAMLMap } from 'yaml';
 import { findPair } from 'yaml/util';
 import { createParentDesc, PackageDescriptor } from '../../index';

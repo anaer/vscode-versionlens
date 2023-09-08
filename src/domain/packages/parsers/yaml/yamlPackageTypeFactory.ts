@@ -1,4 +1,4 @@
-import { Undefinable } from "domain/generics";
+import { Undefinable } from 'domain/utils';
 import {
   TPackageGitDescriptor,
   TPackageHostedDescriptor,

@@ -1,5 +1,5 @@
-import { Nullable, Undefinable } from 'domain/generics';
-import { IFrozenOptions, Options, IOptionsWithDefaults } from '.';
+import { Nullable, Undefinable } from 'domain/utils';
+import { IFrozenOptions, IOptionsWithDefaults, Options } from '.';
 
 export class OptionsWithFallback extends Options
   implements IOptionsWithDefaults {

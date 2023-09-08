@@ -1,5 +1,5 @@
 import { throwNotStringOrEmpty, throwUndefinedOrNull } from '@esm-test/guards';
-import { TAsyncFunction } from 'domain/generics';
+import { TAsyncFunction } from 'domain/utils';
 import { ICache } from './definitions/iCache';
 
 type CacheMap = {

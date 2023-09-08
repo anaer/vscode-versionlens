@@ -1,4 +1,3 @@
-import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
   PackageCache,
@@ -20,6 +19,7 @@ import {
   TSuggestionReplaceFunction,
   defaultReplaceFn
 } from 'domain/suggestions';
+import { KeyDictionary } from 'domain/utils';
 import { DubClient } from './dubClient';
 import { DubConfig } from './dubConfig';
 

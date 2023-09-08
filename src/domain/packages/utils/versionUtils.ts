@@ -1,4 +1,4 @@
-import { KeyStringArrayDictionary } from 'domain/generics';
+import { KeyStringArrayDictionary } from 'domain/utils';
 import semver from 'semver';
 import { PackageVersionType } from '../definitions/ePackageVersionType';
 import { TPackageNameVersion } from '../definitions/tPackageNameVersion';

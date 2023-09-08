@@ -1,5 +1,5 @@
 import { TClientResponse } from "domain/clients";
-import { KeyDictionary } from "domain/generics";
+import { KeyDictionary } from 'domain/utils';
 
 export type TPacoteData = {
 

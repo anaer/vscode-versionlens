@@ -1,5 +1,5 @@
 import { IFrozenOptions, OptionsWithFallback } from 'domain/configuration';
-import { Nullable } from 'domain/generics';
+import { Nullable } from 'domain/utils';
 
 import { CachingContributions } from '../definitions/eCachingContributions';
 import { ICachingOptions } from "../definitions/iCachingOptions";

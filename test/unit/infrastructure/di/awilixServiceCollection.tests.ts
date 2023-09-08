@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { BuildResolver } from 'awilix';
 import { TServiceResolver } from 'domain/di';
-import { KeyDictionary } from 'domain/generics';
+import { KeyDictionary } from 'domain/utils';
 import { AwilixServiceCollection } from 'infrastructure/di';
 import { test } from 'mocha-ui-esm';
 

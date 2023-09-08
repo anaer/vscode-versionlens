@@ -1,6 +1,5 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ClientResponseSource } from 'domain/clients';
-import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
   ClientResponseFactory,
@@ -11,6 +10,7 @@ import {
   VersionUtils
 } from 'domain/packages';
 import { createSuggestions } from 'domain/suggestions';
+import { KeyDictionary } from 'domain/utils';
 import semver from 'semver';
 import { TPactoteClientResponse } from '../definitions/TPactoteClientResponse';
 import { TNpmClientData } from '../definitions/tNpmClientData';

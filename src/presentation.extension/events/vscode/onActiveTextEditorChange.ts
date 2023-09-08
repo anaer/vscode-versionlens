@@ -1,8 +1,7 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
-import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import { ISuggestionProvider } from 'domain/suggestions';
-import { AsyncEmitter } from 'domain/utils';
+import { AsyncEmitter, IDisposable } from 'domain/utils';
 import { Disposable, TextDocument, TextEditor, window } from 'vscode';
 import { VersionLensState } from '../../state/versionLensState';
 import { getDocumentProvider } from '../eventUtils';

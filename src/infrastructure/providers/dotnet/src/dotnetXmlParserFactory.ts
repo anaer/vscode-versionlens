@@ -1,4 +1,3 @@
-import { Nullable } from 'domain/generics';
 import {
   PackageDescriptor,
   PackageDescriptorType,
@@ -6,6 +5,7 @@ import {
   TPackageTextRange,
   TPackageVersionDescriptor
 } from 'domain/packages';
+import { Nullable } from 'domain/utils';
 import xmldoc from 'xmldoc';
 
 export function createDependenciesFromXml(

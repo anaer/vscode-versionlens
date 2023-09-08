@@ -1,5 +1,5 @@
 import { throwNotStringOrEmpty, throwUndefinedOrNull } from '@esm-test/guards';
-import { Nullable, Undefinable } from 'domain/generics';
+import { Nullable, Undefinable } from 'domain/utils';
 import { IConfig } from './definitions/iConfig';
 import { IFrozenOptions } from './definitions/iOptions';
 import { TConfigSectionResolver } from './definitions/tConfigResolver';

@@ -11,9 +11,8 @@ import {
   ServiceLifetime,
   TServiceResolver
 } from 'domain/di';
-import { AsyncFunction, IDisposable, KeyDictionary } from 'domain/generics';
 import { IDomainServices } from 'domain/services';
-import { nameOf } from 'domain/utils';
+import { AsyncFunction, IDisposable, KeyDictionary, nameOf } from 'domain/utils';
 import { AwilixServiceProvider } from './awilixServiceProvider';
 import { registerAsyncSingletons } from './awillixUtils';
 

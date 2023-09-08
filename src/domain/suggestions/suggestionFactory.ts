@@ -1,10 +1,10 @@
-import { Nullable } from 'domain/generics';
 import {
   SuggestionFactory,
   SuggestionStatus,
   SuggestionTypes,
   TPackageSuggestion
 } from 'domain/suggestions';
+import { Nullable } from 'domain/utils';
 import semver from 'semver';
 
 export function createFromHttpStatus(status: number | string): Nullable<TPackageSuggestion> {

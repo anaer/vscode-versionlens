@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { OptionsWithFallback } from 'domain/configuration';
-import { KeyDictionary } from 'domain/generics';
+import { KeyDictionary } from 'domain/utils';
 import { test } from 'mocha-ui-esm';
 
 export const OptionsWithFallbackTests = {

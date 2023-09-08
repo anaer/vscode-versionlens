@@ -1,4 +1,3 @@
-import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
   PackageCache,
@@ -18,6 +17,7 @@ import {
   TSuggestionReplaceFunction,
   defaultReplaceFn
 } from 'domain/suggestions';
+import { KeyDictionary } from 'domain/utils';
 import { ComposerClient } from './composerClient';
 import { ComposerConfig } from './composerConfig';
 

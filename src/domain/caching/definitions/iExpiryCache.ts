@@ -1,4 +1,4 @@
-import { TAsyncFunction } from "domain/generics";
+import { TAsyncFunction } from 'domain/utils';
 
 export type ExpiryCacheEntry<T> = {
   createdTime: number,

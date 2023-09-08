@@ -1,5 +1,5 @@
-import { Nullable } from 'domain/generics';
 import { VersionUtils } from 'domain/packages';
+import { Nullable } from 'domain/utils';
 import semver from 'semver';
 import { SuggestionTypes, TPackageSuggestion } from '../index';
 import {

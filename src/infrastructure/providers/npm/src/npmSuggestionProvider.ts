@@ -1,4 +1,3 @@
-import { KeyDictionary } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
   PackageCache,
@@ -17,6 +16,7 @@ import {
   SuggestionProvider,
   TSuggestionReplaceFunction
 } from 'domain/suggestions';
+import { KeyDictionary } from 'domain/utils';
 import { homedir } from 'node:os';
 import { resolve } from 'node:path';
 import { NpmPackageClient } from './clients/npmPackageClient';

@@ -1,4 +1,4 @@
-import { KeyStringDictionary } from 'domain/generics';
+import { KeyStringDictionary } from 'domain/utils';
 import { parse } from 'url';
 
 export enum RegistryProtocols {

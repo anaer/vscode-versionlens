@@ -1,5 +1,4 @@
 import assert from 'assert';
-import { KeyDictionary } from 'domain/generics';
 import {
   extractPackageDependenciesFromYaml,
   TYamlPackageParserOptions,
@@ -11,6 +10,7 @@ import {
   createPathDescFromYamlNode,
   createVersionDescFromYamlNode
 } from 'domain/packages/parsers/yaml/yamlPackageTypeFactory';
+import { KeyDictionary } from 'domain/utils';
 import { test } from 'mocha-ui-esm';
 import Fixtures from './extractPackageDependenciesFromYaml.fixtures';
 

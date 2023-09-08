@@ -1,4 +1,4 @@
-import { KeyDictionary } from "domain/generics";
+import { KeyDictionary } from 'domain/utils';
 import { TYamlPackageTypeHandler } from "./tYamlPackageTypeHandler";
 
 export type TYamlPackageParserOptions = {

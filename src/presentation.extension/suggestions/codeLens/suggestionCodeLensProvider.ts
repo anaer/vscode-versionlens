@@ -1,5 +1,4 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
-import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import {
   PackageResponse,
@@ -13,6 +12,7 @@ import {
   SuggestionTypes,
   defaultReplaceFn
 } from 'domain/suggestions';
+import { IDisposable } from 'domain/utils';
 import { dirname } from 'node:path';
 import {
   CommandFactory,

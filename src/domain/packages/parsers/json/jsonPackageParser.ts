@@ -1,5 +1,5 @@
-import { KeyDictionary, Undefinable } from 'domain/generics';
 import { PackageDescriptor } from 'domain/packages';
+import { KeyDictionary, Undefinable } from 'domain/utils';
 import * as JsonC from 'jsonc-parser';
 import { TJsonPackageParserOptions } from '../definitions/tJsonPackageParserOptions';
 import { TJsonPackageTypeHandler } from '../definitions/tJsonPackageTypeHandler';

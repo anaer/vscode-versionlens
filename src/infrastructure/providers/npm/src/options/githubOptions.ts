@@ -1,5 +1,5 @@
-import { Nullable } from 'domain/generics';
 import { IFrozenOptions, OptionsWithFallback } from 'domain/configuration';
+import { Nullable } from 'domain/utils';
 import { GitHubContributions } from '../definitions/eGitHubContributions';
 
 export class GitHubOptions extends OptionsWithFallback {
