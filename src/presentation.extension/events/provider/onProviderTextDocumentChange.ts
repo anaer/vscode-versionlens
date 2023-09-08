@@ -2,10 +2,12 @@ import { throwUndefinedOrNull } from "@esm-test/guards";
 import { ILogger } from "domain/logging";
 import { DependencyCache } from "domain/packages";
 import { GetDependencyChanges, ISuggestionProvider } from "domain/suggestions";
+import { VersionLensState } from "presentation.extension";
 
 export class OnProviderTextDocumentChange {
 
   constructor(
+    readonly state: VersionLensState,
     readonly getDependencyChanges: GetDependencyChanges,
     readonly editorDependencyCache: DependencyCache,
     readonly logger: ILogger
@@ -31,7 +33,8 @@ export class OnProviderTextDocumentChange {
       result.parsedDependencies
     );
 
-    this.logger.debug("has changes = %s", result.hasChanged);
+    this.logger.silly("has changes = %s", result.hasChanged);
+    this.state.showOutdated.change(result.hasChanged);
   }
 
 }

@@ -9,6 +9,7 @@ import {
   OnProviderTextDocumentChange,
   OnProviderTextDocumentClose,
   OnProviderTextDocumentSave,
+  OnSaveChanges,
   OnTextDocumentChange,
   OnTextDocumentClose,
   OnTextDocumentSave,
@@ -51,6 +52,8 @@ export interface IExtensionServices {
   onPackageDependenciesChanged: OnPackageDependenciesChanged;
 
   onClearCache: OnClearCache;
+
+  onSaveChanges: OnSaveChanges;
 
   onFileLinkClick: OnFileLinkClick;
 

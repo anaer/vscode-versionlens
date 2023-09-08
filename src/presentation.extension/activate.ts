@@ -15,6 +15,7 @@ import {
   OnProviderTextDocumentChange,
   OnProviderTextDocumentClose,
   OnProviderTextDocumentSave,
+  OnSaveChanges,
   OnTogglePrereleases,
   OnToggleReleases,
   OnUpdateDependencyClick,
@@ -74,6 +75,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   serviceProvider.getService<OnUpdateDependencyClick>(serviceNames.onUpdateDependencyClick);
   serviceProvider.getService<OnFileLinkClick>(serviceNames.onFileLinkClick);
   serviceProvider.getService<OnClearCache>(serviceNames.onClearCache);
+  serviceProvider.getService<OnSaveChanges>(serviceNames.onSaveChanges);
   serviceProvider.getService<OnPackageDependenciesChanged>(serviceNames.onPackageDependenciesChanged);
   serviceProvider.getService<OnProviderEditorActivated>(serviceNames.onProviderEditorActivated);
   serviceProvider.getService<OnProviderTextDocumentChange>(serviceNames.onProviderTextDocumentChange);

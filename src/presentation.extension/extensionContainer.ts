@@ -27,6 +27,7 @@ import {
   addOnProviderTextDocumentChange,
   addOnProviderTextDocumentClose,
   addOnProviderTextDocumentSave,
+  addOnSaveChanges,
   addOnShowError,
   addOnTextDocumentChange,
   addOnTextDocumentClosed,
@@ -105,6 +106,8 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
   addOnProviderTextDocumentSave(services);
 
   addOnClearCache(services);
+
+  addOnSaveChanges(services);
 
   addOnFileLinkClick(services);
 

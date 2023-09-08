@@ -146,16 +146,6 @@
         "command": "versionlens.suggestions.clearCache",
         "title": "Clear cache",
         "category": "VersionLens"
-      },
-      {
-        "command": "versionlens.icons.showOutdated",
-        "enablement": "false",
-        "title": "Outdated",
-        "category": "VersionLens",
-        "icon": {
-          "dark": "images/icons/dep-status-dark.svg",
-          "light": "images/icons/dep-status-dark.svg"
-        }
       }
     ],
     "menus": {
@@ -201,11 +191,6 @@
           "command": "versionlens.icons.showingProgress",
           "when": "versionlens.providerBusy && versionlens.providerActive && versionlens.providerError == false && textCompareEditorVisible == false",
           "group": "navigation@1"
-        },
-        {
-          "command": "versionlens.icons.showOutdated",
-          "when": "versionlens.providerActive && versionlens.showOutdated",
-          "group": "navigation@0"
         },
         {
           "command": "versionlens.icons.showPrereleaseVersions",

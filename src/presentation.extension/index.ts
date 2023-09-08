@@ -5,6 +5,7 @@ export * from './events/editorTitleBar/onTogglePrereleases';
 export * from './events/editorTitleBar/onToggleReleases';
 export * as TextDocumentUtils from './events/eventUtils';
 export * from './events/onClearCache';
+export * from './events/onSaveChanges';
 export * from './events/provider/onProviderEditorActivated';
 export * from './events/provider/onProviderTextDocumentChange';
 export * from './events/provider/onProviderTextDocumentClose';

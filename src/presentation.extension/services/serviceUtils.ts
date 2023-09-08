@@ -15,6 +15,7 @@ import {
   OnProviderTextDocumentChange,
   OnProviderTextDocumentClose,
   OnProviderTextDocumentSave,
+  OnSaveChanges,
   OnTextDocumentChange,
   OnTextDocumentClose,
   OnTextDocumentSave,
@@ -178,6 +179,7 @@ export function addOnProviderTextDocumentChange(services: IServiceCollection) {
     serviceName,
     (container: IDomainServices & IExtensionServices) => {
       const listener = new OnProviderTextDocumentChange(
+        container.extension.state,
         container.getDependencyChanges,
         container.editorDependencyCache,
         container.logger.child({ namespace: serviceName })
@@ -203,6 +205,24 @@ export function addOnClearCache(services: IServiceCollection) {
       );
     },
     true
+  )
+}
+
+export function addOnSaveChanges(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onSaveChanges
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices & IExtensionServices) => {
+      const event = new OnSaveChanges(
+        container.extension.state,
+        container.logger.child({ namespace: serviceName })
+      );
+
+      // register listener
+      container.onTextDocumentSave.registerListener(event.execute, event);
+
+      return event;
+    }
   )
 }
 
@@ -283,6 +303,7 @@ export function addOnPackageDependenciesChanged(services: IServiceCollection) {
     serviceName,
     (container: IDomainServices & IExtensionServices) => {
       const event = new OnPackageDependenciesChanged(
+        container.extension.state,
         container.logger.child({ namespace: serviceName })
       );
 
@@ -318,7 +339,6 @@ export function addOnProviderTextDocumentSave(services: IServiceCollection) {
     serviceName,
     (container: IDomainServices & IExtensionServices) => {
       const event = new OnProviderTextDocumentSave(
-        container.extension.state,
         container.editorDependencyCache,
         container.logger.child({ namespace: serviceName })
       );

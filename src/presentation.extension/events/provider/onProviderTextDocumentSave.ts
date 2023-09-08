@@ -2,16 +2,13 @@ import { throwUndefinedOrNull } from "@esm-test/guards";
 import { ILogger } from "domain/logging";
 import { DependencyCache } from "domain/packages";
 import { ISuggestionProvider } from "domain/suggestions";
-import { VersionLensState } from "presentation.extension";
 
 export class OnProviderTextDocumentSave {
 
   constructor(
-    readonly state: VersionLensState,
     readonly editorDependencyCache: DependencyCache,
     readonly logger: ILogger
   ) {
-    throwUndefinedOrNull("state", state);
     throwUndefinedOrNull("editorDependencyCache", editorDependencyCache);
     throwUndefinedOrNull("logger", logger);
   }

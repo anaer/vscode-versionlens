@@ -10,6 +10,8 @@ export class VersionLensState {
 
   showPrereleases: ContextState<boolean>;
 
+  showOutdated: ContextState<boolean>;
+
   providerActive: ContextState<boolean>;
 
   providerBusy: ContextState<number>;
@@ -27,6 +29,11 @@ export class VersionLensState {
     this.showPrereleases = new ContextState(
       StateContributions.ShowPrereleases,
       extension.suggestions.showPrereleasesOnStartup
+    );
+
+    this.showOutdated = new ContextState(
+      StateContributions.ShowOutdated,
+      false
     );
 
     this.providerActive = new ContextState(
