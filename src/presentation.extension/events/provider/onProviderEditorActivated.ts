@@ -13,7 +13,7 @@ export class OnProviderEditorActivated {
     throwUndefinedOrNull("logger", logger);
   }
 
-  execute(activeProvider: ISuggestionProvider, document: TextDocument) {
+  async execute(activeProvider: ISuggestionProvider, document: TextDocument): Promise<void> {
     this.logger.debug("%s provider editor activated", activeProvider.name);
 
     // ensure the latest logging level is set

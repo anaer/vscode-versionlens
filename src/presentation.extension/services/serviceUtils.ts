@@ -287,10 +287,7 @@ export function addOnPackageDependenciesChanged(services: IServiceCollection) {
       );
 
       // register listener
-      container.packageFileWatcher.registerOnPackageDependenciesChanged(
-        event.execute,
-        event
-      );
+      container.packageFileWatcher.registerListener(event.execute, event);
 
       return event;
     }

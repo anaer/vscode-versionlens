@@ -121,6 +121,7 @@ export const packageFileWatcherTests = {
 
     "doesn't call changed listener when dependencies haven't changed": async function (this: TestContext) {
       // setup
+      const stubWatcher = instance(this.mockPackageFileWatcher);
       const testProvider = instance(this.mockProvider);
       const testUri: Uri = <any>{ fsPath: 'some-dir/package.json' };
 
@@ -139,8 +140,7 @@ export const packageFileWatcherTests = {
       );
 
       // override dependent functions with mocks
-      const stubWatcher = instance(this.mockPackageFileWatcher);
-      watcher.packageDependenciesChangedListener = stubWatcher.packageDependenciesChangedListener;
+      watcher.fire = stubWatcher.fire;
 
       // test
       await watcher.onFileChange(testProvider, testUri);
@@ -162,7 +162,7 @@ export const packageFileWatcherTests = {
       ).never();
 
       verify(
-        this.mockPackageFileWatcher.packageDependenciesChangedListener(
+        this.mockPackageFileWatcher.fire(
           anything(),
           anything(),
           anything()
@@ -199,7 +199,7 @@ export const packageFileWatcherTests = {
         instance(this.mockLogger)
       );
 
-      watcher.packageDependenciesChangedListener = stubWatcher.packageDependenciesChangedListener;
+      watcher.fire = stubWatcher.fire;
 
       // test
       await watcher.onFileChange(testProvider, testUri);
@@ -232,7 +232,7 @@ export const packageFileWatcherTests = {
       ).once();
 
       verify(
-        this.mockPackageFileWatcher.packageDependenciesChangedListener(
+        this.mockPackageFileWatcher.fire(
           testProvider,
           testUri.fsPath,
           testNewDependencies

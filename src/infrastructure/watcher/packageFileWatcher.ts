@@ -4,13 +4,16 @@ import { ILogger } from 'domain/logging';
 import {
   DependencyCache,
   IPackageFileWatcher,
-  OnPackageDependenciesChangedFunction
+  OnPackageDependenciesChangedEvent
 } from 'domain/packages';
 import { DependencyChangesResult, GetDependencyChanges, ISuggestionProvider } from 'domain/suggestions';
+import { AsyncEmitter } from 'domain/utils';
 import { Uri } from 'vscode';
 import { IWorkspaceAdapter } from '.';
 
-export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
+export class PackageFileWatcher
+  extends AsyncEmitter<OnPackageDependenciesChangedEvent>
+  implements IPackageFileWatcher, IDisposable {
 
   constructor(
     readonly getDependencyChanges: GetDependencyChanges,
@@ -19,6 +22,7 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
     readonly dependencyCache: DependencyCache,
     readonly logger: ILogger
   ) {
+    super();
     throwUndefinedOrNull("getDependencyChanges", getDependencyChanges);
     throwUndefinedOrNull("workspace", workspace);
     throwUndefinedOrNull("providers", providers);
@@ -29,8 +33,6 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
   }
 
   private disposables: IDisposable[];
-
-  packageDependenciesChangedListener: OnPackageDependenciesChangedFunction;
 
   async initialize(): Promise<void> {
 
@@ -69,13 +71,6 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
     });
   }
 
-  registerOnPackageDependenciesChanged(
-    listener: OnPackageDependenciesChangedFunction,
-    thisArg: any,
-  ): void {
-    this.packageDependenciesChangedListener = listener.bind(thisArg);
-  }
-
   async dispose(): Promise<void> {
     this.disposables.forEach(async disposable => await disposable.dispose());
   }
@@ -102,8 +97,8 @@ export class PackageFileWatcher implements IPackageFileWatcher, IDisposable {
     const result = await this.updateCacheFromFile(provider, packageFilePath);
 
     // notify dependencies updated to listener
-    if (result.hasChanged && this.packageDependenciesChangedListener) {
-      await this.packageDependenciesChangedListener(
+    if (result.hasChanged) {
+      await this.fire(
         provider,
         packageFilePath,
         result.parsedDependencies

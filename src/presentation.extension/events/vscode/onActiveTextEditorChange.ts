@@ -1,23 +1,27 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
-import { IDisposable, Undefinable } from 'domain/generics';
+import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import { ISuggestionProvider } from 'domain/suggestions';
+import { AsyncEmitter } from 'domain/utils';
 import { Disposable, TextDocument, TextEditor, window } from 'vscode';
 import { VersionLensState } from '../../state/versionLensState';
 import { getDocumentProvider } from '../eventUtils';
 
-export type ProviderEditorActivatedFunction = (
+export type ProviderEditorActivatedEvent = (
   activeProvider: ISuggestionProvider,
   document: TextDocument,
-) => void;
+) => Promise<void>;
 
-export class OnActiveTextEditorChange implements IDisposable {
+export class OnActiveTextEditorChange
+  extends AsyncEmitter<ProviderEditorActivatedEvent>
+  implements IDisposable {
 
   constructor(
     readonly state: VersionLensState,
     readonly suggestionProviders: Array<ISuggestionProvider>,
     readonly logger: ILogger
   ) {
+    super();
     throwUndefinedOrNull("state", state);
     throwUndefinedOrNull("suggestionProviders", suggestionProviders);
     throwUndefinedOrNull("logger", logger);
@@ -28,19 +32,13 @@ export class OnActiveTextEditorChange implements IDisposable {
 
   disposable: Disposable;
 
-  listener: ProviderEditorActivatedFunction;
-
-  registerListener(listener: ProviderEditorActivatedFunction, thisArg: any) {
-    this.listener = listener.bind(thisArg);
-  }
-
   /**
   * Maintains the versionLens.providerActive state
   * each time the active editor changes
   * @param textEditor
   * @returns
   */
-  execute(textEditor: Undefinable<TextEditor>) {
+  async execute(textEditor?: TextEditor): Promise<void> {
     if (!textEditor) {
       // disable icons when no editor
       this.state.providerActive.value = false;
@@ -58,8 +56,8 @@ export class OnActiveTextEditorChange implements IDisposable {
     // update provider active state to show icons
     this.state.providerActive.value = true;
 
-    // fire provider activated event
-    this.listener && this.listener(activeProvider as ISuggestionProvider, textEditor.document);
+    // fire activated event
+    await this.fire(activeProvider as ISuggestionProvider, textEditor.document);
   }
 
   async dispose() {

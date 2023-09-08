@@ -1,13 +1,7 @@
 import { PackageDependency } from "domain/packages";
 import { ISuggestionProvider } from "domain/suggestions";
 
-export type OnPackageDependenciesChangedFunction = (
-  provider: ISuggestionProvider,
-  packageFilePath: string,
-  packageDeps: PackageDependency[]
-) => Promise<void>;
-
-export type OnPackageFileUpdatedFunction = (
+export type OnPackageDependenciesChangedEvent = (
   provider: ISuggestionProvider,
   packageFilePath: string,
   packageDeps: PackageDependency[]
@@ -19,8 +13,8 @@ export interface IPackageFileWatcher {
 
   watch: () => void;
 
-  registerOnPackageDependenciesChanged: (
-    listener: OnPackageDependenciesChangedFunction,
+  registerListener: (
+    listener: OnPackageDependenciesChangedEvent,
     thisArg: any
   ) => void;
 

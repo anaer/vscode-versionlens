@@ -2,21 +2,25 @@ import { throwUndefinedOrNull } from '@esm-test/guards';
 import { IDisposable } from 'domain/generics';
 import { ILogger } from 'domain/logging';
 import { ISuggestionProvider } from 'domain/suggestions';
+import { AsyncEmitter } from 'domain/utils';
 import { TextDocumentUtils } from 'presentation.extension';
 import { Disposable, TextDocumentChangeEvent, TextDocumentChangeReason, workspace } from 'vscode';
 
-export type ProviderTextDocumentChangeFunction = (
+export type ProviderTextDocumentChangeEvent = (
   provider: ISuggestionProvider,
   packageFilePath: string,
   newContent: string
-) => void;
+) => Promise<void>;
 
-export class OnTextDocumentChange implements IDisposable {
+export class OnTextDocumentChange
+  extends AsyncEmitter<ProviderTextDocumentChangeEvent>
+  implements IDisposable {
 
   constructor(
     readonly suggestionProviders: Array<ISuggestionProvider>,
     readonly logger: ILogger
   ) {
+    super();
     throwUndefinedOrNull("suggestionProviders", suggestionProviders);
     throwUndefinedOrNull("logger", logger);
 
@@ -26,13 +30,7 @@ export class OnTextDocumentChange implements IDisposable {
 
   disposable: Disposable;
 
-  listener: ProviderTextDocumentChangeFunction;
-
-  registerListener(listener: ProviderTextDocumentChangeFunction, thisArg: any) {
-    this.listener = listener.bind(thisArg);
-  }
-
-  execute(e: TextDocumentChangeEvent) {
+  async execute(e: TextDocumentChangeEvent): Promise<void> {
     // check if we have a change
     const shouldHandleEvent = e.reason == TextDocumentChangeReason.Redo
       || e.reason == TextDocumentChangeReason.Undo
@@ -49,7 +47,7 @@ export class OnTextDocumentChange implements IDisposable {
     if (!provider) return;
 
     // execute the listener
-    this.listener && this.listener(
+    await this.fire(
       provider as ISuggestionProvider,
       e.document.uri.fsPath,
       e.document.getText()
