@@ -23,10 +23,10 @@ import {
   addOnClearCache,
   addOnFileLinkClick,
   addOnPackageDependenciesChanged,
+  addOnPreSaveChanges,
   addOnProviderEditorActivated,
   addOnProviderTextDocumentChange,
   addOnProviderTextDocumentClose,
-  addOnProviderTextDocumentSave,
   addOnSaveChanges,
   addOnShowError,
   addOnTextDocumentChange,
@@ -103,9 +103,9 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
 
   addOnProviderTextDocumentClose(services);
 
-  addOnProviderTextDocumentSave(services);
-
   addOnClearCache(services);
+
+  addOnPreSaveChanges(services);
 
   addOnSaveChanges(services);
 

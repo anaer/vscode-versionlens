@@ -1,22 +1,15 @@
 import { throwUndefinedOrNull } from "@esm-test/guards";
 import { ILogger } from "domain/logging";
 import { ISuggestionProvider } from "domain/suggestions";
-import { VersionLensState } from "presentation.extension";
 import { Task, tasks } from "vscode";
 
 export class OnSaveChanges {
 
-  constructor(
-    readonly state: VersionLensState,
-    readonly logger: ILogger
-  ) {
-    throwUndefinedOrNull("state", state);
+  constructor(readonly logger: ILogger) {
     throwUndefinedOrNull("logger", logger);
   }
 
   async execute(provider: ISuggestionProvider, packageFilePath: string): Promise<void> {
-    if (this.state.showOutdated.value == false) return;
-
     // check we have a task to run
     if (provider.config.onSaveChangesTask === null) {
       this.logger.info(
@@ -50,9 +43,6 @@ export class OnSaveChanges {
 
     // execute the task
     const exitCode = await executeTask(filteredTasks[0])
-
-    // reset outdated flag
-    this.state.showOutdated.change(false);
 
     this.logger.info(
       '%s.onSaveChanges["%s"] task exited with %s.',

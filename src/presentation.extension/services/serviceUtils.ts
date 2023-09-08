@@ -10,10 +10,10 @@ import {
   OnErrorClick,
   OnFileLinkClick,
   OnPackageDependenciesChanged,
+  OnPreSaveChanges,
   OnProviderEditorActivated,
   OnProviderTextDocumentChange,
   OnProviderTextDocumentClose,
-  OnProviderTextDocumentSave,
   OnSaveChanges,
   OnTextDocumentChange,
   OnTextDocumentClose,
@@ -148,6 +148,7 @@ export function addOnTextDocumentSave(services: IServiceCollection) {
     (container: IDomainServices & IExtensionServices) =>
       new OnTextDocumentSave(
         container.suggestionProviders,
+        container.extension.state,
         container.logger.child({ namespace: serviceName })
       ),
     true
@@ -207,18 +208,36 @@ export function addOnClearCache(services: IServiceCollection) {
   )
 }
 
+export function addOnPreSaveChanges(services: IServiceCollection) {
+  const serviceName = nameOf<IExtensionServices>().onPreSaveChanges
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices & IExtensionServices) => {
+      const event = new OnPreSaveChanges(
+        container.fileWatcherDependencyCache,
+        container.editorDependencyCache,
+        container.logger.child({ namespace: serviceName })
+      );
+
+      // register listener
+      container.onTextDocumentSave.registerListener(event.execute, event, 1);
+
+      return event;
+    }
+  )
+}
+
 export function addOnSaveChanges(services: IServiceCollection) {
   const serviceName = nameOf<IExtensionServices>().onSaveChanges
   services.addSingleton(
     serviceName,
     (container: IDomainServices & IExtensionServices) => {
       const event = new OnSaveChanges(
-        container.extension.state,
         container.logger.child({ namespace: serviceName })
       );
 
       // register listener
-      container.onTextDocumentSave.registerListener(event.execute, event);
+      container.onTextDocumentSave.registerListener(event.execute, event, 2);
 
       return event;
     }
@@ -326,24 +345,6 @@ export function addOnProviderTextDocumentClose(services: IServiceCollection) {
 
       // register listener
       container.onTextDocumentClose.registerListener(event.execute, event);
-
-      return event;
-    }
-  )
-}
-
-export function addOnProviderTextDocumentSave(services: IServiceCollection) {
-  const serviceName = nameOf<IExtensionServices>().onProviderTextDocumentSave
-  services.addSingleton(
-    serviceName,
-    (container: IDomainServices & IExtensionServices) => {
-      const event = new OnProviderTextDocumentSave(
-        container.editorDependencyCache,
-        container.logger.child({ namespace: serviceName })
-      );
-
-      // register listener
-      container.onTextDocumentSave.registerListener(event.execute, event);
 
       return event;
     }
