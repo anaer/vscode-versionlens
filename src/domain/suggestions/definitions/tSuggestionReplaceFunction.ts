@@ -1,8 +1,8 @@
-import { PackageResponse } from "domain/packages";
+import { TSuggestionUpdate } from "domain/suggestions";
 
 export type TSuggestionReplaceFunction = (
 
-  response: PackageResponse,
+  suggestionUpdate: TSuggestionUpdate,
 
   version: string
 

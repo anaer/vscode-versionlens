@@ -12,7 +12,6 @@ import {
   addSuggestionPackageCache,
   addSuggestionProviders
 } from ".";
-import { TConfigSectionResolver } from "domain/configuration";
 
 export function addDomainServices(
   services: IServiceCollection,

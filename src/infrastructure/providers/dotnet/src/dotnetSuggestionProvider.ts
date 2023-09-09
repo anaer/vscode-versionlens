@@ -10,9 +10,7 @@ import {
 } from 'domain/packages';
 import {
   ISuggestionProvider,
-  SuggestionProvider,
-  TSuggestionReplaceFunction,
-  defaultReplaceFn
+  SuggestionProvider
 } from 'domain/suggestions';
 import { DotNetCli } from './clients/dotnetCli';
 import { NuGetPackageClient } from './clients/nugetPackageClient';
@@ -36,7 +34,6 @@ export class DotNetSuggestionProvider
     this.config = nugetClient.config;
     this.dotnetClient = dotnetCli;
     this.nugetResClient = nugetResClient;
-    this.suggestionReplaceFn = defaultReplaceFn
   }
 
   config: DotNetConfig;
@@ -44,8 +41,6 @@ export class DotNetSuggestionProvider
   dotnetClient: DotNetCli;
 
   nugetResClient: NuGetResourceClient;
-
-  suggestionReplaceFn: TSuggestionReplaceFunction;
 
   parseDependencies(packagePath: string, packageText: string): Array<PackageDependency> {
 
@@ -61,7 +56,7 @@ export class DotNetSuggestionProvider
           const nameDesc = packageDesc.getType<TPackageNameDescriptor>(
             PackageDescriptorType.name
           );
-          
+
           const versionDesc = packageDesc.getType<TPackageVersionDescriptor>(
             PackageDescriptorType.version
           );

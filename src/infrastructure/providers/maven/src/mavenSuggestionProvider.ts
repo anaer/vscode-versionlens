@@ -10,8 +10,7 @@ import {
 } from 'domain/packages';
 import {
   ISuggestionProvider,
-  SuggestionProvider,
-  TSuggestionReplaceFunction
+  SuggestionProvider
 } from 'domain/suggestions';
 import { MavenClient } from './clients/mavenClient';
 import { MvnCli } from './clients/mvnCli';
@@ -37,8 +36,6 @@ export class MavenSuggestionProvider
   config: MavenConfig
 
   mvnCli: MvnCli;
-
-  suggestionReplaceFn: TSuggestionReplaceFunction;
 
   parseDependencies(
     packagePath: string,

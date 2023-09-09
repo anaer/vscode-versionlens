@@ -1,46 +1,46 @@
 import NpmCliConfig from '@npmcli/config';
 import { ClientResponseSource, HttpClientResponse } from 'domain/clients';
 import {
-  PackageResponse,
   PackageSourceType,
   PackageVersionType,
   VersionUtils
 } from 'domain/packages';
+import { TSuggestionUpdate } from 'domain/suggestions';
 import { KeyStringDictionary, fileExists, readFile } from 'domain/utils';
 import dotenv from 'dotenv';
 import { resolve } from 'node:path';
 
-export function npmReplaceVersion(packageInfo: PackageResponse, newVersion: string): string {
-  if (packageInfo.packageSource === PackageSourceType.Github) {
-    return replaceGitVersion(packageInfo, newVersion);
+export function npmReplaceVersion(suggestionUpdate: TSuggestionUpdate): string {
+  if (suggestionUpdate.packageSource === PackageSourceType.Github) {
+    return replaceGitVersion(suggestionUpdate);
   }
 
-  if (packageInfo.type === PackageVersionType.Alias) {
-    return replaceAliasVersion(packageInfo, newVersion);
+  if (suggestionUpdate.packageVersionType === PackageVersionType.Alias) {
+    return replaceAliasVersion(suggestionUpdate);
   }
 
   // fallback to default
   return VersionUtils.formatWithExistingLeading(
-    packageInfo.parsedPackage.version,
-    newVersion
+    suggestionUpdate.parsedVersion,
+    suggestionUpdate.suggestionVersion
   );
 }
 
-function replaceGitVersion(response: PackageResponse, newVersion: string): string {
-  return response.parsedPackage.version.replace(
-    response.fetchedPackage.version,
-    newVersion
+function replaceGitVersion(suggestionUpdate: TSuggestionUpdate): string {
+  return suggestionUpdate.parsedVersion.replace(
+    suggestionUpdate.fetchedVersion,
+    suggestionUpdate.suggestionVersion
   )
 }
 
-function replaceAliasVersion(packageInfo: PackageResponse, newVersion: string): string {
+function replaceAliasVersion(suggestionUpdate: TSuggestionUpdate): string {
   // preserve the leading symbol from the existing version
   const preservedLeadingVersion = VersionUtils.formatWithExistingLeading(
-    packageInfo.parsedPackage.version,
-    newVersion
+    suggestionUpdate.parsedVersion,
+    suggestionUpdate.suggestionVersion
   );
 
-  return `npm:${packageInfo.fetchedPackage.name}@${preservedLeadingVersion}`;
+  return `npm:${suggestionUpdate.fetchedName}@${preservedLeadingVersion}`;
 }
 
 export function convertNpmErrorToResponse(

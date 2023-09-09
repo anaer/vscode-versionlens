@@ -39,6 +39,6 @@ function createFromPackageResponse(
     replaceRange,
     packageResponse,
     Uri.file(document.fileName),
-    replaceVersionFn.bind(document.getText())
+    replaceVersionFn
   );
 }

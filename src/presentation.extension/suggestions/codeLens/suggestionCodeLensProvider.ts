@@ -1,15 +1,10 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
-import {
-  PackageResponse,
-  PackageSourceType
-} from 'domain/packages';
+import { PackageResponse, PackageSourceType } from 'domain/packages';
 import { IProvider, IProviderConfig } from 'domain/providers';
 import {
   GetSuggestions,
   ISuggestionProvider,
-  SuggestionStatus,
-  SuggestionTypes,
   defaultReplaceFn
 } from 'domain/suggestions';
 import { IDisposable } from 'domain/utils';
@@ -100,7 +95,8 @@ export class SuggestionCodeLensProvider
       suggestions = await this.getSuggestions.execute(
         this.suggestionProvider,
         projectPath,
-        packageFilePath
+        packageFilePath,
+        this.state.showPrereleases.value
       );
     } catch (error) {
       this.state.providerError.value = true;
@@ -109,20 +105,6 @@ export class SuggestionCodeLensProvider
     }
 
     this.state.providerBusy.value--;
-
-    // remove prereleases if not enabled
-    if (this.state.showPrereleases.value === false) {
-      suggestions = suggestions.filter(
-        function (response) {
-          const { suggestion } = response;
-          return suggestion
-            && (
-              (suggestion.type & SuggestionTypes.prerelease) === 0
-              || suggestion.name.includes(SuggestionStatus.LatestIsPrerelease)
-            );
-        }
-      )
-    }
 
     // convert suggestions in to code lenses
     return SuggestionCodeLensFactory.createFromPackageResponses(

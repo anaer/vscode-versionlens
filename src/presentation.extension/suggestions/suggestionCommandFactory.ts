@@ -1,4 +1,4 @@
-import { SuggestionStatus, SuggestionTypes } from 'domain/suggestions';
+import { SuggestionStatus, SuggestionTypes, mapToSuggestionUpdate } from 'domain/suggestions';
 import fs from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import {
@@ -47,7 +47,10 @@ export function createSuggestedVersionCommand(codeLens: SuggestionCodeLens) {
   if (!isStatus) {
     const replaceWithVersion: string = isPrerelease || isTag ?
       version :
-      codeLens.replaceVersionFn(codeLens.package, version);
+      codeLens.replaceVersionFn(
+        mapToSuggestionUpdate(codeLens.package),
+        version
+      );
 
     const prefix = isTag ? '' : name + ': ';
     return codeLens.setCommand(

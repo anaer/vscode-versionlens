@@ -11,12 +11,7 @@ import {
   createVersionDescFromJsonNode,
   extractPackageDependenciesFromJson
 } from 'domain/packages';
-import {
-  ISuggestionProvider,
-  SuggestionProvider,
-  TSuggestionReplaceFunction,
-  defaultReplaceFn
-} from 'domain/suggestions';
+import { ISuggestionProvider, SuggestionProvider } from 'domain/suggestions';
 import { KeyDictionary } from 'domain/utils';
 import { ComposerClient } from './composerClient';
 import { ComposerConfig } from './composerConfig';
@@ -32,12 +27,9 @@ export class ComposerSuggestionProvider
   constructor(client: ComposerClient, packageCache: PackageCache, logger: ILogger) {
     super(client, packageCache, logger);
     this.config = client.config;
-    this.suggestionReplaceFn = defaultReplaceFn
   }
 
   config: ComposerConfig;
-
-  suggestionReplaceFn: TSuggestionReplaceFunction;
 
   parseDependencies(packagePath: string, packageText: string): Array<PackageDependency> {
 

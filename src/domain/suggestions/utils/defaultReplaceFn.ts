@@ -1,8 +1,9 @@
-import { PackageResponse, VersionUtils } from 'domain/packages';
+import { VersionUtils } from 'domain/packages';
+import { TSuggestionUpdate } from 'domain/suggestions';
 
-export function defaultReplaceFn(response: PackageResponse, newVersion: string): string {
+export function defaultReplaceFn(suggestionUpdate: TSuggestionUpdate, newVersion: string): string {
   return VersionUtils.formatWithExistingLeading(
-    response.parsedPackage.version,
+    suggestionUpdate.parsedVersion,
     newVersion
   );
 }

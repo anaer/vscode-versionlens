@@ -15,9 +15,7 @@ import {
 } from 'domain/packages';
 import {
   ISuggestionProvider,
-  SuggestionProvider,
-  TSuggestionReplaceFunction,
-  defaultReplaceFn
+  SuggestionProvider
 } from 'domain/suggestions';
 import { KeyDictionary } from 'domain/utils';
 import { DubClient } from './dubClient';
@@ -36,12 +34,9 @@ export class DubSuggestionProvider
   constructor(client: DubClient, packageCache: PackageCache, logger: ILogger) {
     super(client, packageCache, logger);
     this.config = client.config;
-    this.suggestionReplaceFn = defaultReplaceFn
   }
 
   config: DubConfig;
-
-  suggestionReplaceFn: TSuggestionReplaceFunction;
 
   parseDependencies(packagePath: string, packageText: string): Array<PackageDependency> {
 

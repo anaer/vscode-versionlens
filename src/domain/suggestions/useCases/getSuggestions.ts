@@ -1,7 +1,7 @@
 import { throwUndefinedOrNull } from "@esm-test/guards";
 import { ILogger } from "domain/logging";
 import { DependencyCache, PackageResponse } from "domain/packages";
-import { ISuggestionProvider } from "domain/suggestions";
+import { ISuggestionProvider, SuggestionStatus, SuggestionTypes } from "domain/suggestions";
 import { dirname } from 'node:path';
 
 export class GetSuggestions {
@@ -17,7 +17,8 @@ export class GetSuggestions {
   async execute(
     suggestionProvider: ISuggestionProvider,
     projectPath: string,
-    packageFilePath: string
+    packageFilePath: string,
+    includePrereleases: boolean
   ): Promise<PackageResponse[]> {
 
     // ensure the caching duration is up to date
@@ -48,6 +49,21 @@ export class GetSuggestions {
       suggestionProvider.name
     );
 
+    // return without preleases
+    if (includePrereleases === false) {
+      return suggestions.filter(
+        function (response) {
+          const { suggestion } = response;
+          return suggestion
+            && (
+              (suggestion.type & SuggestionTypes.prerelease) === 0
+              || suggestion.name.includes(SuggestionStatus.LatestIsPrerelease)
+            );
+        }
+      )
+    }
+
+    // return all suggestions
     return suggestions;
   }
 

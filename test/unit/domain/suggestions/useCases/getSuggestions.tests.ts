@@ -3,16 +3,34 @@ import { CachingOptions } from "domain/caching";
 import { ILogger } from "domain/logging";
 import { DependencyCache, PackageResponse } from "domain/packages";
 import { IProviderConfig } from "domain/providers";
-import { GetSuggestions, ISuggestionProvider } from "domain/suggestions";
+import { GetSuggestions, ISuggestionProvider, SuggestionTypes } from "domain/suggestions";
 import { test } from "mocha-ui-esm";
 import { anything, instance, mock, verify, when } from "ts-mockito";
+
+type TestContext = {
+  mockEditorDependencyCache: DependencyCache;
+  mockFileDependencyCache: DependencyCache;
+  mockLogger: ILogger;
+  mockConfig: IProviderConfig;
+  mockProvider: ISuggestionProvider;
+  mockCachingOpts: CachingOptions;
+}
 
 export const getSuggestionsTests = {
 
   [test.title]: GetSuggestions.name,
 
-  "$i: return expected suggestions": [
-    [[], 0,],
+  beforeEach: function (this: TestContext) {
+    this.mockEditorDependencyCache = mock<DependencyCache>();
+    this.mockFileDependencyCache = mock<DependencyCache>();
+    this.mockLogger = mock<ILogger>();
+    this.mockConfig = mock<IProviderConfig>()
+    this.mockProvider = mock<ISuggestionProvider>();
+    this.mockCachingOpts = mock<CachingOptions>();
+  },
+
+  "$i: return expected suggestions.length==$3 and includePrereleases==$2": [
+    [[], false, 0],
     [
       [
         <PackageResponse>{
@@ -20,76 +38,98 @@ export const getSuggestionsTests = {
             name: "test-package",
             version: "1.2.3",
             path: "some/project/path/package.json"
+          },
+          suggestion: {
+            name: "test-package",
+            version: "1.2.4",
+            type: SuggestionTypes.release
           }
         }
       ],
+      false,
       1
     ],
-    async function (testSuggestions: PackageResponse[], expectedLength: number) {
-      const mockEditorDependencyCache = mock<DependencyCache>();
-      const mockFileDependencyCache = mock<DependencyCache>();
-
-      const mockLogger = mock<ILogger>();
-      const mockConfig = mock<IProviderConfig>()
-      const mockProvider = mock<ISuggestionProvider>();
-      const mockCachingOpts = mock<CachingOptions>();
-
-      const testCacheOpts = instance(mockCachingOpts)
-      const testProvider = instance(mockProvider)
+    [
+      [
+        <PackageResponse>{
+          parsedPackage: {
+            name: "test-package",
+            version: "1.2.3",
+            path: "some/project/path/package.json"
+          },
+          suggestion: {
+            name: "test-package",
+            version: "1.2.4",
+            type: SuggestionTypes.prerelease
+          }
+        }
+      ],
+      true,
+      1
+    ],
+    async function (
+      this: TestContext,
+      testSuggestions: PackageResponse[],
+      testIncludePrereleases: boolean,
+      expectedLength: number
+    ) {
+      const testCacheOpts = instance(this.mockCachingOpts)
+      const testProvider = instance(this.mockProvider)
       const testProjectPath = "some/project/path";
       const testPackageFilePath = `${testProjectPath}/package.json`;
 
-      when(mockCachingOpts.duration).thenReturn(3000)
-      when(mockConfig.caching).thenReturn(testCacheOpts);
-      when(mockProvider.name).thenReturn("test provider");
-      when(mockProvider.config).thenReturn(instance(mockConfig));
-      when(mockProvider.fetchSuggestions(testProjectPath, testProjectPath, anything()))
+      when(this.mockCachingOpts.duration).thenReturn(3000)
+      when(this.mockConfig.caching).thenReturn(testCacheOpts);
+      when(this.mockProvider.name).thenReturn("test provider");
+      when(this.mockProvider.config).thenReturn(instance(this.mockConfig));
+      when(this.mockProvider.fetchSuggestions(testProjectPath, testProjectPath, anything()))
         .thenResolve(testSuggestions);
 
-      when(mockEditorDependencyCache.get(testProvider.name, testPackageFilePath))
+      when(this.mockEditorDependencyCache.get(testProvider.name, testPackageFilePath))
         .thenReturn([]);
 
-      when(mockFileDependencyCache.get(testProvider.name, testPackageFilePath))
+      when(this.mockFileDependencyCache.get(testProvider.name, testPackageFilePath))
         .thenReturn([]);
 
       const useCase = new GetSuggestions(
-        [instance(mockEditorDependencyCache), instance(mockFileDependencyCache)],
-        instance(mockLogger)
+        [instance(this.mockEditorDependencyCache), instance(this.mockFileDependencyCache)],
+        instance(this.mockLogger)
       );
 
       // test
       const actualSuggestions = await useCase.execute(
-        instance(mockProvider),
+        instance(this.mockProvider),
         testProjectPath,
-        testPackageFilePath
+        testPackageFilePath,
+        testIncludePrereleases
       );
 
       // verify
-      verify(mockCachingOpts.defrost()).once()
+      verify(this.mockCachingOpts.defrost()).once()
 
       verify(
-        mockLogger.debug(
+        this.mockLogger.debug(
           "caching duration is set to %s seconds",
           testCacheOpts.duration / 1000
         )
       ).once();
 
       verify(
-        mockEditorDependencyCache.get(
+        this.mockEditorDependencyCache.get(
           testProvider.name,
           testPackageFilePath
         )
       ).once();
 
       verify(
-        mockFileDependencyCache.get(
+        this.mockFileDependencyCache.get(
           testProvider.name,
           testPackageFilePath
         )
       ).never();
 
       verify(
-        mockLogger.info(
+        this.mockLogger.info(
           "resolved %s %s package release and pre-release suggestions",
           expectedLength,
           testProvider.name
