@@ -1,7 +1,8 @@
 import { ILogger } from 'domain/logging';
 import { DependencyCache, PackageDependency } from 'domain/packages';
 import { IProviderConfig } from 'domain/providers';
-import { GetDependencyChanges, ISuggestionProvider } from 'domain/suggestions';
+import { ISuggestionProvider } from 'domain/suggestions';
+import { GetDependencyChanges } from 'domain/useCases';
 import { IWorkspaceAdapter, PackageFileWatcher } from 'infrastructure/watcher';
 import { test } from 'mocha-ui-esm';
 import { anything, instance, mock, verify, when } from 'ts-mockito';

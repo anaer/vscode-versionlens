@@ -5,8 +5,8 @@ import { HttpOptions } from 'domain/http';
 import { ILogger, ILoggerChannel, LoggingOptions } from 'domain/logging';
 import { DependencyCache, IPackageFileWatcher, PackageCache } from 'domain/packages';
 import { IStorage } from 'domain/storage';
-import { GetDependencyChanges, ISuggestionProvider } from 'domain/suggestions';
-import { GetSuggestions } from 'domain/suggestions/useCases/getSuggestions';
+import { ISuggestionProvider } from 'domain/suggestions';
+import { GetDependencyChanges, GetSuggestions } from 'domain/useCases';
 
 export interface IDomainServices {
 

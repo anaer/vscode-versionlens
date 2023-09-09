@@ -1,7 +1,8 @@
 import { throwUndefinedOrNull } from "@esm-test/guards";
 import { ILogger } from "domain/logging";
 import { DependencyCache } from "domain/packages";
-import { GetDependencyChanges, ISuggestionProvider } from "domain/suggestions";
+import { ISuggestionProvider } from "domain/suggestions";
+import { GetDependencyChanges } from "domain/useCases";
 import { VersionLensState } from "presentation.extension";
 
 export class OnProviderTextDocumentChange {

@@ -4,9 +4,8 @@ import { IServiceCollection } from "domain/di";
 import { HttpOptions } from "domain/http";
 import { LoggingOptions } from "domain/logging";
 import { DependencyCache, PackageCache } from "domain/packages";
-import { importSuggestionProviders } from "domain/providers";
 import { FileSystemStorage } from "domain/storage";
-import { GetDependencyChanges } from "domain/suggestions";
+import { GetDependencyChanges, importSuggestionProviders } from "domain/useCases";
 import { nameOf } from "domain/utils";
 import { IDomainServices } from "./iDomainServices";
 

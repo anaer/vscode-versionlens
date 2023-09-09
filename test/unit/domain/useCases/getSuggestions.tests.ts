@@ -3,7 +3,8 @@ import { CachingOptions } from "domain/caching";
 import { ILogger } from "domain/logging";
 import { DependencyCache, PackageResponse } from "domain/packages";
 import { IProviderConfig } from "domain/providers";
-import { GetSuggestions, ISuggestionProvider, SuggestionTypes } from "domain/suggestions";
+import { ISuggestionProvider, SuggestionTypes } from "domain/suggestions";
+import { GetSuggestions } from "domain/useCases";
 import { test } from "mocha-ui-esm";
 import { anything, instance, mock, verify, when } from "ts-mockito";
 

@@ -6,8 +6,6 @@ export * from './definitions/tSuggestionReplaceFunction';
 export * from './definitions/tSuggestionUpdate';
 export * as SuggestionFactory from './suggestionFactory';
 export * from './suggestionProvider';
-export * from './useCases/getDependencyChanges';
-export * from './useCases/getSuggestions';
 export * from './utils/createSuggestions';
 export * from './utils/defaultReplaceFn';
 export * from './utils/packageResponseMappers';
