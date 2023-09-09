@@ -12,12 +12,12 @@ import { IDomainServices } from "./iDomainServices";
 
 export function addAppConfig(
   services: IServiceCollection,
-  configSectionResolver: TConfigSectionResolver,
-  appName: string
+  configSection: string,
+  configSectionResolver: TConfigSectionResolver
 ) {
   services.addSingleton(
     nameOf<IDomainServices>().appConfig,
-    () => new Config(configSectionResolver, appName.toLowerCase())
+    () => new Config(configSectionResolver, configSection.toLowerCase())
   )
 }
 

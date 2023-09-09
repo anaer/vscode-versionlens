@@ -1,17 +1,5 @@
 import { IServiceProvider } from 'domain/di';
-import {
-  IDomainServices,
-  addAppConfig,
-  addCachingOptions,
-  addFileSystemStorage,
-  addFileWatcherDependencyCache,
-  addGetDependencyChangesUseCase,
-  addHttpOptions,
-  addLoggingOptions,
-  addProcessesCache,
-  addSuggestionPackageCache,
-  addSuggestionProviders,
-} from 'domain/services';
+import { IDomainServices, addDomainServices } from 'domain/services';
 import { nameOf } from 'domain/utils';
 import { AwilixServiceCollectionFactory } from 'infrastructure/di';
 import { addInfrastructureServices } from 'infrastructure/services';
@@ -53,25 +41,11 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
   );
 
   // domain
-  addAppConfig(services, workspace.getConfiguration, VersionLensExtension.extensionName);
-
-  addHttpOptions(services);
-
-  addCachingOptions(services);
-
-  addLoggingOptions(services);
-
-  addFileSystemStorage(services);
-
-  addProviderNames(services);
-
-  addSuggestionProviders(services);
-
-  addSuggestionPackageCache(services);
-
-  addProcessesCache(services);
-
-  addGetDependencyChangesUseCase(services);
+  addDomainServices(
+    services,
+    VersionLensExtension.extensionName,
+    workspace.getConfiguration
+  );
 
   // infrastructure
   addInfrastructureServices(services, "extension");
@@ -79,11 +53,11 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
   // extension
   addVersionLensExtension(services);
 
+  addProviderNames(services);
+
   addOutputChannel(services);
 
   addVersionLensProviders(services);
-
-  addFileWatcherDependencyCache(services);
 
   addEditorDependencyCache(services);
 
