@@ -103,7 +103,7 @@ export function createDirectory(
     {
       name: 'file://',
       version: resolved.version,
-      type: SuggestionTypes.release
+      type: SuggestionTypes.status
     },
   ];
 
