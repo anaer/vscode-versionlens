@@ -30,25 +30,17 @@ export class NpmPackageClient implements IPackageClient<null> {
     throwUndefinedOrNull("logger", logger);
   }
 
-  fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
+  async fetchPackage(request: TPackageClientRequest<null>): Promise<TPackageClientResponse> {
     let source: PackageSourceType;
-    const requestedPackage = request.dependency.package;
 
-    return new Promise<TPackageClientResponse>((resolve, reject) => {
-      // try parse the package
-      let npaSpec: NpaSpec;
-      try {
-        npaSpec = npa.resolve(
-          requestedPackage.name,
-          requestedPackage.version,
-          requestedPackage.path
-        ) as NpaSpec;
-      }
-      catch (error) {
-        return reject(
-          NpmUtils.convertNpmErrorToResponse(error, ClientResponseSource.local)
-        );
-      }
+    try {
+      const requestedPackage = request.dependency.package;
+
+      const npaSpec = npa.resolve(
+        requestedPackage.name,
+        requestedPackage.version,
+        requestedPackage.path
+      ) as NpaSpec;
 
       switch (npaSpec.type) {
         case NpaTypes.Directory:
@@ -71,31 +63,32 @@ export class NpmPackageClient implements IPackageClient<null> {
 
       // return if directory or file document
       if (source === PackageSourceType.Directory || source === PackageSourceType.File) {
-        return resolve(ClientResponseFactory.createDirectoryFromFileProtocol(requestedPackage));
+        return ClientResponseFactory.createDirectoryFromFileProtocol(requestedPackage);
       }
 
       if (source === PackageSourceType.Github) {
 
         if (!npaSpec.hosted) {
           // could not resolve
-          return reject({
+          throw {
             status: 'EUNSUPPORTEDPROTOCOL',
             data: 'Git url could not be resolved',
             source: ClientResponseSource.local
-          });
+          };
         }
 
         if (!npaSpec.gitCommittish && npaSpec.hosted.default !== 'shortcut') {
-          return resolve(ClientResponseFactory.createGit());
+          return ClientResponseFactory.createGit();
         }
 
         // resolve tags, committishes
-        return resolve(this.githubClient.fetchGithub(npaSpec));
+        return await this.githubClient.fetchGithub(npaSpec);
       }
 
       // otherwise return registry result
-      return resolve(this.pacoteClient.fetchPackage(request, npaSpec));
-    }).catch(response => {
+      return await this.pacoteClient.fetchPackage(request, npaSpec);
+
+    } catch (response) {
       this.logger.debug("Caught exception from %s: %O", source, response);
 
       if (!response.data) {
@@ -133,7 +126,7 @@ export class NpmPackageClient implements IPackageClient<null> {
       else
         suggestions = [SuggestionFactory.createFromHttpStatus(status)];
 
-      if (suggestions === null) return Promise.reject(response);
+      if (suggestions === null) throw response;
 
       return ClientResponseFactory.create(
         source,
@@ -141,7 +134,7 @@ export class NpmPackageClient implements IPackageClient<null> {
         suggestions
       );
 
-    });
+    };
 
   }
 
