@@ -9,8 +9,8 @@ export type TSuggestionUpdate = {
   parsedVersion: string,
   parsedVersionRange: TPackageTextRange,
 
-  fetchedName: string,
-  fetchedVersion: string,
+  fetchedName?: string,
+  fetchedVersion?: string,
 
   suggestionType: SuggestionTypes,
   suggestionVersion: string,

@@ -26,20 +26,20 @@ export const getTests = {
   "returns entry when unexpired": () => {
     // setup
     const testKey = 'key1';
-    const testData = {};
+    const testData = { "test": 123 };
     testCacheMap.set(testKey, testData);
 
     // test
     const actual = testCacheMap.get(testKey, 1000);
 
     // assert
-    assert.equal(actual, testData);
+    assert.deepEqual(actual, testData);
   },
 
   "returns undefined when expired": () => {
     // setup
     const testKey = 'key1';
-    const testData = {};
+    const testData = { "test": 123 };
     testCacheMap.set(testKey, testData);
 
     // test

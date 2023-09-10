@@ -16,7 +16,7 @@ import {
 } from 'domain/packages';
 import {
   SuggestionFactory,
-  SuggestionStatus,
+  SuggestionStatusText,
   TPackageSuggestion,
   createSuggestions
 } from 'domain/suggestions';
@@ -133,7 +133,7 @@ export function parseSuggestions(
 
   // check for ~{name} suggestion if no matches found
   const firstSuggestion = suggestions[0];
-  const hasNoMatch = firstSuggestion.name === SuggestionStatus.NoMatch;
+  const hasNoMatch = firstSuggestion.name === SuggestionStatusText.NoMatch;
   const isTildeVersion = versionRange.charAt(0) === '~';
 
   if (hasNoMatch && isTildeVersion && releases.length > 0) {
@@ -144,7 +144,7 @@ export function parseSuggestions(
       suggestions.pop();
     } else {
       // suggest
-      suggestions[1] = SuggestionFactory.createLatest(latestRelease);
+      suggestions[1] = SuggestionFactory.createLatestUpdateable(latestRelease);
     }
 
   }

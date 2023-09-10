@@ -1,9 +1,11 @@
 import { ClientResponseSource } from 'domain/clients';
 import {
   SuggestionFactory,
-  SuggestionTypes,
   TPackageSuggestion
 } from 'domain/suggestions';
+import { createDirectoryNotFoundStatus, createDirectoryStatus } from 'domain/suggestions/suggestionFactory';
+import { existsSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { PackageVersionType } from "../definitions/ePackageVersionType";
 import { TPackageResource } from '../definitions/tPackageResource';
 import { PackageSourceType } from "./ePackageSource";
@@ -32,8 +34,8 @@ export function createInvalidVersion(
 ): TPackageClientResponse {
   const source: PackageSourceType = PackageSourceType.Registry;
   const suggestions: Array<TPackageSuggestion> = [
-    SuggestionFactory.createInvalid(''),
-    SuggestionFactory.createLatest(),
+    SuggestionFactory.createInvalidStatus(''),
+    SuggestionFactory.createLatestUpdateable(),
   ];
 
   return {
@@ -53,8 +55,8 @@ export function createNoMatch(
 ): TPackageClientResponse {
 
   const suggestions: Array<TPackageSuggestion> = [
-    SuggestionFactory.createNoMatch(),
-    SuggestionFactory.createLatest(latestVersion),
+    SuggestionFactory.createNoMatchStatus(),
+    SuggestionFactory.createLatestUpdateable(latestVersion),
   ];
 
   return {
@@ -88,32 +90,35 @@ export function createFixed(
 
 export function createDirectory(
   packageName: string,
+  packageFilePath: string,
   path: string
 ): TPackageClientResponse {
-
   const source = PackageSourceType.Directory;
   const type = PackageVersionType.Version;
+  const resolvedPath = join(dirname(packageFilePath), path);
+  const exists = existsSync(resolvedPath)
+
+  const suggestions: Array<TPackageSuggestion> = [
+    exists
+      ? createDirectoryStatus(path)
+      : createDirectoryNotFoundStatus(path)
+  ];
+
+  const responseStatus = createResponseStatus(
+    ClientResponseSource.local,
+    exists ? 200 : 404
+  );
 
   const resolved = {
     name: packageName,
-    version: path,
+    version: resolvedPath,
   };
-
-  const suggestions: Array<TPackageSuggestion> = [
-    {
-      name: 'file://',
-      version: resolved.version,
-      type: SuggestionTypes.status
-    },
-  ];
-
-  const responseStatus = createResponseStatus(ClientResponseSource.local, 200);
 
   return {
     source,
     type,
     responseStatus,
-    resolved,
+    resolved: exists ? resolved : null,
     suggestions
   };
 }
@@ -133,7 +138,7 @@ export function createDirectoryFromFileProtocol(
 
   const path = fileRegExpResult[1];
 
-  return createDirectory(requested.name, path);
+  return createDirectory(requested.name, requested.path, path);
 }
 
 export function createGit(): TPackageClientResponse {

@@ -4,9 +4,15 @@ import {
   createDependencyRange,
   createPackageResource,
   PackageDependency,
+  PackageSourceType,
   TPackageClientRequest
 } from 'domain/packages';
-import { SuggestionStatus, SuggestionTypes, TPackageSuggestion } from 'domain/suggestions';
+import {
+  SuggestionCategory,
+  SuggestionStatusText,
+  SuggestionTypes,
+  TPackageSuggestion
+} from 'domain/suggestions';
 import {
   GitHubClient,
   NpmConfig,
@@ -14,7 +20,10 @@ import {
   PacoteClient
 } from 'infrastructure/providers/npm';
 import { LoggerStub } from 'test/unit/domain/logging';
+import { fileDir } from 'test/unit/utils';
 import { anything, instance, mock, when } from 'ts-mockito';
+
+const testDir = fileDir();
 
 let configMock: NpmConfig;
 let pacoteMock: PacoteClient;
@@ -39,9 +48,9 @@ export const fetchPackageTests = {
       // package name
       'filepackage',
       // package version
-      'file://some/path/out/there',
+      'file:../../..',
       // package path
-      'filepackagepath',
+      testDir,
     );
 
     const testRequest: TPackageClientRequest<any> = {
@@ -64,7 +73,7 @@ export const fetchPackageTests = {
 
     return cut.fetchPackage(testRequest)
       .then(actual => {
-        assert.equal(actual.source, 'directory', `expected to see ${expectedSource}`)
+        assert.equal(actual.source, PackageSourceType.Directory, `expected to see ${expectedSource}`)
         assert.deepEqual(actual.resolved?.name, testPackageRes.name)
       })
   },
@@ -115,7 +124,8 @@ export const fetchPackageTests = {
           actual.suggestions,
           [
             <TPackageSuggestion>{
-              name: SuggestionStatus.Fixed,
+              name: SuggestionStatusText.Fixed,
+              category: SuggestionCategory.Match,
               version: 'git repository',
               type: SuggestionTypes.status
             }
@@ -161,7 +171,8 @@ export const fetchPackageTests = {
           actual.suggestions,
           [
             <TPackageSuggestion>{
-              name: SuggestionStatus.NotSupported,
+              name: SuggestionStatusText.NotSupported,
+              category: SuggestionCategory.NoMatch,
               version: '',
               type: SuggestionTypes.status
             }
@@ -172,9 +183,9 @@ export const fetchPackageTests = {
   },
 
   'returns $1 suggestion statuses': [
-    ["401", { status: 401, suggestion: { name: SuggestionStatus.NotAuthorized} }],
-    ["404", { status: 404, suggestion: { name: SuggestionStatus.NotFound } }],
-    ["ECONNREFUSED", { status: 'ECONNREFUSED', suggestion: { name: SuggestionStatus.ConnectionRefused } }],
+    ["401", { status: 401, suggestion: { name: SuggestionStatusText.NotAuthorized} }],
+    ["404", { status: 404, suggestion: { name: SuggestionStatusText.NotFound } }],
+    ["ECONNREFUSED", { status: 'ECONNREFUSED', suggestion: { name: SuggestionStatusText.ConnectionRefused } }],
     async (testTitlePart: string, testState: any) => {
       const testPackageRes = createPackageResource(
         // package name
@@ -220,6 +231,7 @@ export const fetchPackageTests = {
         [
           <TPackageSuggestion>{
             name: testState.suggestion.name,
+            category: SuggestionCategory.Error,
             version: '',
             type: SuggestionTypes.status
           }

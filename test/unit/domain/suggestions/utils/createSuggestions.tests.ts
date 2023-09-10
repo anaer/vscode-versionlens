@@ -1,9 +1,10 @@
 import assert from 'assert';
 import {
-  createSuggestions,
+  SuggestionCategory,
+  SuggestionStatusText,
   SuggestionTypes,
-  SuggestionStatus,
-  TPackageSuggestion
+  TPackageSuggestion,
+  createSuggestions
 } from 'domain/suggestions';
 import { test } from 'mocha-ui-esm';
 import Fixtures from './createSuggestions.fixtures';
@@ -17,7 +18,7 @@ export const CreateSuggestionsTests = {
     "when releases and prereleases are empty": () => {
       const expected = [
         <TPackageSuggestion>{
-          name: SuggestionStatus.NoMatch,
+          name: SuggestionStatusText.NoMatch,
           version: '',
           type: SuggestionTypes.status
         }
@@ -41,12 +42,14 @@ export const CreateSuggestionsTests = {
 
       const expected = [
         <TPackageSuggestion>{
-          name: SuggestionStatus.NoMatch,
+          name: SuggestionStatusText.NoMatch,
+          category: SuggestionCategory.NoMatch,
           version: '',
           type: SuggestionTypes.status
         },
         <TPackageSuggestion>{
-          name: SuggestionStatus.UpdateLatest,
+          name: SuggestionStatusText.UpdateLatest,
+          category: SuggestionCategory.Updateable,
           version: '1.0.0',
           type: SuggestionTypes.release
         }
@@ -72,12 +75,14 @@ export const CreateSuggestionsTests = {
 
         const expected = [
           <TPackageSuggestion>{
-            name: SuggestionStatus.NoMatch,
+            name: SuggestionStatusText.NoMatch,
+            category: SuggestionCategory.NoMatch,
             version: '',
             type: SuggestionTypes.status
           },
           <TPackageSuggestion>{
-            name: SuggestionStatus.UpdateLatestPrerelease,
+            name: SuggestionStatusText.UpdateLatestPrerelease,
+            category: SuggestionCategory.Updateable,
             version: '4.0.0-next',
             type: SuggestionTypes.prerelease
           }
@@ -106,7 +111,8 @@ export const CreateSuggestionsTests = {
 
         const expected = [
           <TPackageSuggestion>{
-            name: SuggestionStatus.Latest,
+            name: SuggestionStatusText.Latest,
+            category: SuggestionCategory.Latest,
             version: '5.0.0',
             type: SuggestionTypes.status
           }

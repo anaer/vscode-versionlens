@@ -1,6 +1,6 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
-import { PackageResponse, PackageSourceType } from 'domain/packages';
+import { PackageResponse } from 'domain/packages';
 import { IProvider, IProviderConfig } from 'domain/providers';
 import { ISuggestionProvider, defaultReplaceFn } from 'domain/suggestions';
 import { GetSuggestions } from 'domain/useCases';
@@ -124,10 +124,10 @@ export class SuggestionCodeLensProvider
   }
 
   evaluateCodeLens(codeLens: SuggestionCodeLens) {
-    if (codeLens.hasPackageSource(PackageSourceType.Directory))
-      return CommandFactory.createDirectoryLinkCommand(codeLens);
-
-    return CommandFactory.createSuggestedVersionCommand(codeLens)
+    return CommandFactory.createSuggestedVersionCommand(
+      codeLens,
+      this.extension.suggestions.indicators
+    );
   }
 
   async dispose() {

@@ -1,4 +1,3 @@
-// import  NpmCliConfig from '@npmcli/config';
 import assert from 'assert';
 import { CachingOptions, ICachingOptions } from 'domain/caching';
 import { ILogger } from 'domain/logging';
@@ -8,7 +7,12 @@ import {
   createDependencyRange,
   createPackageResource
 } from 'domain/packages';
-import { SuggestionStatus, SuggestionTypes, TPackageSuggestion } from 'domain/suggestions';
+import {
+  SuggestionCategory,
+  SuggestionStatusText,
+  SuggestionTypes,
+  TPackageSuggestion
+} from 'domain/suggestions';
 import {
   GitHubOptions,
   IPacote,
@@ -200,7 +204,8 @@ export const fetchPackageTests = {
           actual.suggestions,
           [
             <TPackageSuggestion>{
-              name: SuggestionStatus.Latest,
+              name: SuggestionStatusText.Latest,
+              category: SuggestionCategory.Latest,
               version: testPackageRes.version,
               type: SuggestionTypes.status
             }

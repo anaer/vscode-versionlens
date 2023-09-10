@@ -19,7 +19,7 @@ export const dependencyCacheTests = {
 
   get: function (this: TestContext) {
     // setup
-    const testDeps: PackageDependency[] = [];
+    const testDeps: PackageDependency[] = [<any>{ package: { name: "test", version: "1.2.3" } }];
     const cache = new DependencyCache([this.testProviderName]);
 
     cache.set(this.testProviderName, this.testPackageFilePath, testDeps)
@@ -28,7 +28,7 @@ export const dependencyCacheTests = {
     const actual = cache.get(this.testProviderName, this.testPackageFilePath);
 
     // assert
-    assert.equal(actual, testDeps);
+    assert.deepEqual(actual, testDeps);
   },
 
   remove: function (this: TestContext) {

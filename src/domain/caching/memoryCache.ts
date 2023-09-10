@@ -27,13 +27,13 @@ export class MemoryCache implements ICache {
   }
 
   get<T>(key: string): T {
+    throwUndefinedOrNull("key", key);
     const value = this.cacheMap[key];
     return value;
   }
 
   set<T>(key: string, value: T): T {
     throwUndefinedOrNull("key", key);
-
     this.cacheMap[key] = value;
     return value;
   }

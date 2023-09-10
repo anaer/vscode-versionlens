@@ -114,22 +114,22 @@ export class NpmPackageClient implements IPackageClient<null> {
       let suggestions: Array<TPackageSuggestion>;
 
       if (status == 'CONNREFUSED')
-        suggestions = [SuggestionFactory.createConnectionRefused()];
+        suggestions = [SuggestionFactory.createConnectionRefusedStatus()];
       else if (status == 'CONNRESET')
-        suggestions = [SuggestionFactory.createConnectionReset()];
+        suggestions = [SuggestionFactory.createConnectionResetStatus()];
       else if (status == 'UNSUPPORTEDPROTOCOL' || response.data == 'Not implemented yet')
-        suggestions = [SuggestionFactory.createNotSupported()];
+        suggestions = [SuggestionFactory.createNotSupportedStatus()];
       else if (status == 'INVALIDTAGNAME' || response.data.includes('Invalid comparator:'))
         suggestions = [
-          SuggestionFactory.createInvalid(''),
-          SuggestionFactory.createLatest()
+          SuggestionFactory.createInvalidStatus(''),
+          SuggestionFactory.createLatestUpdateable()
         ];
       else if (status == 'INVALIDPACKAGENAME')
         suggestions = [
-          SuggestionFactory.createInvalid('')
+          SuggestionFactory.createInvalidStatus('')
         ];
       else if (status == 128)
-        suggestions = [SuggestionFactory.createNotFound()]
+        suggestions = [SuggestionFactory.createNotFoundStatus()]
       else
         suggestions = [SuggestionFactory.createFromHttpStatus(status)];
 

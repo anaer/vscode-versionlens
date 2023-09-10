@@ -1,7 +1,8 @@
 import assert from 'assert';
 import {
+  SuggestionCategory,
   SuggestionFactory,
-  SuggestionStatus,
+  SuggestionStatusText,
   SuggestionTypes,
   TPackageSuggestion
 } from 'domain/suggestions';
@@ -14,7 +15,8 @@ export const CreateFromHttpStatusTests = {
     [
       400,
       <TPackageSuggestion>{
-        name: SuggestionStatus.BadRequest,
+        name: SuggestionStatusText.BadRequest,
+        category: SuggestionCategory.Error,
         version: '',
         type: SuggestionTypes.status
       }
@@ -22,7 +24,8 @@ export const CreateFromHttpStatusTests = {
     [
       401,
       <TPackageSuggestion>{
-        name: SuggestionStatus.NotAuthorized,
+        name: SuggestionStatusText.NotAuthorized,
+        category: SuggestionCategory.Error,
         version: '',
         type: SuggestionTypes.status
       }
@@ -30,7 +33,8 @@ export const CreateFromHttpStatusTests = {
     [
       403,
       <TPackageSuggestion>{
-        name: SuggestionStatus.Forbidden,
+        name: SuggestionStatusText.Forbidden,
+        category: SuggestionCategory.Error,
         version: '',
         type: SuggestionTypes.status
       }
@@ -38,7 +42,8 @@ export const CreateFromHttpStatusTests = {
     [
       404,
       <TPackageSuggestion>{
-        name: SuggestionStatus.NotFound,
+        name: SuggestionStatusText.NotFound,
+        category: SuggestionCategory.Error,
         version: '',
         type: SuggestionTypes.status
       }
@@ -46,7 +51,8 @@ export const CreateFromHttpStatusTests = {
     [
       500,
       <TPackageSuggestion>{
-        name: SuggestionStatus.InternalServerError,
+        name: SuggestionStatusText.InternalServerError,
+        category: SuggestionCategory.Error,
         version: '',
         type: SuggestionTypes.status
       }

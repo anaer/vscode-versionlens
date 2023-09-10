@@ -1,21 +1,23 @@
 import assert from 'assert';
 import {
+  SuggestionCategory,
   SuggestionFactory,
-  SuggestionStatus,
+  SuggestionStatusText,
   SuggestionTypes,
   TPackageSuggestion
 } from 'domain/suggestions';
 
 export const CreateLatestTests = {
 
-  title: SuggestionFactory.createLatest.name,
+  title: SuggestionFactory.createLatestUpdateable.name,
 
   "when version param is undefined then returns 'latest' tagged package suggestion": () => {
-    const actual = SuggestionFactory.createLatest()
+    const actual = SuggestionFactory.createLatestUpdateable()
     assert.deepEqual(
       actual,
       <TPackageSuggestion>{
-        name: SuggestionStatus.UpdateLatest,
+        name: SuggestionStatusText.UpdateLatest,
+        category: SuggestionCategory.Updateable,
         version: 'latest',
         type: SuggestionTypes.tag
       });
@@ -23,11 +25,12 @@ export const CreateLatestTests = {
 
   "when version param is a release then returns 'latest' version package suggestion": () => {
     const testRelease = '1.0.0';
-    const actual = SuggestionFactory.createLatest(testRelease)
+    const actual = SuggestionFactory.createLatestUpdateable(testRelease)
     assert.deepEqual(
       actual,
       <TPackageSuggestion>{
-        name: SuggestionStatus.UpdateLatest,
+        name: SuggestionStatusText.UpdateLatest,
+        category: SuggestionCategory.Updateable,
         version: testRelease,
         type: SuggestionTypes.release
       });
@@ -35,11 +38,12 @@ export const CreateLatestTests = {
 
   "when version param is a prerelease then returns 'latest' version package suggestion": () => {
     const testPrerelease = '1.0.0-beta.1';
-    const actual = SuggestionFactory.createLatest(testPrerelease)
+    const actual = SuggestionFactory.createLatestUpdateable(testPrerelease)
     assert.deepEqual(
       actual,
       <TPackageSuggestion>{
-        name: SuggestionStatus.UpdateLatestPrerelease,
+        name: SuggestionStatusText.UpdateLatestPrerelease,
+        category: SuggestionCategory.Updateable,
         version: testPrerelease,
         type: SuggestionTypes.prerelease
       });

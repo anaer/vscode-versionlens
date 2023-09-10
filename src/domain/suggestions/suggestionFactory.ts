@@ -1,6 +1,7 @@
 import {
+  SuggestionCategory,
   SuggestionFactory,
-  SuggestionStatus,
+  SuggestionStatusText,
   SuggestionTypes,
   TPackageSuggestion
 } from 'domain/suggestions';
@@ -10,110 +11,139 @@ import semver from 'semver';
 export function createFromHttpStatus(status: number | string): Nullable<TPackageSuggestion> {
 
   if (status == 400)
-    return SuggestionFactory.createBadRequest();
+    return SuggestionFactory.createBadRequestStatus();
   else if (status == 401)
-    return SuggestionFactory.createNotAuthorized();
+    return SuggestionFactory.createNotAuthorizedStatus();
   else if (status == 403)
-    return SuggestionFactory.createForbidden();
+    return SuggestionFactory.createForbiddenStatus();
   else if (status == 404)
-    return SuggestionFactory.createNotFound();
+    return SuggestionFactory.createNotFoundStatus();
   else if (status == 500)
-    return SuggestionFactory.createInternalServerError();
+    return SuggestionFactory.createInternalServerErrorStatus();
 
   return null;
 }
 
-export function createNotFound(): TPackageSuggestion {
+export function createNotFoundStatus(): TPackageSuggestion {
   return {
-    name: SuggestionStatus.NotFound,
+    name: SuggestionStatusText.NotFound,
+    category: SuggestionCategory.Error,
     version: '',
     type: SuggestionTypes.status
   };
 }
 
-export function createInternalServerError(): TPackageSuggestion {
+export function createInternalServerErrorStatus(): TPackageSuggestion {
   return {
-    name: SuggestionStatus.InternalServerError,
+    name: SuggestionStatusText.InternalServerError,
+    category: SuggestionCategory.Error,
     version: '',
     type: SuggestionTypes.status
   };
 }
 
-export function createConnectionRefused(): TPackageSuggestion {
+export function createConnectionRefusedStatus(): TPackageSuggestion {
   return {
-    name: SuggestionStatus.ConnectionRefused,
+    name: SuggestionStatusText.ConnectionRefused,
+    category: SuggestionCategory.Error,
     version: '',
     type: SuggestionTypes.status
   };
 }
 
-export function createConnectionReset(): TPackageSuggestion {
+export function createConnectionResetStatus(): TPackageSuggestion {
   return {
-    name: SuggestionStatus.ConnectionReset,
+    name: SuggestionStatusText.ConnectionReset,
+    category: SuggestionCategory.Error,
     version: '',
     type: SuggestionTypes.status
   };
 }
 
-export function createForbidden(): TPackageSuggestion {
+export function createForbiddenStatus(): TPackageSuggestion {
   return {
-    name: SuggestionStatus.Forbidden,
+    name: SuggestionStatusText.Forbidden,
+    category: SuggestionCategory.Error,
     version: '',
     type: SuggestionTypes.status
   };
 }
 
-export function createNotAuthorized(): TPackageSuggestion {
+export function createNotAuthorizedStatus(): TPackageSuggestion {
   return {
-    name: SuggestionStatus.NotAuthorized,
+    name: SuggestionStatusText.NotAuthorized,
+    category: SuggestionCategory.Error,
     version: '',
     type: SuggestionTypes.status
   };
 }
 
-export function createBadRequest(): TPackageSuggestion {
+export function createBadRequestStatus(): TPackageSuggestion {
   return {
-    name: SuggestionStatus.BadRequest,
+    name: SuggestionStatusText.BadRequest,
+    category: SuggestionCategory.Error,
     version: '',
     type: SuggestionTypes.status
   };
 }
 
-export function createInvalid(requestedVersion: string): TPackageSuggestion {
+export function createDirectoryNotFoundStatus(path: string): TPackageSuggestion {
   return {
-    name: SuggestionStatus.Invalid,
+    name: SuggestionStatusText.DirectoryNotFound,
+    category: SuggestionCategory.Error,
+    version: path,
+    type: SuggestionTypes.status
+  };
+}
+
+export function createDirectoryStatus(path: string): TPackageSuggestion {
+  return {
+    name: 'file://',
+    category: SuggestionCategory.Directory,
+    version: path,
+    type: SuggestionTypes.status
+  };
+}
+
+export function createInvalidStatus(requestedVersion: string): TPackageSuggestion {
+  return {
+    name: SuggestionStatusText.Invalid,
+    category: SuggestionCategory.Error,
     version: requestedVersion,
     type: SuggestionTypes.status
   };
 }
 
-export function createNotSupported(): TPackageSuggestion {
+export function createNotSupportedStatus(): TPackageSuggestion {
   return {
-    name: SuggestionStatus.NotSupported,
+    name: SuggestionStatusText.NotSupported,
+    category: SuggestionCategory.NoMatch,
     version: '',
     type: SuggestionTypes.status
   };
 }
 
-export function createNoMatch(): TPackageSuggestion {
+export function createNoMatchStatus(): TPackageSuggestion {
   return {
-    name: SuggestionStatus.NoMatch,
+    name: SuggestionStatusText.NoMatch,
+    category: SuggestionCategory.NoMatch,
     version: '',
     type: SuggestionTypes.status
   };
 }
 
-export function createLatest(requestedVersion?: string): TPackageSuggestion {
+export function createLatestUpdateable(requestedVersion?: string): TPackageSuggestion {
   const isPrerelease = semver.prerelease(requestedVersion);
 
-  const name = isPrerelease ?
-    SuggestionStatus.UpdateLatestPrerelease :
-    SuggestionStatus.UpdateLatest;
+  const name = isPrerelease
+    ? SuggestionStatusText.UpdateLatestPrerelease
+    : SuggestionStatusText.UpdateLatest;
 
   // treats requestedVersion as latest version
   // if no requestedVersion then uses the 'latest' tag instead
   return {
     name,
+    category: SuggestionCategory.Updateable,
     version: requestedVersion || 'latest',
     type: isPrerelease
       ? SuggestionTypes.prerelease
@@ -123,9 +153,10 @@ export function createLatest(requestedVersion?: string): TPackageSuggestion {
   };
 }
 
-export function createRangeUpdate(rangeVersion: string): TPackageSuggestion {
+export function createRangeUpdateable(rangeVersion: string): TPackageSuggestion {
   return createSuggestion(
-    SuggestionStatus.UpdateRange,
+    SuggestionStatusText.UpdateRange,
+    SuggestionCategory.Updateable,
     rangeVersion,
     SuggestionTypes.release
   );
@@ -134,12 +165,13 @@ export function createRangeUpdate(rangeVersion: string): TPackageSuggestion {
 export function createMatchesLatestStatus(latestVersion: string): TPackageSuggestion {
   const isPrerelease = semver.prerelease(latestVersion);
 
-  const name = isPrerelease ?
-    SuggestionStatus.LatestIsPrerelease :
-    SuggestionStatus.Latest;
+  const name = isPrerelease
+    ? SuggestionStatusText.LatestIsPrerelease
+    : SuggestionStatusText.Latest;
 
   return {
     name,
+    category: SuggestionCategory.Latest,
     version: latestVersion,
     type: SuggestionTypes.status
   };
@@ -147,7 +179,8 @@ export function createMatchesLatestStatus(latestVersion: string): TPackageSugges
 
 export function createSatisifiesLatestStatus(latestVersion: string): TPackageSuggestion {
   return createSuggestion(
-    SuggestionStatus.SatisfiesLatest,
+    SuggestionStatusText.SatisfiesLatest,
+    SuggestionCategory.Latest,
     latestVersion,
     SuggestionTypes.status
   )
@@ -155,7 +188,8 @@ export function createSatisifiesLatestStatus(latestVersion: string): TPackageSug
 
 export function createSatisifiesStatus(satisfiesVersion: string): TPackageSuggestion {
   return createSuggestion(
-    SuggestionStatus.Satisfies,
+    SuggestionStatusText.Satisfies,
+    SuggestionCategory.Match,
     satisfiesVersion,
     SuggestionTypes.status
   )
@@ -163,7 +197,8 @@ export function createSatisifiesStatus(satisfiesVersion: string): TPackageSugges
 
 export function createFixedStatus(version: string): TPackageSuggestion {
   return createSuggestion(
-    SuggestionStatus.Fixed,
+    SuggestionStatusText.Fixed,
+    SuggestionCategory.Match,
     version,
     SuggestionTypes.status
   );
@@ -171,8 +206,9 @@ export function createFixedStatus(version: string): TPackageSuggestion {
 
 export function createSuggestion(
   name: string,
+  category: SuggestionCategory,
   version: string,
   type: SuggestionTypes
 ): TPackageSuggestion {
-  return { name, version, type };
+  return { name, category, version, type };
 }

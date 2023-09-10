@@ -42,9 +42,10 @@ export const packageCacheTests = {
       this.testPackage,
       async () => this.testCacheItem,
       1000
-    )
+    );
+
     // assert
-    assert.equal(actual, this.testCacheItem);
+    assert.deepEqual(actual, this.testCacheItem);
   },
 
   get: async function (this: TestContext) {
@@ -65,7 +66,7 @@ export const packageCacheTests = {
     );
 
     // assert
-    assert.equal(actual, this.testCacheItem);
+    assert.deepEqual(actual, this.testCacheItem);
   },
 
   clear: async function (this: TestContext) {

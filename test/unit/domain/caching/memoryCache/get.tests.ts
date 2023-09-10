@@ -14,15 +14,15 @@ export const getTests = {
     this.testCache = new MemoryCache("getTests");
   },
 
-  "$i caches $2": [
-    [Boolean, true],
-    [Boolean, false],
-    [String, "string"],
-    [Number, 123],
-    [Number, 100.123],
-    [Object, { item: 123 }],
-    [Array, [123, 456]],
-    function (this: TestContext, expected: any) {
+  "$i caches $1 $2": [
+    [Boolean.name, true],
+    [Boolean.name, false],
+    [String.name, "test text"],
+    [Number.name, 123],
+    [Number.name, 100.123],
+    [Object.name, { item: 123 }],
+    [Array.name, [123, 456]],
+    function (this: TestContext, titleType: any, expected: any) {
       const testKey = "key1";
 
       // store the data

@@ -1,19 +1,27 @@
-import { SuggestionStatus, SuggestionTypes, TPackageSuggestion } from "domain/suggestions";
+import {
+  SuggestionCategory,
+  SuggestionStatusText,
+  SuggestionTypes,
+  TPackageSuggestion
+} from "domain/suggestions";
 
 export default {
   fixedNoMatchWithLatestSuggestions: [
     <TPackageSuggestion>{
       type: SuggestionTypes.status,
-      name: SuggestionStatus.NoMatch,
+      category: SuggestionCategory.NoMatch,
+      name: SuggestionStatusText.NoMatch,
       version: ''
     },
     <TPackageSuggestion>{
       type: SuggestionTypes.release,
-      name: SuggestionStatus.UpdateLatest,
+      category: SuggestionCategory.Updateable,
+      name: SuggestionStatusText.UpdateLatest,
       version: '1.0.0'
     },
     <TPackageSuggestion>{
       type: SuggestionTypes.prerelease,
+      category: SuggestionCategory.Updateable,
       name: 'alpha',
       version: '1.1.0-alpha.1'
     }
@@ -21,18 +29,21 @@ export default {
   fixedIsLatestNoSuggestions: [
     <TPackageSuggestion>{
       type: SuggestionTypes.status,
-      name: SuggestionStatus.Latest,
+      category: SuggestionCategory.Latest,
+      name: SuggestionStatusText.Latest,
       version: '3.0.0'
     }
   ],
   fixedIsLatestWithPrereleaseSuggestions: [
     <TPackageSuggestion>{
       type: SuggestionTypes.status,
-      name: SuggestionStatus.Latest,
+      category: SuggestionCategory.Latest,
+      name: SuggestionStatusText.Latest,
       version: '3.0.0'
     },
     <TPackageSuggestion>{
       type: SuggestionTypes.prerelease,
+      category: SuggestionCategory.Updateable,
       name: 'next',
       version: '4.0.0-next'
     }
@@ -40,23 +51,27 @@ export default {
   rangeNoMatchWithLatestSuggestions: [
     <TPackageSuggestion>{
       type: SuggestionTypes.status,
-      name: SuggestionStatus.NoMatch,
+      category: SuggestionCategory.NoMatch,
+      name: SuggestionStatusText.NoMatch,
       version: ''
     },
     <TPackageSuggestion>{
       type: SuggestionTypes.release,
-      name: SuggestionStatus.UpdateLatest,
+      category: SuggestionCategory.Updateable,
+      name: SuggestionStatusText.UpdateLatest,
       version: '2.0.0'
     }
   ],
   rangeSatisfiesLatestOnly: [
     <TPackageSuggestion>{
       type: SuggestionTypes.status,
-      name: SuggestionStatus.SatisfiesLatest,
+      category: SuggestionCategory.Latest,
+      name: SuggestionStatusText.SatisfiesLatest,
       version: '3.0.0'
     },
     <TPackageSuggestion>{
       type: SuggestionTypes.prerelease,
+      category: SuggestionCategory.Updateable,
       name: 'next',
       version: '4.0.0-next'
     }
@@ -64,16 +79,19 @@ export default {
   rangeSatisfiesUpdateAndSuggestsLatest: [
     <TPackageSuggestion>{
       type: SuggestionTypes.status,
-      name: SuggestionStatus.Satisfies,
+      category: SuggestionCategory.Match,
+      name: SuggestionStatusText.Satisfies,
       version: '2.1.0'
     },
     <TPackageSuggestion>{
       type: SuggestionTypes.release,
-      name: SuggestionStatus.UpdateRange,
+      category: SuggestionCategory.Updateable,
+      name: SuggestionStatusText.UpdateRange,
       version: '2.1.0'
     },
     <TPackageSuggestion>{
       type: SuggestionTypes.prerelease,
+      category: SuggestionCategory.Updateable,
       name: 'next',
       version: '4.0.0-next'
     }
@@ -81,16 +99,19 @@ export default {
   rangeSatisfiesMaxAndSuggestsLatest: [
     <TPackageSuggestion>{
       type: SuggestionTypes.status,
-      name: SuggestionStatus.Satisfies,
+      category: SuggestionCategory.Match,
+      name: SuggestionStatusText.Satisfies,
       version: '2.1.0'
     },
     <TPackageSuggestion>{
       type: SuggestionTypes.release,
-      name: SuggestionStatus.UpdateLatest,
+      category: SuggestionCategory.Updateable,
+      name: SuggestionStatusText.UpdateLatest,
       version: '3.0.0'
     },
     <TPackageSuggestion>{
       type: SuggestionTypes.prerelease,
+      category: SuggestionCategory.Updateable,
       name: 'next',
       version: '4.0.0-next'
     }

@@ -1,27 +1,29 @@
-# 1.7.0-preview.1
+# 1.7.0-preview.2
 
 ## All providers
 
-  - Added unicode colour circles to help identify versions that have updates
+  - Added unicode indicators to help identify versions that have updates
 
-    Some examples:
+    The indicators can be customized in the settings `versionlens.suggestions.indicators`
 
-    - 🟢latest
-    - 🟢satisfies latest
-    - 🟢latest prerelease
-    - 🟡fixed
-    - 🟡satisfies
-    - ⚪no match
-    - ⚪not supported
-    - 🔴invalid entry
+    Defaults are:
 
-  - Fixed an issue where certain ranged versions were not showing updatable links.
+    ```js
+    {
+      "Directory": "🖿 ",
+      "Error": "🔴",
+      "Latest": "🟢",
+      "NoMatch": "⚪",
+      "Match": "🟡",
+      "Updateable": "🠝 "
+    }
+    ```
 
-    The new update link is `bump: ↑ x.x.x`.
+  - Fixed an issue where certain ranged versions were not showing Updateable links.
 
-    Note: There are still replacement issues with ranges. Only `^` and `~` work correctly at present.
+    The new update link is `🠝 bump x.x.x`.
 
-  - Icons now match the size of the built in icons in the editor/title bar
+  - Editor icons for version lens now match the size of the built in icons in the editor/title bar
 
 # 1.6
 

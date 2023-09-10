@@ -1,13 +1,14 @@
 import { VersionUtils } from 'domain/packages';
+import { SuggestionCategory } from 'domain/suggestions';
 import { Nullable } from 'domain/utils';
 import semver from 'semver';
 import { SuggestionTypes, TPackageSuggestion } from '../index';
 import {
   createFixedStatus,
-  createLatest,
+  createLatestUpdateable,
   createMatchesLatestStatus,
-  createNoMatch,
-  createRangeUpdate,
+  createNoMatchStatus,
+  createRangeUpdateable,
   createSatisifiesLatestStatus,
   createSatisifiesStatus
 } from '../suggestionFactory';
@@ -56,13 +57,13 @@ export function createSuggestions(
 
   if (releases.length === 0 && prereleases.length === 0)
     // no match
-    suggestions.push(createNoMatch())
+    suggestions.push(createNoMatchStatus())
   else if (!satisfiesVersion)
     // no match
     suggestions.push(
-      createNoMatch(),
+      createNoMatchStatus(),
       // suggest latestVersion
-      createLatest(latestVersion),
+      createLatestUpdateable(latestVersion),
     )
   else if (isLatest && isFixedVersion)
     // latest
@@ -77,14 +78,14 @@ export function createSuggestions(
       // fixed
       createFixedStatus(satisfiesVersion),
       // suggest latestVersion
-      createLatest(latestVersion),
+      createLatestUpdateable(latestVersion),
     );
   else if (hasRangeUpdate) {
     suggestions.push(
       // satisfies version that doesnt match latest
       createSatisifiesStatus(satisfiesVersion),
       // suggest update
-      createRangeUpdate(satisfiesVersion),
+      createRangeUpdateable(satisfiesVersion),
     );
   }
   else if (satisfiesVersion)
@@ -92,7 +93,7 @@ export function createSuggestions(
       // satisfies version that doesnt match latest
       createSatisifiesStatus(satisfiesVersion),
       // suggest latestVersion
-      createLatest(latestVersion),
+      createLatestUpdateable(latestVersion),
     );
 
   // roll up prereleases
@@ -104,15 +105,16 @@ export function createSuggestions(
   // group prereleases (latest first)
   const taggedVersions = VersionUtils.extractTaggedVersions(maxSatisfyingPrereleases);
   for (let index = taggedVersions.length - 1; index > -1; index--) {
-    const pvn = taggedVersions[index];
-    if (pvn.name === 'latest') break;
-    if (pvn.version === satisfiesVersion) break;
-    if (pvn.version === latestVersion) break;
-    if (versionRange.includes(pvn.version)) break;
+    const tv = taggedVersions[index];
+    if (tv.name === 'latest') break;
+    if (tv.version === satisfiesVersion) break;
+    if (tv.version === latestVersion) break;
+    if (versionRange.includes(tv.version)) break;
 
     suggestions.push({
-      name: pvn.name,
-      version: pvn.version,
+      name: tv.name,
+      category: SuggestionCategory.Updateable,
+      version: tv.version,
       type: SuggestionTypes.prerelease
     });
   }

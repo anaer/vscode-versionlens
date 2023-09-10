@@ -138,7 +138,7 @@ export class GitHubClient {
       return ClientResponseFactory.create(
         PackageSourceType.Github,
         clientResponse,
-        [SuggestionFactory.createNotFound()]
+        [SuggestionFactory.createNotFoundStatus()]
       )
     }
 
@@ -161,8 +161,8 @@ export class GitHubClient {
 
     if (noMatch) {
       suggestions.push(
-        SuggestionFactory.createNoMatch(),
-        SuggestionFactory.createLatest(latestCommit)
+        SuggestionFactory.createNoMatchStatus(),
+        SuggestionFactory.createLatestUpdateable(latestCommit)
       );
     } else if (isLatest) {
       suggestions.push(
@@ -171,7 +171,7 @@ export class GitHubClient {
     } else if (commitIndex > 0) {
       suggestions.push(
         SuggestionFactory.createFixedStatus(versionRange),
-        SuggestionFactory.createLatest(latestCommit)
+        SuggestionFactory.createLatestUpdateable(latestCommit)
       );
     }
 

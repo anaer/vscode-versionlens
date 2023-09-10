@@ -217,15 +217,35 @@
           "default": false,
           "description": "Show version prerelease suggestions by default on vscode start up."
         },
+        "versionlens.suggestions.indicators": {
+          "type": "object",
+          "default": {
+            "Directory": "🖿 ",
+            "Error": "🔴",
+            "Latest": "🟢",
+            "NoMatch": "⚪",
+            "Match": "🟡",
+            "Updateable": "🠝 "
+          },
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "indicator": {
+              "type": "string"
+            }
+          },
+          "description": "The indicators used when showing version suggestion statuses."
+        },
         "versionlens.logging.level": {
           "type": "string",
+          "default": "error",
           "enum": [
             "error",
             "info",
             "debug",
             "silly"
           ],
-          "default": "error",
           "description": "Sets the level of logs to be written to the VersionLens output channel."
         },
         "versionlens.caching.duration": {

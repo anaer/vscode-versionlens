@@ -1,4 +1,5 @@
-export * from './definitions/eSuggestionStatus';
+export * from './definitions/eSuggestionCategory';
+export * from './definitions/eSuggestionStatusText';
 export * from './definitions/eSuggestionTypes';
 export * from './definitions/iSuggestionProvider';
 export * from './definitions/tSuggestion';

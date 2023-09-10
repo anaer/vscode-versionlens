@@ -1,7 +1,7 @@
 import { throwUndefinedOrNull } from "@esm-test/guards";
 import { ILogger } from "domain/logging";
 import { DependencyCache, PackageResponse } from "domain/packages";
-import { ISuggestionProvider, SuggestionStatus, SuggestionTypes } from "domain/suggestions";
+import { ISuggestionProvider, SuggestionStatusText, SuggestionTypes } from "domain/suggestions";
 import { dirname } from 'node:path';
 
 export class GetSuggestions {
@@ -57,7 +57,7 @@ export class GetSuggestions {
           return suggestion
             && (
               (suggestion.type & SuggestionTypes.prerelease) === 0
-              || suggestion.name.includes(SuggestionStatus.LatestIsPrerelease)
+              || suggestion.name.includes(SuggestionStatusText.LatestIsPrerelease)
             );
         }
       )

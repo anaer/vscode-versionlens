@@ -4,7 +4,7 @@ import {
   PackageSourceType,
   createDependencyRange
 } from 'domain/packages';
-import { SuggestionTypes, mapToSuggestionUpdate } from 'domain/suggestions';
+import { SuggestionCategory, SuggestionTypes, mapToSuggestionUpdate } from 'domain/suggestions';
 import { NpmUtils } from 'infrastructure/providers/npm';
 import { test } from 'mocha-ui-esm';
 
@@ -30,6 +30,7 @@ export const npmReplaceVersionTests = {
       },
       suggestion: {
         name: 'packagename',
+        category: SuggestionCategory.Updateable,
         type: SuggestionTypes.release,
         version: '4.2.1'
       }

@@ -4,7 +4,12 @@ import {
   IJsonHttpClient,
   JsonHttpClient
 } from 'domain/clients';
-import { SuggestionStatus, SuggestionTypes, TPackageSuggestion } from 'domain/suggestions';
+import {
+  SuggestionCategory,
+  SuggestionStatusText,
+  SuggestionTypes,
+  TPackageSuggestion
+} from 'domain/suggestions';
 import {
   GitHubClient,
   GitHubOptions,
@@ -75,17 +80,20 @@ export const fetchGithubTests = {
           actual.suggestions,
           [
             <TPackageSuggestion>{
-              name: SuggestionStatus.SatisfiesLatest,
+              name: SuggestionStatusText.SatisfiesLatest,
+              category: SuggestionCategory.Latest,
               version: 'v2.5.0',
               type: SuggestionTypes.status
             },
             <TPackageSuggestion>{
               name: 'rc',
+              category: SuggestionCategory.Updateable,
               version: 'v2.6.0-rc.1',
               type: SuggestionTypes.prerelease
             },
             <TPackageSuggestion>{
               name: 'preview',
+              category: SuggestionCategory.Updateable,
               version: 'v2.5.0-preview.1',
               type: SuggestionTypes.prerelease
             }
@@ -135,22 +143,26 @@ export const fetchGithubTests = {
           actual.suggestions,
           [
             <TPackageSuggestion>{
-              name: SuggestionStatus.Fixed,
+              name: SuggestionStatusText.Fixed,
+              category: SuggestionCategory.Match,
               version: 'v2.0.0',
               type: SuggestionTypes.status
             },
             <TPackageSuggestion>{
-              name: SuggestionStatus.UpdateLatest,
+              name: SuggestionStatusText.UpdateLatest,
+              category: SuggestionCategory.Updateable,
               version: 'v2.5.0',
               type: SuggestionTypes.release
             },
             <TPackageSuggestion>{
               name: 'rc',
+              category: SuggestionCategory.Updateable,
               version: 'v2.6.0-rc.1',
               type: SuggestionTypes.prerelease
             },
             <TPackageSuggestion>{
               name: 'preview',
+              category: SuggestionCategory.Updateable,
               version: 'v2.5.0-preview.1',
               type: SuggestionTypes.prerelease
             }
@@ -199,12 +211,14 @@ export const fetchGithubTests = {
           actual.suggestions,
           [
             <TPackageSuggestion>{
-              name: SuggestionStatus.Fixed,
+              name: SuggestionStatusText.Fixed,
+              category: SuggestionCategory.Match,
               version: '166c3497',
               type: SuggestionTypes.status
             },
             <TPackageSuggestion>{
-              name: SuggestionStatus.UpdateLatest,
+              name: SuggestionStatusText.UpdateLatest,
+              category: SuggestionCategory.Updateable,
               version: 'df4d9435',
               type: SuggestionTypes.release
             }

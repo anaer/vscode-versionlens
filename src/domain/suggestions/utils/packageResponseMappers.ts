@@ -10,8 +10,8 @@ export function mapToSuggestionUpdate(packageResponse: PackageResponse): TSugges
     parsedVersion: packageResponse.parsedPackage.version,
     parsedVersionRange: packageResponse.versionRange,
 
-    fetchedName: packageResponse.fetchedPackage.name,
-    fetchedVersion: packageResponse.fetchedPackage.version,
+    fetchedName: packageResponse.fetchedPackage?.name,
+    fetchedVersion: packageResponse.fetchedPackage?.version,
 
     suggestionType: packageResponse.suggestion.type,
     suggestionVersion: packageResponse.suggestion.version,

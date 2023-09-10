@@ -44,6 +44,7 @@ export class PubClient implements IPackageClient<null> {
     if (pathDesc) {
       return ClientResponseFactory.createDirectory(
         requestedPackage.name,
+        requestedPackage.path,
         pathDesc.path
       );
     }

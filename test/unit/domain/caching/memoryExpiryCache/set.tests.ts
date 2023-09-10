@@ -16,26 +16,26 @@ export const setTests = {
     // setup
     const testKey = 'key1';
     const testDuration = 1000;
-    const testData = {};
+    const testData = { "test": 123 };
     testCacheMap.set(testKey, testData);
 
     // test
     const actual = testCacheMap.get(testKey, testDuration);
 
     // assert
-    assert.equal(actual, testData);
+    assert.deepEqual(actual, testData);
   },
 
   "returns the data that was set": () => {
     // setup
     const testKey = 'key1';
-    const testData = {};
+    const testData = { "test": 123 };
 
     // test
     const actual = testCacheMap.set(testKey, testData);
 
     // assert
-    assert.equal(actual, testData);
+    assert.deepEqual(actual, testData);
   }
 
 }

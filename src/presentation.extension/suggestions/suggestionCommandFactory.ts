@@ -1,65 +1,63 @@
-import { SuggestionStatus, SuggestionTypes, mapToSuggestionUpdate } from 'domain/suggestions';
-import fs from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import {
+  SuggestionCategory,
+  SuggestionStatusText
+} from 'domain/suggestions';
+import { KeyDictionary } from 'domain/utils';
 import {
   SuggestionCodeLens,
-  SuggestionCommandContributions,
-  SuggestionIndicators
+  SuggestionCommandContributions
 } from 'presentation.extension';
 
-export function createTagCommand(tag: string, codeLens: SuggestionCodeLens) {
-  return codeLens.setCommand(tag, "");
+export function createStatusCommand(status: string, codeLens: SuggestionCodeLens) {
+  return codeLens.setCommand(status, "");
+}
+
+export function createUpdateableCommand(title: string, codeLens: SuggestionCodeLens) {
+  return codeLens.setCommand(
+    title,
+    SuggestionCommandContributions.OnUpdateDependencyClick,
+    [codeLens]
+  );
 }
 
 export function createInvalidCommand(codeLens: SuggestionCodeLens) {
-  return codeLens.setCommand(SuggestionStatus.Invalid, "");
+  return codeLens.setCommand(SuggestionStatusText.Invalid, "");
 }
 
-export function createDirectoryLinkCommand(codeLens: SuggestionCodeLens) {
-  let title: string;
-  let cmd = SuggestionCommandContributions.OnFileLinkClick as string;
-
-  const path = codeLens.package.fetchedPackage?.version;
-  if (!path) return createInvalidCommand(codeLens);
-
-  const filePath = resolve(
-    dirname(codeLens.documentUrl.fsPath),
-    path
-  );
-
-  const fileExists = fs.existsSync(filePath);
-  if (fileExists === false)
-    title = (cmd = "") || SuggestionStatus.DirectoryNotFound;
-  else
-    title = `${SuggestionIndicators.OpenNewWindow} ${codeLens.package.parsedPackage.version}`;
-
-  return codeLens.setCommand(title, cmd, [codeLens, filePath]);
+export function createDirectoryLinkCommand(title: string, codeLens: SuggestionCodeLens) {
+  const cmd = SuggestionCommandContributions.OnFileLinkClick as string;
+  return codeLens.setCommand(title, cmd, [codeLens]);
 }
 
-export function createSuggestedVersionCommand(codeLens: SuggestionCodeLens) {
+export function createSuggestedVersionCommand(
+  codeLens: SuggestionCodeLens,
+  indicators: KeyDictionary<string>
+) {
   if (!codeLens.package.suggestion) return createInvalidCommand(codeLens);
 
-  const { name, version, type } = codeLens.package.suggestion;
-  const isStatus = (type & SuggestionTypes.status);
-  const isTag = (type & SuggestionTypes.tag);
-  const isPrerelease = type & SuggestionTypes.prerelease;
+  const { name, version, category } = codeLens.package.suggestion;
 
-  if (!isStatus) {
-    const replaceWithVersion: string = isPrerelease || isTag ?
-      version :
-      codeLens.replaceVersionFn(
-        mapToSuggestionUpdate(codeLens.package),
-        version
-      );
+  // get the category indicator
+  const indicator = indicators[category];
+  const indicatedName = indicator
+    ? `${indicator}${name}`
+    : name;
 
-    const prefix = isTag ? '' : name + ': ';
-    return codeLens.setCommand(
-      `${prefix}${SuggestionIndicators.Update} ${version}`,
-      SuggestionCommandContributions.OnUpdateDependencyClick,
-      [codeLens, `${replaceWithVersion}`]
-    );
+  // create the indicated command title
+  const cmdTitle = `${indicatedName} ${version}`.trim();
+
+  // create the suggestion command
+  switch (category) {
+    case SuggestionCategory.Updateable:
+      createUpdateableCommand(cmdTitle, codeLens)
+      break;
+
+    case SuggestionCategory.Directory:
+      createDirectoryLinkCommand(cmdTitle, codeLens)
+      break;
+
+    default:
+      createStatusCommand(cmdTitle.trimEnd(), codeLens)
+      break;
   }
-
-  // show the status
-  return createTagCommand(`${name} ${version}`.trimEnd(), codeLens);
 }
