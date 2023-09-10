@@ -10,18 +10,22 @@
 
     ```js
     {
-      "Directory": "🖿 ",
-      "Error": "🔴",
-      "Latest": "🟢",
-      "NoMatch": "⚪",
-      "Match": "🟡",
-      "Updateable": "🠝 "
+      "Directory": "🖿 ",  // clickable folder links (used by dart or npm)
+      "Error": "🔴",      // i.e "invalid version" or "package not found"
+      "Latest": "🟢",     // "latest x.x.x" or "satisfies latest x.x.x"
+      "NoMatch": "⚪",    // "no match" or "not supported"
+      "Match": "🟡",      // "fixed x.x.x" or satisfies x.x.x
+      "Updateable": "🠝 "  // up arrow used to show updateable links "🠝 latest x.x.x"
     }
     ```
 
-  - Fixed an issue where certain ranged versions were not showing Updateable links.
+    Related to [#328](https://gitlab.com/versionlens/vscode-versionlens/-/issues/328)
 
-    The new update link is `🠝 bump x.x.x`.
+  - Fixed an issue where certain ranged version expressions that didn't satisfy the latest version were not showing updateable links.
+
+    The updateable link is called `🠝 bump x.x.x`.
+
+    Related to [#329](https://gitlab.com/versionlens/vscode-versionlens/-/issues/329)
 
   - Editor icons for version lens now match the size of the built in icons in the editor/title bar
 
