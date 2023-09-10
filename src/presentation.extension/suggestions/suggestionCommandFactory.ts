@@ -1,6 +1,7 @@
 import {
   SuggestionCategory,
-  SuggestionStatusText
+  SuggestionStatusText,
+  SuggestionTypes
 } from 'domain/suggestions';
 import { KeyDictionary } from 'domain/utils';
 import {
@@ -35,7 +36,7 @@ export function createSuggestedVersionCommand(
 ) {
   if (!codeLens.package.suggestion) return createInvalidCommand(codeLens);
 
-  const { name, version, category } = codeLens.package.suggestion;
+  const { name, version, category, type } = codeLens.package.suggestion;
 
   // get the category indicator
   const indicator = indicators[category];
@@ -44,7 +45,9 @@ export function createSuggestedVersionCommand(
     : name;
 
   // create the indicated command title
-  const cmdTitle = `${indicatedName} ${version}`.trim();
+  const cmdTitle = type === SuggestionTypes.tag
+    ? indicatedName.trim()
+    : `${indicatedName} ${version}`.trim();
 
   // create the suggestion command
   switch (category) {
@@ -57,7 +60,7 @@ export function createSuggestedVersionCommand(
       break;
 
     default:
-      createStatusCommand(cmdTitle.trimEnd(), codeLens)
+      createStatusCommand(cmdTitle, codeLens)
       break;
   }
 }
