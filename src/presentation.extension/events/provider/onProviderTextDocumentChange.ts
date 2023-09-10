@@ -35,7 +35,7 @@ export class OnProviderTextDocumentChange {
     );
 
     this.logger.silly("has changes = %s", result.hasChanged);
-    this.state.showOutdated.change(result.hasChanged);
+    await this.state.showOutdated.change(result.hasChanged);
   }
 
 }

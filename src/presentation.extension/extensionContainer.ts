@@ -25,8 +25,10 @@ import {
   addOnUpdateDependencyClick,
   addOutputChannel,
   addProviderNames,
+  addSuggestionOptions,
   addVersionLensExtension,
-  addVersionLensProviders
+  addVersionLensProviders,
+  addVersionLensState
 } from 'presentation.extension';
 import { ExtensionContext, workspace } from 'vscode';
 
@@ -51,6 +53,10 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
   addInfrastructureServices(services, "extension");
 
   // extension
+  addSuggestionOptions(services);
+
+  addVersionLensState(services);
+
   addVersionLensExtension(services);
 
   addProviderNames(services);

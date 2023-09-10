@@ -17,13 +17,19 @@ import {
   OnToggleReleases,
   OnUpdateDependencyClick,
   SuggestionCodeLensProvider,
-  VersionLensExtension
+  SuggestionsOptions,
+  VersionLensExtension,
+  VersionLensState
 } from 'presentation.extension';
 import { OutputChannel } from 'vscode';
 
 export interface IExtensionServices {
 
+  suggestionOptions: SuggestionsOptions,
+
   extension: VersionLensExtension;
+
+  versionLensState: VersionLensState;
 
   outputChannel: OutputChannel;
 

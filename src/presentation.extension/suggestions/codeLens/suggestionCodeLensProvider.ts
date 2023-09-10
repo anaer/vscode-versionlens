@@ -81,10 +81,10 @@ export class SuggestionCodeLensProvider
     this.logger.info("Project path is %s", projectPath);
 
     // clear any errors
-    this.state.providerError.value = false;
+    await this.state.clearErrorState();
 
     // set in progress
-    this.state.providerBusy.value++;
+    await this.state.increaseBusyState();
 
     // fetch the package suggestions
     let suggestions: Array<PackageResponse> = [];
@@ -96,12 +96,12 @@ export class SuggestionCodeLensProvider
         this.state.showPrereleases.value
       );
     } catch (error) {
-      this.state.providerError.value = true;
-      this.state.providerBusy.change(0)
+      await this.state.setErrorState();
+      await this.state.clearBusyState()
       return Promise.reject(error);
     }
 
-    this.state.providerBusy.value--;
+    await this.state.decreaseBusyState();
 
     // convert suggestions in to code lenses
     return SuggestionCodeLensFactory.createFromPackageResponses(
@@ -126,7 +126,7 @@ export class SuggestionCodeLensProvider
   evaluateCodeLens(codeLens: SuggestionCodeLens) {
     return CommandFactory.createSuggestedVersionCommand(
       codeLens,
-      this.extension.suggestions.indicators
+      this.extension.suggestionOptions.indicators
     );
   }
 

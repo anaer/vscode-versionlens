@@ -5,27 +5,19 @@ import { SuggestionsOptions } from "./suggestions/suggestionsOptions";
 
 export class VersionLensExtension {
 
-  constructor(appConfig: IFrozenOptions, projectPath: string) {
-    throwUndefinedOrNull("appConfig", appConfig);
+  static readonly extensionName: string = 'VersionLens';
+
+  constructor(
+    readonly config: IFrozenOptions,
+    readonly state: VersionLensState,
+    readonly suggestionOptions: SuggestionsOptions,
+    readonly projectPath: string
+  ) {
+    throwUndefinedOrNull("config", config);
+    throwUndefinedOrNull("state", state);
+    throwUndefinedOrNull("suggestionOptions", suggestionOptions);
     throwNotStringOrEmpty("projectPath", projectPath);
-
-    this.config = appConfig;
-    this.projectPath = projectPath;
-    this.suggestions = new SuggestionsOptions(appConfig);
-
-    // instantiate setContext options
-    this.state = new VersionLensState(this);
   }
-
-  static extensionName: string = 'VersionLens';
-
-  config: IFrozenOptions;
-
-  projectPath: string;
-
-  suggestions: SuggestionsOptions;
-
-  state: VersionLensState;
 
   /**
    * Checks if vscode is in workspace mode

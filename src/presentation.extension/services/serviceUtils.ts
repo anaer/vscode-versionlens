@@ -22,9 +22,29 @@ import {
   OnToggleReleases,
   OnUpdateDependencyClick,
   SuggestionCodeLensProvider,
-  VersionLensExtension
+  SuggestionsOptions,
+  VersionLensExtension,
+  VersionLensState
 } from "presentation.extension";
 import { window, workspace } from "vscode";
+
+export function addSuggestionOptions(services: IServiceCollection) {
+  services.addSingleton(
+    nameOf<IExtensionServices>().suggestionOptions,
+    (container: IDomainServices) => new SuggestionsOptions(container.appConfig)
+  )
+}
+
+export function addVersionLensState(services: IServiceCollection) {
+  services.addSingleton(
+    nameOf<IExtensionServices>().versionLensState,
+    async (container: IExtensionServices) => {
+      const state = new VersionLensState(container.suggestionOptions)
+      await state.applyDefaults();
+      return state;
+    }
+  )
+}
 
 export function addVersionLensExtension(services: IServiceCollection) {
   const projectPath = workspace.workspaceFolders && workspace.workspaceFolders.length > 0
@@ -34,7 +54,12 @@ export function addVersionLensExtension(services: IServiceCollection) {
   services.addSingleton(
     nameOf<IExtensionServices>().extension,
     (container: IDomainServices & IExtensionServices) =>
-      new VersionLensExtension(container.appConfig, projectPath)
+      new VersionLensExtension(
+        container.appConfig,
+        container.versionLensState,
+        container.suggestionOptions,
+        projectPath
+      )
   )
 }
 

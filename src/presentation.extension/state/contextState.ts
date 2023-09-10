@@ -1,13 +1,12 @@
+import { throwNotStringOrEmpty } from '@esm-test/guards';
 import { commands } from 'vscode';
 
 export class ContextState<T> {
 
-  constructor(key: string, defaultValue: T) {
-    this.key = key;
-    this.change(defaultValue);
+  constructor(private readonly key: string) {
+    throwNotStringOrEmpty("key", key);
+    this.key = this.key;
   }
-
-  private key: string;
 
   private _value!: T;
 
@@ -15,13 +14,9 @@ export class ContextState<T> {
     return this._value;
   }
 
-  set value(newValue: T) {
-    this.change(newValue);
-  }
-
-  change(newValue: T): Thenable<T> {
+  async change(newValue: T): Promise<T> {
     this._value = newValue;
-    return commands.executeCommand(
+    return await commands.executeCommand(
       'setContext',
       this.key,
       newValue

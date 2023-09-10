@@ -41,7 +41,7 @@ export class OnTextDocumentSave
       await this.fire(provider as ISuggestionProvider, document.uri.fsPath);
 
       // reset outdated flag
-      this.state.showOutdated.change(false);
+      await this.state.showOutdated.change(false);
     }
   }
 

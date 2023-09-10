@@ -40,7 +40,7 @@ export class OnActiveTextEditorChange
   async execute(textEditor?: TextEditor): Promise<void> {
     if (!textEditor) {
       // disable icons when no editor
-      this.state.providerActive.value = false;
+      await this.state.providerActive.change(false);
       return;
     }
 
@@ -48,12 +48,12 @@ export class OnActiveTextEditorChange
     const activeProvider = getDocumentProvider(textEditor.document, this.suggestionProviders);
     if (!activeProvider) {
       // disable icons if no matches found
-      this.state.providerActive.value = false;
+      await this.state.providerActive.change(false);
       return;
     }
 
     // update provider active state to show icons
-    this.state.providerActive.value = true;
+    await this.state.providerActive.change(true);
 
     // fire activated event
     await this.fire(activeProvider as ISuggestionProvider, textEditor.document);

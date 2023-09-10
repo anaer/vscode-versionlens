@@ -28,11 +28,9 @@ export class OnErrorClick {
     // show the version lens log window
     this.outputChannel.show();
 
-    // clear the error state
-    await Promise.all([
-      this.state.providerError.change(false),
-      this.state.providerBusy.change(0)
-    ]);
+    // clear the error and busy states
+    await this.state.clearErrorState();
+    await this.state.clearBusyState();
 
     // focus on the document unhide icons
     window.showTextDocument(window.activeTextEditor.document);

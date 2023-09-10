@@ -27,4 +27,5 @@ export * from './suggestions/definitions/eIconCommandContributions';
 export * from './suggestions/definitions/eSuggestionCommandContributions';
 export * from './suggestions/definitions/eSuggestionContributions';
 export * as CommandFactory from './suggestions/suggestionCommandFactory';
+export * from './suggestions/suggestionsOptions';
 export * from './versionLensExtension';
