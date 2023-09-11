@@ -1,0 +1,13 @@
+import { TSuggestionUpdate, defaultReplaceFn } from 'domain/suggestions';
+
+export function pubReplaceVersion(suggestionUpdate: TSuggestionUpdate, newVersion: string): string {
+
+  return defaultReplaceFn(
+    suggestionUpdate,
+    // handle cases with blank entries and # comments
+    suggestionUpdate.parsedVersion === '#' ?
+      newVersion + ' ' :
+      newVersion
+  );
+
+}

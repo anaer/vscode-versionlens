@@ -41,9 +41,12 @@ export function createVersionDescFromYamlNode(
     versionRange.end--;
   }
 
+  const hasComment = valueNode.comment !== undefined && valueNode.comment.length > 0;
+  const fallbackValue = hasComment ? "#" : "";
+
   return {
     type: PackageDescriptorType.version,
-    version: valueNode.value || "",
+    version: valueNode.value || fallbackValue,
     versionRange
   }
 }

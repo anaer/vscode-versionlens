@@ -75,7 +75,7 @@ dependencies:
           },
           version: <TPackageVersionDescriptor>{
             type: PackageDescriptorType.version,
-            version: "",
+            version: "#",
             versionRange: {
               start: 397,
               end: 397

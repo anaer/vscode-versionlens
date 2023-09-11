@@ -15,9 +15,10 @@ import {
   createVersionDescFromYamlNode,
   extractPackageDependenciesFromYaml
 } from 'domain/packages';
-import { ISuggestionProvider, SuggestionProvider } from 'domain/suggestions';
+import { ISuggestionProvider, SuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import { PubClient } from './pubClient';
 import { PubConfig } from './pubConfig';
+import { pubReplaceVersion } from './pubUtils';
 
 const complexTypeHandlers = {
   [PackageDescriptorType.version]: createVersionDescFromYamlNode,
@@ -36,6 +37,8 @@ export class PubSuggestionProvider
   }
 
   config: PubConfig;
+
+  suggestionReplaceFn?: TSuggestionReplaceFunction = pubReplaceVersion;
 
   parseDependencies(
     packagePath: string,
