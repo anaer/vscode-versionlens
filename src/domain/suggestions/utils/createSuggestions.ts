@@ -48,7 +48,7 @@ export function createSuggestions(
 
   let hasRangeUpdate = false;
 
-  if (isRangeVersion && isLatest == false && satisfiesVersion) {
+  if (isRangeVersion && satisfiesVersion) {
     // get the lowest version in the range
     const lowestRangeVersion = minVersion(versionRange);
     // check satisfiesVersion > minRangeVersion
@@ -68,10 +68,17 @@ export function createSuggestions(
   else if (isLatest && isFixedVersion)
     // latest
     suggestions.push(createMatchesLatestStatus(latestVersion));
-  else if (isLatest && isRangeVersion)
+  else if (isLatest && isRangeVersion && hasRangeUpdate)
     suggestions.push(
       // satisfies latest
-      createSatisifiesLatestStatus(latestVersion)
+      createSatisifiesLatestStatus(latestVersion),
+      // suggest latestVersion
+      createRangeUpdateable(latestVersion),
+    );
+  else if (isLatest && isRangeVersion)
+    suggestions.push(
+      // matches latest
+      createMatchesLatestStatus(latestVersion)
     );
   else if (satisfiesVersion && isFixedVersion)
     suggestions.push(

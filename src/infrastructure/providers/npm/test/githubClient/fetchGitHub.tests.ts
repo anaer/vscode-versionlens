@@ -81,9 +81,15 @@ export const fetchGithubTests = {
           [
             <TPackageSuggestion>{
               name: SuggestionStatusText.SatisfiesLatest,
-              category: SuggestionCategory.Latest,
+              category: SuggestionCategory.Match,
               version: 'v2.5.0',
               type: SuggestionTypes.status
+            },
+            <TPackageSuggestion>{
+              name: SuggestionStatusText.UpdateRange,
+              category: SuggestionCategory.Updateable,
+              version: 'v2.5.0',
+              type: SuggestionTypes.release
             },
             <TPackageSuggestion>{
               name: 'rc',

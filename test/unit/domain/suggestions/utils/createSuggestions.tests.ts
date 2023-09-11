@@ -212,10 +212,8 @@ export const CreateSuggestionsTests = {
       }
     },
 
-    "satisfies the latest release": {
-      "$i: returns 'satisfies latest' with latest prerelease suggestions": [
-        ['>=2'],
-        ['>=2 <=5'],
+    "matches the latest release": {
+      "$i: returns 'latest' with latest prerelease suggestions": [
         ['>=3'],
         ['^3'],
         ['3.*'],
@@ -235,7 +233,30 @@ export const CreateSuggestionsTests = {
           );
 
           // assert
-          assert.deepEqual(results, Fixtures.rangeSatisfiesLatestOnly);
+          assert.deepEqual(results, Fixtures.rangeSatisfiesLatest);
+          assert.equal(results[0].version, latestVersion);
+        }
+      ],
+    },
+    "satisifes the latest release": {
+      "$i: returns 'satisifes latest' with latest prerelease suggestions": [
+        ['>=2'],
+        ['>=2 <=5'],
+        (testRange: string) => {
+          // setup
+          const latestVersion = '3.0.0';
+          const testReleases = ['1.0.0', '2.0.0', '2.1.0', latestVersion]
+          const testPrereleases = ['1.1.0-alpha.1', '4.0.0-next']
+
+          // test
+          const results = createSuggestions(
+            testRange,
+            testReleases,
+            testPrereleases
+          );
+
+          // assert
+          assert.deepEqual(results, Fixtures.latestWithinRange);
           assert.equal(results[0].version, latestVersion);
         }
       ],

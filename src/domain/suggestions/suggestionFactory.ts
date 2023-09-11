@@ -180,7 +180,7 @@ export function createMatchesLatestStatus(latestVersion: string): TPackageSugges
 export function createSatisifiesLatestStatus(latestVersion: string): TPackageSuggestion {
   return createSuggestion(
     SuggestionStatusText.SatisfiesLatest,
-    SuggestionCategory.Latest,
+    SuggestionCategory.Match,
     latestVersion,
     SuggestionTypes.status
   )

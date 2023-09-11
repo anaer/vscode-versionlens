@@ -62,11 +62,31 @@ export default {
       version: '2.0.0'
     }
   ],
-  rangeSatisfiesLatestOnly: [
+  rangeSatisfiesLatest: [
     <TPackageSuggestion>{
       type: SuggestionTypes.status,
       category: SuggestionCategory.Latest,
+      name: SuggestionStatusText.Latest,
+      version: '3.0.0'
+    },
+    <TPackageSuggestion>{
+      type: SuggestionTypes.prerelease,
+      category: SuggestionCategory.Updateable,
+      name: 'next',
+      version: '4.0.0-next'
+    }
+  ],
+  latestWithinRange: [
+    <TPackageSuggestion>{
+      type: SuggestionTypes.status,
+      category: SuggestionCategory.Match,
       name: SuggestionStatusText.SatisfiesLatest,
+      version: '3.0.0'
+    },
+    <TPackageSuggestion>{
+      type: SuggestionTypes.release,
+      category: SuggestionCategory.Updateable,
+      name: SuggestionStatusText.UpdateRange,
       version: '3.0.0'
     },
     <TPackageSuggestion>{

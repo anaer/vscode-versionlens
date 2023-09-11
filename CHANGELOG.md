@@ -1,23 +1,29 @@
-# 1.7.0-preview.2
+# 1.7.1
+
+## All providers
+
+  - Fixes cases where 'satisifies latest' didn't offer a bump update suggestion link
+
+    This fix also comes with an adjustment to the indictor group used for 'satisifies latest' statuses.
+
+    ```js
+    {
+      "Directory": "🖿 ",  // clickable folder links (used by dart or npm)
+      "Error": "🔴",      // i.e "invalid version" or "package not found"
+      "Latest": "🟢",     // "latest x.x.x"
+      "NoMatch": "⚪",    // "no match" or "not supported"
+      "Match": "🟡",      // "fixed x.x.x" or satisfies x.x.x or "satisfies latest x.x.x"
+      "Updateable": "🠝 "  // up arrow used to show updateable links "🠝 latest x.x.x"
+    }
+    ```
+
+# 1.7.0
 
 ## All providers
 
   - Added unicode indicators to help identify versions that have updates
 
     The indicators can be customized in the settings `versionlens.suggestions.indicators`
-
-    Defaults are:
-
-    ```js
-    {
-      "Directory": "🖿 ",  // clickable folder links (used by dart or npm)
-      "Error": "🔴",      // i.e "invalid version" or "package not found"
-      "Latest": "🟢",     // "latest x.x.x" or "satisfies latest x.x.x"
-      "NoMatch": "⚪",    // "no match" or "not supported"
-      "Match": "🟡",      // "fixed x.x.x" or satisfies x.x.x
-      "Updateable": "🠝 "  // up arrow used to show updateable links "🠝 latest x.x.x"
-    }
-    ```
 
     Related to [#328](https://gitlab.com/versionlens/vscode-versionlens/-/issues/328)
 
