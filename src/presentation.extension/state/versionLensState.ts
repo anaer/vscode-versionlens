@@ -11,7 +11,7 @@ export class VersionLensState {
 
   showOutdated: ContextState<boolean>;
 
-  providerActive: ContextState<boolean>;
+  providerActive: ContextState<string>;
 
   providerBusy: ContextState<number>;
 
@@ -32,7 +32,7 @@ export class VersionLensState {
     await this.show.change(this.suggestionOptions.showOnStartup);
     await this.showPrereleases.change(this.suggestionOptions.showPrereleasesOnStartup);
     await this.showOutdated.change(false);
-    await this.providerActive.change(false);
+    await this.providerActive.change(null);
     await this.providerBusy.change(0);
     await this.providerError.change(false);
   }

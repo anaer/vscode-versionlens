@@ -1,8 +1,9 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import { ISuggestionProvider } from 'domain/suggestions';
+import { GetSuggestionProvider } from 'domain/useCases';
 import { AsyncEmitter, IDisposable } from 'domain/utils';
-import { TextDocumentUtils, VersionLensState } from 'presentation.extension';
+import { VersionLensState } from 'presentation.extension';
 import { Disposable, TextDocument, workspace } from 'vscode';
 
 export type ProviderTextDocumentSaveEvent = (
@@ -15,12 +16,13 @@ export class OnTextDocumentSave
   implements IDisposable {
 
   constructor(
-    readonly suggestionProviders: Array<ISuggestionProvider>,
+    readonly getSuggestionProvider: GetSuggestionProvider,
     readonly state: VersionLensState,
     readonly logger: ILogger
   ) {
     super();
-    throwUndefinedOrNull("suggestionProviders", suggestionProviders);
+    throwUndefinedOrNull("getSuggestionProvider", getSuggestionProvider);
+    throwUndefinedOrNull("state", state)
     throwUndefinedOrNull("logger", logger);
 
     // register the vscode workspace event
@@ -30,11 +32,11 @@ export class OnTextDocumentSave
   disposable: Disposable;
 
   async execute(document: TextDocument): Promise<void> {
-    const provider = TextDocumentUtils.getDocumentProvider(
-      document,
-      this.suggestionProviders
-    );
+    // ensure we have an active provider
+    if (!this.state.providerActive.value) return;
 
+    // get the provider
+    const provider = this.getSuggestionProvider.execute(document.fileName);
     if (!provider) return;
 
     if (this.state.showOutdated.value) {

@@ -1,16 +1,18 @@
 import assert from 'assert';
 import { ILogger } from 'domain/logging';
-import { IProvider, IProviderConfig, getProviderByFileName } from 'domain/providers';
+import { IProviderConfig } from 'domain/providers';
+import { ISuggestionProvider } from 'domain/suggestions';
+import { GetSuggestionProvider } from 'domain/useCases';
 import { test } from 'mocha-ui-esm';
 import { instance, mock, when } from 'ts-mockito';
 
 type TestContext = {
-  testProviders: Array<IProvider>
+  testProviders: Array<ISuggestionProvider>
 }
 
-export const getSuggestionProviderByFileNameTests = {
+export const getSuggestionProviderTests = {
 
-  [test.title]: getProviderByFileName.name,
+  [test.title]: GetSuggestionProvider.name,
 
   beforeEach: function (this: TestContext) {
     const mockLogger = mock<ILogger>();
@@ -22,19 +24,24 @@ export const getSuggestionProviderByFileNameTests = {
       pattern: "**/package.json"
     });
 
-    this.testProviders = [{
-      config: instance(mockConfig),
-      logger: instance(mockLogger)
-    }]
+    this.testProviders = [
+      <ISuggestionProvider>{
+        name: "test",
+        config: instance(mockConfig),
+        logger: instance(mockLogger)
+      }
+    ]
   },
 
   "returns provider by file pattern": function (this: TestContext) {
-    const actual = getProviderByFileName("package.json", this.testProviders)
+    const usecase = new GetSuggestionProvider(this.testProviders);
+    const actual = usecase.execute("package.json");
     assert.deepEqual(actual, this.testProviders[0]);
   },
 
   "returns no providers when file pattern does not match": function (this: TestContext) {
-    const actual = getProviderByFileName("no-match.json", this.testProviders)
+    const usecase = new GetSuggestionProvider(this.testProviders);
+    const actual = usecase.execute("no-match.json");
     assert.equal(actual, undefined);
   },
 

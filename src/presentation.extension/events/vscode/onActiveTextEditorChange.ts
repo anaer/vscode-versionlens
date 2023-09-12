@@ -1,10 +1,10 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import { ISuggestionProvider } from 'domain/suggestions';
+import { GetSuggestionProvider } from 'domain/useCases';
 import { AsyncEmitter, IDisposable } from 'domain/utils';
 import { Disposable, TextDocument, TextEditor, window } from 'vscode';
 import { VersionLensState } from '../../state/versionLensState';
-import { getDocumentProvider } from '../eventUtils';
 
 export type ProviderEditorActivatedEvent = (
   activeProvider: ISuggestionProvider,
@@ -17,12 +17,12 @@ export class OnActiveTextEditorChange
 
   constructor(
     readonly state: VersionLensState,
-    readonly suggestionProviders: Array<ISuggestionProvider>,
+    readonly getSuggestionProvider: GetSuggestionProvider,
     readonly logger: ILogger
   ) {
     super();
     throwUndefinedOrNull("state", state);
-    throwUndefinedOrNull("suggestionProviders", suggestionProviders);
+    throwUndefinedOrNull("getSuggestionProvider", getSuggestionProvider);
     throwUndefinedOrNull("logger", logger);
 
     // register the vscode editor event
@@ -38,25 +38,25 @@ export class OnActiveTextEditorChange
   * @returns
   */
   async execute(textEditor?: TextEditor): Promise<void> {
-    if (!textEditor) {
+    if (!textEditor || textEditor.document.uri.scheme !== 'file') {
       // disable icons when no editor
-      await this.state.providerActive.change(false);
+      await this.state.providerActive.change(null);
       return;
     }
 
     // get the active providers
-    const activeProvider = getDocumentProvider(textEditor.document, this.suggestionProviders);
+    const activeProvider = this.getSuggestionProvider.execute(textEditor.document.fileName);
     if (!activeProvider) {
       // disable icons if no matches found
-      await this.state.providerActive.change(false);
+      await this.state.providerActive.change(null);
       return;
     }
 
     // update provider active state to show icons
-    await this.state.providerActive.change(true);
+    await this.state.providerActive.change(activeProvider.name);
 
     // fire activated event
-    await this.fire(activeProvider as ISuggestionProvider, textEditor.document);
+    await this.fire(activeProvider, textEditor.document);
   }
 
   async dispose() {

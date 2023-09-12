@@ -1,7 +1,6 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import { PackageResponse } from 'domain/packages';
-import { IProvider, IProviderConfig } from 'domain/providers';
 import { ISuggestionProvider, defaultReplaceFn } from 'domain/suggestions';
 import { GetSuggestions } from 'domain/useCases';
 import { IDisposable } from 'domain/utils';
@@ -17,14 +16,14 @@ import * as VsCode from 'vscode';
 import {
   CancellationToken,
   CodeLens,
+  CodeLensProvider,
   Event,
   EventEmitter,
   TextDocument,
   languages
 } from 'vscode';
 
-export class SuggestionCodeLensProvider
-  implements VsCode.CodeLensProvider, IProvider, IDisposable {
+export class SuggestionCodeLensProvider implements CodeLensProvider, IDisposable {
 
   constructor(
     readonly extension: VersionLensExtension,
@@ -37,6 +36,8 @@ export class SuggestionCodeLensProvider
     throwUndefinedOrNull("getSuggestions", getSuggestions);
     throwUndefinedOrNull("logger", logger);
 
+    this.providerName = suggestionProvider.config.providerName;
+
     // register changed event before registering the codelens
     this.notifyCodeLensesChanged = new EventEmitter();
     this.onDidChangeCodeLenses = this.notifyCodeLensesChanged.event;
@@ -48,15 +49,13 @@ export class SuggestionCodeLensProvider
     );
   }
 
+  providerName: string;
+
   notifyCodeLensesChanged: EventEmitter<void>;
 
   onDidChangeCodeLenses: Event<void>;
 
   disposable: VsCode.Disposable
-
-  get config(): IProviderConfig {
-    return this.suggestionProvider.config;
-  }
 
   get state(): VersionLensState {
     return this.extension.state;

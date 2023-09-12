@@ -6,7 +6,6 @@ import {
   VersionLensState
 } from 'presentation.extension';
 import { Disposable, commands } from 'vscode';
-import { refreshActiveCodeLenses } from '../eventUtils';
 
 export class OnTogglePrereleases {
 
@@ -35,13 +34,20 @@ export class OnTogglePrereleases {
   disposables: Disposable[] = [];
 
   async execute(toggle: boolean): Promise<void> {
-    await this.state.showPrereleases.change(toggle)
-    refreshActiveCodeLenses(this.suggestionCodeLensProvider);
+    await this.state.showPrereleases.change(toggle);
+
+    // refresh the active code lenses
+    const providerName = this.state.providerActive.value;
+    const codelensProvider = this.suggestionCodeLensProvider.find(
+      x => x.providerName === providerName
+    );
+
+    codelensProvider && codelensProvider.reloadCodeLenses();
   }
 
   async dispose() {
     this.disposables.forEach(x => x.dispose());
-    this.logger.debug("disposed");
+    this.logger.debug(`disposed ${OnTogglePrereleases.name}`);
   }
 
 }

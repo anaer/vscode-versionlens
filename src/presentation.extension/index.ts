@@ -3,7 +3,6 @@ export * from './events/codelens/onUpdateDependencyClick';
 export * from './events/editorTitleBar/onErrorClick';
 export * from './events/editorTitleBar/onTogglePrereleases';
 export * from './events/editorTitleBar/onToggleReleases';
-export * as TextDocumentUtils from './events/eventUtils';
 export * from './events/onClearCache';
 export * from './events/onPreSaveChanges';
 export * from './events/onSaveChanges';

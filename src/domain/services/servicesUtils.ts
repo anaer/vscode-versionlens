@@ -5,7 +5,7 @@ import { HttpOptions } from "domain/http";
 import { LoggingOptions } from "domain/logging";
 import { DependencyCache, PackageCache } from "domain/packages";
 import { FileSystemStorage } from "domain/storage";
-import { GetDependencyChanges, importSuggestionProviders } from "domain/useCases";
+import { GetDependencyChanges, GetSuggestionProvider, importSuggestionProviders } from "domain/useCases";
 import { nameOf } from "domain/utils";
 import { IDomainServices } from "./iDomainServices";
 
@@ -76,6 +76,14 @@ export function addSuggestionPackageCache(services: IServiceCollection) {
 export function addProcessesCache(services: IServiceCollection) {
   const serviceName = nameOf<IDomainServices>().processesCache;
   services.addSingleton(serviceName, new MemoryExpiryCache(serviceName));
+}
+
+export function addGetSuggestionProviderUseCase(services: IServiceCollection) {
+  const serviceName = nameOf<IDomainServices>().GetSuggestionProvider;
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices) => new GetSuggestionProvider(container.suggestionProviders)
+  );
 }
 
 export function addGetDependencyChangesUseCase(services: IServiceCollection) {

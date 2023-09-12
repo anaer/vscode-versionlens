@@ -6,6 +6,7 @@ import {
   addFileSystemStorage,
   addFileWatcherDependencyCache,
   addGetDependencyChangesUseCase,
+  addGetSuggestionProviderUseCase,
   addHttpOptions,
   addLoggingOptions,
   addProcessesCache,
@@ -36,6 +37,8 @@ export function addDomainServices(
   addSuggestionPackageCache(services);
 
   addProcessesCache(services);
+
+  addGetSuggestionProviderUseCase(services);
 
   addGetDependencyChangesUseCase(services);
 

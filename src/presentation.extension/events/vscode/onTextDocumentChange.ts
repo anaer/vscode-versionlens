@@ -1,8 +1,9 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import { ISuggestionProvider } from 'domain/suggestions';
+import { GetSuggestionProvider } from 'domain/useCases';
 import { AsyncEmitter, IDisposable } from 'domain/utils';
-import { TextDocumentUtils } from 'presentation.extension';
+import { VersionLensState } from 'presentation.extension';
 import { Disposable, TextDocumentChangeEvent, TextDocumentChangeReason, workspace } from 'vscode';
 
 export type ProviderTextDocumentChangeEvent = (
@@ -16,11 +17,13 @@ export class OnTextDocumentChange
   implements IDisposable {
 
   constructor(
-    readonly suggestionProviders: Array<ISuggestionProvider>,
+    readonly getSuggestionProvider: GetSuggestionProvider,
+    readonly state: VersionLensState,
     readonly logger: ILogger
   ) {
     super();
-    throwUndefinedOrNull("suggestionProviders", suggestionProviders);
+    throwUndefinedOrNull("getSuggestionProvider", getSuggestionProvider);
+    throwUndefinedOrNull("state", state);
     throwUndefinedOrNull("logger", logger);
 
     // register the vscode workspace event
@@ -30,6 +33,9 @@ export class OnTextDocumentChange
   disposable: Disposable;
 
   async execute(e: TextDocumentChangeEvent): Promise<void> {
+    // ensure we have an active provider
+    if (!this.state.providerActive.value) return;
+
     // check if we have a change
     const shouldHandleEvent = e.reason == TextDocumentChangeReason.Redo
       || e.reason == TextDocumentChangeReason.Undo
@@ -37,17 +43,13 @@ export class OnTextDocumentChange
 
     if (shouldHandleEvent == false) return;
 
-    // check a provider handles this document
-    const provider = TextDocumentUtils.getDocumentProvider(
-      e.document,
-      this.suggestionProviders
-    );
-
+    // get the provider
+    const provider = this.getSuggestionProvider.execute(e.document.fileName);
     if (!provider) return;
 
     // execute the listener
     await this.fire(
-      provider as ISuggestionProvider,
+      provider,
       e.document.uri.fsPath,
       e.document.getText()
     );

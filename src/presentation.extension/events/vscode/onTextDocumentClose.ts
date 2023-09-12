@@ -1,8 +1,8 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import { ISuggestionProvider } from 'domain/suggestions';
+import { GetSuggestionProvider } from 'domain/useCases';
 import { AsyncEmitter, IDisposable } from 'domain/utils';
-import { TextDocumentUtils } from 'presentation.extension';
 import { Disposable, TextDocument, workspace } from 'vscode';
 
 export type ProviderTextDocumentClosedEvent = (
@@ -15,11 +15,11 @@ export class OnTextDocumentClose
   implements IDisposable {
 
   constructor(
-    readonly suggestionProviders: Array<ISuggestionProvider>,
+    readonly getSuggestionProvider: GetSuggestionProvider,
     readonly logger: ILogger
   ) {
     super();
-    throwUndefinedOrNull("suggestionProviders", suggestionProviders);
+    throwUndefinedOrNull("getSuggestionProvider", getSuggestionProvider);
     throwUndefinedOrNull("logger", logger);
 
     // register the vscode workspace event
@@ -29,12 +29,18 @@ export class OnTextDocumentClose
   disposable: Disposable;
 
   async execute(document: TextDocument): Promise<void> {
-    const provider = TextDocumentUtils.getDocumentProvider(
-      document,
-      this.suggestionProviders
-    );
+    // we can't check for an active provider here
+    // because its already been de-activated before this event is called
 
-    provider && await this.fire(provider as ISuggestionProvider, document.uri.fsPath);
+    // ensure this is a file
+    if (document.uri.scheme !== 'file') return;
+
+    // attempt to match a provider file
+    const provider = this.getSuggestionProvider.execute(document.fileName);
+    if (!provider) return;
+
+    // execute the listener
+    await this.fire(provider, document.uri.fsPath);
   }
 
   async dispose() {

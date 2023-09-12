@@ -133,7 +133,7 @@ export function addOnActiveTextEditorChange(services: IServiceCollection) {
     (container: IDomainServices & IExtensionServices) =>
       new OnActiveTextEditorChange(
         container.extension.state,
-        container.suggestionProviders,
+        container.GetSuggestionProvider,
         container.logger.child({ namespace: serviceName })
       ),
     true
@@ -146,7 +146,8 @@ export function addOnTextDocumentChange(services: IServiceCollection) {
     serviceName,
     (container: IDomainServices & IExtensionServices) =>
       new OnTextDocumentChange(
-        container.suggestionProviders,
+        container.GetSuggestionProvider,
+        container.versionLensState,
         container.logger.child({ namespace: serviceName })
       ),
     true
@@ -159,7 +160,7 @@ export function addOnTextDocumentClosed(services: IServiceCollection) {
     serviceName,
     (container: IDomainServices & IExtensionServices) =>
       new OnTextDocumentClose(
-        container.suggestionProviders,
+        container.GetSuggestionProvider,
         container.logger.child({ namespace: serviceName })
       ),
     true
@@ -172,7 +173,7 @@ export function addOnTextDocumentSave(services: IServiceCollection) {
     serviceName,
     (container: IDomainServices & IExtensionServices) =>
       new OnTextDocumentSave(
-        container.suggestionProviders,
+        container.GetSuggestionProvider,
         container.extension.state,
         container.logger.child({ namespace: serviceName })
       ),
