@@ -1,3 +1,20 @@
+# 1.7.2
+
+## All providers
+
+  - Fixed a character glitch in the file exclude pattern which caused version lens to search the node_modules 
+    when the extension first loads. This made version lens initialize slower for larger projects.
+
+    ![image](https://gitlab.com/versionlens/vscode-versionlens/uploads/a24c518454257c6224a0991f5da4619a/image.png)
+
+    Unit tests also had the same character glitch and therefore passed when checking the exclude pattern.
+
+    Related to [#327](https://gitlab.com/versionlens/vscode-versionlens/-/issues/327)
+
+## Dart
+
+  - Fixed a spacing issue after clicking an updatable link for blank version entries that have `# comments` on the same line.
+
 # 1.7.1
 
 ## All providers

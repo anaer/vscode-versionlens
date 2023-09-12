@@ -49,7 +49,7 @@ export const packageFileWatcherTests = {
 
       when(this.mockProvider.config).thenReturn(testConfig);
 
-      when(this.mockWorkspace.findFiles(testConfig.fileMatcher.pattern, '**​/node_modules/**'))
+      when(this.mockWorkspace.findFiles(testConfig.fileMatcher.pattern, '**/node_modules/**'))
         .thenResolve([testUri])
 
       const watcher = new PackageFileWatcher(
@@ -218,7 +218,7 @@ export const packageFileWatcherTests = {
       ).once()
 
       verify(
-        this.mockLogger.debug(
+        this.mockLogger.silly(
           "updating package dependency cache for '%s'",
           testUri.fsPath
         )

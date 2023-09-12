@@ -37,13 +37,28 @@ export class PackageFileWatcher
   async initialize(): Promise<void> {
 
     for (const provider of this.providers) {
+
+      // capture start time
+      const startedAt = performance.now();
+
       const files = await this.workspace.findFiles(
         provider.config.fileMatcher.pattern,
-        '**​/node_modules/**'
+        '**/node_modules/**'
       );
+
       for (const file of files) {
         await this.onFileAdd(provider, file)
       }
+
+      // report completed duration
+      const completedAt = performance.now();
+      this.logger.debug(
+        'found %s project files for %s (%s ms)',
+        files.length,
+        provider.config.providerName,
+        Math.floor(completedAt - startedAt)
+      );
+
     }
 
     this.watch();
@@ -113,7 +128,7 @@ export class PackageFileWatcher
 
     const result = await this.getDependencyChanges.execute(provider, packageFilePath);
     if (result.hasChanged) {
-      this.logger.debug("updating package dependency cache for '%s'", packageFilePath);
+      this.logger.silly("updating package dependency cache for '%s'", packageFilePath);
       this.dependencyCache.set(provider.name, packageFilePath, result.parsedDependencies);
     }
 
