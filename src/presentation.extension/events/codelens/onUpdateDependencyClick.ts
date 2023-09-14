@@ -25,6 +25,9 @@ export class OnUpdateDependencyClick {
    * @param packageVersion 
    */
   async execute(codeLens: SuggestionCodeLens): Promise<void> {
+    if ((<any>codeLens).preventExtraClicks) return;
+    (<any>codeLens).preventExtraClicks = true;
+
     const { version, type } = codeLens.package.suggestion;
     const isTag = type & SuggestionTypes.tag;
     const isPrerelease = type & SuggestionTypes.prerelease;

@@ -16,6 +16,8 @@ export class SuggestionCodeLens extends CodeLens {
 
   replaceVersionFn: TSuggestionReplaceFunction;
 
+  preventExtraClicks: boolean;
+
   constructor(
     commandRange: Range,
     replaceRange: Range,
