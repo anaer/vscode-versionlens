@@ -1,3 +1,21 @@
+# 1.7.3-preview.1
+
+## Maven
+
+  - Fixed an extension loading issue when a maven pom.xml file causes the xml parser to crash on start up.
+
+    Related to [#330](https://gitlab.com/versionlens/vscode-versionlens/-/issues/330)
+
+## All providers
+
+  - Replaced the up arrow indicator so it renders on the mac.
+  
+    Related to [#331](https://gitlab.com/versionlens/vscode-versionlens/-/issues/331)
+
+  - Added a space to all indicators on mac\linux. This does not apply to windows.
+
+    Related to [#331](https://gitlab.com/versionlens/vscode-versionlens/-/issues/331)
+
 # 1.7.2
 
 ## All providers

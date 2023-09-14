@@ -4,10 +4,13 @@ import {
   SuggestionTypes
 } from 'domain/suggestions';
 import { KeyDictionary } from 'domain/utils';
+import * as os from 'node:os';
 import {
   SuggestionCodeLens,
   SuggestionCommandContributions
 } from 'presentation.extension';
+
+const isWindows = os.type() === "Windows_NT";
 
 export function createStatusCommand(status: string, codeLens: SuggestionCodeLens) {
   return codeLens.setCommand(status, "");
@@ -39,7 +42,7 @@ export function createSuggestedVersionCommand(
   const { name, version, category, type } = codeLens.package.suggestion;
 
   // get the category indicator
-  const indicator = indicators[category];
+  const indicator = indicators[category] + (isWindows ? '' : ' ');
   const indicatedName = indicator
     ? `${indicator}${name}`
     : name;
