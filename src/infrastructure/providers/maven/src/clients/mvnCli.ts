@@ -3,7 +3,7 @@ import { IProcessClient, UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import { MavenRepository } from '../definitions/mavenRepository';
 import { MavenConfig } from '../mavenConfig';
-import * as MavenXmlFactory from '../mavenXmlParserFactory';
+import { extractReposUrlsFromXml } from '../parser/mavenParserTypeFactory';
 
 export class MvnCli {
 
@@ -30,7 +30,7 @@ export class MvnCli {
       const { data } = result;
       if (data.length === 0) return [];
 
-      repos = MavenXmlFactory.extractReposUrlsFromXml(data);
+      repos = extractReposUrlsFromXml(data);
 
     } catch (err) {
       repos = [];

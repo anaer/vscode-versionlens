@@ -1,0 +1,1 @@
+export * as MavenParser from './mavenXmlParser/createDependenciesFromXml.tests';

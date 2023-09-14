@@ -17,7 +17,7 @@ import { NuGetPackageClient } from './clients/nugetPackageClient';
 import { NuGetResourceClient } from './clients/nugetResourceClient';
 import { NuGetClientData } from './definitions/nuget';
 import { DotNetConfig } from './dotnetConfig';
-import { createDependenciesFromXml } from './dotnetXmlParserFactory';
+import { createDependenciesFromXml } from './parser/dotnetParser';
 
 export class DotNetSuggestionProvider
   extends SuggestionProvider<NuGetClientData>
@@ -44,12 +44,12 @@ export class DotNetSuggestionProvider
 
   parseDependencies(packagePath: string, packageText: string): Array<PackageDependency> {
 
-    const packageLocations = createDependenciesFromXml(
+    const packageDescriptors = createDependenciesFromXml(
       packageText,
       this.config.dependencyProperties
     );
 
-    const packageDependencies = packageLocations
+    const packageDependencies = packageDescriptors
       .filter(x => x.hasType(PackageDescriptorType.version))
       .map(
         packageDesc => {

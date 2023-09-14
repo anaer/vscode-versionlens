@@ -17,19 +17,32 @@ export const createDependenciesFromXmlTests = {
     [[], ''],
     [["non-dependencies"], Fixtures.createDependenciesFromXml.test],
     function (this: TestContext, testIncludeNames: Array<string>, expected: string) {
-      this.test.title = this.test.title.replace("$1", testIncludeNames.toString());
-      const results = createDependenciesFromXml(expected, testIncludeNames);
-      assert.equal(results.length, 0);
+      // test
+      const actual = createDependenciesFromXml(expected, testIncludeNames);
+
+      //assert
+      assert.equal(actual.length, 0);
     }
   ],
 
   "extracts dependency entries from dotnet xml": () => {
-    const includeNames = ["Sdk", "PackageReference", "PackageVersion"]
-    const results = createDependenciesFromXml(
+    // setup
+    const includeNames = [
+      "Project.Sdk",
+      "Project.ItemGroup.GlobalPackageReference",
+      "Project.ItemGroup.PackageReference",
+      "Project.ItemGroup.PackageVersion",
+      "Project.ItemGroup.DotNetCliToolReference"
+    ];
+
+    // test
+    const actual = createDependenciesFromXml(
       Fixtures.createDependenciesFromXml.test,
       includeNames
     );
-    assert.deepEqual(results, Fixtures.createDependenciesFromXml.expected);
+
+    // assert
+    assert.deepEqual(actual, Fixtures.createDependenciesFromXml.expected);
   }
 
 }

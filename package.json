@@ -82,7 +82,7 @@
     "request-light": "0.7.0",
     "semver": "7.5.4",
     "winston": "3.7.1",
-    "xmldoc": "1.3.0",
+    "sax": "1.2.4",
     "yaml": "2.3.2"
   },
   "contributes": {
@@ -404,11 +404,11 @@
           "uniqueItems": true,
           "minItems": 1,
           "default": [
-            "Sdk",
-            "GlobalPackageReference",
-            "PackageReference",
-            "PackageVersion",
-            "DotNetCliToolReference"
+            "Project.Sdk",
+            "Project.ItemGroup.GlobalPackageReference",
+            "Project.ItemGroup.PackageReference",
+            "Project.ItemGroup.PackageVersion",
+            "Project.ItemGroup.DotNetCliToolReference"
           ],
           "description": "Defines which project properties should be parsed by this extension"
         },
@@ -574,8 +574,8 @@
           "uniqueItems": true,
           "minItems": 1,
           "default": [
-            "dependency",
-            "parent"
+            "project.dependencies.dependency",
+            "project.parent"
           ],
           "description": "Defines which properties in pom.xml should be parsed by this extension"
         },

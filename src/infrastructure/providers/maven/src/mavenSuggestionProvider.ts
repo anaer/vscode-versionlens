@@ -16,7 +16,7 @@ import { MavenClient } from './clients/mavenClient';
 import { MvnCli } from './clients/mvnCli';
 import { MavenClientData } from './definitions/mavenClientData';
 import { MavenConfig } from './mavenConfig';
-import * as MavenXmlFactory from './mavenXmlParserFactory';
+import { createDependenciesFromXml } from './parser/mavenParser';
 
 export class MavenSuggestionProvider
   extends SuggestionProvider<MavenClientData>
@@ -41,8 +41,7 @@ export class MavenSuggestionProvider
     packagePath: string,
     packageText: string
   ): Array<PackageDependency> {
-    const packageLocations = MavenXmlFactory.createDependenciesFromXml(
-
+    const packageLocations = createDependenciesFromXml(
       packageText,
       this.config.dependencyProperties
     );
