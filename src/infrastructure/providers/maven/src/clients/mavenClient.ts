@@ -15,15 +15,15 @@ import {
   VersionUtils
 } from 'domain/packages';
 import { SuggestionFactory, createSuggestions } from 'domain/suggestions';
-import xmldoc from 'xmldoc';
 import { MavenClientData } from '../definitions/mavenClientData';
 import { MavenConfig } from '../mavenConfig';
+import { getVersionsFromPackageXml } from '../parser/mavenXmlUtils';
 
 export class MavenClient implements IPackageClient<MavenClientData> {
 
   constructor(
-    readonly config: MavenConfig, 
-    readonly httpClient: IHttpClient, 
+    readonly config: MavenConfig,
+    readonly httpClient: IHttpClient,
     readonly logger: ILogger
   ) {
     throwUndefinedOrNull("config", config);
@@ -126,17 +126,4 @@ export class MavenClient implements IPackageClient<MavenClientData> {
     };
   }
 
-}
-
-function getVersionsFromPackageXml(packageXml: string): Array<string> {
-  let xmlRootNode = new xmldoc.XmlDocument(packageXml);
-  let xmlVersioningNode = xmlRootNode.childNamed("versioning");
-  let xmlVersionsList = xmlVersioningNode.childNamed("versions").childrenNamed("version");
-  let versions = [];
-
-  xmlVersionsList.forEach(xmlVersionNode => {
-    versions.push(xmlVersionNode.val);
-  })
-
-  return versions
 }

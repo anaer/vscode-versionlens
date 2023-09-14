@@ -3,7 +3,7 @@ import { IProcessClient, UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import { MavenRepository } from '../definitions/mavenRepository';
 import { MavenConfig } from '../mavenConfig';
-import { extractReposUrlsFromXml } from '../parser/mavenParserTypeFactory';
+import { extractReposUrlsFromXml } from '../parser/mavenXmlUtils';
 
 export class MvnCli {
 

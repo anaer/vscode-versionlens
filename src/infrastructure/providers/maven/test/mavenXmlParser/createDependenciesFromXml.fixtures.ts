@@ -137,5 +137,25 @@ export default {
       "C:\\Users\\UserName\\.m2\\repository",
       "https://repo.adobe.com/nexus/content/groups/public"
     ]
+  },
+
+  getVersionsFromPackageXml: {
+    test: `
+      <?xml version="1.0" encoding="UTF-8"?>
+      <metadata>
+        <versioning>
+          <versions>
+            <version>1.2.3</version>
+            <version>1.2.4</version>
+            <version>1.2.5</version>
+          </versions>
+        </versioning>
+      </metadata>
+    `,
+    expected: [
+      '1.2.3',
+      '1.2.4',
+      '1.2.5'
+    ]
   }
 }

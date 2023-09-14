@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { createDependenciesFromXml, extractReposUrlsFromXml } from 'infrastructure/providers/maven';
+import { createDependenciesFromXml, extractReposUrlsFromXml, getVersionsFromPackageXml } from 'infrastructure/providers/maven';
 import { test } from 'mocha-ui-esm';
 import Fixtures from './createDependenciesFromXml.fixtures';
 
@@ -48,6 +48,14 @@ export const createDependenciesFromXmlTests = {
 
     // assert
     assert.deepEqual(actual, Fixtures.extractReposUrlsFromXml.expected);
+  },
+
+  "extracts versions from maven client xml": () => {
+    // test
+    const actual = getVersionsFromPackageXml(Fixtures.getVersionsFromPackageXml.test);
+
+    // assert
+    assert.deepEqual(actual, Fixtures.getVersionsFromPackageXml.expected);
   }
 
 }
