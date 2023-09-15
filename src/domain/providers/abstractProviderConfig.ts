@@ -2,7 +2,6 @@ import { throwNotStringOrEmpty, throwUndefinedOrNull } from '@esm-test/guards';
 import { ICachingOptions } from 'domain/caching';
 import { IFrozenOptions } from 'domain/configuration';
 import { IHttpOptions } from 'domain/http';
-import { ProviderSupport } from 'domain/providers';
 
 export abstract class AbstractProviderConfig {
 
@@ -16,13 +15,6 @@ export abstract class AbstractProviderConfig {
     throwUndefinedOrNull("config", config);
     throwUndefinedOrNull("caching", caching);
     throwUndefinedOrNull("http", http);
-
-    this.supports = [
-      ProviderSupport.Releases,
-      ProviderSupport.Prereleases,
-    ];
   }
-
-  supports: Array<ProviderSupport>;
 
 }
