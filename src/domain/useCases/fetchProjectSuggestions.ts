@@ -29,6 +29,9 @@ export class FetchProjectSuggestions {
 
     this.logger.debug("queueing %s package fetch tasks", dependencies.length);
 
+    // capture start time
+    const startedAt = performance.now();
+
     // queue package fetch tasks
     const promises = [];
     for (const dependency of dependencies) {
@@ -46,9 +49,6 @@ export class FetchProjectSuggestions {
       // queue the fetch task
       promises.push(promisedFetch);
     }
-
-    // capture start time
-    const startedAt = performance.now();
 
     // parallel the fetch requests
     const responses: Array<PackageResponse> = await Promise.all(promises);
