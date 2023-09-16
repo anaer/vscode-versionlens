@@ -1,4 +1,4 @@
-# 1.7.3-preview.1
+# 1.7.3
 
 ## Maven
 
@@ -6,13 +6,43 @@
 
     Related to [#330](https://gitlab.com/versionlens/vscode-versionlens/-/issues/330)
 
+  - Xml parser has been updated to use the full xml path to find dependency elements.
+
+    `versionlens.maven.dependencyProperties` default settings
+
+    ```js
+    "default": [
+      "project.dependencies.dependency",
+      "project.parent"
+    ]
+    ```
+
+## Dotnet
+
+  - Xml parser has been updated to use the full xml path to find dependency elements. 
+
+    `versionlens.dotnet.dependencyProperties` default settings
+
+    ```js
+    "default": [
+      "Project.Sdk",
+      "Project.ItemGroup.GlobalPackageReference",
+      "Project.ItemGroup.PackageReference",
+      "Project.ItemGroup.PackageVersion",
+      "Project.ItemGroup.DotNetCliToolReference"
+    ]
+    ```
+
 ## All providers
 
-  - Replaced the up arrow indicator so it renders on the mac.
+  - Replaced the up arrow and folder indicators in the default settings so they render correctly on the mac.
   
+    - "Directory": "📁 "
+    - "Updateable": "↑ "
+
     Related to [#331](https://gitlab.com/versionlens/vscode-versionlens/-/issues/331)
 
-  - Added a space to all indicators on mac\linux. This does not apply to windows.
+  - Added an extra space to all indicators on mac\linux. This does not apply to windows.
 
     Related to [#331](https://gitlab.com/versionlens/vscode-versionlens/-/issues/331)
 
