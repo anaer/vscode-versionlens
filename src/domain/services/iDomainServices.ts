@@ -6,7 +6,13 @@ import { ILogger, ILoggerChannel, LoggingOptions } from 'domain/logging';
 import { DependencyCache, IPackageFileWatcher, PackageCache } from 'domain/packages';
 import { IStorage } from 'domain/storage';
 import { ISuggestionProvider } from 'domain/suggestions';
-import { GetDependencyChanges, GetSuggestionProvider, GetSuggestions } from 'domain/useCases';
+import {
+  FetchPackageSuggestions,
+  FetchProjectSuggestions,
+  GetDependencyChanges,
+  GetSuggestionProvider,
+  GetSuggestions
+} from 'domain/useCases';
 
 export interface IDomainServices {
 
@@ -41,6 +47,10 @@ export interface IDomainServices {
   processesCache: IExpiryCache;
 
   GetSuggestionProvider: GetSuggestionProvider;
+
+  fetchProjectSuggestions: FetchProjectSuggestions;
+
+  fetchPackageSuggestions: FetchPackageSuggestions;
 
   getSuggestions: GetSuggestions;
 

@@ -17,7 +17,6 @@ export const getSuggestionProviderTests = {
   beforeEach: function (this: TestContext) {
     const mockLogger = mock<ILogger>();
     const mockConfig = mock<IProviderConfig>();
-    when(mockConfig.providerName).thenReturn("test");
     when(mockConfig.fileMatcher).thenReturn({
       language: "json",
       scheme: "file",

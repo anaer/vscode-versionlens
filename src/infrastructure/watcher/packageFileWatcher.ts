@@ -55,7 +55,7 @@ export class PackageFileWatcher
       this.logger.debug(
         'found %s project files for %s (%s ms)',
         files.length,
-        provider.config.providerName,
+        provider.name,
         Math.floor(completedAt - startedAt)
       );
 

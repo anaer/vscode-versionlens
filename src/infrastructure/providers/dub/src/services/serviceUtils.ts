@@ -80,7 +80,7 @@ export function addSuggestionProvider(services: IServiceCollection) {
     (container: IDubServices & IDomainServices) =>
       new DubSuggestionProvider(
         container.dubClient,
-        container.packageCache,
+        container.dubConfig,
         container.logger.child({ namespace: 'dubSuggestionProvider' })
       )
   );

@@ -3,41 +3,45 @@ import { ILogger } from "domain/logging";
 import { DependencyCache, PackageResponse } from "domain/packages";
 import { ISuggestionProvider, SuggestionStatusText, SuggestionTypes } from "domain/suggestions";
 import { dirname } from 'node:path';
+import { FetchProjectSuggestions } from "./fetchProjectSuggestions";
 
 export class GetSuggestions {
 
   constructor(
+    readonly fetchSuggestions: FetchProjectSuggestions,
     readonly dependencyCaches: DependencyCache[],
     readonly logger: ILogger
   ) {
+    throwUndefinedOrNull("fetchSuggestions", fetchSuggestions);
     throwUndefinedOrNull("dependencyCaches", dependencyCaches);
     throwUndefinedOrNull("logger", logger);
   }
 
   async execute(
-    suggestionProvider: ISuggestionProvider,
+    provider: ISuggestionProvider,
     projectPath: string,
     packageFilePath: string,
     includePrereleases: boolean
   ): Promise<PackageResponse[]> {
 
     // ensure the caching duration is up to date
-    suggestionProvider.config.caching.defrost();
+    provider.config.caching.defrost();
     this.logger.debug(
       "caching duration is set to %s seconds",
-      suggestionProvider.config.caching.duration / 1000
+      provider.config.caching.duration / 1000
     );
 
     // get the document dependencies
     const packageDeps = DependencyCache.getDependenciesWithFallback(
-      suggestionProvider.name,
+      provider.name,
       packageFilePath,
       ...this.dependencyCaches
     );
 
     // fetch the package suggestions
     const packagePath = dirname(packageFilePath);
-    const suggestions = await suggestionProvider.fetchSuggestions(
+    const suggestions = await this.fetchSuggestions.execute(
+      provider,
       projectPath,
       packagePath,
       packageDeps
@@ -46,7 +50,7 @@ export class GetSuggestions {
     this.logger.info(
       "resolved %s %s package release and pre-release suggestions",
       suggestions.length,
-      suggestionProvider.name
+      provider.name
     );
 
     // return without preleases

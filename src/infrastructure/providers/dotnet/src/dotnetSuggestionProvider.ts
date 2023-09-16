@@ -1,17 +1,14 @@
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
-  PackageCache,
   PackageDependency,
   PackageDescriptorType,
   TPackageNameDescriptor,
   TPackageVersionDescriptor,
   createPackageResource
 } from 'domain/packages';
-import {
-  ISuggestionProvider,
-  SuggestionProvider
-} from 'domain/suggestions';
+import { ISuggestionProvider } from 'domain/suggestions';
 import { DotNetCli } from './clients/dotnetCli';
 import { NuGetPackageClient } from './clients/nugetPackageClient';
 import { NuGetResourceClient } from './clients/nugetResourceClient';
@@ -19,28 +16,23 @@ import { NuGetClientData } from './definitions/nuget';
 import { DotNetConfig } from './dotnetConfig';
 import { createDependenciesFromXml } from './parser/dotnetParser';
 
-export class DotNetSuggestionProvider
-  extends SuggestionProvider<NuGetClientData>
-  implements ISuggestionProvider {
+export class DotNetSuggestionProvider implements ISuggestionProvider {
+
+  readonly name: string = 'dotnet';
 
   constructor(
-    dotnetCli: DotNetCli,
-    nugetClient: NuGetPackageClient,
-    nugetResClient: NuGetResourceClient,
-    packageCache: PackageCache,
-    logger: ILogger
+    readonly client: NuGetPackageClient,
+    readonly dotnetClient: DotNetCli,
+    readonly nugetResClient: NuGetResourceClient,
+    readonly config: DotNetConfig,
+    readonly logger: ILogger
   ) {
-    super(nugetClient, packageCache, logger);
-    this.config = nugetClient.config;
-    this.dotnetClient = dotnetCli;
-    this.nugetResClient = nugetResClient;
+    throwUndefinedOrNull("client", client);
+    throwUndefinedOrNull("dotnetClient", dotnetClient);
+    throwUndefinedOrNull("nugetResClient", nugetResClient);
+    throwUndefinedOrNull("config", config);
+    throwUndefinedOrNull("logger", logger);
   }
-
-  config: DotNetConfig;
-
-  dotnetClient: DotNetCli;
-
-  nugetResClient: NuGetResourceClient;
 
   parseDependencies(packagePath: string, packageText: string): Array<PackageDependency> {
 
@@ -77,7 +69,7 @@ export class DotNetSuggestionProvider
     return packageDependencies;
   }
 
-  protected async preFetchSuggestions(
+  async preFetchSuggestions(
     projectPath: string,
     packagePath: string
   ): Promise<NuGetClientData> {

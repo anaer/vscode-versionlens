@@ -5,7 +5,13 @@ import { HttpOptions } from "domain/http";
 import { LoggingOptions } from "domain/logging";
 import { DependencyCache, PackageCache } from "domain/packages";
 import { FileSystemStorage } from "domain/storage";
-import { GetDependencyChanges, GetSuggestionProvider, importSuggestionProviders } from "domain/useCases";
+import {
+  FetchPackageSuggestions,
+  FetchProjectSuggestions,
+  GetDependencyChanges,
+  GetSuggestionProvider,
+  importSuggestionProviders
+} from "domain/useCases";
 import { nameOf } from "domain/utils";
 import { IDomainServices } from "./iDomainServices";
 
@@ -94,6 +100,30 @@ export function addGetDependencyChangesUseCase(services: IServiceCollection) {
       new GetDependencyChanges(
         container.storage,
         container.fileWatcherDependencyCache,
+        container.logger.child({ namespace: serviceName })
+      )
+  );
+}
+
+export function addFetchProjectSuggestionsUseCase(services: IServiceCollection) {
+  const serviceName = nameOf<IDomainServices>().fetchProjectSuggestions;
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices) =>
+      new FetchProjectSuggestions(
+        container.fetchPackageSuggestions,
+        container.logger.child({ namespace: serviceName })
+      )
+  );
+}
+
+export function addFetchPackageSuggestionsUseCase(services: IServiceCollection) {
+  const serviceName = nameOf<IDomainServices>().fetchPackageSuggestions;
+  services.addSingleton(
+    serviceName,
+    (container: IDomainServices) =>
+      new FetchPackageSuggestions(
+        container.packageCache,
         container.logger.child({ namespace: serviceName })
       )
   );

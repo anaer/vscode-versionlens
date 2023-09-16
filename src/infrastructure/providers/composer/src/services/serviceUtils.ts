@@ -80,7 +80,7 @@ export function addSuggestionProvider(services: IServiceCollection) {
     (container: IComposerService & IDomainServices) =>
       new ComposerSuggestionProvider(
         container.composerClient,
-        container.packageCache,
+        container.composerConfig,
         container.logger.child({ namespace: 'composerSuggestionProvider' })
       )
   );

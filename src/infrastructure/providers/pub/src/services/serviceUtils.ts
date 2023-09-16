@@ -80,7 +80,7 @@ export function addSuggestionProvider(services: IServiceCollection) {
     (container: IPubServices & IDomainServices) =>
       new PubSuggestionProvider(
         container.pubClient,
-        container.packageCache,
+        container.pubConfig,
         container.logger.child({ namespace: 'pubSuggestionProvider' })
       )
   );

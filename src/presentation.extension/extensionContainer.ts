@@ -1,5 +1,10 @@
 import { IServiceProvider } from 'domain/di';
-import { IDomainServices, addDomainServices } from 'domain/services';
+import {
+  IDomainServices,
+  addDomainServices,
+  addFetchPackageSuggestionsUseCase,
+  addFetchProjectSuggestionsUseCase
+} from 'domain/services';
 import { nameOf } from 'domain/utils';
 import { AwilixServiceCollectionFactory } from 'infrastructure/di';
 import { addInfrastructureServices } from 'infrastructure/services';
@@ -66,6 +71,10 @@ export async function configureContainer(context: ExtensionContext): Promise<ISe
   addVersionLensProviders(services);
 
   addEditorDependencyCache(services);
+
+  addFetchProjectSuggestionsUseCase(services);
+
+  addFetchPackageSuggestionsUseCase(services);
 
   addGetSuggestionsUseCase(services);
 

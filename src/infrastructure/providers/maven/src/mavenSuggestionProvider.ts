@@ -1,41 +1,35 @@
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { UrlHelpers } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
   createPackageResource,
-  PackageCache,
   PackageDependency,
   PackageDescriptorType,
   TPackageNameDescriptor,
   TPackageVersionDescriptor
 } from 'domain/packages';
-import {
-  ISuggestionProvider,
-  SuggestionProvider
-} from 'domain/suggestions';
+import { ISuggestionProvider } from 'domain/suggestions';
 import { MavenClient } from './clients/mavenClient';
 import { MvnCli } from './clients/mvnCli';
 import { MavenClientData } from './definitions/mavenClientData';
 import { MavenConfig } from './mavenConfig';
 import { createDependenciesFromXml } from './parser/mavenParser';
 
-export class MavenSuggestionProvider
-  extends SuggestionProvider<MavenClientData>
-  implements ISuggestionProvider {
+export class MavenSuggestionProvider implements ISuggestionProvider {
+
+  readonly name: string = 'maven';
 
   constructor(
-    mnvCli: MvnCli,
-    client: MavenClient,
-    packageCache: PackageCache,
-    logger: ILogger
+    readonly client: MavenClient,
+    readonly mvnCli: MvnCli,
+    readonly config: MavenConfig,
+    readonly logger: ILogger
   ) {
-    super(client, packageCache, logger);
-    this.config = client.config;
-    this.mvnCli = mnvCli;
+    throwUndefinedOrNull("client", client);
+    throwUndefinedOrNull("mvnCli", mvnCli);
+    throwUndefinedOrNull("config", config);
+    throwUndefinedOrNull("logger", logger);
   }
-
-  config: MavenConfig
-
-  mvnCli: MvnCli;
 
   parseDependencies(
     packagePath: string,
@@ -74,7 +68,7 @@ export class MavenSuggestionProvider
     return packageDependencies;
   }
 
-  protected async preFetchSuggestions(
+  async preFetchSuggestions(
     projectPath: string,
     packagePath: string
   ): Promise<MavenClientData> {

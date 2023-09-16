@@ -3,6 +3,8 @@ import { IServiceCollection } from "domain/di";
 import {
   addAppConfig,
   addCachingOptions,
+  addFetchPackageSuggestionsUseCase,
+  addFetchProjectSuggestionsUseCase,
   addFileSystemStorage,
   addFileWatcherDependencyCache,
   addGetDependencyChangesUseCase,
@@ -37,6 +39,10 @@ export function addDomainServices(
   addSuggestionPackageCache(services);
 
   addProcessesCache(services);
+
+  addFetchProjectSuggestionsUseCase(services);
+
+  addFetchPackageSuggestionsUseCase(services);
 
   addGetSuggestionProviderUseCase(services);
 

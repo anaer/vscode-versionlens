@@ -1,19 +1,24 @@
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ICachingOptions } from 'domain/caching';
 import { UrlHelpers } from 'domain/clients';
 import { IFrozenOptions } from 'domain/configuration';
 import { IHttpOptions } from 'domain/http';
 import { IProviderConfig, TProviderFileMatcher } from 'domain/providers';
-import { AbstractProviderConfig } from 'domain/providers/abstractProviderConfig';
+import { nameOf } from 'domain/utils';
 import { MavenContributions } from './definitions/eMavenContributions';
 
-export class MavenConfig extends AbstractProviderConfig implements IProviderConfig {
+const ctorParam = nameOf<MavenConfig>();
+
+export class MavenConfig implements IProviderConfig {
 
   constructor(
-    config: IFrozenOptions,
-    caching: ICachingOptions,
-    http: IHttpOptions
+    readonly config: IFrozenOptions,
+    readonly caching: ICachingOptions,
+    readonly http: IHttpOptions
   ) {
-    super('maven', config, caching, http);
+    throwUndefinedOrNull(ctorParam.config, config);
+    throwUndefinedOrNull(ctorParam.caching, caching);
+    throwUndefinedOrNull(ctorParam.http, http);
   }
 
   get fileMatcher(): TProviderFileMatcher {

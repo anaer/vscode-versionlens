@@ -107,9 +107,9 @@ export function addSuggestionProvider(services: IServiceCollection) {
     nameOf<IProviderServices>().suggestionProvider,
     (container: IMavenServices & IDomainServices) =>
       new MavenSuggestionProvider(
-        container.mvnCli,
         container.mavenClient,
-        container.packageCache,
+        container.mvnCli,
+        container.mavenConfig,
         container.logger.child({ namespace: 'mavenSuggestionProvider' })
       )
   );

@@ -14,7 +14,7 @@ export class OnSaveChanges {
     if (provider.config.onSaveChangesTask === null) {
       this.logger.info(
         'Skipping "%s.onSaveChanges" because a custom task was not provided.',
-        provider.config.providerName
+        provider.name
       );
       return;
     }
@@ -29,7 +29,7 @@ export class OnSaveChanges {
     if (filteredTasks.length == 0) {
       this.logger.error(
         'Could not find the %s.onSaveChanges["%s"] task.',
-        provider.config.providerName,
+        provider.name,
         provider.config.onSaveChangesTask
       );
       return;
@@ -37,7 +37,7 @@ export class OnSaveChanges {
 
     this.logger.info(
       'Executing %s.onSaveChanges["%s"] task.',
-      provider.config.providerName,
+      provider.name,
       provider.config.onSaveChangesTask
     );
 
@@ -46,7 +46,7 @@ export class OnSaveChanges {
 
     this.logger.info(
       '%s.onSaveChanges["%s"] task exited with %s.',
-      provider.config.providerName,
+      provider.name,
       provider.config.onSaveChangesTask,
       exitCode
     );

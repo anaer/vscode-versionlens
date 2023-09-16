@@ -4,8 +4,6 @@ import { TProviderFileMatcher } from './tProviderFileMatcher';
 
 export interface IProviderConfig {
 
-  providerName: string;
-
   fileMatcher: TProviderFileMatcher;
 
   caching: ICachingOptions;

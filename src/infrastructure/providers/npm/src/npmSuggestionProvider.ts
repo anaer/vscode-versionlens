@@ -1,6 +1,6 @@
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import {
-  PackageCache,
   PackageDependency,
   PackageDescriptorType,
   TJsonPackageParserOptions,
@@ -13,14 +13,12 @@ import {
 } from 'domain/packages';
 import {
   ISuggestionProvider,
-  SuggestionProvider,
   TSuggestionReplaceFunction
 } from 'domain/suggestions';
 import { KeyDictionary } from 'domain/utils';
 import { homedir } from 'node:os';
 import { resolve } from 'node:path';
 import { NpmPackageClient } from './clients/npmPackageClient';
-import { TNpmClientData } from './definitions/tNpmClientData';
 import { NpmConfig } from './npmConfig';
 import { createPacoteOptions, npmReplaceVersion, resolveDotFilePath } from './npmUtils';
 
@@ -28,17 +26,21 @@ const complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler> = {
   [PackageDescriptorType.version]: createVersionDescFromJsonNode
 };
 
-export class NpmSuggestionProvider
-  extends SuggestionProvider<TNpmClientData>
-  implements ISuggestionProvider {
+export class NpmSuggestionProvider implements ISuggestionProvider {
 
-  constructor(client: NpmPackageClient, packageCache: PackageCache, logger: ILogger) {
-    super(client, packageCache, logger);
-    this.config = client.config;
+  readonly name: string = 'npm';
+
+  constructor(
+    readonly client: NpmPackageClient,
+    readonly config: NpmConfig,
+    readonly logger: ILogger
+  ) { 
+    throwUndefinedOrNull("client", client);
+    throwUndefinedOrNull("config", config);
+    throwUndefinedOrNull("logger", logger);
+
     this.suggestionReplaceFn = npmReplaceVersion;
   }
-
-  config: NpmConfig;
 
   suggestionReplaceFn: TSuggestionReplaceFunction;
 

@@ -133,10 +133,10 @@ export function addSuggestionProvider(services: IServiceCollection) {
     nameOf<IProviderServices>().suggestionProvider,
     (container: IDotNetServices & IDomainServices) =>
       new DotNetSuggestionProvider(
-        container.dotnetCli,
         container.nugetClient,
+        container.dotnetCli,
         container.nugetResClient,
-        container.packageCache,
+        container.dotnetConfig,
         container.logger.child({ namespace: 'dotnetSuggestionProvider' })
       )
   );

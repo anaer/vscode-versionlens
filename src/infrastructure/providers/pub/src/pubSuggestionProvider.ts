@@ -1,6 +1,6 @@
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import {
-  PackageCache,
   PackageDependency,
   PackageDescriptorType,
   TPackageGitDescriptor,
@@ -15,7 +15,7 @@ import {
   createVersionDescFromYamlNode,
   extractPackageDependenciesFromYaml
 } from 'domain/packages';
-import { ISuggestionProvider, SuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
+import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import { PubClient } from './pubClient';
 import { PubConfig } from './pubConfig';
 import { pubReplaceVersion } from './pubUtils';
@@ -27,16 +27,19 @@ const complexTypeHandlers = {
   [PackageDescriptorType.git]: createGitDescFromYamlNode
 }
 
-export class PubSuggestionProvider
-  extends SuggestionProvider<null>
-  implements ISuggestionProvider {
+export class PubSuggestionProvider implements ISuggestionProvider {
 
-  constructor(client: PubClient, packageCache: PackageCache, logger: ILogger) {
-    super(client, packageCache, logger);
-    this.config = client.config;
+  readonly name: string = 'pub';
+
+  constructor(
+    readonly client: PubClient,
+    readonly config: PubConfig,
+    readonly logger: ILogger
+  ) {
+    throwUndefinedOrNull("client", client);
+    throwUndefinedOrNull("config", config);
+    throwUndefinedOrNull("logger", logger);
   }
-
-  config: PubConfig;
 
   suggestionReplaceFn?: TSuggestionReplaceFunction = pubReplaceVersion;
 

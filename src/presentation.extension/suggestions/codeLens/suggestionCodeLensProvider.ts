@@ -36,7 +36,7 @@ export class SuggestionCodeLensProvider implements CodeLensProvider, IDisposable
     throwUndefinedOrNull("getSuggestions", getSuggestions);
     throwUndefinedOrNull("logger", logger);
 
-    this.providerName = suggestionProvider.config.providerName;
+    this.providerName = suggestionProvider.name;
 
     // register changed event before registering the codelens
     this.notifyCodeLensesChanged = new EventEmitter();

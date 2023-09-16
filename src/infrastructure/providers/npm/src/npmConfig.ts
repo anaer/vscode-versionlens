@@ -1,24 +1,27 @@
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ICachingOptions } from 'domain/caching';
 import { IFrozenOptions } from 'domain/configuration';
 import { IHttpOptions } from 'domain/http';
 import { IProviderConfig, TProviderFileMatcher } from 'domain/providers';
-import { AbstractProviderConfig } from 'domain/providers/abstractProviderConfig';
+import { nameOf } from 'domain/utils';
 import { NpmContributions } from './definitions/eNpmContributions';
 import { GitHubOptions } from './options/githubOptions';
 
-export class NpmConfig extends AbstractProviderConfig implements IProviderConfig {
+const ctorParam = nameOf<NpmConfig>();
+
+export class NpmConfig implements IProviderConfig {
 
   constructor(
-    config: IFrozenOptions,
-    caching: ICachingOptions,
-    http: IHttpOptions,
-    github: GitHubOptions,
+    readonly config: IFrozenOptions,
+    readonly caching: ICachingOptions,
+    readonly http: IHttpOptions,
+    readonly github: GitHubOptions,
   ) {
-    super('npm', config, caching, http);
-    this.github = github;
+    throwUndefinedOrNull(ctorParam.config, config);
+    throwUndefinedOrNull(ctorParam.caching, caching);
+    throwUndefinedOrNull(ctorParam.http, http);
+    throwUndefinedOrNull(ctorParam.github, github);
   }
-
-  github: GitHubOptions;
 
   get fileMatcher(): TProviderFileMatcher {
     return {

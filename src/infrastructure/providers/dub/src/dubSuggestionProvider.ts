@@ -1,6 +1,6 @@
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import {
-  PackageCache,
   PackageDependency,
   PackageDescriptorType,
   TJsonPackageParserOptions,
@@ -13,10 +13,7 @@ import {
   createVersionDescFromJsonNode,
   extractPackageDependenciesFromJson
 } from 'domain/packages';
-import {
-  ISuggestionProvider,
-  SuggestionProvider
-} from 'domain/suggestions';
+import { ISuggestionProvider } from 'domain/suggestions';
 import { KeyDictionary } from 'domain/utils';
 import { DubClient } from './dubClient';
 import { DubConfig } from './dubConfig';
@@ -27,16 +24,19 @@ const complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler> = {
   "repository": createRepoDescFromJsonNode
 };
 
-export class DubSuggestionProvider
-  extends SuggestionProvider<null>
-  implements ISuggestionProvider {
+export class DubSuggestionProvider implements ISuggestionProvider {
 
-  constructor(client: DubClient, packageCache: PackageCache, logger: ILogger) {
-    super(client, packageCache, logger);
-    this.config = client.config;
+  readonly name: string = 'dub';
+
+  constructor(
+    readonly client: DubClient,
+    readonly config: DubConfig,
+    readonly logger: ILogger
+  ) {
+    throwUndefinedOrNull("client", client);
+    throwUndefinedOrNull("config", config);
+    throwUndefinedOrNull("logger", logger);
   }
-
-  config: DubConfig;
 
   parseDependencies(packagePath: string, packageText: string): Array<PackageDependency> {
 

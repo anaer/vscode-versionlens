@@ -1,6 +1,6 @@
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import {
-  PackageCache,
   PackageDependency,
   PackageDescriptorType,
   TJsonPackageParserOptions,
@@ -11,7 +11,7 @@ import {
   createVersionDescFromJsonNode,
   extractPackageDependenciesFromJson
 } from 'domain/packages';
-import { ISuggestionProvider, SuggestionProvider } from 'domain/suggestions';
+import { ISuggestionProvider } from 'domain/suggestions';
 import { KeyDictionary } from 'domain/utils';
 import { ComposerClient } from './composerClient';
 import { ComposerConfig } from './composerConfig';
@@ -20,16 +20,19 @@ const complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler> = {
   [PackageDescriptorType.version]: createVersionDescFromJsonNode
 };
 
-export class ComposerSuggestionProvider
-  extends SuggestionProvider<null>
-  implements ISuggestionProvider {
+export class ComposerSuggestionProvider implements ISuggestionProvider {
 
-  constructor(client: ComposerClient, packageCache: PackageCache, logger: ILogger) {
-    super(client, packageCache, logger);
-    this.config = client.config;
+  readonly name: string = 'composer';
+
+  constructor(
+    readonly client: ComposerClient,
+    readonly config: ComposerConfig,
+    readonly logger: ILogger
+  ) {
+    throwUndefinedOrNull("client", client);
+    throwUndefinedOrNull("config", config);
+    throwUndefinedOrNull("logger", logger);
   }
-
-  config: ComposerConfig;
 
   parseDependencies(packagePath: string, packageText: string): Array<PackageDependency> {
 

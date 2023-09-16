@@ -1,21 +1,28 @@
+import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ICachingOptions } from 'domain/caching';
 import { IFrozenOptions } from 'domain/configuration';
 import { IHttpOptions } from 'domain/http';
 import { IProviderConfig, TProviderFileMatcher } from 'domain/providers';
-import { AbstractProviderConfig } from 'domain/providers/abstractProviderConfig';
+import { nameOf } from 'domain/utils';
 import { DotNetContributions } from './definitions/eDotNetContributions';
 import { INugetOptions } from "./definitions/iNugetOptions";
 
-export class DotNetConfig extends AbstractProviderConfig implements IProviderConfig {
+const ctorParam = nameOf<DotNetConfig>();
+
+export class DotNetConfig implements IProviderConfig {
 
   constructor(
-    config: IFrozenOptions,
-    caching: ICachingOptions,
-    http: IHttpOptions,
-    nugetOpts: INugetOptions,
+    readonly config: IFrozenOptions,
+    readonly caching: ICachingOptions,
+    readonly http: IHttpOptions,
+    nugetOptions: INugetOptions,
   ) {
-    super('dotnet', config, caching, http);
-    this.nuget = nugetOpts;
+    throwUndefinedOrNull(ctorParam.config, config);
+    throwUndefinedOrNull(ctorParam.caching, caching);
+    throwUndefinedOrNull(ctorParam.http, http);
+    throwUndefinedOrNull(ctorParam.nuget, nugetOptions);
+
+    this.nuget = nugetOptions;
   }
 
   nuget: INugetOptions;

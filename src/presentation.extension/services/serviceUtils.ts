@@ -117,6 +117,7 @@ export function addGetSuggestionsUseCase(services: IServiceCollection) {
     serviceName,
     (container: IDomainServices & IExtensionServices) =>
       new GetSuggestions(
+        container.fetchProjectSuggestions,
         [
           container.editorDependencyCache,
           container.fileWatcherDependencyCache
