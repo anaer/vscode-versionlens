@@ -220,12 +220,12 @@
         "versionlens.suggestions.indicators": {
           "type": "object",
           "default": {
-            "Directory": "🖿 ",
+            "Directory": "📁 ",
             "Error": "🔴",
             "Latest": "🟢",
             "NoMatch": "⚪",
             "Match": "🟡",
-            "Updateable": "🠉"
+            "Updateable": "↑ "
           },
           "properties": {
             "name": {
