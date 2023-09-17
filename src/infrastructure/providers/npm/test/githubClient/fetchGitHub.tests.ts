@@ -86,7 +86,7 @@ export const fetchGithubTests = {
               type: SuggestionTypes.status
             },
             <TPackageSuggestion>{
-              name: SuggestionStatusText.UpdateRange,
+              name: SuggestionStatusText.Latest,
               category: SuggestionCategory.Updateable,
               version: 'v2.5.0',
               type: SuggestionTypes.release

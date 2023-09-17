@@ -86,7 +86,7 @@ export default {
     <TPackageSuggestion>{
       type: SuggestionTypes.release,
       category: SuggestionCategory.Updateable,
-      name: SuggestionStatusText.UpdateRange,
+      name: SuggestionStatusText.Latest,
       version: '3.0.0'
     },
     <TPackageSuggestion>{

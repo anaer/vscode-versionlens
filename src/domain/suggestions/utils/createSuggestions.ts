@@ -73,7 +73,7 @@ export function createSuggestions(
       // satisfies latest
       createSatisifiesLatestStatus(latestVersion),
       // suggest latestVersion
-      createRangeUpdateable(latestVersion),
+      createLatestUpdateable(latestVersion),
     );
   else if (isLatest && isRangeVersion)
     suggestions.push(
