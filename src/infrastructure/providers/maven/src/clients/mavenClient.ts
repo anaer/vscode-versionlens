@@ -9,12 +9,13 @@ import {
   ClientResponseFactory,
   IPackageClient,
   PackageSourceType,
+  SuggestionFactory,
   TPackageClientRequest,
   TPackageClientResponse,
   TSemverSpec,
-  VersionUtils
+  VersionUtils,
+  createSuggestions
 } from 'domain/packages';
-import { SuggestionFactory, createSuggestions } from 'domain/suggestions';
 import { MavenClientData } from '../definitions/mavenClientData';
 import { MavenConfig } from '../mavenConfig';
 import { getVersionsFromPackageXml } from '../parser/mavenXmlUtils';

@@ -2,7 +2,7 @@ import {
   SuggestionCategory,
   SuggestionStatusText,
   SuggestionTypes
-} from 'domain/suggestions';
+} from 'domain/packages';
 import { KeyDictionary } from 'domain/utils';
 import * as os from 'node:os';
 import {

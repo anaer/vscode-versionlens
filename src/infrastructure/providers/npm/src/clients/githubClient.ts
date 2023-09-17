@@ -5,10 +5,11 @@ import {
   ClientResponseFactory,
   PackageSourceType,
   PackageVersionType,
+  SuggestionFactory,
   TPackageClientResponse,
-  VersionUtils
+  VersionUtils,
+  createSuggestions
 } from 'domain/packages';
-import { SuggestionFactory, createSuggestions } from 'domain/suggestions';
 import semver from 'semver';
 import { NpaSpec } from '../models/npaSpec';
 import { NpmConfig } from '../npmConfig';

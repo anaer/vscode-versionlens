@@ -1,9 +1,14 @@
-import { throwUndefinedOrNull } from "@esm-test/guards";
-import { ILogger } from "domain/logging";
-import { DependencyCache, PackageResponse } from "domain/packages";
-import { ISuggestionProvider, SuggestionStatusText, SuggestionTypes } from "domain/suggestions";
+import { throwUndefinedOrNull } from '@esm-test/guards';
+import { ILogger } from 'domain/logging';
+import {
+  DependencyCache,
+  PackageResponse,
+  SuggestionStatusText,
+  SuggestionTypes
+} from 'domain/packages';
+import { ISuggestionProvider } from 'domain/providers';
 import { dirname } from 'node:path';
-import { FetchProjectSuggestions } from "./fetchProjectSuggestions";
+import { FetchProjectSuggestions } from './fetchProjectSuggestions';
 
 export class GetSuggestions {
 

@@ -5,7 +5,7 @@ import {
   SuggestionTypes,
   TPackageSuggestion,
   createSuggestions
-} from 'domain/suggestions';
+} from 'domain/packages';
 import { test } from 'mocha-ui-esm';
 import Fixtures from './createSuggestions.fixtures';
 

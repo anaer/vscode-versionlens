@@ -1,6 +1,6 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
-import { ISuggestionProvider } from 'domain/suggestions';
+import { ISuggestionProvider } from 'domain/providers';
 import { GetSuggestionProvider } from 'domain/useCases';
 import { AsyncEmitter, IDisposable } from 'domain/utils';
 import { VersionLensState } from 'presentation.extension';

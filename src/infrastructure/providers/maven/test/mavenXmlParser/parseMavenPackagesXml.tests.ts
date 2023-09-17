@@ -1,7 +1,7 @@
 import assert from 'assert';
-import { createDependenciesFromXml, extractReposUrlsFromXml, getVersionsFromPackageXml } from 'infrastructure/providers/maven';
+import { extractReposUrlsFromXml, getVersionsFromPackageXml, parseMavenPackagesXml } from 'infrastructure/providers/maven';
 import { test } from 'mocha-ui-esm';
-import Fixtures from './createDependenciesFromXml.fixtures';
+import Fixtures from './parseMavenPackagesXml.fixtures';
 
 type TestContext = {
   test: {
@@ -9,23 +9,23 @@ type TestContext = {
   }
 }
 
-export const createDependenciesFromXmlTests = {
+export const parseMavenPackagesXmlTests = {
 
-  [test.title]: createDependenciesFromXml.name,
+  [test.title]: parseMavenPackagesXml.name,
 
   'returns empty when no matches found with "$1"': [
     [[], ''],
-    [["non-dependencies"], Fixtures.createDependenciesFromXml.test],
+    [["non-dependencies"], Fixtures.parseMavenPackagesXml.test],
     function (this: TestContext, testIncludeNames: Array<string>, expected: string) {
       // test
-      const actual = createDependenciesFromXml(expected, testIncludeNames);
+      const actual = parseMavenPackagesXml(expected, testIncludeNames);
 
       // assert
       assert.equal(actual.length, 0);
     }
   ],
 
-  "extracts dependency entries from maven xml": () => {
+  "extracts packages from maven xml": () => {
     // setup
     const includeNames = [
       "project.parent",
@@ -33,13 +33,13 @@ export const createDependenciesFromXmlTests = {
     ];
 
     // test
-    const actual = createDependenciesFromXml(
-      Fixtures.createDependenciesFromXml.test,
+    const actual = parseMavenPackagesXml(
+      Fixtures.parseMavenPackagesXml.test,
       includeNames
     );
 
     // assert
-    assert.deepEqual(actual, Fixtures.createDependenciesFromXml.expected);
+    assert.deepEqual(actual, Fixtures.parseMavenPackagesXml.expected);
   },
 
   "extracts repositories from mvn cli xml": () => {

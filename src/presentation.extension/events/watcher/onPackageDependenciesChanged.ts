@@ -1,8 +1,8 @@
-import { throwUndefinedOrNull } from "@esm-test/guards";
-import { ILogger } from "domain/logging";
-import { PackageDependency } from "domain/packages";
-import { ISuggestionProvider } from "domain/suggestions";
-import { VersionLensState } from "presentation.extension";
+import { throwUndefinedOrNull } from '@esm-test/guards';
+import { ILogger } from 'domain/logging';
+import { PackageDependency } from 'domain/packages';
+import { ISuggestionProvider } from 'domain/providers';
+import { VersionLensState } from 'presentation.extension';
 
 export class OnPackageDependenciesChanged {
 

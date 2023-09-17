@@ -1,15 +1,15 @@
 import { PackageDescriptor } from 'domain/packages';
 import { KeyDictionary, Undefinable } from 'domain/utils';
 import * as JsonC from 'jsonc-parser';
-import { TJsonPackageParserOptions } from '../definitions/tJsonPackageParserOptions';
-import { TJsonPackageTypeHandler } from '../definitions/tJsonPackageTypeHandler';
 import {
   createNameDescFromJsonNode,
   createParentDesc,
   createVersionDescFromJsonNode
 } from './jsonPackageTypeFactory';
+import { TJsonPackageParserOptions } from './tJsonPackageParserOptions';
+import { TJsonPackageTypeHandler } from './tJsonPackageTypeHandler';
 
-export function extractPackageDependenciesFromJson(
+export function parsePackagesJson(
   json: string,
   options: TJsonPackageParserOptions
 ): Array<PackageDescriptor> {
@@ -22,10 +22,10 @@ export function extractPackageDependenciesFromJson(
   const hasChildren = rootNode.children && rootNode.children.length > 0;
   if (hasChildren === false) return [];
 
-  return extractDependenciesFromNodes(rootNode, options);
+  return parsePackageNodes(rootNode, options);
 }
 
-function extractDependenciesFromNodes(
+function parsePackageNodes(
   rootNode: JsonC.Node,
   options: TJsonPackageParserOptions
 ): Array<PackageDescriptor> {

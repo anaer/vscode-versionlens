@@ -1,7 +1,7 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
-import { PackageResponse } from 'domain/packages';
-import { ISuggestionProvider, defaultReplaceFn } from 'domain/suggestions';
+import { PackageResponse, defaultReplaceFn } from 'domain/packages';
+import { ISuggestionProvider } from 'domain/providers';
 import { GetSuggestions } from 'domain/useCases';
 import { IDisposable } from 'domain/utils';
 import { dirname } from 'node:path';

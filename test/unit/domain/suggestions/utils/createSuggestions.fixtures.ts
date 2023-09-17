@@ -3,7 +3,7 @@ import {
   SuggestionStatusText,
   SuggestionTypes,
   TPackageSuggestion
-} from "domain/suggestions";
+} from 'domain/packages';
 
 export default {
   fixedNoMatchWithLatestSuggestions: [

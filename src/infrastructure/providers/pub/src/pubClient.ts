@@ -1,24 +1,21 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
-import {
-  HttpClientRequestMethods,
-  HttpClientResponse,
-  IJsonHttpClient
-} from 'domain/clients';
+import { HttpClientRequestMethods, HttpClientResponse, IJsonHttpClient } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
   ClientResponseFactory,
   IPackageClient,
   PackageDescriptorType,
   PackageSourceType,
+  SuggestionFactory,
   TPackageClientRequest,
   TPackageClientResponse,
   TPackageGitDescriptor,
   TPackageHostedDescriptor,
   TPackagePathDescriptor,
   TSemverSpec,
-  VersionUtils
+  VersionUtils,
+  createSuggestions
 } from 'domain/packages';
-import { SuggestionFactory, createSuggestions } from 'domain/suggestions';
 import semver from 'semver';
 import { PubConfig } from './pubConfig';
 

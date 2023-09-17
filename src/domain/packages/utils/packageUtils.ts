@@ -1,9 +1,9 @@
-import { PackageDependency } from "domain/packages";
 import {
+  PackageDependency,
   TPackageNameVersion,
   TPackageResource,
   TPackageTextRange
-} from "../index";
+} from "domain/packages";
 
 export function createDependencyRange(
   start: number,

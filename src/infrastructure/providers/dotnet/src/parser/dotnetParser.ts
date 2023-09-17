@@ -6,7 +6,7 @@ import {
   createVersionDescFromXmlAttr
 } from "./dotnetParserTypeFactory";
 
-export function createDependenciesFromXml(
+export function parseDotNetPackagesXml(
   xml: string,
   includePropertyNames: Array<string>
 ): Array<PackageDescriptor> {
@@ -16,10 +16,10 @@ export function createDependenciesFromXml(
   document.parse(xml)
   if (document.errors.length > 0) return [];
 
-  return extractDependenciesFromNodes(document, includePropertyNames);
+  return parsePackageNodes(document, includePropertyNames);
 }
 
-export function extractDependenciesFromNodes(
+export function parsePackageNodes(
   doc: XmlDoc,
   includePropNames: string[]
 ): Array<PackageDescriptor> {

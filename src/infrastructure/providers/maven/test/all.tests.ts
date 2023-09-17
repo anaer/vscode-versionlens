@@ -1,1 +1,1 @@
-export * as MavenParser from './mavenXmlParser/createDependenciesFromXml.tests';
+export * as MavenParser from './mavenXmlParser/parseMavenPackagesXml.tests';

@@ -1,16 +1,15 @@
 import { ClientResponseSource } from 'domain/clients';
 import {
+  PackageSourceType,
+  PackageVersionType,
   SuggestionFactory,
+  TPackageClientResponse,
+  TPackageClientResponseStatus,
+  TPackageResource,
   TPackageSuggestion
-} from 'domain/suggestions';
-import { createDirectoryNotFoundStatus, createDirectoryStatus } from 'domain/suggestions/suggestionFactory';
+} from 'domain/packages';
 import { existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { PackageVersionType } from "../definitions/ePackageVersionType";
-import { TPackageResource } from '../definitions/tPackageResource';
-import { PackageSourceType } from "./ePackageSource";
-import { TPackageClientResponse } from "./tPackageClientResponse";
-import { TPackageClientResponseStatus } from "./tPackageClientResponseStatus";
 
 export function create(
   source: PackageSourceType,
@@ -100,8 +99,8 @@ export function createDirectory(
 
   const suggestions: Array<TPackageSuggestion> = [
     exists
-      ? createDirectoryStatus(path)
-      : createDirectoryNotFoundStatus(path)
+      ? SuggestionFactory.createDirectoryStatus(path)
+      : SuggestionFactory.createDirectoryNotFoundStatus(path)
   ];
 
   const responseStatus = createResponseStatus(

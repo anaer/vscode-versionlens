@@ -1,7 +1,6 @@
-import { ILogger } from "domain/logging";
-import { IPackageClient, PackageDependency } from "domain/packages";
-import { IProviderConfig } from "domain/providers";
-import { TSuggestionReplaceFunction } from "./tSuggestionReplaceFunction";
+import { ILogger } from 'domain/logging';
+import { IPackageClient, PackageDependency, TSuggestionReplaceFunction } from 'domain/packages';
+import { IProviderConfig } from 'domain/providers';
 
 export interface ISuggestionProvider {
 

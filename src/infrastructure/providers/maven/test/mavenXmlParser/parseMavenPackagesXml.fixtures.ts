@@ -1,6 +1,6 @@
 export default {
 
-  createDependenciesFromXml: {
+  parseMavenPackagesXml: {
 
     test: `
       <project>

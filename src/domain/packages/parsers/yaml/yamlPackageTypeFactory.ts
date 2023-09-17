@@ -1,14 +1,14 @@
-import { Undefinable } from 'domain/utils';
 import {
+  PackageDescriptorType,
   TPackageGitDescriptor,
   TPackageHostedDescriptor,
   TPackageNameDescriptor,
   TPackagePathDescriptor,
   TPackageVersionDescriptor
 } from "domain/packages";
+import { Undefinable } from 'domain/utils';
 import { YAMLMap } from 'yaml';
 import { findPair } from 'yaml/util';
-import { PackageDescriptorType } from "../definitions/ePackageDescriptorType";
 
 export function createNameDescFromYamlNode(keyNode: any): TPackageNameDescriptor {
   const name = keyNode.value;

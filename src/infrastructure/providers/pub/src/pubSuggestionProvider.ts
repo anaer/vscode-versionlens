@@ -1,21 +1,21 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import {
-  PackageDependency,
-  PackageDescriptorType,
+  PackageDependency, PackageDescriptorType,
   TPackageGitDescriptor,
   TPackageNameDescriptor,
   TPackagePathDescriptor,
   TPackageVersionDescriptor,
+  TSuggestionReplaceFunction,
   TYamlPackageParserOptions,
   createGitDescFromYamlNode,
   createHostedDescFromYamlNode,
   createPackageResource,
   createPathDescFromYamlNode,
   createVersionDescFromYamlNode,
-  extractPackageDependenciesFromYaml
+  parsePackagesYaml
 } from 'domain/packages';
-import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
+import { ISuggestionProvider } from 'domain/providers';
 import { PubClient } from './pubClient';
 import { PubConfig } from './pubConfig';
 import { pubReplaceVersion } from './pubUtils';
@@ -53,14 +53,11 @@ export class PubSuggestionProvider implements ISuggestionProvider {
       complexTypeHandlers
     };
 
-    const packageDescriptors = extractPackageDependenciesFromYaml(
-      packageText,
-      options
-    );
+    const parsedPackages = parsePackagesYaml(packageText, options);
 
     const packageDependencies = [];
 
-    for (const packageDesc of packageDescriptors) {
+    for (const packageDesc of parsedPackages) {
       const nameDesc = packageDesc.getType<TPackageNameDescriptor>(
         PackageDescriptorType.name
       );

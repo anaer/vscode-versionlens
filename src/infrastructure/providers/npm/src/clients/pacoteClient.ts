@@ -7,9 +7,9 @@ import {
   PackageVersionType,
   TPackageClientRequest,
   TPackageClientResponse,
-  VersionUtils
+  VersionUtils,
+  createSuggestions
 } from 'domain/packages';
-import { createSuggestions } from 'domain/suggestions';
 import { KeyDictionary } from 'domain/utils';
 import semver from 'semver';
 import { TPactoteClientResponse } from '../definitions/TPactoteClientResponse';

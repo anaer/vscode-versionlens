@@ -1,12 +1,12 @@
 import {
+  PackageDescriptorType,
   TPackageGitDescriptor,
   TPackageNameDescriptor,
   TPackageParentDescriptor,
   TPackagePathDescriptor,
   TPackageVersionDescriptor
-} from "domain/packages";
+} from 'domain/packages';
 import * as JsonC from 'jsonc-parser';
-import { PackageDescriptorType } from "../definitions/ePackageDescriptorType";
 
 export function createNameDescFromJsonNode(keyNode: JsonC.Node): TPackageNameDescriptor {
   const name = keyNode.value;

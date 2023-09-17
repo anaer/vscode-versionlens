@@ -3,9 +3,9 @@ import { ClientResponseSource, HttpClientResponse } from 'domain/clients';
 import {
   PackageSourceType,
   PackageVersionType,
+  TSuggestionUpdate,
   VersionUtils
 } from 'domain/packages';
-import { TSuggestionUpdate } from 'domain/suggestions';
 import { KeyStringDictionary, fileExists, readFile } from 'domain/utils';
 import dotenv from 'dotenv';
 import { resolve } from 'node:path';

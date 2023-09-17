@@ -3,16 +3,14 @@ import { CachingOptions, ICachingOptions } from 'domain/caching';
 import { ILogger } from 'domain/logging';
 import {
   PackageDependency,
-  TPackageClientRequest,
-  createDependencyRange,
-  createPackageResource
-} from 'domain/packages';
-import {
   SuggestionCategory,
   SuggestionStatusText,
   SuggestionTypes,
-  TPackageSuggestion
-} from 'domain/suggestions';
+  TPackageClientRequest,
+  TPackageSuggestion,
+  createDependencyRange,
+  createPackageResource
+} from 'domain/packages';
 import {
   GitHubOptions,
   IPacote,

@@ -1,5 +1,4 @@
-import { PackageResponse } from "domain/packages";
-import { TSuggestionUpdate } from "domain/suggestions";
+import { PackageResponse, TSuggestionUpdate } from 'domain/packages';
 
 export function mapToSuggestionUpdate(packageResponse: PackageResponse): TSuggestionUpdate {
   return {

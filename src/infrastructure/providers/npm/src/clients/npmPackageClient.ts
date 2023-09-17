@@ -5,10 +5,11 @@ import {
   ClientResponseFactory,
   IPackageClient,
   PackageSourceType,
+  SuggestionFactory,
   TPackageClientRequest,
-  TPackageClientResponse
+  TPackageClientResponse,
+  TPackageSuggestion
 } from 'domain/packages';
-import { SuggestionFactory, TPackageSuggestion } from 'domain/suggestions';
 import npa from 'npm-package-arg';
 import { NpaSpec, NpaTypes } from '../models/npaSpec';
 import { NpmConfig } from '../npmConfig';

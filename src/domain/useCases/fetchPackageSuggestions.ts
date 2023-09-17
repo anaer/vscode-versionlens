@@ -1,5 +1,5 @@
-import { throwUndefinedOrNull } from "@esm-test/guards";
-import { ILogger } from "domain/logging";
+import { throwUndefinedOrNull } from '@esm-test/guards';
+import { ILogger } from 'domain/logging';
 import {
   IPackageClient,
   PackageCache,
@@ -7,8 +7,8 @@ import {
   ResponseFactory,
   TPackageClientRequest,
   TPackageClientResponse
-} from "domain/packages";
-import { ISuggestionProvider } from "domain/suggestions";
+} from 'domain/packages';
+import { ISuggestionProvider } from 'domain/providers';
 
 export class FetchPackageSuggestions {
 

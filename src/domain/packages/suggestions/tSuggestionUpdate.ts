@@ -1,5 +1,9 @@
-import { PackageSourceType, PackageVersionType, TPackageTextRange } from "domain/packages";
-import { SuggestionTypes } from "domain/suggestions";
+import {
+  PackageSourceType,
+  PackageVersionType,
+  SuggestionTypes,
+  TPackageTextRange
+} from "domain/packages";
 
 export type TSuggestionUpdate = {
   packageSource: PackageSourceType,

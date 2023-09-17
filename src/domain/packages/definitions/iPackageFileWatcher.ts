@@ -1,5 +1,5 @@
 import { PackageDependency } from "domain/packages";
-import { ISuggestionProvider } from "domain/suggestions";
+import { ISuggestionProvider } from "domain/providers";
 
 export type OnPackageDependenciesChangedEvent = (
   provider: ISuggestionProvider,

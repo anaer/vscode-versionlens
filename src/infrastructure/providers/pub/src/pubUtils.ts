@@ -1,4 +1,4 @@
-import { TSuggestionUpdate, defaultReplaceFn } from 'domain/suggestions';
+import { TSuggestionUpdate, defaultReplaceFn } from 'domain/packages';
 
 export function pubReplaceVersion(suggestionUpdate: TSuggestionUpdate, newVersion: string): string {
 

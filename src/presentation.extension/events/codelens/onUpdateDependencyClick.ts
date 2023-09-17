@@ -1,6 +1,6 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
-import { SuggestionTypes, mapToSuggestionUpdate } from 'domain/suggestions';
+import { SuggestionTypes, mapToSuggestionUpdate } from 'domain/packages';
 import { SuggestionCodeLens, SuggestionCommandContributions } from 'presentation.extension';
 import { Disposable, WorkspaceEdit, commands, workspace } from 'vscode';
 

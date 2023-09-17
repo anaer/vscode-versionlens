@@ -9,12 +9,13 @@ import {
   ClientResponseFactory,
   IPackageClient,
   PackageSourceType,
+  SuggestionFactory,
   TPackageClientRequest,
   TPackageClientResponse,
   TSemverSpec,
-  VersionUtils
+  VersionUtils,
+  createSuggestions
 } from 'domain/packages';
-import { SuggestionFactory, createSuggestions } from 'domain/suggestions';
 import { ComposerConfig } from './composerConfig';
 import { IPackagistApiItem } from './definitions/iPackagistApiItem';
 

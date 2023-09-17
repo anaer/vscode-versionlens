@@ -1,7 +1,7 @@
 import { PackageDescriptor, XmlDoc, XmlNode } from "domain/packages";
 import { createNameDescFromXmlNodes, createVersionDescFromXmlNodes } from "./mavenParserTypeFactory";
 
-export function createDependenciesFromXml(
+export function parseMavenPackagesXml(
   xml: string,
   includePropertyNames: Array<string>
 ): Array<PackageDescriptor> {

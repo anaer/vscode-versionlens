@@ -1,9 +1,4 @@
-import {
-  PackageResponse,
-  PackageResponseError,
-  PackageSourceType
-} from 'domain/packages';
-import { TSuggestionReplaceFunction } from 'domain/suggestions';
+import { PackageResponse, TSuggestionReplaceFunction } from 'domain/packages';
 import { CodeLens, Range, Uri } from 'vscode';
 
 export class SuggestionCodeLens extends CodeLens {
@@ -31,14 +26,6 @@ export class SuggestionCodeLens extends CodeLens {
     this.documentUrl = documentUrl;
     this.command = undefined;
     this.replaceVersionFn = replaceVersionFn;
-  }
-
-  hasPackageSource(source: PackageSourceType): boolean {
-    return this.package.packageSource === source;
-  }
-
-  hasPackageError(error: PackageResponseError): boolean {
-    return this.package.error == error;
   }
 
   setCommand(title: string, command: string, args?: Array<any>) {

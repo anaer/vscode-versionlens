@@ -1,7 +1,7 @@
-import { throwUndefinedOrNull } from "@esm-test/guards";
-import { ILogger } from "domain/logging";
-import { DependencyCache } from "domain/packages";
-import { ISuggestionProvider } from "domain/suggestions";
+import { throwUndefinedOrNull } from '@esm-test/guards';
+import { ILogger } from 'domain/logging';
+import { DependencyCache } from 'domain/packages';
+import { ISuggestionProvider } from 'domain/providers';
 
 export class OnProviderTextDocumentClose {
 

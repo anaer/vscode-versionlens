@@ -1,15 +1,15 @@
+import { createParentDesc, PackageDescriptor } from 'domain/packages';
 import { KeyDictionary } from 'domain/utils';
 import { Document, isMap, Pair, ParsedNode, parseDocument, YAMLMap } from 'yaml';
 import { findPair } from 'yaml/util';
-import { createParentDesc, PackageDescriptor } from '../../index';
-import { TYamlPackageParserOptions } from '../definitions/tYamlPackageParserOptions';
-import { TYamlPackageTypeHandler } from '../definitions/tYamlPackageTypeHandler';
+import { TYamlPackageParserOptions } from './tYamlPackageParserOptions';
+import { TYamlPackageTypeHandler } from './tYamlPackageTypeHandler';
 import {
   createNameDescFromYamlNode,
   createVersionDescFromYamlNode
 } from './yamlPackageTypeFactory';
 
-export function extractPackageDependenciesFromYaml(
+export function parsePackagesYaml(
   yaml: string,
   options: TYamlPackageParserOptions
 ): Array<PackageDescriptor> {
@@ -17,10 +17,10 @@ export function extractPackageDependenciesFromYaml(
   const yamlDoc = parseDocument(yaml)
   if (!yamlDoc || !yamlDoc.contents || yamlDoc.errors.length > 0) return [];
 
-  return extractDependenciesFromNodes(yamlDoc, options);
+  return parsePackageNodes(yamlDoc, options);
 }
 
-function extractDependenciesFromNodes(
+function parsePackageNodes(
   rootNode: Document.Parsed<ParsedNode>,
   options: TYamlPackageParserOptions
 ): PackageDescriptor[] {

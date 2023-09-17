@@ -11,9 +11,9 @@ import {
   createPathDescFromJsonNode,
   createRepoDescFromJsonNode,
   createVersionDescFromJsonNode,
-  extractPackageDependenciesFromJson
+  parsePackagesJson
 } from 'domain/packages';
-import { ISuggestionProvider } from 'domain/suggestions';
+import { ISuggestionProvider } from 'domain/providers';
 import { KeyDictionary } from 'domain/utils';
 import { DubClient } from './dubClient';
 import { DubConfig } from './dubConfig';
@@ -45,14 +45,11 @@ export class DubSuggestionProvider implements ISuggestionProvider {
       complexTypeHandlers
     };
 
-    const packageDescriptors = extractPackageDependenciesFromJson(
-      packageText,
-      options
-    );
+    const parsedPackages = parsePackagesJson(packageText, options);
 
     const packageDependencies = [];
 
-    for (const packageDesc of packageDescriptors) {
+    for (const packageDesc of parsedPackages) {
 
       // map the version descriptor to a package dependency
       if (packageDesc.hasType(PackageDescriptorType.version)) {

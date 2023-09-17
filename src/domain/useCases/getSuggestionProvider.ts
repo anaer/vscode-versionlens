@@ -1,5 +1,5 @@
-import { throwUndefinedOrNull } from "@esm-test/guards";
-import { ISuggestionProvider } from "domain/suggestions";
+import { throwUndefinedOrNull } from '@esm-test/guards';
+import { ISuggestionProvider } from 'domain/providers';
 import { minimatch } from 'minimatch';
 import { basename } from 'node:path';
 

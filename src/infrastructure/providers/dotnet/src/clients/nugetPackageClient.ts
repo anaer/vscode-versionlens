@@ -11,11 +11,12 @@ import {
   IPackageClient,
   PackageSourceType,
   PackageVersionType,
+  SuggestionFactory,
   TPackageClientRequest,
   TPackageClientResponse,
-  VersionUtils
+  VersionUtils,
+  createSuggestions
 } from 'domain/packages';
-import { SuggestionFactory, createSuggestions } from 'domain/suggestions';
 import { NuGetClientData } from '../definitions/nuget';
 import { DotNetConfig } from '../dotnetConfig';
 import { parseVersionSpec } from '../utils/parseVersionSpec';

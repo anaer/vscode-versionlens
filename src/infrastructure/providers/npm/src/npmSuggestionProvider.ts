@@ -1,20 +1,17 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import {
-  PackageDependency,
-  PackageDescriptorType,
+  PackageDependency, PackageDescriptorType,
   TJsonPackageParserOptions,
   TJsonPackageTypeHandler,
   TPackageNameDescriptor,
   TPackageVersionDescriptor,
+  TSuggestionReplaceFunction,
   createPackageResource,
   createVersionDescFromJsonNode,
-  extractPackageDependenciesFromJson
+  parsePackagesJson
 } from 'domain/packages';
-import {
-  ISuggestionProvider,
-  TSuggestionReplaceFunction
-} from 'domain/suggestions';
+import { ISuggestionProvider } from 'domain/providers';
 import { KeyDictionary } from 'domain/utils';
 import { homedir } from 'node:os';
 import { resolve } from 'node:path';
@@ -34,7 +31,7 @@ export class NpmSuggestionProvider implements ISuggestionProvider {
     readonly client: NpmPackageClient,
     readonly config: NpmConfig,
     readonly logger: ILogger
-  ) { 
+  ) {
     throwUndefinedOrNull("client", client);
     throwUndefinedOrNull("config", config);
     throwUndefinedOrNull("logger", logger);
@@ -51,14 +48,11 @@ export class NpmSuggestionProvider implements ISuggestionProvider {
       complexTypeHandlers
     };
 
-    const packageDescriptors = extractPackageDependenciesFromJson(
-      packageText,
-      options
-    );
+    const parsedPackages = parsePackagesJson(packageText, options);
 
     const packageDependencies = [];
 
-    for (const packageDesc of packageDescriptors) {
+    for (const packageDesc of parsedPackages) {
 
       const nameDesc = packageDesc.getType<TPackageNameDescriptor>(
         PackageDescriptorType.name

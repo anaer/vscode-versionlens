@@ -1,6 +1,6 @@
 export default {
 
-  createDependenciesFromXml: {
+  parseDotNetPackagesXml: {
 
     test: `
       <Project>

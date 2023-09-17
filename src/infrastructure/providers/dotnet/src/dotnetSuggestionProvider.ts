@@ -6,15 +6,16 @@ import {
   PackageDescriptorType,
   TPackageNameDescriptor,
   TPackageVersionDescriptor,
+  TSuggestionReplaceFunction,
   createPackageResource
 } from 'domain/packages';
-import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
+import { ISuggestionProvider } from 'domain/providers';
 import { DotNetCli } from './clients/dotnetCli';
 import { NuGetPackageClient } from './clients/nugetPackageClient';
 import { NuGetResourceClient } from './clients/nugetResourceClient';
 import { NuGetClientData } from './definitions/nuget';
 import { DotNetConfig } from './dotnetConfig';
-import { createDependenciesFromXml } from './parser/dotnetParser';
+import { parseDotNetPackagesXml } from './parser/dotnetParser';
 import { dotnetReplaceVersion } from './utils/dotnetReplaceVersion';
 
 export class DotNetSuggestionProvider implements ISuggestionProvider {
@@ -39,12 +40,12 @@ export class DotNetSuggestionProvider implements ISuggestionProvider {
 
   parseDependencies(packagePath: string, packageText: string): Array<PackageDependency> {
 
-    const packageDescriptors = createDependenciesFromXml(
+    const parsedPackages = parseDotNetPackagesXml(
       packageText,
       this.config.dependencyProperties
     );
 
-    const packageDependencies = packageDescriptors
+    const packageDependencies = parsedPackages
       .filter(x => x.hasType(PackageDescriptorType.version))
       .map(
         packageDesc => {

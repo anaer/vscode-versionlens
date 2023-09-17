@@ -1,18 +1,16 @@
 import assert from 'assert';
 import { ClientResponseSource } from 'domain/clients';
 import {
-  createDependencyRange,
-  createPackageResource,
   PackageDependency,
   PackageSourceType,
-  TPackageClientRequest
-} from 'domain/packages';
-import {
   SuggestionCategory,
   SuggestionStatusText,
   SuggestionTypes,
-  TPackageSuggestion
-} from 'domain/suggestions';
+  TPackageClientRequest,
+  TPackageSuggestion,
+  createDependencyRange,
+  createPackageResource
+} from 'domain/packages';
 import {
   GitHubClient,
   NpmConfig,

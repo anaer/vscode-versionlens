@@ -1,15 +1,13 @@
 import assert from 'assert';
 import {
-  extractPackageDependenciesFromYaml,
-  TYamlPackageParserOptions,
-  TYamlPackageTypeHandler
-} from 'domain/packages';
-import {
   createGitDescFromYamlNode,
   createHostedDescFromYamlNode,
   createPathDescFromYamlNode,
-  createVersionDescFromYamlNode
-} from 'domain/packages/parsers/yaml/yamlPackageTypeFactory';
+  createVersionDescFromYamlNode,
+  parsePackagesYaml,
+  TYamlPackageParserOptions,
+  TYamlPackageTypeHandler
+} from 'domain/packages';
 import { KeyDictionary } from 'domain/utils';
 import { test } from 'mocha-ui-esm';
 import Fixtures from './extractPackageDependenciesFromYaml.fixtures';
@@ -23,7 +21,7 @@ const complexTypeHandlers = <KeyDictionary<TYamlPackageTypeHandler>>{
 
 export const extractPackageDependenciesFromYamlTests = {
 
-  [test.title]: extractPackageDependenciesFromYaml.name,
+  [test.title]: parsePackagesYaml.name,
 
   "returns empty when no matches found": () => {
     const includePropNames: Array<string> = [];
@@ -33,7 +31,7 @@ export const extractPackageDependenciesFromYamlTests = {
       complexTypeHandlers
     };
 
-    const results = extractPackageDependenciesFromYaml(
+    const results = parsePackagesYaml(
       "",
       testOptions
     );
@@ -48,7 +46,7 @@ export const extractPackageDependenciesFromYamlTests = {
       complexTypeHandlers
     };
 
-    const results = extractPackageDependenciesFromYaml(
+    const results = parsePackagesYaml(
       Fixtures.extractDependencyEntries.test,
       testOptions
     );
@@ -64,7 +62,7 @@ export const extractPackageDependenciesFromYamlTests = {
       complexTypeHandlers
     };
 
-    const results = extractPackageDependenciesFromYaml(
+    const results = parsePackagesYaml(
       Fixtures.extractDependencyEntries.test,
       testOptions
     );
@@ -80,7 +78,7 @@ export const extractPackageDependenciesFromYamlTests = {
       complexTypeHandlers
     };
 
-    const results = extractPackageDependenciesFromYaml(
+    const results = parsePackagesYaml(
       Fixtures.extractPathDependencies.test,
       testOptions
     );
@@ -96,7 +94,7 @@ export const extractPackageDependenciesFromYamlTests = {
       complexTypeHandlers
     };
 
-    const results = extractPackageDependenciesFromYaml(
+    const results = parsePackagesYaml(
       Fixtures.extractGitDepencdencies.test,
       testOptions
     );
@@ -111,7 +109,7 @@ export const extractPackageDependenciesFromYamlTests = {
       complexTypeHandlers
     };
 
-    const results = extractPackageDependenciesFromYaml(
+    const results = parsePackagesYaml(
       Fixtures.extractHostedDependencies.test,
       testOptions
     );

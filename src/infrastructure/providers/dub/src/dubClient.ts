@@ -9,17 +9,15 @@ import {
   ClientResponseFactory,
   IPackageClient,
   PackageSourceType,
-  TPackageClientRequest,
-  TPackageClientResponse,
-  TSemverSpec,
-  VersionUtils
-} from 'domain/packages';
-import {
   SuggestionFactory,
   SuggestionStatusText,
+  TPackageClientRequest,
+  TPackageClientResponse,
   TPackageSuggestion,
+  TSemverSpec,
+  VersionUtils,
   createSuggestions
-} from 'domain/suggestions';
+} from 'domain/packages';
 import { DubConfig } from './dubConfig';
 
 export class DubClient implements IPackageClient<null> {

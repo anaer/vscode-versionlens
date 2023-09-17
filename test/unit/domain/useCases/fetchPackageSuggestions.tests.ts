@@ -7,18 +7,19 @@ import {
   PackageResponse,
   PackageSourceType,
   PackageVersionType,
+  SuggestionTypes,
   TPackageClientRequest,
   TPackageClientResponse,
   TPackageNameVersion,
   TPackageResource,
+  TPackageSuggestion,
   TPackageTextRange,
   createDependencyRange,
   createPackageNameVersion,
   createPackageResource
 } from 'domain/packages';
 import { PackageCache } from 'domain/packages/packageCache';
-import { IProviderConfig } from 'domain/providers';
-import { ISuggestionProvider, SuggestionTypes, TPackageSuggestion } from 'domain/suggestions';
+import { IProviderConfig, ISuggestionProvider } from 'domain/providers';
 import { FetchPackageSuggestions } from 'domain/useCases';
 import { test } from 'mocha-ui-esm';
 import { anything, instance, mock, verify, when } from 'ts-mockito';

@@ -1,17 +1,16 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import {
-  PackageDependency,
-  PackageDescriptorType,
+  PackageDependency, PackageDescriptorType,
   TJsonPackageParserOptions,
   TJsonPackageTypeHandler,
   TPackageNameDescriptor,
   TPackageVersionDescriptor,
   createPackageResource,
   createVersionDescFromJsonNode,
-  extractPackageDependenciesFromJson
+  parsePackagesJson
 } from 'domain/packages';
-import { ISuggestionProvider } from 'domain/suggestions';
+import { ISuggestionProvider } from 'domain/providers';
 import { KeyDictionary } from 'domain/utils';
 import { ComposerClient } from './composerClient';
 import { ComposerConfig } from './composerConfig';
@@ -41,12 +40,9 @@ export class ComposerSuggestionProvider implements ISuggestionProvider {
       complexTypeHandlers
     };
 
-    const packageDescriptors = extractPackageDependenciesFromJson(
-      packageText,
-      options
-    );
+    const parsedPackages = parsePackagesJson(packageText, options);
 
-    const packageDependencies = packageDescriptors
+    const packageDependencies = parsedPackages
       .filter(x => x.hasType(PackageDescriptorType.version))
       .map(
         packageDesc => {

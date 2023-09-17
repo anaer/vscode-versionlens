@@ -1,5 +1,4 @@
-import { PackageDescriptor, TPackageResource } from "..";
-import { TPackageTextRange } from "../definitions/tPackageTextRange";
+import { PackageDescriptor, TPackageResource, TPackageTextRange } from "domain/packages";
 
 export class PackageDependency {
 

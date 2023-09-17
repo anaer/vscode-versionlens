@@ -1,7 +1,7 @@
-import { IServiceProvider } from "domain/di";
-import { ILogger } from "domain/logging";
-import { ISuggestionProvider } from "domain/suggestions";
-import { importSuggestionProvider } from "./importSuggestionProvider";
+import { IServiceProvider } from 'domain/di';
+import { ILogger } from 'domain/logging';
+import { ISuggestionProvider } from 'domain/providers';
+import { importSuggestionProvider } from './importSuggestionProvider';
 
 export function importSuggestionProviders(
   serviceProvider: IServiceProvider,

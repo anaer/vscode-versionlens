@@ -1,17 +1,12 @@
-import { VersionUtils } from 'domain/packages';
-import { SuggestionCategory } from 'domain/suggestions';
+import {
+  SuggestionCategory,
+  SuggestionFactory,
+  SuggestionTypes,
+  TPackageSuggestion,
+  VersionUtils
+} from 'domain/packages';
 import { Nullable } from 'domain/utils';
 import semver from 'semver';
-import { SuggestionTypes, TPackageSuggestion } from '../index';
-import {
-  createFixedStatus,
-  createLatestUpdateable,
-  createMatchesLatestStatus,
-  createNoMatchStatus,
-  createRangeUpdateable,
-  createSatisifiesLatestStatus,
-  createSatisifiesStatus
-} from '../suggestionFactory';
 
 export function createSuggestions(
   versionRange: string,
@@ -57,50 +52,50 @@ export function createSuggestions(
 
   if (releases.length === 0 && prereleases.length === 0)
     // no match
-    suggestions.push(createNoMatchStatus())
+    suggestions.push(SuggestionFactory.createNoMatchStatus())
   else if (!satisfiesVersion)
     // no match
     suggestions.push(
-      createNoMatchStatus(),
+      SuggestionFactory.createNoMatchStatus(),
       // suggest latestVersion
-      createLatestUpdateable(latestVersion),
+      SuggestionFactory.createLatestUpdateable(latestVersion),
     )
   else if (isLatest && isFixedVersion)
     // latest
-    suggestions.push(createMatchesLatestStatus(latestVersion));
+    suggestions.push(SuggestionFactory.createMatchesLatestStatus(latestVersion));
   else if (isLatest && isRangeVersion && hasRangeUpdate)
     suggestions.push(
       // satisfies latest
-      createSatisifiesLatestStatus(latestVersion),
+      SuggestionFactory.createSatisifiesLatestStatus(latestVersion),
       // suggest latestVersion
-      createLatestUpdateable(latestVersion),
+      SuggestionFactory.createLatestUpdateable(latestVersion),
     );
   else if (isLatest && isRangeVersion)
     suggestions.push(
       // matches latest
-      createMatchesLatestStatus(latestVersion)
+      SuggestionFactory.createMatchesLatestStatus(latestVersion)
     );
   else if (satisfiesVersion && isFixedVersion)
     suggestions.push(
       // fixed
-      createFixedStatus(satisfiesVersion),
+      SuggestionFactory.createFixedStatus(satisfiesVersion),
       // suggest latestVersion
-      createLatestUpdateable(latestVersion),
+      SuggestionFactory.createLatestUpdateable(latestVersion),
     );
   else if (hasRangeUpdate) {
     suggestions.push(
       // satisfies version that doesnt match latest
-      createSatisifiesStatus(satisfiesVersion),
+      SuggestionFactory.createSatisifiesStatus(satisfiesVersion),
       // suggest update
-      createRangeUpdateable(satisfiesVersion),
+      SuggestionFactory.createRangeUpdateable(satisfiesVersion),
     );
   }
   else if (satisfiesVersion)
     suggestions.push(
       // satisfies version that doesnt match latest
-      createSatisifiesStatus(satisfiesVersion),
+      SuggestionFactory.createSatisifiesStatus(satisfiesVersion),
       // suggest latestVersion
-      createLatestUpdateable(latestVersion),
+      SuggestionFactory.createLatestUpdateable(latestVersion),
     );
 
   // roll up prereleases

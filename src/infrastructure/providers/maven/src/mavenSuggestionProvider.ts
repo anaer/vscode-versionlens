@@ -8,12 +8,12 @@ import {
   TPackageNameDescriptor,
   TPackageVersionDescriptor
 } from 'domain/packages';
-import { ISuggestionProvider } from 'domain/suggestions';
+import { ISuggestionProvider } from 'domain/providers';
 import { MavenClient } from './clients/mavenClient';
 import { MvnCli } from './clients/mvnCli';
 import { MavenClientData } from './definitions/mavenClientData';
 import { MavenConfig } from './mavenConfig';
-import { createDependenciesFromXml } from './parser/mavenParser';
+import { parseMavenPackagesXml } from './parser/mavenParser';
 
 export class MavenSuggestionProvider implements ISuggestionProvider {
 
@@ -35,12 +35,12 @@ export class MavenSuggestionProvider implements ISuggestionProvider {
     packagePath: string,
     packageText: string
   ): Array<PackageDependency> {
-    const packageLocations = createDependenciesFromXml(
+    const parsedPackages = parseMavenPackagesXml(
       packageText,
       this.config.dependencyProperties
     );
 
-    const packageDependencies = packageLocations
+    const packageDependencies = parsedPackages
       .filter(x => x.hasType(PackageDescriptorType.version))
       .map(
         packageDesc => {

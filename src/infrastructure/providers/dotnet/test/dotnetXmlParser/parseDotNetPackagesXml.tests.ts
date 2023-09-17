@@ -1,7 +1,7 @@
 import assert from 'assert';
-import { createDependenciesFromXml } from 'infrastructure/providers/dotnet';
+import { parseDotNetPackagesXml } from 'infrastructure/providers/dotnet';
 import { test } from 'mocha-ui-esm';
-import Fixtures from './createDependenciesFromXml.fixtures';
+import Fixtures from './parseDotNetPackagesXml.fixtures';
 
 type TestContext = {
   test: {
@@ -9,23 +9,23 @@ type TestContext = {
   }
 }
 
-export const createDependenciesFromXmlTests = {
+export const parsePackagesXmlTests = {
 
-  [test.title]: createDependenciesFromXml.name,
+  [test.title]: parseDotNetPackagesXml.name,
 
   'returns empty when no matches found with "$1"': [
     [[], ''],
-    [["non-dependencies"], Fixtures.createDependenciesFromXml.test],
+    [["non-dependencies"], Fixtures.parseDotNetPackagesXml.test],
     function (this: TestContext, testIncludeNames: Array<string>, expected: string) {
       // test
-      const actual = createDependenciesFromXml(expected, testIncludeNames);
+      const actual = parseDotNetPackagesXml(expected, testIncludeNames);
 
       //assert
       assert.equal(actual.length, 0);
     }
   ],
 
-  "extracts dependency entries from dotnet xml": () => {
+  "extracts packages from dotnet xml": () => {
     // setup
     const includeNames = [
       "Project.Sdk",
@@ -36,13 +36,13 @@ export const createDependenciesFromXmlTests = {
     ];
 
     // test
-    const actual = createDependenciesFromXml(
-      Fixtures.createDependenciesFromXml.test,
+    const actual = parseDotNetPackagesXml(
+      Fixtures.parseDotNetPackagesXml.test,
       includeNames
     );
 
     // assert
-    assert.deepEqual(actual, Fixtures.createDependenciesFromXml.expected);
+    assert.deepEqual(actual, Fixtures.parseDotNetPackagesXml.expected);
   }
 
 }

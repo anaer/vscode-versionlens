@@ -1,4 +1,3 @@
-import { KeyDictionary } from 'domain/utils';
 import {
   PackageDescriptor,
   PackageDescriptorType,
@@ -9,6 +8,7 @@ import {
   TPackageTypeDescriptor,
   TPackageVersionDescriptor
 } from "domain/packages";
+import { KeyDictionary } from 'domain/utils';
 
 export default {
 

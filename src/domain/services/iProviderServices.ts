@@ -1,4 +1,4 @@
-import { ISuggestionProvider } from 'domain/suggestions';
+import { ISuggestionProvider } from 'domain/providers';
 
 export interface IProviderServices {
 

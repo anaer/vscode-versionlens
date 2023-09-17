@@ -5,7 +5,7 @@ import {
   IPackageFileWatcher,
   OnPackageDependenciesChangedEvent
 } from 'domain/packages';
-import { ISuggestionProvider } from 'domain/suggestions';
+import { ISuggestionProvider } from 'domain/providers';
 import { DependencyChangesResult, GetDependencyChanges } from 'domain/useCases';
 import { AsyncEmitter, IDisposable } from 'domain/utils';
 import { Uri } from 'vscode';

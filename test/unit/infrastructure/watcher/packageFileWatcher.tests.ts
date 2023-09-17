@@ -1,7 +1,6 @@
 import { ILogger } from 'domain/logging';
 import { DependencyCache, PackageDependency } from 'domain/packages';
-import { IProviderConfig } from 'domain/providers';
-import { ISuggestionProvider } from 'domain/suggestions';
+import { IProviderConfig, ISuggestionProvider } from 'domain/providers';
 import { GetDependencyChanges } from 'domain/useCases';
 import { IWorkspaceAdapter, PackageFileWatcher } from 'infrastructure/watcher';
 import { test } from 'mocha-ui-esm';

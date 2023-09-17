@@ -2,9 +2,11 @@ import assert from 'assert';
 import {
   PackageResponse,
   PackageSourceType,
-  createDependencyRange
+  SuggestionCategory,
+  SuggestionTypes,
+  createDependencyRange,
+  mapToSuggestionUpdate
 } from 'domain/packages';
-import { SuggestionCategory, SuggestionTypes, mapToSuggestionUpdate } from 'domain/suggestions';
 import { NpmUtils } from 'infrastructure/providers/npm';
 import { test } from 'mocha-ui-esm';
 

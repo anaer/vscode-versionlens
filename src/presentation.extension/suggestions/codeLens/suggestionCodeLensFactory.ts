@@ -1,5 +1,4 @@
-import { PackageResponse } from 'domain/packages';
-import { TSuggestionReplaceFunction } from 'domain/suggestions';
+import { PackageResponse, TSuggestionReplaceFunction } from 'domain/packages';
 import { Range, TextDocument, Uri } from 'vscode';
 import { SuggestionCodeLens } from './suggestionCodeLens';
 

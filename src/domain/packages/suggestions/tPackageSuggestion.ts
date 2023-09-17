@@ -1,5 +1,5 @@
-import { SuggestionCategory } from "./eSuggestionCategory"
-import { SuggestionTypes } from "./eSuggestionTypes"
+import { SuggestionCategory } from './eSuggestionCategory'
+import { SuggestionTypes } from './eSuggestionTypes'
 
 export type TPackageSuggestion = {
 

@@ -1,4 +1,4 @@
-import { TPackageTextRange } from "../../definitions/tPackageTextRange";
+import { TPackageTextRange } from "domain/packages";
 
 export type TPackageType = {
   type: string

@@ -1,7 +1,7 @@
-import { throwUndefinedOrNull } from "@esm-test/guards";
-import { ILogger, ILoggerChannel } from "domain/logging";
-import { ISuggestionProvider } from "domain/suggestions";
-import { TextDocument } from "vscode";
+import { throwUndefinedOrNull } from '@esm-test/guards';
+import { ILogger, ILoggerChannel } from 'domain/logging';
+import { ISuggestionProvider } from 'domain/providers';
+import { TextDocument } from 'vscode';
 
 export class OnProviderEditorActivated {
 

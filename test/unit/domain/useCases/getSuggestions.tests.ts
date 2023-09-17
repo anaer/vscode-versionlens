@@ -1,12 +1,11 @@
-import assert from "assert";
-import { CachingOptions } from "domain/caching";
-import { ILogger } from "domain/logging";
-import { DependencyCache, PackageResponse } from "domain/packages";
-import { IProviderConfig } from "domain/providers";
-import { ISuggestionProvider, SuggestionTypes } from "domain/suggestions";
-import { FetchProjectSuggestions, GetSuggestions } from "domain/useCases";
-import { test } from "mocha-ui-esm";
-import { anything, instance, mock, verify, when } from "ts-mockito";
+import assert from 'assert';
+import { CachingOptions } from 'domain/caching';
+import { ILogger } from 'domain/logging';
+import { DependencyCache, PackageResponse, SuggestionTypes } from 'domain/packages';
+import { IProviderConfig, ISuggestionProvider } from 'domain/providers';
+import { FetchProjectSuggestions, GetSuggestions } from 'domain/useCases';
+import { test } from 'mocha-ui-esm';
+import { anything, instance, mock, verify, when } from 'ts-mockito';
 
 type TestContext = {
   mockEditorDependencyCache: DependencyCache;

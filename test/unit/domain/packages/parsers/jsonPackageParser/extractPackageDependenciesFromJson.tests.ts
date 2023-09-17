@@ -1,14 +1,12 @@
 import assert from 'assert';
 import {
-  extractPackageDependenciesFromJson,
+  createPathDescFromJsonNode,
+  createRepoDescFromJsonNode,
+  createVersionDescFromJsonNode,
+  parsePackagesJson,
   TJsonPackageParserOptions,
   TJsonPackageTypeHandler
 } from 'domain/packages';
-import {
-  createPathDescFromJsonNode,
-  createRepoDescFromJsonNode,
-  createVersionDescFromJsonNode
-} from 'domain/packages/parsers/json/jsonPackageTypeFactory';
 import { KeyDictionary } from 'domain/utils';
 import { test } from 'mocha-ui-esm';
 import Fixtures from './extractPackageDependenciesFromJson.fixtures';
@@ -21,7 +19,7 @@ const complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler> = {
 
 export const extractPackageDependenciesFromJsonTests = {
 
-  [test.title]: extractPackageDependenciesFromJson.name,
+  [test.title]: parsePackagesJson.name,
 
   "returns empty when no matches found": () => {
     const includePropNames: Array<string> = []
@@ -31,7 +29,7 @@ export const extractPackageDependenciesFromJsonTests = {
       complexTypeHandlers
     };
 
-    const results = extractPackageDependenciesFromJson(
+    const results = parsePackagesJson(
       "",
       testOptions
     );
@@ -46,7 +44,7 @@ export const extractPackageDependenciesFromJsonTests = {
       complexTypeHandlers
     };
 
-    const results = extractPackageDependenciesFromJson(
+    const results = parsePackagesJson(
       JSON.stringify(Fixtures.extractDependencyEntries.test),
       testOptions
     );
@@ -62,7 +60,7 @@ export const extractPackageDependenciesFromJsonTests = {
       complexTypeHandlers
     };
 
-    const results = extractPackageDependenciesFromJson(
+    const results = parsePackagesJson(
       JSON.stringify(Fixtures.extractDependencyEntries.test),
       testOptions
     );
@@ -78,7 +76,7 @@ export const extractPackageDependenciesFromJsonTests = {
       complexTypeHandlers
     };
 
-    const results = extractPackageDependenciesFromJson(
+    const results = parsePackagesJson(
       JSON.stringify(Fixtures.matchesPathExpressions.test),
       testOptions
     );

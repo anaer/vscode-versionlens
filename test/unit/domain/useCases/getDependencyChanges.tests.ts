@@ -1,11 +1,11 @@
-import assert from "assert";
-import { ILogger } from "domain/logging";
-import { DependencyCache, PackageDependency } from "domain/packages";
-import { IStorage } from "domain/storage";
-import { ISuggestionProvider } from "domain/suggestions";
-import { GetDependencyChanges } from "domain/useCases";
-import { test } from "mocha-ui-esm";
-import { instance, mock, when } from "ts-mockito";
+import assert from 'assert';
+import { ILogger } from 'domain/logging';
+import { DependencyCache, PackageDependency } from 'domain/packages';
+import { ISuggestionProvider } from 'domain/providers';
+import { IStorage } from 'domain/storage';
+import { GetDependencyChanges } from 'domain/useCases';
+import { test } from 'mocha-ui-esm';
+import { instance, mock, when } from 'ts-mockito';
 
 type TestContext = {
   mockStorage: IStorage;

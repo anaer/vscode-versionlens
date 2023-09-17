@@ -1,7 +1,6 @@
 import assert from 'assert';
 import { ILogger } from 'domain/logging';
-import { IProviderConfig } from 'domain/providers';
-import { ISuggestionProvider } from 'domain/suggestions';
+import { IProviderConfig, ISuggestionProvider } from 'domain/providers';
 import { GetSuggestionProvider } from 'domain/useCases';
 import { test } from 'mocha-ui-esm';
 import { instance, mock, when } from 'ts-mockito';

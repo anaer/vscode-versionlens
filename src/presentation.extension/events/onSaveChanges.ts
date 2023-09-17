@@ -1,7 +1,7 @@
-import { throwUndefinedOrNull } from "@esm-test/guards";
-import { ILogger } from "domain/logging";
-import { ISuggestionProvider } from "domain/suggestions";
-import { Task, tasks } from "vscode";
+import { throwUndefinedOrNull } from '@esm-test/guards';
+import { ILogger } from 'domain/logging';
+import { ISuggestionProvider } from 'domain/providers';
+import { Task, tasks } from 'vscode';
 
 export class OnSaveChanges {
 
