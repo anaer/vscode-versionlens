@@ -5,6 +5,8 @@ import {
   XmlNode
 } from "domain/packages";
 
+export const noVersionAttr = '>=*.*.*';
+
 export function createNameDescFromXmlAttr(node: XmlNode): TPackageNameDescriptor {
   const includeAttr = node.attributes.include || node.attributes.update;
   if (!includeAttr) return undefined;
@@ -50,5 +52,18 @@ export function createVersionDescFromXmlAttr(keyNode: XmlNode): TPackageVersionD
     type: PackageDescriptorType.version,
     version: versionAttr.value,
     versionRange
-  }
+  };
+}
+
+export function createBlankVersionDescFromXmlAttr(node: XmlNode): TPackageVersionDescriptor {
+  const versionRange = {
+    start: node.tagCloseStart,
+    end: node.tagCloseStart,
+  };
+
+  return {
+    type: PackageDescriptorType.version,
+    version: noVersionAttr,
+    versionRange
+  };
 }

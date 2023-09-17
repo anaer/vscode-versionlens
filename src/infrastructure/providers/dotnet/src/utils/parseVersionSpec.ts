@@ -1,37 +1,7 @@
-import { PackageVersionType, VersionUtils } from 'domain/packages';
+import { PackageVersionType, VersionUtils } from "domain/packages";
 import semver from 'semver';
-import { DotNetVersionSpec } from './definitions/dotnet';
-import { NugetVersionSpec } from './definitions/nuget';
-
-export function expandShortVersion(value) {
-  if (!value ||
-    value.indexOf('[') !== -1 ||
-    value.indexOf('(') !== -1 ||
-    value.indexOf(',') !== -1 ||
-    value.indexOf(')') !== -1 ||
-    value.indexOf(']') !== -1 ||
-    value.indexOf('*') !== -1)
-    return value;
-
-  let dotCount = 0;
-  for (let i = 0; i < value.length; i++) {
-    const c = value[i];
-    if (c === '.')
-      dotCount++;
-    else if (isNaN(parseInt(c)))
-      return value;
-  }
-
-  let fmtValue = '';
-  if (dotCount === 0)
-    fmtValue = value + '.0.0';
-  else if (dotCount === 1)
-    fmtValue = value + '.0';
-  else
-    return value;
-
-  return fmtValue;
-}
+import { DotNetVersionSpec } from "../definitions/dotnet";
+import { NugetVersionSpec } from "../definitions/nuget";
 
 export function parseVersionSpec(rawVersion: string): DotNetVersionSpec {
   const spec = buildVersionSpec(rawVersion);
@@ -62,7 +32,37 @@ export function parseVersionSpec(rawVersion: string): DotNetVersionSpec {
   };
 }
 
-export function buildVersionSpec(value): NugetVersionSpec {
+function expandShortVersion(value) {
+  if (!value ||
+    value.indexOf('[') !== -1 ||
+    value.indexOf('(') !== -1 ||
+    value.indexOf(',') !== -1 ||
+    value.indexOf(')') !== -1 ||
+    value.indexOf(']') !== -1 ||
+    value.indexOf('*') !== -1)
+    return value;
+
+  let dotCount = 0;
+  for (let i = 0; i < value.length; i++) {
+    const c = value[i];
+    if (c === '.')
+      dotCount++;
+    else if (isNaN(parseInt(c)))
+      return value;
+  }
+
+  let fmtValue = '';
+  if (dotCount === 0)
+    fmtValue = value + '.0.0';
+  else if (dotCount === 1)
+    fmtValue = value + '.0';
+  else
+    return value;
+
+  return fmtValue;
+}
+
+function buildVersionSpec(value): NugetVersionSpec {
   let formattedValue = expandShortVersion(value.trim());
   if (!formattedValue) return null;
 

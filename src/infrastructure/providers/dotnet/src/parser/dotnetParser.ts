@@ -1,5 +1,6 @@
 import { PackageDescriptor, XmlDoc } from "domain/packages";
 import {
+  createBlankVersionDescFromXmlAttr,
   createNameDescFromXmlAttr,
   createSdkNameDescFromXmlAttr,
   createVersionDescFromXmlAttr
@@ -38,7 +39,9 @@ export function extractDependenciesFromNodes(
     if (!nameDesc) continue;
 
     // get the version descriptor
-    const versionDesc = createVersionDescFromXmlAttr(node);
+    const versionDesc = createVersionDescFromXmlAttr(node)
+      || createBlankVersionDescFromXmlAttr(node);
+
     if (!versionDesc) continue;
 
     // add the descriptors

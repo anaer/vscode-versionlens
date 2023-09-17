@@ -8,13 +8,14 @@ import {
   TPackageVersionDescriptor,
   createPackageResource
 } from 'domain/packages';
-import { ISuggestionProvider } from 'domain/suggestions';
+import { ISuggestionProvider, TSuggestionReplaceFunction } from 'domain/suggestions';
 import { DotNetCli } from './clients/dotnetCli';
 import { NuGetPackageClient } from './clients/nugetPackageClient';
 import { NuGetResourceClient } from './clients/nugetResourceClient';
 import { NuGetClientData } from './definitions/nuget';
 import { DotNetConfig } from './dotnetConfig';
 import { createDependenciesFromXml } from './parser/dotnetParser';
+import { dotnetReplaceVersion } from './utils/dotnetReplaceVersion';
 
 export class DotNetSuggestionProvider implements ISuggestionProvider {
 
@@ -33,6 +34,8 @@ export class DotNetSuggestionProvider implements ISuggestionProvider {
     throwUndefinedOrNull("config", config);
     throwUndefinedOrNull("logger", logger);
   }
+
+  suggestionReplaceFn?: TSuggestionReplaceFunction = dotnetReplaceVersion;
 
   parseDependencies(packagePath: string, packageText: string): Array<PackageDependency> {
 

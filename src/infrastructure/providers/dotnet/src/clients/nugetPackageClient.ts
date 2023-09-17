@@ -18,7 +18,7 @@ import {
 import { SuggestionFactory, createSuggestions } from 'domain/suggestions';
 import { NuGetClientData } from '../definitions/nuget';
 import { DotNetConfig } from '../dotnetConfig';
-import { parseVersionSpec } from '../dotnetUtils';
+import { parseVersionSpec } from '../utils/parseVersionSpec';
 
 export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
 

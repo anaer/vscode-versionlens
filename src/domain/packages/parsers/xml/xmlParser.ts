@@ -14,6 +14,8 @@ export type XmlNode = {
   isSelfClosing: boolean,
   tagOpenStart: number;
   tagOpenEnd: number;
+  tagCloseStart?: number;
+  tagCloseEnd?: number;
   attributes: KeyDictionary<XmlAttribute>,
   text?: string,
   textStart?: number,
@@ -113,11 +115,16 @@ function onCloseTag(xmlDoc: XmlDoc, saxNode: any) {
 
   const nodeRef = xmlDoc.nodeRefs.pop();
 
+  const tagCloseEnd = this.position;
+  const tagCloseStart = nodeRef.isSelfClosing 
+    ? tagCloseEnd - 2
+    : tagCloseEnd - saxNode.length - 3;
+
   Object.assign(
     nodeRef,
     {
-      tagCloseStart: this.startTagPosition - 1,
-      tagCloseEnd: this.position,
+      tagCloseStart,
+      tagCloseEnd
     }
   );
 }

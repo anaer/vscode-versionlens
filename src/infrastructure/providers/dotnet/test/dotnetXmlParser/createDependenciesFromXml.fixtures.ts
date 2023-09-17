@@ -1,6 +1,6 @@
 export default {
 
-  "createDependenciesFromXml": {
+  createDependenciesFromXml: {
 
     test: `
       <Project>
@@ -13,6 +13,7 @@ export default {
             <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.7" />
             <GlobalPackageReference Include="Microsoft.Azure.ServiceBus" Version="(3.0,)" />
             <PackageVersion Update="AngularJS.Core" Version="1.0.*" />
+            <PackageReference Include="NoVersionAttribute" />
         </ItemGroup>
       </Project>
     `,
@@ -97,6 +98,27 @@ export default {
             "versionRange": {
               "start": 319,
               "end": 324
+            }
+          }
+        },
+        "typeCount": 2
+      },
+      {
+        "types": {
+          "name": {
+            "type": "name",
+            "name": "NoVersionAttribute",
+            "nameRange": {
+              "start": 774,
+              "end": 774
+            }
+          },
+          "version": {
+            "type": "version",
+            "version": ">=*.*.*",
+            "versionRange": {
+              "start": 821,
+              "end": 821
             }
           }
         },

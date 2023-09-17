@@ -120,7 +120,7 @@ export const xmlDocFixtures = {
             "tagCloseStart": 215,
             "tagCloseEnd": 227
           },
-          "tagCloseStart": 77,
+          "tagCloseStart": 135,
           "tagCloseEnd": 137
         },
         {
@@ -177,7 +177,7 @@ export const xmlDocFixtures = {
             "tagCloseStart": 215,
             "tagCloseEnd": 227
           },
-          "tagCloseStart": 150,
+          "tagCloseStart": 202,
           "tagCloseEnd": 204
         }
       ]
