@@ -1,5 +1,5 @@
-import { KeyDictionary } from 'domain/utils';
-import { parser as saxParser } from 'sax';
+import { KeyDictionary, Nullable } from 'domain/utils';
+import { QualifiedTag, SAXParser, Tag, parser as saxParser } from 'sax';
 
 export type XmlAttribute = {
   name: string,
@@ -20,7 +20,7 @@ export type XmlNode = {
   text?: string,
   textStart?: number,
   textEnd?: number,
-  parent: XmlNode
+  parent: Nullable<XmlNode>
 }
 
 export class XmlDoc {
@@ -69,17 +69,17 @@ export class XmlDoc {
 
 }
 
-function onOpenTag(xmlDoc: XmlDoc, saxNode: any) {
-  xmlDoc.paths.push(saxNode.name);
+function onOpenTag(this: SAXParser, xmlDoc: XmlDoc, tag: Tag | QualifiedTag) {
+  xmlDoc.paths.push(tag.name);
   const path = xmlDoc.paths.join('.');
   const parent = xmlDoc.nodeRefs.length > 0
     ? xmlDoc.nodeRefs[xmlDoc.nodeRefs.length - 1]
     : null;
 
-  const node = {
+  const node: XmlNode = {
     path,
-    name: saxNode.name,
-    isSelfClosing: saxNode.isSelfClosing,
+    name: tag.name,
+    isSelfClosing: tag.isSelfClosing,
     tagOpenStart: this.startTagPosition - 1,
     tagOpenEnd: this.position,
     attributes: { ...xmlDoc.attribs },
@@ -91,7 +91,7 @@ function onOpenTag(xmlDoc: XmlDoc, saxNode: any) {
   xmlDoc.attribs = {};
 }
 
-function onAttribute(xmlDoc: XmlDoc, saxAttr: any) {
+function onAttribute(this: SAXParser, xmlDoc: XmlDoc, saxAttr: { name: string, value: string }) {
   const { name, value } = saxAttr;
 
   // positions without quotes
@@ -99,7 +99,7 @@ function onAttribute(xmlDoc: XmlDoc, saxAttr: any) {
   const start = this.position - saxAttr.value.length - 1;
 
   // create the attribute
-  const attr = {
+  const attr: XmlAttribute = {
     name,
     value,
     start,
@@ -109,16 +109,18 @@ function onAttribute(xmlDoc: XmlDoc, saxAttr: any) {
   xmlDoc.attribs[name.toLowerCase()] = attr;
 }
 
-function onCloseTag(xmlDoc: XmlDoc, saxNode: any) {
-
+function onCloseTag(this: SAXParser, xmlDoc: XmlDoc, tagName: string) {
   xmlDoc.paths.pop();
 
   const nodeRef = xmlDoc.nodeRefs.pop();
+  if (nodeRef === undefined) {
+    throw new Error("'nodeRef' doesn't exist")
+  }
 
   const tagCloseEnd = this.position;
-  const tagCloseStart = nodeRef.isSelfClosing 
+  const tagCloseStart = nodeRef.isSelfClosing
     ? tagCloseEnd - 2
-    : tagCloseEnd - saxNode.length - 3;
+    : tagCloseEnd - tagName.length - 3;
 
   Object.assign(
     nodeRef,
@@ -129,12 +131,12 @@ function onCloseTag(xmlDoc: XmlDoc, saxNode: any) {
   );
 }
 
-function onText(xmlDoc: XmlDoc, text: any) {
+function onText(this: SAXParser, xmlDoc: XmlDoc, text: string) {
   if (xmlDoc.nodeRefs.length === 0) return;
   const nodeRef = xmlDoc.nodeRefs[xmlDoc.nodeRefs.length - 1];
   const textEnd = this.startTagPosition - 1;
   const textStart = textEnd - text.length;
-  
+
   Object.assign(
     nodeRef,
     {

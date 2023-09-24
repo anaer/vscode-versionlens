@@ -55,6 +55,7 @@
     "@types/mocha": "10.0.1",
     "@types/node": "20.6.0",
     "@types/npm-package-arg": "6.1.1",
+    "@types/sax": "1.2.4",
     "@types/source-map-support": "0.5.7",
     "@types/vscode": "1.82.0",
     "@vscode/test-electron": "2.3.4",
@@ -80,9 +81,9 @@
     "npm-package-arg": "11.0.1",
     "pacote": "17.0.4",
     "request-light": "0.7.0",
+    "sax": "1.2.4",
     "semver": "7.5.4",
     "winston": "3.7.1",
-    "sax": "1.2.4",
     "yaml": "2.3.2"
   },
   "contributes": {
