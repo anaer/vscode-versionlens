@@ -1,3 +1,15 @@
+# 1.8.0-preview.1
+
+## Dotnet
+
+  - Added ability to insert missing version attributes
+
+    Related to [#304](https://gitlab.com/versionlens/vscode-versionlens/-/issues/304)
+
+  - Added extra debug logging for retry attempts with multiple package sources
+
+    Related to [#335](https://gitlab.com/versionlens/vscode-versionlens/-/issues/335)
+
 # 1.7.3
 
 ## Maven
