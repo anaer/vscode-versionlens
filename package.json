@@ -92,56 +92,38 @@
         "command": "versionlens.icons.showError",
         "title": "An error has occurred. Click to see the log for details.",
         "category": "VersionLens",
-        "icon": {
-          "dark": "images/icons/toggle-death.svg",
-          "light": "images/icons/toggle-death.svg"
-        }
+        "icon": "images/icons/toggle-death.svg"
       },
       {
         "command": "versionlens.icons.showVersionLenses",
         "title": "Show dependency versions",
         "category": "VersionLens",
-        "icon": {
-          "dark": "images/icons/toggle-dark.svg",
-          "light": "images/icons/toggle-light.svg"
-        }
+        "icon": "images/icons/toggle-inactive.svg"
       },
       {
         "command": "versionlens.icons.hideVersionLenses",
         "title": "Hide dependency versions",
         "category": "VersionLens",
-        "icon": {
-          "dark": "images/icons/toggle-active.svg",
-          "light": "images/icons/toggle-active.svg"
-        }
+        "icon": "images/icons/toggle-active.svg"
       },
       {
         "command": "versionlens.icons.showPrereleaseVersions",
         "title": "Show tagged dependency versions",
         "category": "VersionLens",
-        "icon": {
-          "dark": "images/icons/tag-dark.svg",
-          "light": "images/icons/tag-light.svg"
-        }
+        "icon": "images/icons/tag-inactive.svg"
       },
       {
         "command": "versionlens.icons.hidePrereleaseVersions",
         "title": "Hide tagged dependency versions",
         "category": "VersionLens",
-        "icon": {
-          "dark": "images/icons/tag-active.svg",
-          "light": "images/icons/tag-active.svg"
-        }
+        "icon": "images/icons/tag-active.svg"
       },
       {
         "command": "versionlens.icons.showingProgress",
         "enablement": "false",
         "title": "Analyzing dependencies...",
         "category": "VersionLens",
-        "icon": {
-          "dark": "images/icons/toggle-active-progress.svg",
-          "light": "images/icons/toggle-active-progress.svg"
-        }
+        "icon": "images/icons/toggle-active-progress.svg"
       },
       {
         "command": "versionlens.suggestions.clearCache",
