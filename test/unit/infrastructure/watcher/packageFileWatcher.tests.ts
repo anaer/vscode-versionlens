@@ -124,10 +124,11 @@ export const packageFileWatcherTests = {
       const stubWatcher = instance(this.mockPackageFileWatcher);
       const testProvider = instance(this.mockProvider);
       const testUri: Uri = <any>{ fsPath: 'some-dir/package.json' };
+      const testDependencies = [];
 
       when(this.mockGetDependencyChanges.execute(testProvider, testUri.fsPath))
         .thenResolve({
-          parsedDependencies: [],
+          parsedDependencies: testDependencies,
           hasChanged: false
         });
 
@@ -158,8 +159,8 @@ export const packageFileWatcherTests = {
       ).once()
 
       verify(
-        this.mockCache.set(anything(), anything(), anything())
-      ).never();
+        this.mockCache.set(testProvider.name, testUri.fsPath, testDependencies)
+      ).once();
 
       verify(
         this.mockPackageFileWatcher.fire(

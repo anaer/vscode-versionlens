@@ -127,10 +127,8 @@ export class PackageFileWatcher
   ): Promise<DependencyChangesResult> {
 
     const result = await this.getDependencyChanges.execute(provider, packageFilePath);
-    if (result.hasChanged) {
-      this.logger.silly("updating package dependency cache for '%s'", packageFilePath);
-      this.dependencyCache.set(provider.name, packageFilePath, result.parsedDependencies);
-    }
+    this.logger.silly("updating package dependency cache for '%s'", packageFilePath);
+    this.dependencyCache.set(provider.name, packageFilePath, result.parsedDependencies);
 
     return result;
   }
