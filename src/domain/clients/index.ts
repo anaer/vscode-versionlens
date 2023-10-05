@@ -5,4 +5,4 @@ export * from './definitions/iJsonHttpClient';
 export * from './definitions/iProcessClient';
 export * from './definitions/tHttpClientOptions';
 export * from './jsonHttpClient';
-export * as UrlHelpers from './utils/urlUtils';
+export * as UrlUtils from './utils/urlUtils';

@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { CachingOptions, ICachingOptions } from 'domain/caching';
-import { ClientResponseSource, IProcessClient, UrlHelpers } from 'domain/clients';
+import { ClientResponseSource, IProcessClient, UrlUtils } from 'domain/clients';
 import { HttpOptions, IHttpOptions } from 'domain/http';
 import { ILogger } from 'domain/logging';
 import {
@@ -49,25 +49,25 @@ export const DotNetCliTests = {
           enabled: true,
           machineWide: false,
           url: testFeeds[0],
-          protocol: UrlHelpers.RegistryProtocols.https
+          protocol: UrlUtils.RegistryProtocols.https
         },
         {
           enabled: true,
           machineWide: false,
           url: 'https://api.nuget.org/v3/index.json',
-          protocol: UrlHelpers.RegistryProtocols.https
+          protocol: UrlUtils.RegistryProtocols.https
         },
         {
           enabled: true,
           machineWide: false,
           url: 'http://non-ssl/v3/index.json',
-          protocol: UrlHelpers.RegistryProtocols.http
+          protocol: UrlUtils.RegistryProtocols.http
         },
         {
           enabled: true,
           machineWide: true,
           url: 'C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\',
-          protocol: UrlHelpers.RegistryProtocols.file
+          protocol: UrlUtils.RegistryProtocols.file
         },
       ]
 
@@ -130,7 +130,7 @@ export const DotNetCliTests = {
           enabled: true,
           machineWide: false,
           url: 'https://api.nuget.org/v3/index.json',
-          protocol: UrlHelpers.RegistryProtocols.https
+          protocol: UrlUtils.RegistryProtocols.https
         },
       ]
 

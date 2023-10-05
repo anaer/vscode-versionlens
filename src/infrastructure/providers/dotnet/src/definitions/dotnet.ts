@@ -1,5 +1,5 @@
 import { PackageVersionType } from 'domain/packages';
-import { UrlHelpers } from 'domain/clients';
+import { UrlUtils } from 'domain/clients';
 import { NugetVersionSpec } from './nuget';
 
 export type DotNetVersionSpec = {
@@ -13,5 +13,5 @@ export type DotNetSource = {
   enabled: boolean,
   machineWide: boolean,
   url: string,
-  protocol: UrlHelpers.RegistryProtocols,
+  protocol: UrlUtils.RegistryProtocols,
 }

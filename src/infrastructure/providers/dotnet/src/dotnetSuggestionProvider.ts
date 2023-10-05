@@ -1,5 +1,5 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
-import { UrlHelpers } from 'domain/clients';
+import { UrlUtils } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
   PackageDependency,
@@ -85,8 +85,8 @@ export class DotNetSuggestionProvider implements ISuggestionProvider {
 
     // filter remote sources only
     const remoteSources = sources.filter(
-      s => s.protocol === UrlHelpers.RegistryProtocols.https ||
-        s.protocol === UrlHelpers.RegistryProtocols.http
+      s => s.protocol === UrlUtils.RegistryProtocols.https ||
+        s.protocol === UrlUtils.RegistryProtocols.http
     );
 
     // convert each fetch resource to a promise

@@ -5,7 +5,7 @@ import {
   HttpClientRequestMethods,
   HttpClientResponse,
   HttpClientOptions,
-  UrlHelpers
+  UrlUtils
 } from 'domain/clients';
 import { KeyStringDictionary } from 'domain/utils';
 import { HttpOptions, IHttpOptions } from 'domain/http';
@@ -93,7 +93,7 @@ export const RequestLightClientTests = {
           responseText: null
         })
 
-      const expectedUrl = UrlHelpers.createUrl(testUrl, testQuery);
+      const expectedUrl = UrlUtils.createUrl(testUrl, testQuery);
 
       await rut.request(
         HttpClientRequestMethods.get,

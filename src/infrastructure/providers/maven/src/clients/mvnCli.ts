@@ -1,5 +1,5 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
-import { IProcessClient, UrlHelpers } from 'domain/clients';
+import { IProcessClient, UrlUtils } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import { MavenRepository } from '../definitions/mavenRepository';
 import { MavenConfig } from '../mavenConfig';
@@ -43,7 +43,7 @@ export class MvnCli {
 
     // parse urls to Array<MavenRepository>
     return repos.map(url => {
-      const protocol = UrlHelpers.getProtocolFromUrl(url);
+      const protocol = UrlUtils.getProtocolFromUrl(url);
       return {
         url,
         protocol,

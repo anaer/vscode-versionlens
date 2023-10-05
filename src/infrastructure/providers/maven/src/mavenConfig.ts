@@ -1,6 +1,6 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ICachingOptions } from 'domain/caching';
-import { UrlHelpers } from 'domain/clients';
+import { UrlUtils } from 'domain/clients';
 import { IFrozenOptions } from 'domain/configuration';
 import { IHttpOptions } from 'domain/http';
 import { IProviderConfig, TProviderFileMatcher } from 'domain/providers';
@@ -38,7 +38,7 @@ export class MavenConfig implements IProviderConfig {
   }
 
   get apiUrl(): string {
-    return UrlHelpers.ensureEndSlash(this.config.get(MavenContributions.ApiUrl));
+    return UrlUtils.ensureEndSlash(this.config.get(MavenContributions.ApiUrl));
   }
 
   get onSaveChangesTask(): string {

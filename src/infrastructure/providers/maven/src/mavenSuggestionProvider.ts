@@ -1,5 +1,5 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
-import { UrlHelpers } from 'domain/clients';
+import { UrlUtils } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
   createPackageResource,
@@ -77,7 +77,7 @@ export class MavenSuggestionProvider implements ISuggestionProvider {
 
     // filter https urls
     const repositories = repos.filter(
-      repo => repo.protocol === UrlHelpers.RegistryProtocols.https
+      repo => repo.protocol === UrlUtils.RegistryProtocols.https
     );
 
     // return the client data

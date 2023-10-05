@@ -1,5 +1,5 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
-import { IProcessClient, UrlHelpers } from 'domain/clients';
+import { IProcessClient, UrlUtils } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import { CrLf, Lf } from 'domain/utils';
 import { DotNetSource } from '../definitions/dotnet';
@@ -87,7 +87,7 @@ export class DotNetCli {
         <DotNetSource>{
           enabled: true,
           machineWide: false,
-          protocol: UrlHelpers.RegistryProtocols.https,
+          protocol: UrlUtils.RegistryProtocols.https,
           url: this.config.fallbackNugetSource,
         }
       ]
@@ -101,7 +101,7 @@ function parseSourcesArray(lines: Array<string>): Array<DotNetSource> {
     const machineWide = line.substring(1, 2) === 'M';
     const offset = machineWide ? 3 : 2;
     const url = line.substring(offset);
-    const protocol = UrlHelpers.getProtocolFromUrl(url);
+    const protocol = UrlUtils.getProtocolFromUrl(url);
     return {
       enabled,
       machineWide,
@@ -113,8 +113,8 @@ function parseSourcesArray(lines: Array<string>): Array<DotNetSource> {
 
 function convertFeedsToSources(feeds: Array<string>): Array<DotNetSource> {
   return feeds.map(function (url: string) {
-    const protocol = UrlHelpers.getProtocolFromUrl(url);
-    const machineWide = (protocol === UrlHelpers.RegistryProtocols.file);
+    const protocol = UrlUtils.getProtocolFromUrl(url);
+    const machineWide = (protocol === UrlUtils.RegistryProtocols.file);
     return {
       enabled: true,
       machineWide,

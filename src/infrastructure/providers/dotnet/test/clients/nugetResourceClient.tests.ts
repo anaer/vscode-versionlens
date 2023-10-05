@@ -3,7 +3,8 @@ import {
   ClientResponseSource,
   HttpClientRequestMethods,
   IJsonHttpClient,
-  JsonHttpClient, UrlHelpers
+  JsonHttpClient,
+  UrlUtils
 } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import { NuGetResourceClient } from 'infrastructure/providers/dotnet';
@@ -30,7 +31,7 @@ export const NuGetResourceClientTests = {
         enabled: true,
         machineWide: false,
         url: 'https://test',
-        protocol: UrlHelpers.RegistryProtocols.https
+        protocol: UrlUtils.RegistryProtocols.https
       };
 
       const mockResponse = {
@@ -65,7 +66,7 @@ export const NuGetResourceClientTests = {
         enabled: true,
         machineWide: false,
         url: 'https://test',
-        protocol: UrlHelpers.RegistryProtocols.https
+        protocol: UrlUtils.RegistryProtocols.https
       };
 
       const errorResponse = {

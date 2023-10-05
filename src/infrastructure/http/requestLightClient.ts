@@ -5,7 +5,7 @@ import {
   HttpClientRequestMethods,
   HttpClientResponse,
   IHttpClient,
-  UrlHelpers
+  UrlUtils
 } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import { KeyStringDictionary } from 'domain/utils';
@@ -31,7 +31,7 @@ export class RequestLightClient implements IHttpClient {
     headers: KeyStringDictionary = {}
   ): Promise<HttpClientResponse> {
 
-    const url = UrlHelpers.createUrl(baseUrl, query);
+    const url = UrlUtils.createUrl(baseUrl, query);
 
     try {
       // make the request

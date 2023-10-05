@@ -3,7 +3,7 @@ import {
   HttpClientRequestMethods,
   HttpClientResponse,
   IJsonHttpClient,
-  UrlHelpers
+  UrlUtils
 } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
@@ -88,7 +88,7 @@ export class NuGetPackageClient implements IPackageClient<NuGetClientData> {
     const query = {};
     const headers = {};
     const requestedPackage = request.dependency.package;
-    const packageUrl = UrlHelpers.ensureEndSlash(url)
+    const packageUrl = UrlUtils.ensureEndSlash(url)
       + `${requestedPackage.name.toLowerCase()}/index.json`;
 
     const httpResponse = await this.jsonClient.request(
