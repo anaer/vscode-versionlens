@@ -15,7 +15,7 @@ import {
   GitHubClient,
   NpmConfig,
   NpmPackageClient,
-  PacoteClient
+  NpmRegistryClient
 } from 'infrastructure/providers/npm';
 import { LoggerStub } from 'test/unit/domain/logging';
 import { fileDir } from 'test/unit/utils';
@@ -24,7 +24,7 @@ import { anything, instance, mock, when } from 'ts-mockito';
 const testDir = fileDir();
 
 let configMock: NpmConfig;
-let pacoteMock: PacoteClient;
+let npmRegistryClientMock: NpmRegistryClient;
 let githubClientMock: GitHubClient;
 let loggerMock: LoggerStub;
 
@@ -34,7 +34,7 @@ export const fetchPackageTests = {
 
   beforeEach: () => {
     configMock = mock(NpmConfig);
-    pacoteMock = mock(PacoteClient);
+    npmRegistryClientMock = mock(NpmRegistryClient);
     githubClientMock = mock(GitHubClient);
     loggerMock = mock(LoggerStub);
   },
@@ -64,7 +64,7 @@ export const fetchPackageTests = {
 
     const cut = new NpmPackageClient(
       instance(configMock),
-      instance(pacoteMock),
+      instance(npmRegistryClientMock),
       instance(githubClientMock),
       instance(loggerMock)
     );
@@ -98,7 +98,7 @@ export const fetchPackageTests = {
       attempt: 1
     };
 
-    when(pacoteMock.fetchPackage(anything(), anything()))
+    when(npmRegistryClientMock.fetchPackage(anything(), anything()))
       .thenResolve(<any>{
         status: 200,
         data: '',
@@ -108,7 +108,7 @@ export const fetchPackageTests = {
     // setup initial call
     const cut = new NpmPackageClient(
       instance(configMock),
-      instance(pacoteMock),
+      instance(npmRegistryClientMock),
       instance(githubClientMock),
       instance(loggerMock)
     );
@@ -158,7 +158,7 @@ export const fetchPackageTests = {
     // setup initial call
     const cut = new NpmPackageClient(
       instance(configMock),
-      instance(pacoteMock),
+      instance(npmRegistryClientMock),
       instance(githubClientMock),
       instance(loggerMock)
     );
@@ -208,12 +208,12 @@ export const fetchPackageTests = {
       // setup initial call
       const cut = new NpmPackageClient(
         instance(configMock),
-        instance(pacoteMock),
+        instance(npmRegistryClientMock),
         instance(githubClientMock),
         instance(loggerMock)
       );
 
-      when(pacoteMock.fetchPackage(anything(), anything()))
+      when(npmRegistryClientMock.fetchPackage(anything(), anything()))
         .thenReject(<any>{
           status: testState.status,
           data: "response",

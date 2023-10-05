@@ -1,7 +1,7 @@
 import { TClientResponse } from "domain/clients";
 import { KeyDictionary } from 'domain/utils';
 
-export type TPacoteData = {
+export type TNpmRegistryData = {
 
   name: string;
 
@@ -11,4 +11,4 @@ export type TPacoteData = {
 
 }
 
-export type TPactoteClientResponse = TClientResponse<number, TPacoteData>
+export type TNpmRegistryClientResponse = TClientResponse<number, TNpmRegistryData>

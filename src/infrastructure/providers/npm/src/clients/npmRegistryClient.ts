@@ -1,5 +1,5 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
-import { ClientResponseSource } from 'domain/clients';
+import { ClientResponseSource, UrlUtils } from 'domain/clients';
 import { ILogger } from 'domain/logging';
 import {
   ClientResponseFactory,
@@ -12,19 +12,20 @@ import {
 } from 'domain/packages';
 import { KeyDictionary } from 'domain/utils';
 import semver from 'semver';
-import { TPactoteClientResponse } from '../definitions/TPactoteClientResponse';
+import { INpmRegistry } from '../definitions/iNpmRegistry.js';
 import { TNpmClientData } from '../definitions/tNpmClientData';
+import { TNpmRegistryClientResponse } from '../definitions/tNpmRegistryClientResponse';
 import { NpaSpec, NpaTypes } from '../models/npaSpec';
 import { NpmConfig } from '../npmConfig';
 
-export class PacoteClient {
+export class NpmRegistryClient {
 
   constructor(
-    readonly pacote: any,
+    readonly npmRegistryFetch: INpmRegistry,
     readonly config: NpmConfig,
     readonly logger: ILogger
   ) {
-    throwUndefinedOrNull("pacote", pacote);
+    throwUndefinedOrNull("npmRegistryFetch", npmRegistryFetch);
     throwUndefinedOrNull("config", config);
     throwUndefinedOrNull("logger", logger);
   }
@@ -35,7 +36,7 @@ export class PacoteClient {
   ): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;
 
-    // fetch the package from npm's pacote
+    // fetch the package from the npm's registry
     const response = await this.request(npaSpec, request.clientData);
 
     const { compareLoose } = semver;
@@ -130,28 +131,22 @@ export class PacoteClient {
   async request(
     npaSpec: NpaSpec,
     options: KeyDictionary<any>
-  ): Promise<TPactoteClientResponse> {
-    const before = new Date();
+  ): Promise<TNpmRegistryClientResponse> {
 
     try {
-      // fetch the package from npm's pacote
-      const packumentResponse = await this.pacote.packument(
-        npaSpec,
-        {
-          before,
-          ...options
-        }
-      );
+      const registry = this.npmRegistryFetch.pickRegistry(npaSpec, options);
+      const url = `${UrlUtils.ensureEndSlash(registry)}${npaSpec.escapedName}`;
+      const registryResponse = await this.npmRegistryFetch.json(url, options);
 
-      return <TPactoteClientResponse>{
+      return <TNpmRegistryClientResponse>{
         source: ClientResponseSource.remote,
         status: 200,
-        data: packumentResponse,
+        data: registryResponse,
         rejected: false
       };
 
     } catch (error) {
-      const result = <TPactoteClientResponse>{
+      const result = <TNpmRegistryClientResponse>{
         source: ClientResponseSource.remote,
         status: error.code,
         data: error.message,

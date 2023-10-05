@@ -13,10 +13,10 @@ import {
 } from 'domain/packages';
 import {
   GitHubOptions,
-  IPacote,
+  INpmRegistry,
   NpaSpec,
   NpmConfig,
-  PacoteClient
+  NpmRegistryClient
 } from 'infrastructure/providers/npm';
 import { test } from 'mocha-ui-esm';
 import npa from 'npm-package-arg';
@@ -25,29 +25,30 @@ import { resolve } from 'path';
 import { LoggerStub } from 'test/unit/domain/logging';
 import { anything, instance, mock, when } from 'ts-mockito';
 import { TNpmClientData } from '../../src/definitions/tNpmClientData';
-import Fixtures from './pacoteClient.fixtures';
-import { PacoteStub } from './stubs/pacoteStub';
+import Fixtures from './npmRegistryClient.fixtures';
 
 let cachingOptsMock: ICachingOptions;
 let githubOptsMock: GitHubOptions;
 let loggerMock: ILogger;
 let configMock: NpmConfig;
-let pacoteMock: IPacote;
+let npmRegistryMock: INpmRegistry;
 
 export const fetchPackageTests = {
 
-  [test.title]: PacoteClient.prototype.fetchPackage.name,
+  [test.title]: NpmRegistryClient.prototype.fetchPackage.name,
 
   beforeEach: () => {
     githubOptsMock = mock(GitHubOptions);
     cachingOptsMock = mock(CachingOptions)
     configMock = mock(NpmConfig)
     loggerMock = mock(LoggerStub)
-    pacoteMock = mock(PacoteStub)
+    npmRegistryMock = mock<INpmRegistry>()
 
     when(configMock.caching).thenReturn(instance(cachingOptsMock))
     when(configMock.github).thenReturn(instance(githubOptsMock))
     when(configMock.prereleaseTagFilter).thenReturn([])
+    when(npmRegistryMock.pickRegistry(anything(), anything()))
+      .thenReturn("https://registry.npmjs.org/")
   },
 
   'returns a registry range package': async () => {
@@ -84,11 +85,11 @@ export const fetchPackageTests = {
       testPackageRes.path
     ) as NpaSpec;
 
-    when(pacoteMock.packument(anything(), anything()))
+    when(npmRegistryMock.json(anything(), anything()))
       .thenResolve(Fixtures.packumentRegistryRange)
 
-    const cut = new PacoteClient(
-      instance(pacoteMock),
+    const cut = new NpmRegistryClient(
+      instance(npmRegistryMock),
       instance(configMock),
       instance(loggerMock)
     )
@@ -136,11 +137,11 @@ export const fetchPackageTests = {
       testPackageRes.path
     ) as NpaSpec;
 
-    when(pacoteMock.packument(anything(), anything()))
+    when(npmRegistryMock.json(anything(), anything()))
       .thenResolve(Fixtures.packumentRegistryVersion)
 
-    const cut = new PacoteClient(
-      instance(pacoteMock),
+    const cut = new NpmRegistryClient(
+      instance(npmRegistryMock),
       instance(configMock),
       instance(loggerMock)
     )
@@ -187,11 +188,11 @@ export const fetchPackageTests = {
       testPackageRes.path
     ) as NpaSpec;
 
-    when(pacoteMock.packument(anything(), anything()))
+    when(npmRegistryMock.json(anything(), anything()))
       .thenResolve(Fixtures.packumentCappedToLatestTaggedVersion)
 
-    const cut = new PacoteClient(
-      instance(pacoteMock),
+    const cut = new NpmRegistryClient(
+      instance(npmRegistryMock),
       instance(configMock),
       instance(loggerMock)
     )
@@ -246,11 +247,11 @@ export const fetchPackageTests = {
       testPackageRes.path
     ) as NpaSpec;
 
-    when(pacoteMock.packument(anything(), anything()))
+    when(npmRegistryMock.json(anything(), anything()))
       .thenResolve(Fixtures.packumentRegistryAlias)
 
-    const cut = new PacoteClient(
-      instance(pacoteMock),
+    const cut = new NpmRegistryClient(
+      instance(npmRegistryMock),
       instance(configMock),
       instance(loggerMock)
     )

@@ -19,9 +19,9 @@ export function getProtocolFromUrl(url: string): RegistryProtocols {
 export function createUrl(baseUrl: string, queryParams: KeyStringDictionary): string {
   const query = buildQueryParams(queryParams);
 
-  const slashedUrl = query.length > 0 ?
-    stripEndSlash(baseUrl) :
-    baseUrl;
+  const slashedUrl = query.length > 0
+    ? trimEndSlash(baseUrl)
+    : baseUrl;
 
   return slashedUrl + query;
 }
@@ -37,7 +37,7 @@ function buildQueryParams(queryParams: KeyStringDictionary): string {
   return query;
 }
 
-function stripEndSlash(url: string): string {
+export function trimEndSlash(url: string): string {
   return url.endsWith('/') ? url.slice(0, -1) : url;
 }
 

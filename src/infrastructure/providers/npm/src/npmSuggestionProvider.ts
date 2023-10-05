@@ -17,7 +17,7 @@ import { homedir } from 'node:os';
 import { resolve } from 'node:path';
 import { NpmPackageClient } from './clients/npmPackageClient';
 import { NpmConfig } from './npmConfig';
-import { createPacoteOptions, npmReplaceVersion, resolveDotFilePath } from './npmUtils';
+import { createNpmRegistryOptions, npmReplaceVersion, resolveDotFilePath } from './npmUtils';
 
 const complexTypeHandlers: KeyDictionary<TJsonPackageTypeHandler> = {
   [PackageDescriptorType.version]: createVersionDescFromJsonNode
@@ -124,7 +124,7 @@ export class NpmSuggestionProvider implements ISuggestionProvider {
     const hasEnvFile = envFilePath.length > 0;
     this.logger.debug("Resolved .env is %s", hasEnvFile ? envFilePath : false);
 
-    // return pacote options as client data
+    // return options as client data
     const npmCliOptions = {
       projectPath,
       userConfigPath,
@@ -134,7 +134,7 @@ export class NpmSuggestionProvider implements ISuggestionProvider {
       hasEnvFile
     };
 
-    return createPacoteOptions(packagePath, npmCliOptions)
+    return createNpmRegistryOptions(packagePath, npmCliOptions)
   }
 
 }

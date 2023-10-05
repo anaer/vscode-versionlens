@@ -5,43 +5,44 @@ import { ILogger } from 'domain/logging';
 import { createPackageResource } from 'domain/packages';
 import {
   GitHubOptions,
-  IPacote,
+  INpmRegistry,
   NpaSpec,
   NpmConfig,
-  PacoteClient
+  NpmRegistryClient
 } from 'infrastructure/providers/npm';
 import { test } from 'mocha-ui-esm';
 import npa from 'npm-package-arg';
 import { LoggerStub } from 'test/unit/domain/logging';
 import { anything, instance, mock, when } from 'ts-mockito';
-import { PacoteStub } from './stubs/pacoteStub';
 
 let cachingOptsMock: ICachingOptions;
 let githubOptsMock: GitHubOptions;
 let loggerMock: ILogger;
 let configMock: NpmConfig;
-let pacoteMock: IPacote;
+let npmRegistryMock: INpmRegistry;
 
 export const RequestsTests = {
 
-  [test.title]: PacoteClient.prototype.request.name,
+  [test.title]: NpmRegistryClient.prototype.request.name,
 
   beforeEach: () => {
     githubOptsMock = mock(GitHubOptions);
     cachingOptsMock = mock(CachingOptions)
     configMock = mock(NpmConfig)
     loggerMock = mock(LoggerStub)
-    pacoteMock = mock(PacoteStub)
+    npmRegistryMock = mock<INpmRegistry>()
 
     when(cachingOptsMock.duration).thenReturn(30000);
     when(configMock.caching).thenReturn(instance(cachingOptsMock))
     when(configMock.github).thenReturn(instance(githubOptsMock))
     when(configMock.prereleaseTagFilter).thenReturn([])
+    when(npmRegistryMock.pickRegistry(anything(), anything()))
+      .thenReturn("https://registry.npmjs.org/")
   },
 
   "returns successful responses": async () => {
     const testResponse = {
-      any: "test success response from pacote"
+      any: "test success response from npm registry"
     };
 
     const expectedResponse = {
@@ -66,11 +67,11 @@ export const RequestsTests = {
       testPackageRes.path
     ) as NpaSpec;
 
-    when(pacoteMock.packument(anything(), anything()))
+    when(npmRegistryMock.json(anything(), anything()))
       .thenResolve(testResponse);
 
-    const cut = new PacoteClient(
-      instance(pacoteMock),
+    const cut = new NpmRegistryClient(
+      instance(npmRegistryMock),
       instance(configMock),
       instance(loggerMock)
     );
@@ -110,11 +111,11 @@ export const RequestsTests = {
       testPackageRes.path
     ) as NpaSpec;
 
-    when(pacoteMock.packument(anything(), anything()))
+    when(npmRegistryMock.json(anything(), anything()))
       .thenReject(<any>testResponse);
 
-    const cut = new PacoteClient(
-      instance(pacoteMock),
+    const cut = new NpmRegistryClient(
+      instance(npmRegistryMock),
       instance(configMock),
       instance(loggerMock)
     );

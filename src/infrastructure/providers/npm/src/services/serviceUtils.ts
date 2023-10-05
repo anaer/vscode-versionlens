@@ -4,10 +4,10 @@ import { HttpOptions } from "domain/http";
 import { IDomainServices, IProviderServices } from "domain/services";
 import { nameOf } from "domain/utils";
 import { createJsonClient } from "infrastructure/http";
-import Pacote from 'pacote';
+import NpmRegistryFetch from 'npm-registry-fetch';
 import { GitHubClient } from '../clients/githubClient';
 import { NpmPackageClient } from '../clients/npmPackageClient';
-import { PacoteClient } from '../clients/pacoteClient';
+import { NpmRegistryClient } from '../clients/npmRegistryClient';
 import { NpmContributions } from '../definitions/eNpmContributions';
 import { NpmConfig } from '../npmConfig';
 import { NpmSuggestionProvider } from "../npmSuggestionProvider";
@@ -91,13 +91,13 @@ export function addGitHubClient(services: IServiceCollection) {
   );
 }
 
-export function addPacoteClient(services: IServiceCollection) {
-  const serviceName = nameOf<INpmServices>().pacoteClient;
+export function addNpmRegistryClient(services: IServiceCollection) {
+  const serviceName = nameOf<INpmServices>().npmRegistryClient;
   services.addSingleton(
     serviceName,
     (container: INpmServices & IDomainServices) =>
-      new PacoteClient(
-        Pacote,
+      new NpmRegistryClient(
+        NpmRegistryFetch,
         container.npmConfig,
         container.logger.child({ namespace: serviceName })
       )
@@ -111,7 +111,7 @@ export function addNpmPackageClient(services: IServiceCollection) {
     (container: INpmServices & IDomainServices) =>
       new NpmPackageClient(
         container.npmConfig,
-        container.pacoteClient,
+        container.npmRegistryClient,
         container.githubClient,
         container.logger.child({ namespace: serviceName })
       )

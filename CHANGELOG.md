@@ -1,4 +1,4 @@
-# 1.8.0-preview.1
+# 1.8.0-preview.2
 
 ## Dotnet
 
@@ -9,6 +9,10 @@
   - Added extra debug logging for retry attempts with multiple package sources
 
     Related to [#335](https://gitlab.com/versionlens/vscode-versionlens/-/issues/335)
+
+## Npm
+
+  - Replaced pacote with npm-registry-fetch which is what pacote uses to fetch npm packages.
 
 # 1.7.3
 

@@ -15,18 +15,18 @@ import { NpaSpec, NpaTypes } from '../models/npaSpec';
 import { NpmConfig } from '../npmConfig';
 import * as NpmUtils from '../npmUtils';
 import { GitHubClient } from './githubClient';
-import { PacoteClient } from './pacoteClient';
+import { NpmRegistryClient } from './npmRegistryClient';
 
 export class NpmPackageClient implements IPackageClient<null> {
 
   constructor(
     readonly config: NpmConfig,
-    readonly pacoteClient: PacoteClient,
+    readonly npmRegistryClient: NpmRegistryClient,
     readonly githubClient: GitHubClient,
     readonly logger: ILogger
   ) {
     throwUndefinedOrNull("config", config);
-    throwUndefinedOrNull("pacoteClient", pacoteClient);
+    throwUndefinedOrNull("npmRegistryClient", npmRegistryClient);
     throwUndefinedOrNull("githubClient", githubClient);
     throwUndefinedOrNull("logger", logger);
   }
@@ -87,7 +87,7 @@ export class NpmPackageClient implements IPackageClient<null> {
       }
 
       // otherwise return registry result
-      return await this.pacoteClient.fetchPackage(request, npaSpec);
+      return await this.npmRegistryClient.fetchPackage(request, npaSpec);
 
     } catch (response) {
       this.logger.debug("Caught exception from %s: %O", source, response);

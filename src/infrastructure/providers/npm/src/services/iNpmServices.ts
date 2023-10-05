@@ -3,7 +3,7 @@ import { IJsonHttpClient } from "domain/clients";
 import { HttpOptions } from "domain/http";
 import { GitHubClient } from '../clients/githubClient';
 import { NpmPackageClient } from '../clients/npmPackageClient';
-import { PacoteClient } from '../clients/pacoteClient';
+import { NpmRegistryClient } from '../clients/npmRegistryClient';
 import { NpmConfig } from '../npmConfig';
 import { GitHubOptions } from '../options/githubOptions';
 
@@ -21,7 +21,7 @@ export interface INpmServices {
 
   githubClient: GitHubClient;
 
-  pacoteClient: PacoteClient;
+  npmRegistryClient: NpmRegistryClient;
 
   npmClient: NpmPackageClient;
 

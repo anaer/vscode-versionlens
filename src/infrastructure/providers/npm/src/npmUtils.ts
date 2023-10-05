@@ -72,7 +72,7 @@ export async function getDotEnv(envPath: string): Promise<KeyStringDictionary> {
   return dotenv.parse(await readFile(envPath));
 }
 
-export async function createPacoteOptions(packagePath: string, options: any): Promise<any> {
+export async function createNpmRegistryOptions(packagePath: string, options: any): Promise<any> {
   const {
     npmRcFilePath,
     envFilePath,

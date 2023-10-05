@@ -7,7 +7,7 @@ import {
   addJsonClient,
   addNpmConfig,
   addNpmPackageClient,
-  addPacoteClient,
+  addNpmRegistryClient,
   addSuggestionProvider
 } from './services/serviceUtils';
 
@@ -28,7 +28,7 @@ export async function configureContainer(
 
   addGitHubClient(services);
 
-  addPacoteClient(services);
+  addNpmRegistryClient(services);
 
   addNpmPackageClient(services);
 
