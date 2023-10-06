@@ -1,8 +1,8 @@
-# 1.8.0-preview.2
+# 1.8.0
 
 ## All providers
 
-  - Updated editor icon graphics to show when they are enabled
+  - Updated editor icon graphics to show when they are enabled or not
 
     This is due to a change that affected the way svg icons are rendered in vscode v1.83.0.
 
@@ -11,6 +11,8 @@
     ![Alt text](https://gitlab.com/versionlens/vscode-versionlens/uploads/6273cf1fbaac4c93d146ce5643f31d08/image.png)
 
     Related to [#336](https://gitlab.com/versionlens/vscode-versionlens/-/issues/336)
+
+  - Prevented BOMs altering position ranges when reading content from project\package files.
 
 ## Dotnet
 
@@ -24,7 +26,7 @@
 
 ## Npm
 
-  - Replaced pacote with npm-registry-fetch which is what pacote uses to fetch npm packages. This has reduced the size of bundling versionlens by more than 0.5MB
+  - Replaced pacote with npm-registry-fetch which is what pacote uses to fetch npm packages. This has reduced the size of bundling versionlens by around 1MB
 
 # 1.7.3
 
