@@ -21,12 +21,11 @@ export class OnUpdateDependencyClick {
 
   /**
    * Executes when a codelens update suggestion is clicked
-   * @param codeLens 
-   * @param packageVersion 
+   * @param codeLens
    */
   async execute(codeLens: SuggestionCodeLens): Promise<void> {
-    if ((<any>codeLens).preventExtraClicks) return;
-    (<any>codeLens).preventExtraClicks = true;
+    if (codeLens.preventExtraClicks) return;
+    codeLens.preventExtraClicks = true;
 
     const { version, type } = codeLens.package.suggestion;
     const isTag = type & SuggestionTypes.tag;
