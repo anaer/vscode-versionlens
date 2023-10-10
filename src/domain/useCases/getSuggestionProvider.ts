@@ -9,12 +9,16 @@ export class GetSuggestionProvider {
     throwUndefinedOrNull("suggestionProviders", suggestionProviders);
   }
 
-  execute(fileName: string): ISuggestionProvider {
-    const filename = basename(fileName);
+  execute(filePath: string): ISuggestionProvider {
+    const filename = basename(filePath);
 
-    const filtered = this.suggestionProviders.filter(
-      provider => minimatch(filename, provider.config.fileMatcher.pattern)
-    );
+    const filtered = this.suggestionProviders
+      .filter(
+        provider => minimatch(filename, provider.config.fileMatcher.pattern)
+      )
+      .filter(
+        provider => !minimatch(filePath, provider.config.fileMatcher.exclude)
+      );
 
     if (filtered.length === 0) return;
 

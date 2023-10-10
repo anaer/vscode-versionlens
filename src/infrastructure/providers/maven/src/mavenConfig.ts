@@ -26,6 +26,7 @@ export class MavenConfig implements IProviderConfig {
       language: 'xml',
       scheme: 'file',
       pattern: this.filePatterns,
+      exclude: ''
     };
   }
 

@@ -26,6 +26,7 @@ export class ComposerConfig implements IProviderConfig {
       language: 'json',
       scheme: 'file',
       pattern: this.filePatterns,
+      exclude: ''
     };
   }
 

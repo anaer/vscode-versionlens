@@ -43,7 +43,7 @@ export class PackageFileWatcher
 
       const files = await this.workspace.findFiles(
         provider.config.fileMatcher.pattern,
-        '**/node_modules/**'
+        provider.config.fileMatcher.exclude
       );
 
       for (const file of files) {

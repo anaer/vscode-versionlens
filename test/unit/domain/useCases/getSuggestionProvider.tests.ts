@@ -6,6 +6,7 @@ import { test } from 'mocha-ui-esm';
 import { instance, mock, when } from 'ts-mockito';
 
 type TestContext = {
+  mockConfig: IProviderConfig,
   testProviders: Array<ISuggestionProvider>
 }
 
@@ -19,7 +20,8 @@ export const getSuggestionProviderTests = {
     when(mockConfig.fileMatcher).thenReturn({
       language: "json",
       scheme: "file",
-      pattern: "**/package.json"
+      pattern: "**/package.json",
+      exclude: "**/node_modules/**"
     });
 
     this.testProviders = [
@@ -40,6 +42,12 @@ export const getSuggestionProviderTests = {
   "returns no providers when file pattern does not match": function (this: TestContext) {
     const usecase = new GetSuggestionProvider(this.testProviders);
     const actual = usecase.execute("no-match.json");
+    assert.equal(actual, undefined);
+  },
+
+  "excludes files using exclude pattern": function (this: TestContext) {
+    const usecase = new GetSuggestionProvider(this.testProviders);
+    const actual = usecase.execute("node_modules/package.json");
     assert.equal(actual, undefined);
   },
 

@@ -44,11 +44,17 @@ export const packageFileWatcherTests = {
         language: "",
         pattern: "**/package.json",
         scheme: "",
+        exclude: "**/node_modules/**"
       });
 
       when(this.mockProvider.config).thenReturn(testConfig);
 
-      when(this.mockWorkspace.findFiles(testConfig.fileMatcher.pattern, '**/node_modules/**'))
+      when(
+        this.mockWorkspace.findFiles(
+          testConfig.fileMatcher.pattern,
+          testConfig.fileMatcher.exclude
+        )
+      )
         .thenResolve([testUri])
 
       const watcher = new PackageFileWatcher(
@@ -84,6 +90,7 @@ export const packageFileWatcherTests = {
         language: "",
         pattern: "**/package.json",
         scheme: "",
+        exclude: "**/node_modules/**"
       });
 
       when(this.mockProvider.config).thenReturn(testConfig);

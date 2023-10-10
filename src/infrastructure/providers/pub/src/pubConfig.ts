@@ -26,6 +26,7 @@ export class PubConfig implements IProviderConfig {
       language: 'yaml',
       scheme: 'file',
       pattern: this.filePatterns,
+      exclude: ''
     };
   }
 

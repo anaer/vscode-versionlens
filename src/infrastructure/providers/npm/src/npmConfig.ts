@@ -28,6 +28,7 @@ export class NpmConfig implements IProviderConfig {
       language: 'json',
       scheme: 'file',
       pattern: this.filePatterns,
+      exclude: '**/node_modules/**'
     };
   }
 

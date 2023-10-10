@@ -32,6 +32,7 @@ export class DotNetConfig implements IProviderConfig {
       language: 'xml',
       scheme: 'file',
       pattern: this.filePatterns,
+      exclude: '**/{obj,bin}/**'
     };
   }
 
