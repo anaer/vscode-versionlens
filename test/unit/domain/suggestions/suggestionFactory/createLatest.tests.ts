@@ -11,19 +11,19 @@ export const CreateLatestTests = {
 
   title: SuggestionFactory.createLatestUpdateable.name,
 
-  "when version param is undefined then returns 'latest' tagged package suggestion": () => {
+  "when version param is undefined then returns '*' as suggested version": () => {
     const actual = SuggestionFactory.createLatestUpdateable()
     assert.deepEqual(
       actual,
       <TPackageSuggestion>{
         name: SuggestionStatusText.UpdateLatest,
         category: SuggestionCategory.Updateable,
-        version: 'latest',
+        version: '*',
         type: SuggestionTypes.tag
       });
   },
 
-  "when version param is a release then returns 'latest' version package suggestion": () => {
+  "when version param is a release then returns 'latest' status suggestion": () => {
     const testRelease = '1.0.0';
     const actual = SuggestionFactory.createLatestUpdateable(testRelease)
     assert.deepEqual(
@@ -36,7 +36,7 @@ export const CreateLatestTests = {
       });
   },
 
-  "when version param is a prerelease then returns 'latest' version package suggestion": () => {
+  "when version param is a prerelease then returns 'latest prerelease' status suggestion": () => {
     const testPrerelease = '1.0.0-beta.1';
     const actual = SuggestionFactory.createLatestUpdateable(testPrerelease)
     assert.deepEqual(

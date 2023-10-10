@@ -139,12 +139,11 @@ export function createLatestUpdateable(requestedVersion?: string): TPackageSugge
     ? SuggestionStatusText.UpdateLatestPrerelease
     : SuggestionStatusText.UpdateLatest;
 
-  // treats requestedVersion as latest version
-  // if no requestedVersion then uses the 'latest' tag instead
+  // treat requestedVersion as latest version otherwise '*'
   return {
     name,
     category: SuggestionCategory.Updateable,
-    version: requestedVersion || 'latest',
+    version: requestedVersion || '*',
     type: isPrerelease
       ? SuggestionTypes.prerelease
       : requestedVersion

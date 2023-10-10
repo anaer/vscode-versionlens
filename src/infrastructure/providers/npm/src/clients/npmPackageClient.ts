@@ -116,7 +116,7 @@ export class NpmPackageClient implements IPackageClient<null> {
       else if (status == 'INVALIDTAGNAME' || response.data.includes('Invalid comparator:'))
         suggestions = [
           SuggestionFactory.createInvalidStatus(''),
-          SuggestionFactory.createLatestUpdateable()
+          SuggestionFactory.createLatestUpdateable('latest')
         ];
       else if (status == 'INVALIDPACKAGENAME')
         suggestions = [
