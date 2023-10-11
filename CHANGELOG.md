@@ -1,3 +1,21 @@
+# 1.9.0-preview.1
+
+## Cargo (rust)
+
+  - Added version suggestion support to Cargo.toml files
+    > TOML is not a first class citizen in vscode so you will need a 
+    > TOML language extension installed like [even-better-toml](https://marketplace.visualstudio.com/items?itemName=tamasfe.even-better-toml)
+
+    Relates to [#116](https://gitlab.com/versionlens/vscode-versionlens/-/issues/116)
+
+## All providers
+
+  - Fixed a case when the latest suggestion for a no-match would result in 'latest' text being inserted in to the version. Now uses '*' instead for these cases.
+
+## Dotnet
+
+  - Prevented versionlens from being available to suggest package updates for files in the bin or obj folders
+
 # 1.8.0
 
 ## All providers
