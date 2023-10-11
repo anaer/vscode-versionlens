@@ -11,6 +11,8 @@ This project is `active`, not sponsored and not funded.
 
 This extension shows __version__ information when opening a package or project for one of the following:
 
+- cargo https://doc.rust-lang.org/cargo/ 
+  - needs a TOML language extension installed (like [even-better-toml](https://marketplace.visualstudio.com/items?itemName=tamasfe.even-better-toml))
 - composer https://getcomposer.org/
 - dotnet https://www.dotnetfoundation.org/
 - dub https://code.dlang.org/
