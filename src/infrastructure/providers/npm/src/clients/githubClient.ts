@@ -15,8 +15,7 @@ import { NpaSpec } from '../models/npaSpec';
 import { NpmConfig } from '../npmConfig';
 
 const defaultHeaders = {
-  accept: 'application\/vnd.github.v3+json',
-  'user-agent': 'vscode-contrib/vscode-versionlens'
+  accept: 'application\/vnd.github.v3+json'
 };
 
 export class GitHubClient {
