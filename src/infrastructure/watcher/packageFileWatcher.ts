@@ -35,31 +35,22 @@ export class PackageFileWatcher
   private disposables: IDisposable[];
 
   async initialize(): Promise<void> {
+    const startedAt = performance.now();
 
+    // queue promises
+    const promises = [];
     for (const provider of this.providers) {
-
-      // capture start time
-      const startedAt = performance.now();
-
-      const files = await this.workspace.findFiles(
-        provider.config.fileMatcher.pattern,
-        provider.config.fileMatcher.exclude
-      );
-
-      for (const file of files) {
-        await this.onFileAdd(provider, file)
-      }
-
-      // report completed duration
-      const completedAt = performance.now();
-      this.logger.debug(
-        'found %s project files for %s (%s ms)',
-        files.length,
-        provider.name,
-        Math.floor(completedAt - startedAt)
-      );
-
+      promises.push(this.findProviderFiles(provider));
     }
+
+    // parallel promises
+    await Promise.all(promises);
+
+    const completedAt = performance.now();
+    this.logger.debug(
+      'initialized PackageFileWatcher (%s ms)',
+      Math.floor(completedAt - startedAt)
+    );
 
     this.watch();
   }
@@ -131,6 +122,29 @@ export class PackageFileWatcher
     this.dependencyCache.set(provider.name, packageFilePath, result.parsedDependencies);
 
     return result;
+  }
+
+  private async findProviderFiles(provider: ISuggestionProvider) {
+    // capture start time
+    const startedAt = performance.now();
+
+    const files = await this.workspace.findFiles(
+      provider.config.fileMatcher.pattern,
+      provider.config.fileMatcher.exclude
+    );
+
+    for (const file of files) {
+      await this.onFileAdd(provider, file)
+    }
+
+    // report completed duration
+    const completedAt = performance.now();
+    this.logger.debug(
+      'found %s project files for %s (%s ms)',
+      files.length,
+      provider.name,
+      Math.floor(completedAt - startedAt)
+    );
   }
 
 }
