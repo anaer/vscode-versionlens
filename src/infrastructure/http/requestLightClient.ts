@@ -12,6 +12,10 @@ import { KeyStringDictionary } from 'domain/utils';
 import { XHRRequest } from 'request-light';
 import { IXhrResponse } from './iXhrResponse';
 
+const defaultHeaders = {
+  'user-agent': 'vscode-versionlens (gitlab.com/versionlens/vscode-versionlens)'
+};
+
 export class RequestLightClient implements IHttpClient {
 
   constructor(
@@ -38,7 +42,7 @@ export class RequestLightClient implements IHttpClient {
       const response = await this.xhr({
         url,
         type: method,
-        headers,
+        headers: Object.assign({}, headers, defaultHeaders),
         strictSSL: this.options.http.strictSSL
       });
 
