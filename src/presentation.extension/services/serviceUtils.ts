@@ -93,6 +93,7 @@ export function addProviderNames(services: IServiceCollection) {
   services.addSingleton(
     nameOf<IDomainServices>().providerNames,
     [
+      'cargo',
       'composer',
       'dotnet',
       'dub',
