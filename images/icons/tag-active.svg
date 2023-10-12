@@ -6,5 +6,5 @@
       V
     </text>
   </mask>
-  <rect width="16" height="16" fill="black" mask="url(#mask)" />
+  <rect width="16" height="16" fill="#438FDC" mask="url(#mask)" />
 </svg>

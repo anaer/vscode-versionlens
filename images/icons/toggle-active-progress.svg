@@ -6,7 +6,7 @@
       V
     </text>
   </mask>
-  <rect width="16" height="16" fill="black" mask="url(#mask)" />
+  <rect width="16" height="16" fill="orange" mask="url(#mask)" />
   <animateTransform 
     href="#progress"
     attributeName="transform"
