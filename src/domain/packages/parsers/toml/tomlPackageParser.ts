@@ -1,12 +1,15 @@
 import { AST, parseTOML } from "toml-eslint-parser";
 import { TOMLTable } from "toml-eslint-parser/lib/ast";
+import { PackageDescriptorType } from "../definitions/ePackageDescriptorType";
 import { PackageDescriptor } from "../packageDescriptor";
 import { TTomlPackageParserOptions } from "./tTomlPackageParserOptions";
 import {
+  createGitDescFromTomlNode,
   createNameDescFromTomlNode,
-  createVersionDescFromTomlComplexNode,
+  createPathDescFromTomlNode,
   createVersionDescFromTomlNode
 } from "./tomlPackageTypeFactory";
+import { complexHasProperty } from "./tomlParserUtils";
 
 export function parsePackagesToml(
   toml: string,
@@ -40,50 +43,68 @@ function parsePackageNodes(
   for (const node of nodes) {
     const parent = node.parent as TOMLTable;
     const isNameFromTable = parent.key.keys.length > 1;
-    const isComplex = node.value.type === 'TOMLInlineTable';
+    const isComplexNode = node.value.type === 'TOMLInlineTable';
 
-    if (isComplex === false) {
-      const packageDesc = new PackageDescriptor();
+    const packageDesc = isComplexNode
+      ? parseComplexNode(node, node.value as AST.TOMLInlineTable)
+      : parseSimpleNode(node, isNameFromTable);
 
-      // add the name descriptor
-      const nameDesc = createNameDescFromTomlNode(node.key, isNameFromTable);
-      packageDesc.addType(nameDesc);
-
-      // add the version descriptor
-      const versionDesc = createVersionDescFromTomlNode(node.value as AST.TOMLValue);
-      packageDesc.addType(versionDesc);
-
-      // add the parent descriptor
-      // const parentDesc = createParentDesc((node.parent as TOMLTable).key.keys[0]);
-      // packageDesc.addType(parentDesc);
-
-      matchedDependencies.push(packageDesc);
-
-      continue;
-    }
-
-    const complexNode = node.value as AST.TOMLInlineTable;
-
-    for (const cNode of complexNode.body) {
-
-      const versionDesc = createVersionDescFromTomlComplexNode(cNode);
-      if (versionDesc) {
-        const packageDesc = new PackageDescriptor();
-
-        // add the name descriptor
-        const nameDesc = createNameDescFromTomlNode(node.key, false);
-        packageDesc.addType(nameDesc)
-
-        // add the version descriptor
-        const versionDesc = createVersionDescFromTomlNode(cNode.value as AST.TOMLValue);
-        packageDesc.addType(versionDesc);
-
-        matchedDependencies.push(packageDesc);
-      }
-
-    }
+    // add the package desc to the matched array
+    if (packageDesc) matchedDependencies.push(packageDesc);
 
   }
 
   return matchedDependencies;
+}
+
+function parseSimpleNode(node: AST.TOMLKeyValue, isNameFromTable: boolean): PackageDescriptor {
+  const packageDesc = new PackageDescriptor();
+
+  // add the name descriptor
+  const nameDesc = createNameDescFromTomlNode(node.key, isNameFromTable);
+  packageDesc.addType(nameDesc);
+
+  // add the version descriptor
+  const versionDesc = createVersionDescFromTomlNode(node.value as AST.TOMLValue);
+  packageDesc.addType(versionDesc);
+
+  return packageDesc;
+}
+
+const complexTypeHandlers = {
+  [PackageDescriptorType.version]: createVersionDescFromTomlNode,
+  [PackageDescriptorType.path]: createPathDescFromTomlNode,
+  [PackageDescriptorType.git]: createGitDescFromTomlNode
+}
+
+function parseComplexNode(nameNode: AST.TOMLKeyValue, valueNode: AST.TOMLInlineTable): PackageDescriptor {
+  const packageDesc = new PackageDescriptor();
+  for (const cNode of valueNode.body) {
+
+    for (const typeName in complexTypeHandlers) {
+
+      const hasType = complexHasProperty(cNode, typeName);
+      if (hasType === false) continue;
+
+      // get the type desc
+      const handler = complexTypeHandlers[typeName];
+
+      // process the type
+      const typeDesc = handler(cNode.value as AST.TOMLValue);
+
+      // add the handled type to the package desc
+      packageDesc.addType(typeDesc);
+      break;
+    }
+
+  }
+
+  // skip when no types were added
+  if (packageDesc.typeCount === 0) return;
+
+  // add the name descriptor
+  const nameDesc = createNameDescFromTomlNode(nameNode.key, false);
+  packageDesc.addType(nameDesc)
+
+  return packageDesc;
 }

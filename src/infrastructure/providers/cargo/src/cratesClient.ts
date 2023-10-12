@@ -8,10 +8,13 @@ import { ILogger } from 'domain/logging';
 import {
   ClientResponseFactory,
   IPackageClient,
+  PackageDescriptorType,
   PackageSourceType,
   SuggestionFactory,
   TPackageClientRequest,
   TPackageClientResponse,
+  TPackageGitDescriptor,
+  TPackagePathDescriptor,
   TSemverSpec,
   VersionUtils,
   createSuggestions
@@ -35,9 +38,28 @@ export class CratesClient implements IPackageClient<null> {
     request: TPackageClientRequest<TClientData>
   ): Promise<TPackageClientResponse> {
     const requestedPackage = request.dependency.package;
+
+    // return a directory response if this a path type
+    const pathDesc = request.dependency.packageDesc.getType<TPackagePathDescriptor>(
+      PackageDescriptorType.path
+    );
+    if (pathDesc) {
+      return ClientResponseFactory.createDirectory(
+        requestedPackage.name,
+        requestedPackage.path,
+        pathDesc.path
+      );
+    }
+
+    // return a git response if this a git type
+    const gitDesc = request.dependency.packageDesc.getType<TPackageGitDescriptor>(
+      PackageDescriptorType.git
+    );
+    if (gitDesc) return ClientResponseFactory.createGit();
+
+    // fetch package suggestions from api
     const semverSpec = VersionUtils.parseSemver(requestedPackage.version);
     const url = `${this.config.apiUrl}${requestedPackage.name}/versions`;
-
     try {
       return await this.createRemotePackageDocument(url, request, semverSpec)
     } catch (error) {

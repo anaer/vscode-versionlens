@@ -1,7 +1,9 @@
 import {
   PackageDescriptor,
   PackageDescriptorType,
+  TPackageGitDescriptor,
   TPackageNameDescriptor,
+  TPackagePathDescriptor,
   TPackageTypeDescriptor,
   TPackageVersionDescriptor
 } from "domain/packages";
@@ -22,6 +24,8 @@ export default {
       [dev-dependencies]
       serde_derive = "1.0"
       serde_json = "1.0"
+      smallvec = { git = "https://github.com/servo/rust-smallvec.git" }
+      bitflags = { path = "my-bitflags" }
     `,
     expected: [
       <PackageDescriptor>{
@@ -129,6 +133,46 @@ export default {
           }
         }
       },
+      <PackageDescriptor>{
+        typeCount: 2,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          name: <TPackageNameDescriptor>{
+            type: PackageDescriptorType.name,
+            name: "smallvec",
+            nameRange: {
+              start: 237,
+              end: 237
+            },
+          },
+          git: <TPackageGitDescriptor>{
+            type: PackageDescriptorType.git,
+            gitUrl: "https://github.com/servo/rust-smallvec.git",
+            gitPath: "",
+            gitRef: ""
+          }
+        }
+      },
+      <PackageDescriptor>{
+        typeCount: 2,
+        types: <KeyDictionary<TPackageTypeDescriptor>>{
+          name: <TPackageNameDescriptor>{
+            type: PackageDescriptorType.name,
+            name: "bitflags",
+            nameRange: {
+              start: 309,
+              end: 309
+            },
+          },
+          path: <TPackagePathDescriptor>{
+            type: PackageDescriptorType.path,
+            path: "my-bitflags",
+            pathRange: {
+              start: 330,
+              end: 341
+            }
+          }
+        }
+      }
     ]
   },
 

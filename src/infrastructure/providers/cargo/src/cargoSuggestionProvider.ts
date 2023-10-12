@@ -2,7 +2,9 @@ import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ILogger } from 'domain/logging';
 import {
   PackageDependency, PackageDescriptorType,
+  TPackageGitDescriptor,
   TPackageNameDescriptor,
+  TPackagePathDescriptor,
   TPackageVersionDescriptor,
   TTomlPackageParserOptions,
   createPackageResource,
@@ -34,19 +36,22 @@ export class CargoSuggestionProvider implements ISuggestionProvider {
 
     const parsedPackages = parsePackagesToml(packageText, options);
 
-    const packageDependencies = parsedPackages
-      .filter(x => x.hasType(PackageDescriptorType.version))
-      .map(
-        packageDesc => {
-          const nameDesc = packageDesc.getType<TPackageNameDescriptor>(
-            PackageDescriptorType.name
-          );
+    const packageDependencies = [];
 
-          const versionDesc = packageDesc.getType<TPackageVersionDescriptor>(
-            PackageDescriptorType.version
-          );
+    for (const packageDesc of parsedPackages) {
 
-          return new PackageDependency(
+      const nameDesc = packageDesc.getType<TPackageNameDescriptor>(
+        PackageDescriptorType.name
+      );
+
+      // map the version descriptor to a package dependency
+      if (packageDesc.hasType(PackageDescriptorType.version)) {
+        const versionDesc = packageDesc.getType<TPackageVersionDescriptor>(
+          PackageDescriptorType.version
+        );
+
+        packageDependencies.push(
+          new PackageDependency(
             createPackageResource(
               nameDesc.name,
               versionDesc.version,
@@ -56,8 +61,56 @@ export class CargoSuggestionProvider implements ISuggestionProvider {
             versionDesc.versionRange,
             packageDesc
           )
-        }
-      );
+        );
+
+        continue;
+      }
+
+      // map the path descriptor to a package dependency
+      if (packageDesc.hasType(PackageDescriptorType.path)) {
+        const pathType = packageDesc.getType<TPackagePathDescriptor>(
+          PackageDescriptorType.path
+        );
+
+        packageDependencies.push(
+          new PackageDependency(
+            createPackageResource(
+              nameDesc.name,
+              pathType.path,
+              packagePath
+            ),
+            nameDesc.nameRange,
+            pathType.pathRange,
+            packageDesc
+          )
+        );
+
+        continue;
+      }
+
+      // map the git descriptor to a package dependency
+      if (packageDesc.hasType(PackageDescriptorType.git)) {
+        const gitType = packageDesc.getType<TPackageGitDescriptor>(
+          PackageDescriptorType.git
+        );
+
+        packageDependencies.push(
+          new PackageDependency(
+            createPackageResource(
+              nameDesc.name,
+              gitType.gitUrl,
+              packagePath
+            ),
+            nameDesc.nameRange,
+            nameDesc.nameRange,
+            packageDesc
+          )
+        );
+
+        continue;
+      }
+
+    } // end map loop
 
     return packageDependencies;
   }
