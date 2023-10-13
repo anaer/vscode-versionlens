@@ -75,10 +75,10 @@
   "dependencies": {
     "@npmcli/config": "8.0.0",
     "@npmcli/promise-spawn": "7.0.0",
-    "awilix": "8.0.1",
+    "awilix": "9.0.0",
     "dotenv": "16.3.1",
     "jsonc-parser": "3.2.0",
-    "minimatch": "9.0.3",
+    "micromatch": "4.0.5",
     "npm-package-arg": "11.0.1",
     "npm-registry-fetch": "16.1.0",
     "request-light": "0.7.0",
@@ -256,7 +256,7 @@
         "versionlens.npm.files": {
           "type": "string",
           "default": "**/package.json",
-          "description": "Specifies which files to register with version lenses. You can use [minimatch](https://github.com/isaacs/minimatch) expressions to match file names. You will need to restart vscode when changing this setting."
+          "description": "Specifies which files to register with version lenses. You can use [micromatch](https://github.com/micromatch/micromatch) expressions to match file names. You will need to restart vscode when changing this setting."
         },
         "versionlens.npm.caching.duration": {
           "type": [
@@ -313,7 +313,7 @@
         "versionlens.pub.files": {
           "type": "string",
           "default": "**/pubspec.yaml",
-          "description": "Specifies which files to register with version lenses. You can use [minimatch](https://github.com/isaacs/minimatch) expressions to match file names. You will need to restart vscode when changing this setting."
+          "description": "Specifies which files to register with version lenses. You can use [micromatch](https://github.com/micromatch/micromatch) expressions to match file names. You will need to restart vscode when changing this setting."
         },
         "versionlens.pub.caching.duration": {
           "type": [
@@ -365,7 +365,7 @@
         "versionlens.dotnet.files": {
           "type": "string",
           "default": "**/*.{csproj,fsproj,targets,props}",
-          "description": "Specifies which files to register with version lenses. You can use [minimatch](https://github.com/isaacs/minimatch) expressions to match file names. You will need to restart vscode when changing this setting."
+          "description": "Specifies which files to register with version lenses. You can use [micromatch](https://github.com/micromatch/micromatch) expressions to match file names. You will need to restart vscode when changing this setting."
         },
         "versionlens.dotnet.caching.duration": {
           "type": [
@@ -426,7 +426,7 @@
         "versionlens.dub.files": {
           "type": "string",
           "default": "**/{dub.json,dub.selections.json}",
-          "description": "Specifies which files to register with version lenses. You can use [minimatch](https://github.com/isaacs/minimatch) expressions to match file names. You will need to restart vscode when changing this setting."
+          "description": "Specifies which files to register with version lenses. You can use [micromatch](https://github.com/micromatch/micromatch) expressions to match file names. You will need to restart vscode when changing this setting."
         },
         "versionlens.dub.caching.duration": {
           "type": [
@@ -478,7 +478,7 @@
         "versionlens.cargo.files": {
           "type": "string",
           "default": "**/Cargo.toml",
-          "description": "Specifies which files to register with version lenses. You can use [minimatch](https://github.com/isaacs/minimatch) expressions to match file names. You will need to restart vscode when changing this setting."
+          "description": "Specifies which files to register with version lenses. You can use [micromatch](https://github.com/micromatch/micromatch) expressions to match file names. You will need to restart vscode when changing this setting."
         },
         "versionlens.cargo.caching.duration": {
           "type": [
@@ -531,7 +531,7 @@
         "versionlens.composer.files": {
           "type": "string",
           "default": "**/composer.json",
-          "description": "Specifies which files to register with version lenses. You can use [minimatch](https://github.com/isaacs/minimatch) expressions to match file names. You will need to restart vscode when changing this setting."
+          "description": "Specifies which files to register with version lenses. You can use [micromatch](https://github.com/micromatch/micromatch) expressions to match file names. You will need to restart vscode when changing this setting."
         },
         "versionlens.composer.caching.duration": {
           "type": [
@@ -583,7 +583,7 @@
         "versionlens.maven.files": {
           "type": "string",
           "default": "**/pom.xml",
-          "description": "Specifies which files to register with version lenses. You can use [minimatch](https://github.com/isaacs/minimatch) expressions to match file names. You will need to restart vscode when changing this setting."
+          "description": "Specifies which files to register with version lenses. You can use [micromatch](https://github.com/micromatch/micromatch) expressions to match file names. You will need to restart vscode when changing this setting."
         },
         "versionlens.maven.caching.duration": {
           "type": [

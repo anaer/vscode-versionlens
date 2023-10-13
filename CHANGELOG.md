@@ -1,3 +1,9 @@
+# Next
+
+## All providers
+
+  - Switched [minimatch](https://github.com/isaacs/minimatch) to [micromatch](https://github.com/micromatch/micromatch) for faster project\package file pattern matching
+
 # 1.9.0
 
 ## All providers

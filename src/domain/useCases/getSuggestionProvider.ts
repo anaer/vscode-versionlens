@@ -1,6 +1,6 @@
 import { throwUndefinedOrNull } from '@esm-test/guards';
 import { ISuggestionProvider } from 'domain/providers';
-import { minimatch } from 'minimatch';
+import { isMatch } from 'micromatch';
 import { basename } from 'node:path';
 
 export class GetSuggestionProvider {
@@ -12,12 +12,15 @@ export class GetSuggestionProvider {
   execute(filePath: string): ISuggestionProvider {
     const filename = basename(filePath);
 
-    const filtered = this.suggestionProviders
+    let filtered = this.suggestionProviders
       .filter(
-        provider => minimatch(filename, provider.config.fileMatcher.pattern)
+        provider => isMatch(filename, provider.config.fileMatcher.pattern)
       )
       .filter(
-        provider => !minimatch(filePath, provider.config.fileMatcher.exclude)
+        provider => !(
+          provider.config.fileMatcher.exclude &&
+          isMatch(filePath, provider.config.fileMatcher.exclude)
+        )
       );
 
     if (filtered.length === 0) return;
