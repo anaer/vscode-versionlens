@@ -73,7 +73,7 @@
     "webpack-cli": "5.1.4"
   },
   "dependencies": {
-    "@npmcli/config": "8.0.0",
+    "@npmcli/config": "8.0.1",
     "@npmcli/promise-spawn": "7.0.0",
     "awilix": "9.0.0",
     "dotenv": "16.3.1",
@@ -86,7 +86,7 @@
     "semver": "7.5.4",
     "toml-eslint-parser": "0.6.0",
     "winston": "3.7.1",
-    "yaml": "2.3.2"
+    "yaml": "2.3.3"
   },
   "contributes": {
     "commands": [
