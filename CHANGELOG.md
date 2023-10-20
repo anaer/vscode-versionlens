@@ -1,8 +1,12 @@
-# Next
+# 1.9.1
 
-## All providers
+## Npm
 
-  - Switched [minimatch](https://github.com/isaacs/minimatch) to [micromatch](https://github.com/micromatch/micromatch) for faster project\package file pattern matching
+  - Fixed valid alias packages returning "package not found"
+
+    Relates to [#338](https://gitlab.com/versionlens/vscode-versionlens/-/issues/338)
+
+  - Fixed replacing alias versions so they preserve range prefixes
 
 # 1.9.0
 
