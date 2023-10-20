@@ -34,23 +34,23 @@ export class NpmRegistryClient {
     request: TPackageClientRequest<TNpmClientData>,
     npaSpec: NpaSpec
   ): Promise<TPackageClientResponse> {
+    const type: PackageVersionType = <any>npaSpec.type;
+
+    const spec = type == PackageVersionType.Alias
+      ? npaSpec.subSpec as NpaSpec
+      : npaSpec;
+
     const requestedPackage = request.dependency.package;
 
     // fetch the package from the npm's registry
-    const response = await this.request(npaSpec, request.clientData);
+    const response = await this.request(spec, request.clientData);
 
     const { compareLoose } = semver;
 
-    const type: PackageVersionType = <any>npaSpec.type;
-
-    let versionRange: string = (type === PackageVersionType.Alias) ?
-      npaSpec.subSpec.rawSpec :
-      npaSpec.rawSpec;
+    let versionRange = spec.rawSpec;
 
     const resolved = {
-      name: (type === PackageVersionType.Alias) ?
-        npaSpec.subSpec.name :
-        npaSpec.name,
+      name: spec.name,
       version: versionRange,
     };
 
