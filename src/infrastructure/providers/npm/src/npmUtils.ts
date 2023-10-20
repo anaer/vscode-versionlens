@@ -36,7 +36,7 @@ function replaceGitVersion(suggestionUpdate: TSuggestionUpdate): string {
 function replaceAliasVersion(suggestionUpdate: TSuggestionUpdate): string {
   // preserve the leading symbol from the existing version
   const preservedLeadingVersion = VersionUtils.formatWithExistingLeading(
-    suggestionUpdate.parsedVersion,
+    suggestionUpdate.fetchedVersion,
     suggestionUpdate.suggestionVersion
   );
 
