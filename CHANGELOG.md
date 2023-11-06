@@ -1,3 +1,11 @@
+# 1.9.2
+
+## All providers
+
+  - Fixed visibility of inactive editor icons when using vscode light themes
+
+    Relates to [#340](https://gitlab.com/versionlens/vscode-versionlens/-/issues/340)
+
 # 1.9.1
 
 ## Npm

@@ -9,7 +9,7 @@
   },
   "author": "Peter Flannery",
   "license": "ISC",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "publisher": "pflannery",
   "displayName": "Version Lens",
   "icon": "images/logo.png",
@@ -100,7 +100,10 @@
         "command": "versionlens.icons.showVersionLenses",
         "title": "Show dependency versions",
         "category": "VersionLens",
-        "icon": "images/icons/toggle-inactive.svg"
+        "icon": {
+          "dark": "images/icons/toggle-inactive.svg",
+          "light": "images/icons/toggle-inactive-light.svg"
+        }
       },
       {
         "command": "versionlens.icons.hideVersionLenses",
@@ -112,7 +115,10 @@
         "command": "versionlens.icons.showPrereleaseVersions",
         "title": "Show tagged dependency versions",
         "category": "VersionLens",
-        "icon": "images/icons/tag-inactive.svg"
+        "icon": {
+          "dark": "images/icons/tag-inactive.svg",
+          "light": "images/icons/tag-inactive-light.svg"
+        }
       },
       {
         "command": "versionlens.icons.hidePrereleaseVersions",
