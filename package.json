@@ -1,17 +1,17 @@
 {
-  "name": "vscode-versionlens",
+  "name": "vscode-version-lens",
   "preview": false,
   "private": true,
   "description": "Shows the latest version for each package using code lens",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/versionlens/vscode-versionlens.git"
+    "url": "https://github.com/anaer/vscode-versionlens.git"
   },
-  "author": "Peter Flannery",
+  "author": "anaer",
   "license": "ISC",
-  "version": "1.9.2",
-  "publisher": "pflannery",
-  "displayName": "Version Lens",
+  "version": "1.9.3",
+  "publisher": "anaer",
+  "displayName": "VersionLens",
   "icon": "images/logo.png",
   "engines": {
     "vscode": ">=1.83.0"
@@ -49,7 +49,8 @@
     "pretest": "npm run -s clean && npm run -s lint:test && npm run -s pack:test",
     "test": "node ./test/run.vscode.tests",
     "test:unit": "npm run pretest && env TEST=unit node ./dist/extension.test.js",
-    "trace": "npm run -s clean && tsc --explainFiles --project ./tsconfig.json > trace.log"
+    "trace": "npm run -s clean && tsc --explainFiles --project ./tsconfig.json > trace.log",
+    "publish": "npm run -s pack -- --mode=production && vsce publish"
   },
   "devDependencies": {
     "@esm-test/guards": "1.0.0-beta.8",
@@ -85,7 +86,7 @@
     "sax": "1.3.0",
     "semver": "7.5.4",
     "toml-eslint-parser": "0.6.0",
-    "winston": "3.7.1",
+    "winston": "3.6.0",
     "yaml": "2.3.3"
   },
   "contributes": {
@@ -230,7 +231,7 @@
         },
         "versionlens.logging.level": {
           "type": "string",
-          "default": "error",
+          "default": "info",
           "enum": [
             "error",
             "info",

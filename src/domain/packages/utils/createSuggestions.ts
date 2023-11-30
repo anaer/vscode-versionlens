@@ -38,7 +38,7 @@ export function createSuggestions(
   }
 
   // get the latest release
-  const latestVersion = distTagVersion || releases[releases.length - 1];
+  const latestVersion = distTagVersion || releases[releases.length - 1] || prereleases[prereleases.length - 1];
   const isLatest = latestVersion === satisfiesVersion;
 
   let hasRangeUpdate = false;

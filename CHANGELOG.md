@@ -1,3 +1,12 @@
+# 1.9.3
+
+## Maven
+
+  - 日志调整为info级别
+  - 日志打印请求链接 便于调试
+  - latestVersion 当releases为空时, 尝试取prereleases
+  - 如果maven配置了apiUrl, 则取apiUrl, 否则走原逻辑
+
 # 1.9.2
 
 ## All providers

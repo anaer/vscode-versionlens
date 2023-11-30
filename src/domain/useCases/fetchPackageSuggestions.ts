@@ -72,6 +72,7 @@ export class FetchPackageSuggestions {
     try {
 
       // fetch the package
+      // this.logger.info("request: %s", request.clientData);
       response = await client.fetchPackage(request);
 
     } catch (error) {

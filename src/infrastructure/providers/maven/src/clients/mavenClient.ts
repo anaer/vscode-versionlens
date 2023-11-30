@@ -39,10 +39,12 @@ export class MavenClient implements IPackageClient<MavenClientData> {
     const semverSpec = VersionUtils.parseSemver(requestedPackage.version);
 
     const { repositories } = request.clientData;
-    const url = repositories[0].url
+    const url = this.config.apiUrl ? this.config.apiUrl : repositories[0].url
+
     let [group, artifact] = requestedPackage.name.split(':');
     let search = group.replace(/\./g, "/") + "/" + artifact
     const queryUrl = `${url}${search}/maven-metadata.xml`;
+    this.logger.info('queryUrl: %s', queryUrl);
 
     try {
       return await this.createRemotePackageDocument(queryUrl, request, semverSpec);
@@ -110,6 +112,13 @@ export class MavenClient implements IPackageClient<MavenClientData> {
       name: requestedPackage.name,
       version: versionRange,
     };
+
+    // this.logger.info(
+    //     "createSuggestions: %s, %s, %s",
+    //     versionRange,
+    //     releases,
+    //     prereleases
+    //   );
 
     // analyse suggestions
     const suggestions = createSuggestions(
