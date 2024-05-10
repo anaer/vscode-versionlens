@@ -9,7 +9,7 @@
   },
   "author": "anaer",
   "license": "ISC",
-  "version": "1.9.3",
+  "version": "1.9.4",
   "publisher": "anaer",
   "displayName": "VersionLens",
   "icon": "images/logo.png",
@@ -610,6 +610,11 @@
           "type": "string",
           "default": "",
           "description": "Defines the api to use for maven package searching."
+        },
+        "versionlens.maven.apiCookie": {
+          "type": "string",
+          "default": "",
+          "description": "Defines the api cookie to use for maven package searching."
         },
         "versionlens.maven.dependencyProperties": {
           "type": "array",

@@ -1,3 +1,9 @@
+# 1.9.4
+
+## Maven
+
+  - 添加配置apiCookie, 用于鉴权, cookie可以通过nexus页面登录, F12获取
+
 # 1.9.3
 
 ## Maven

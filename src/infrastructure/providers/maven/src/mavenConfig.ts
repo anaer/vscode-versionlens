@@ -42,6 +42,10 @@ export class MavenConfig implements IProviderConfig {
     return UrlUtils.ensureEndSlash(this.config.get(MavenContributions.ApiUrl));
   }
 
+  get apiCookie(): string {
+    return this.config.get(MavenContributions.ApiCookie);
+  }
+
   get onSaveChangesTask(): string {
     return this.config.get(MavenContributions.OnSaveChangesTask);
   }
