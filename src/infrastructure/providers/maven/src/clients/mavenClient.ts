@@ -40,8 +40,8 @@ export class MavenClient implements IPackageClient<MavenClientData> {
 
     const { repositories } = request.clientData;
     const url = this.config.apiUrl ? this.config.apiUrl : repositories[0].url
-    // 只有配置apiUrl时才使用cookie
-    const cookie = this.config.apiUrl ? this.config.apiCookie : null
+    // 只有配置apiUrl时才使用authorization
+    const authorization = this.config.apiUrl ? this.config.apiAuthorization: null
 
     let [group, artifact] = requestedPackage.name.split(':');
     let search = group.replace(/\./g, "/") + "/" + artifact
@@ -49,7 +49,7 @@ export class MavenClient implements IPackageClient<MavenClientData> {
     this.logger.info('queryUrl: %s', queryUrl);
 
     try {
-      return await this.createRemotePackageDocument(queryUrl, cookie, request, semverSpec);
+      return await this.createRemotePackageDocument(queryUrl, authorization, request, semverSpec);
     } catch (error) {
       const errorResponse = error as HttpClientResponse;
 
@@ -74,15 +74,15 @@ export class MavenClient implements IPackageClient<MavenClientData> {
 
   async createRemotePackageDocument(
     url: string,
-    cookie: string,
+    authorization: string,
     request: TPackageClientRequest<MavenClientData>,
     semverSpec: TSemverSpec
   ): Promise<TPackageClientResponse> {
     const query = {};
     const headers = {};
 
-    if (cookie != null) {
-      headers['Cookie'] = cookie
+    if (authorization != null) {
+      headers['Authorization'] = authorization
     }
 
     // fetch package from api

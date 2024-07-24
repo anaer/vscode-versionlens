@@ -1,3 +1,9 @@
+# 24.724.1337
+
+## Maven
+
+  - 调整使用apiAuthorization参数, authorization值为: `Basic $base64($username:$password)` -> `Basic dXNlcm5hbWU6cGFzc3dvcmQ=`
+
 # 1.9.4
 
 ## Maven
