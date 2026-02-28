@@ -61,7 +61,7 @@
     "@types/source-map-support": "0.5.9",
     "@types/vscode": "1.83.1",
     "@vscode/test-electron": "2.3.5",
-    "mocha": "10.2.0",
+    "mocha": "10.8.2",
     "mocha-ui-esm": "1.0.0-beta.14",
     "rimraf": "5.0.5",
     "source-map-support": "0.5.21",
